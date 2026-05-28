@@ -228,6 +228,31 @@
       "title": "Tạo dự án tiểu thuyết",
       "description": "Trước tiên hãy xác định rõ cuốn sách này viết cho ai, dựa vào điều gì để thu hút độc giả theo dõi, và 30 chương đầu cần mang lại điều gì. Các thiết lập ở đây sẽ ảnh hưởng trực tiếp đến việc lập kế hoạch mạch chính, ranh giới thế giới, gợi ý cách viết và hành vi tạo nội dung của AI sau này. Bạn vẫn có thể tiếp tục điều chỉnh sau khi tạo.",
       "submitLabel": "Tạo và vào dự án"
+    },
+    "bookFraming": {
+      "title": "Framing cấp sách",
+      "description": "Nói rõ ràng bằng những từ đơn giản nhất: cuốn sách này viết cho ai, điểm bán là gì, độc giả sẽ nhận được gì trong 30 chương đầu. Không cần viết lời giới thiệu chuyên nghiệp, chỉ cần mô tả theo trực giác của bạn.",
+      "fields": {
+        "targetAudience": "Đối tượng độc giả",
+        "targetAudiencePlaceholder": "Ví dụ: độc giả thích truyện đô thị áp lực cao, nhân vật vươn lên, quan hệ giằng co và các móc kéo họ theo dõi tiếp",
+        "commercialTags": "Thẻ thương mại cốt lõi",
+        "commercialTagsPlaceholder": "Ví dụ: vươn lên, xung đột mạnh, hồi hộp cao độ, đấu trí công sở",
+        "competingFeel": "Cảm giác giống tác phẩm cùng dòng / Cảm giác đọc quen thuộc",
+        "competingFeelPlaceholder": "Ví dụ: áp lực công sở thực tế pha chút hài hước lạnh và giằng co quan hệ mật độ cao",
+        "bookSellingPoint": "Điểm bán cốt lõi của sách",
+        "bookSellingPointPlaceholder": "Ví dụ: mỗi lần nhân vật chính giải quyết khó khăn thực tế sẽ kéo theo chuỗi quan hệ và lợi ích lớn hơn, độc giả luôn mong chờ lần phản công tiếp theo.",
+        "first30ChapterPromise": "Cam kết 30 chương đầu",
+        "first30ChapterPromisePlaceholder": "Ví dụ: 30 chương đầu phải cho độc giả thấy nhân vật chính đứng vững lập trường ở giai đoạn đầu, đối thủ cốt lõi lộ diện, tuyến quan hệ có cú đảo chiều mạnh đầu tiên, đồng thời cho thấy truyện về sau sẽ ngày càng quyết liệt."
+      },
+      "quickFill": {
+        "filling": "Đang điền...",
+        "fill": "Giúp tôi điền",
+        "noSuggestion": "AI không trả về gợi ý framing cấp sách khả dụng.",
+        "suggestionAppliedToast": "Đã điền các gợi ý framing cấp sách dựa trên tên sách và phần tóm tắt hiện tại.",
+        "suggestionFailedToast": "Không thể tự động điền framing cấp sách. Vui lòng thử lại sau.",
+        "needTitleOrDescription": "Vui lòng nhập tên sách hoặc tóm tắt một câu trước, rồi để AI giúp bạn điền.",
+        "confirmOverride": "Gợi ý của AI sẽ ghi đè nội dung framing cấp sách hiện tại. Bạn có muốn tiếp tục không?"
+      }
     }
   },
   "autoDirector": {
