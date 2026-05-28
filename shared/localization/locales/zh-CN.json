@@ -283,6 +283,142 @@
         "backgroundContinueToast": "导演任务会继续在后台运行，可在 AI 驾驶舱查看进度。"
       }
     },
+    "progressPanel": {
+      "fallback": {
+        "noTime": "暂无"
+      },
+      "stepStatus": {
+        "completed": "已完成",
+        "running": "进行中",
+        "failed": "需处理",
+        "pending": "待推进"
+      },
+      "containerTitle": {
+        "candidateFailure": "候选方案生成失败",
+        "executionFailure": "导演执行失败",
+        "needsRecovery": "《{title}》等待恢复",
+        "generatingCandidates": "正在生成导演候选方案",
+        "autoDirectorRunning": "《{title}》正在自动导演"
+      },
+      "activityAnalysis": "后台附属分析",
+      "history": {
+        "title": "全部进展",
+        "showCount": "显示 {count} 条最近进展",
+        "loadingProgress": "正在读取进展记录",
+        "loadingProgressMore": "正在读取进展记录。",
+        "recordedTimeLabel": "记录时间：",
+        "stepLabel": "步骤：",
+        "artifactLabel": "产物：",
+        "emptyHint": "任务运行后会在这里写入进展记录。"
+      },
+      "placeholderTitles": {
+        "directorTask": "AI 自动导演小说",
+        "workflowTask": "小说流程任务",
+        "newProject": "新小说项目"
+      },
+      "steps": {
+        "novelCreate": "创建项目",
+        "bookContract": "Book Contract + 故事宏观规划",
+        "characterSetup": "角色准备",
+        "volumeStrategy": "卷战略 + 卷骨架",
+        "beatSheet": "第 1 卷节奏板 + 章节列表",
+        "chapterDetailBundle": "章节批量细化"
+      },
+      "milestoneTypes": {
+        "rewriteBackup": "重写前备份已创建",
+        "candidateGenerated": "等待确认书级方向",
+        "bookContractReady": "Book Contract 已就绪",
+        "characterPendingReview": "角色准备待审核",
+        "volumeStrategyReady": "卷战略已就绪",
+        "autoExecutionPaused": "{scope}自动执行已暂停",
+        "needReplan": "需要重规划",
+        "mainFlowCompleted": "主流程完成"
+      },
+      "tone": {
+        "fallbackToneSummary": "文风关键词：{tone}"
+      },
+      "scope": {
+        "topNChapters": "前 {count} 章"
+      },
+      "actions": {
+        "fixChapterTitle": "快速修复章节标题",
+        "confirmAndContinue": "确认并继续",
+        "continuing": "继续中...",
+        "backgroundContinue": "后台继续",
+        "viewDetails": "查看执行详情",
+        "aiFixing": "AI 修复中..."
+      },
+      "title": {
+        "executionFailed": "导演任务执行中断",
+        "chapterTitleWarning": "章节列表已生成，等待修复标题结构",
+        "preparing": "正在准备导演任务"
+      },
+      "errorFallback": "导演任务执行失败，但没有记录明确错误。",
+      "description": {
+        "candidateExecutionFailed": "候选方向生成链已中断，可以先查看执行详情，再决定是否重试。",
+        "candidateGenerating": "系统会先整理项目设定、对齐书级 framing，再生成两套书级方案和对应标题组。",
+        "stoppedAtLastStep": "任务已停在最近一步，可以先查看执行详情，再决定是否恢复。",
+        "chapterTitleWarning": "章节列表已经保留，这是一条可直接处理的结构提醒。你可以快速修复标题，再决定是否继续后续导演流程。",
+        "userActionRequired": "当前导演流程已经停在审核点，你可以先检查产物，再决定是否继续自动推进。",
+        "leaveOk": "可离开当前页面，任务会继续运行；回来后可在 AI 驾驶舱查看进度。"
+      },
+      "sections": {
+        "currentStyle": "当前命中写法",
+        "stageStyleSummary": "本阶段仅生效的写法摘要",
+        "totalCalls": "累计调用",
+        "promptTokens": "输入 Tokens",
+        "completionTokens": "输出 Tokens",
+        "totalTokens": "累计总 Tokens",
+        "lastRecorded": "最近记录：{time}",
+        "currentNotice": "当前提醒",
+        "failureSummary": "失败摘要",
+        "recoveryHint": "恢复建议：{hint}",
+        "milestoneHistory": "里程碑历史",
+        "milestoneRecorded": "记录时间：{time}",
+        "milestoneEmpty": "任务已创建，正在等待第一个稳定里程碑写入。"
+      }
+    },
+    "takeover": {
+      "loading": "加载中",
+      "aiRunning": "AI 接管中",
+      "waitingApproval": "等待确认",
+      "pending": "待处理",
+      "exception": "执行异常",
+      "progressInProgress": "实时推进中",
+      "progressNeedsConfirm": "等待你确认",
+      "progressNeedsHandle": "需要你处理",
+      "progressInterrupted": "已中断",
+      "taskBadge": "任务 #{taskId}",
+      "flowProgress": "流程进度",
+      "lastCheckpoint": "最近检查点：{label}"
+    },
+    "setup": {
+      "title": {
+        "candidateSelection": "AI 自动导演创建",
+        "executionFailed": "AI 自动导演执行失败",
+        "executionInProgress": "AI 自动导演执行中"
+      },
+      "description": {
+        "candidateSelection": "先补导演起始设置，再让 AI 给你 2 套整本书方向。你可以继续重生新批次，也可以只修某一套方案或它的标题组。",
+        "executionFailed": "导演长流程已中断，当前会优先显示失败摘要、最近里程碑和恢复入口。",
+        "executionInProgress": "当前会实时显示导演主流程进度、当前动作和里程碑历史。"
+      },
+      "trigger": {
+        "viewProgress": "查看导演进度",
+        "create": "AI 自动导演创建"
+      },
+      "feedback": {
+        "confirmFailedNoCommand": "确认方案失败，未返回导演命令。",
+        "confirmedToast": "系统收到书级方向，会创建小说项目并继续推进规划。",
+        "executionFailed": "导演任务执行失败。",
+        "noContinuableTask": "当前没有可继续的自动导演任务。",
+        "continuedToast": "已确认，AI 会继续推进。",
+        "continueFailed": "继续自动导演失败。",
+        "createdToast": "自动导演创建小说项目，并继续推进规划。",
+        "createTaskFailed": "创建导演主任务失败。",
+        "backgroundContinueToast": "导演任务会继续在后台运行，可在 AI 驾驶舱查看进度。"
+      }
+    },
     "setup": {
       "ideaTitle": "你的起始想法",
       "ideaPlaceholder": "例如：普通女大学生误入异能组织，一边上学打工，一边调查父亲失踪真相。",

@@ -544,6 +544,115 @@
         "createTaskFailed": "Không thể tạo tác vụ chính của Đạo diễn tự động.",
         "backgroundContinueToast": "Tác vụ Đạo diễn tự động sẽ tiếp tục chạy ở nền; bạn có thể xem tiến độ trong Bảng điều khiển AI."
       }
+    },
+    "progressPanel": {
+      "fallback": {
+        "noTime": "Chưa có"
+      },
+      "placeholderTitles": {
+        "directorTask": "AI Đạo diễn tự động cho tiểu thuyết",
+        "workflowTask": "Tác vụ quy trình tiểu thuyết",
+        "newProject": "Dự án tiểu thuyết mới"
+      },
+      "steps": {
+        "novelCreate": "Tạo dự án",
+        "bookContract": "Book Contract + Hoạch định tổng thể câu chuyện",
+        "characterSetup": "Chuẩn bị nhân vật",
+        "volumeStrategy": "Chiến lược tập + Khung tập",
+        "beatSheet": "Bảng nhịp độ Tập 1 + Danh sách chương",
+        "chapterDetailBundle": "Chi tiết hóa hàng loạt chương"
+      },
+      "milestoneTypes": {
+        "rewriteBackup": "Bản sao lưu trước khi viết lại đã được tạo",
+        "candidateGenerated": "Đang chờ xác nhận định hướng cấp sách",
+        "bookContractReady": "Book Contract đã sẵn sàng",
+        "characterPendingReview": "Chuẩn bị nhân vật đang chờ duyệt",
+        "volumeStrategyReady": "Chiến lược tập đã sẵn sàng",
+        "autoExecutionPaused": "{scope} đã tạm dừng thực thi tự động",
+        "needReplan": "Cần lập kế hoạch lại",
+        "mainFlowCompleted": "Luồng chính hoàn thành"
+      },
+      "tone": {
+        "fallbackToneSummary": "Từ khóa giọng văn: {tone}"
+      },
+      "scope": {
+        "topNChapters": "{count} chương đầu"
+      },
+      "actions": {
+        "fixChapterTitle": "Sửa nhanh tiêu đề chương",
+        "confirmAndContinue": "Xác nhận và tiếp tục",
+        "continuing": "Đang tiếp tục...",
+        "backgroundContinue": "Tiếp tục chạy nền",
+        "viewDetails": "Xem chi tiết thực thi",
+        "aiFixing": "AI đang sửa..."
+      },
+      "title": {
+        "executionFailed": "Thực thi tác vụ đạo diễn bị gián đoạn",
+        "chapterTitleWarning": "Danh sách chương đã được tạo, đang chờ sửa cấu trúc tiêu đề",
+        "preparing": "Đang chuẩn bị tác vụ đạo diễn"
+      },
+      "errorFallback": "Thực thi tác vụ đạo diễn thất bại nhưng không ghi nhận lỗi cụ thể.",
+      "description": {
+        "candidateExecutionFailed": "Chuỗi tạo hướng ứng viên đã bị gián đoạn. Bạn có thể xem chi tiết thực thi trước rồi quyết định có thử lại không.",
+        "candidateGenerating": "Hệ thống sẽ sắp xếp thiết định dự án, căn chỉnh khung định hướng cấp sách, rồi tạo hai bộ phương án cấp sách cùng các nhóm tiêu đề tương ứng.",
+        "stoppedAtLastStep": "Tác vụ đã dừng ở bước gần nhất, bạn có thể xem chi tiết thực thi trước, rồi quyết định có khôi phục hay không.",
+        "chapterTitleWarning": "Danh sách chương đã được giữ lại, đây là một nhắc nhở cấu trúc có thể xử lý trực tiếp. Bạn có thể nhanh chóng sửa tiêu đề, rồi quyết định có tiếp tục quy trình đạo diễn sau đó hay không.",
+        "userActionRequired": "Quy trình đạo diễn hiện tại đã dừng ở điểm kiểm tra. Bạn có thể kiểm tra kết quả trước rồi quyết định có tiếp tục tự động đẩy tiếp hay không.",
+        "leaveOk": "Bạn có thể rời khỏi trang hiện tại; tác vụ sẽ tiếp tục chạy. Khi quay lại, bạn có thể xem tiến độ trong Bảng điều khiển AI."
+      },
+      "sections": {
+        "currentStyle": "Cách viết hiện tại",
+        "stageStyleSummary": "Tóm tắt cách viết chỉ có hiệu lực trong giai đoạn này",
+        "totalCalls": "Tổng số lần gọi",
+        "promptTokens": "Tokens đầu vào",
+        "completionTokens": "Tokens đầu ra",
+        "totalTokens": "Tổng Tokens tích lũy",
+        "lastRecorded": "Ghi nhận gần nhất: {time}",
+        "currentNotice": "Thông báo hiện tại",
+        "failureSummary": "Tóm tắt lỗi",
+        "recoveryHint": "Gợi ý khôi phục: {hint}",
+        "milestoneHistory": "Lịch sử cột mốc",
+        "milestoneRecorded": "Thời gian ghi nhận: {time}",
+        "milestoneEmpty": "Tác vụ đã được tạo, đang chờ ghi nhận cột mốc ổn định đầu tiên."
+      },
+      "stepStatus": {
+        "completed": "Đã hoàn thành",
+        "running": "Đang tiến hành",
+        "failed": "Cần xử lý",
+        "pending": "Chờ thực hiện"
+      },
+      "containerTitle": {
+        "candidateFailure": "Tạo phương án ứng cử thất bại",
+        "executionFailure": "Đạo diễn thực thi thất bại",
+        "needsRecovery": "《{title}》đang chờ phục hồi",
+        "generatingCandidates": "Đang tạo phương án ứng cử cho đạo diễn",
+        "autoDirectorRunning": "《{title}》đang được đạo diễn tự động"
+      },
+      "activityAnalysis": "Phân tích phụ trợ nền",
+      "history": {
+        "title": "Tất cả tiến triển",
+        "showCount": "Hiển thị {count} tiến triển gần đây",
+        "loadingProgress": "Đang đọc bản ghi tiến triển",
+        "loadingProgressMore": "Đang đọc bản ghi tiến triển.",
+        "recordedTimeLabel": "Thời gian ghi:",
+        "stepLabel": "Bước:",
+        "artifactLabel": "Sản phẩm:",
+        "emptyHint": "Sau khi tác vụ chạy, bản ghi tiến triển sẽ được ghi vào đây."
+      }
+    },
+    "takeover": {
+      "loading": "Đang tải",
+      "aiRunning": "AI đang tiếp quản",
+      "waitingApproval": "Chờ xác nhận",
+      "pending": "Đang chờ xử lý",
+      "exception": "Lỗi khi thực thi",
+      "progressInProgress": "Đang tiến hành theo thời gian thực",
+      "progressNeedsConfirm": "Chờ bạn xác nhận",
+      "progressNeedsHandle": "Cần bạn xử lý",
+      "progressInterrupted": "Đã bị gián đoạn",
+      "taskBadge": "Tác vụ #{taskId}",
+      "flowProgress": "Tiến độ quy trình",
+      "lastCheckpoint": "Điểm kiểm tra gần nhất: {label}"
     }
   },
   "creativeHub": {},
