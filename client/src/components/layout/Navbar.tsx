@@ -1,7 +1,13 @@
+import { useState } from "react";
 import { useLocation } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import LLMSelector from "@/components/common/LLMSelector";
 import DesktopBrandMark from "@/components/layout/DesktopBrandMark";
+import { LocaleSwitcherCompact } from "@/components/settings/LocaleSwitcherCompact";
 import { Button } from "@/components/ui/button";
+import { getI18nClientHandle } from "@/i18n";
+import { readPersistedLocale } from "@/lib/localePersistence";
+import type { LocaleCode } from "@ai-novel/shared/localization";
 import {
   AUTO_DIRECTOR_MOBILE_CLASSES,
   shouldUseAutoDirectorMobileFullWidthContent,
@@ -14,10 +20,22 @@ interface NavbarProps {
 
 export default function Navbar(props: NavbarProps) {
   const { workspaceNavMode, onWorkspaceNavModeChange } = props;
+  const { i18n } = useTranslation();
   const location = useLocation();
+  const [currentLocale, setCurrentLocale] = useState<LocaleCode>(() => readPersistedLocale());
   const isHome = location.pathname === "/";
   const showWorkspaceToggle = Boolean(workspaceNavMode && onWorkspaceNavModeChange);
   const useMobileAutoDirectorShell = shouldUseAutoDirectorMobileFullWidthContent(location.pathname);
+
+  const handleLocaleChange = async (next: LocaleCode) => {
+    const handle = getI18nClientHandle();
+    if (handle) {
+      await handle.setLocale(next);
+    } else {
+      await i18n.changeLanguage(next);
+    }
+    setCurrentLocale(next);
+  };
 
   return (
     <header className="flex h-16 min-w-0 items-center justify-between gap-3 border-b bg-background px-4 sm:px-6">
@@ -40,6 +58,7 @@ export default function Navbar(props: NavbarProps) {
             {workspaceNavMode === "workspace" ? "项目导航" : "创作导航"}
           </Button>
         ) : null}
+        <LocaleSwitcherCompact currentLocale={currentLocale} onLocaleChange={handleLocaleChange} />
         <div className={useMobileAutoDirectorShell ? AUTO_DIRECTOR_MOBILE_CLASSES.navbarModelSelector : undefined}>
           <LLMSelector compact showBadge={false} showHelperText={false} />
         </div>
