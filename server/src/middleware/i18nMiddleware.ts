@@ -11,6 +11,7 @@ import type { NextFunction, Request, Response } from "express";
 
 import { DEFAULT_LOCALE, type LocaleCode } from "@ai-novel/shared/localization";
 import { getI18nServerHandle } from "../i18n";
+import { runWithRequestLocale } from "../runtime/requestLocaleContext";
 
 /**
  * Type-narrowed accessor for `res.locals.locale`. Use this rather than
@@ -26,6 +27,10 @@ export function getRequestLocale(res: Response): LocaleCode {
  * Resolve `res.locals.locale` from the request `Accept-Language` header.
  * Falls back to {@link DEFAULT_LOCALE} when the i18n handle has not been
  * initialised yet (rare; only during a very narrow startup window).
+ *
+ * Also opens an AsyncLocalStorage scope so downstream services can read
+ * the locale via `getCurrentRequestLocale()` without needing to thread
+ * it through every function argument.
  */
 export function i18nMiddleware(req: Request, res: Response, next: NextFunction): void {
   const handle = getI18nServerHandle();
@@ -33,5 +38,5 @@ export function i18nMiddleware(req: Request, res: Response, next: NextFunction):
     ? handle.resolveLocale({ headers: req.headers as Record<string, unknown> })
     : DEFAULT_LOCALE;
   (res.locals as { locale?: LocaleCode }).locale = locale;
-  next();
+  runWithRequestLocale(locale, () => next());
 }

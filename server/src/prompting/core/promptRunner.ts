@@ -17,6 +17,7 @@ import {
   type LlmTokenUsageSnapshot,
 } from "../../llm/usageTracking";
 import { logMemoryUsage } from "../../runtime/memoryTelemetry";
+import { getCurrentRequestLocale } from "../../runtime/requestLocaleContext";
 import { toText } from "../../services/novel/novelP0Utils";
 import { hasRegisteredPromptAsset } from "../registry";
 import {
@@ -29,6 +30,7 @@ import {
   recordPromptQualityEvent,
   type PromptQualityFailureKind,
 } from "./promptQualityTelemetry";
+import { appendOutputLanguageDirective } from "./outputLanguage";
 import { appendStructuredOutputHintMessages } from "./structuredOutputHint";
 import type {
   PromptAsset,
@@ -261,12 +263,15 @@ export function preparePromptExecution<I, O, R = O>(input: {
   const context = buildRenderContext(input.asset as PromptAsset<unknown, unknown, unknown>, input.contextBlocks ?? []);
   const renderedMessages = input.asset.render(input.promptInput, context);
   return {
-    messages: appendStructuredOutputHintMessages({
-      asset: input.asset,
-      promptInput: input.promptInput,
-      context,
-      messages: renderedMessages,
-    }),
+    messages: appendOutputLanguageDirective({
+      messages: appendStructuredOutputHintMessages({
+        asset: input.asset,
+        promptInput: input.promptInput,
+        context,
+        messages: renderedMessages,
+      }) as BaseMessage[],
+      locale: input.options?.outputLanguage ?? getCurrentRequestLocale(),
+    }) as ReturnType<PromptAsset<I, O, R>["render"]>,
     context,
     invocation: buildPromptInvocationMeta(
       input.asset as PromptAsset<unknown, unknown, unknown>,

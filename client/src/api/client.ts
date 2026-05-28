@@ -38,6 +38,20 @@ export const apiClient = axios.create({
   timeout: API_TIMEOUT_MS,
 });
 
+// Forward the user's chosen locale to the server so the i18n middleware
+// can resolve it via `Accept-Language`. Reading from the i18next handle
+// (rather than directly from localStorage) ensures any in-memory
+// language change is reflected on the very next request without waiting
+// for a page reload.
+apiClient.interceptors.request.use((config) => {
+  const handle = getI18nClientHandle();
+  const locale = handle?.currentLocale();
+  if (locale) {
+    config.headers.set("Accept-Language", locale);
+  }
+  return config;
+});
+
 const AUTO_DISMISS_SERVER_ERROR_TOAST = {
   duration: 4000,
   closeButton: false,
