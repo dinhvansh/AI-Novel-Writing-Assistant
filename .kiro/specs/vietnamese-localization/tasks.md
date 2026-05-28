@@ -40,12 +40,12 @@ Within a phase, tasks numbered with the same parent (e.g., 1.8, 1.9, 1.10) can r
     {
       "wave": 3,
       "name": "Phase 3 - Remaining UI surfaces",
-      "tasks": ["3.1", "3.2", "3.3", "3.4", "3.5"]
+      "tasks": ["3.1", "3.1.0", "3.1.1", "3.1.2", "3.1.3", "3.1.4", "3.1.5", "3.1.6", "3.1.7", "3.1.8", "3.1.9", "3.2", "3.3", "3.4", "3.5"]
     },
     {
       "wave": 3,
       "name": "Phase 4 - Server errors and logs",
-      "tasks": ["4.1", "4.2", "4.3", "4.4", "4.5", "4.6", "4.7"]
+      "tasks": ["4.1", "4.2", "4.3", "4.4", "4.4.1", "4.4.2", "4.4.3", "4.4.4", "4.5", "4.6", "4.7"]
     },
     {
       "wave": 4,
@@ -60,7 +60,7 @@ Within a phase, tasks numbered with the same parent (e.g., 1.8, 1.9, 1.10) can r
     {
       "wave": 5,
       "name": "Final acceptance",
-      "tasks": ["7.1", "7.2", "7.3"]
+      "tasks": ["7.1", "7.2", "7.3", "7.4", "7.5"]
     }
   ]
 }
@@ -223,14 +223,178 @@ Within a phase, tasks numbered with the same parent (e.g., 1.8, 1.9, 1.10) can r
   - _Requirements: 3.2, 3.3_
   - **Status note**: in progress. Surfaces wrapped in this commit: `client/src/pages/help/HelpPage.tsx` (55 keys, hero + 7 guide steps + 6 goals + 4 FAQ entries with glossary-aligned translations), `client/src/pages/novels/NovelCreate.tsx` (3 keys: title, description, submit label). Total file count: ~250 surfaces remaining; will be wrapped in subsequent Phase 3 commits with the same translate-then-review-then-wrap pattern. Settings page integrated end-to-end in this commit: `SettingsPage.tsx`, `SettingsNavigationCards.tsx`, `StyleEngineRuntimeSettingsCard.tsx`, `ProviderConfigDialog.tsx`, `ProviderRequestLimitFields.tsx`, `ModelRoutesPage.tsx`, `ModelRouteFields.tsx`, `modelRouteLabels.ts`, `modelRoutes.utils.ts`, `autoDirectorEventOptions.ts`, `AutoDirectorChannelSettingsCard.tsx`, `AutoDirectorApprovalPreferenceCard.tsx`, `AutoDirectorSettingsSection.tsx` — all 13 files have zero CJK literals; `node scripts/i18n/verify-locale-coverage.mjs` shows P1-P5 pass with 357 t() calls covered.
 
+- [-] 3.1.0 Cross-cut surfaces wrapped to date (continuously updated)
+  - **Settings**: Settings tree (13 files), all done. Coverage: zero CJK in `client/src/pages/settings/**`.
+  - **Sidebar / nav**: Sidebar, Home dashboard, Help, NovelCreate, LocaleSwitcher, LocaleSwitcherCompact (header). Done.
+  - **Auto Director cockpit**: AICockpit, DirectorRuntimeProjectionCard, NovelAutoDirectorSetupPanel, NovelAutoDirectorDialog (+ header), BookFramingSection, BookFramingQuickFillButton, NovelAutoDirectorProgressPanel, AITakeoverContainer. Done.
+  - **Novel workspace shell**: NovelWorkspaceRail, NovelEditView, MobileNovelEditView, MobileNovelStepNav, novelWorkspaceNavigation. Done.
+  - **Story Macro page**: StoryMacroPlanTab + shared. Done.
+  - _Requirements: 3.2_
+
+- [ ] 3.1.1 Wrap Auto Director candidate selection surfaces
+  - `client/src/pages/novels/components/NovelAutoDirectorCandidateDialog.tsx` (90 lines, 2 CJK)
+  - `client/src/pages/novels/components/NovelAutoDirectorCandidateBatches.tsx` (284 lines, 30 CJK — title pack, why-it-fits, AI fix prompt, refine batch summaries)
+  - `client/src/pages/novels/components/NovelAutoDirectorCandidateSelectionContent.tsx` (102 lines)
+  - `shared/types/novelDirector.ts` `DIRECTOR_CORRECTION_PRESETS` (5 chips: more_hooky / stronger_conflict / sharper_protagonist / more_grounded / lighter_ending — each `label` + `description` + `promptHint`)
+  - `shared/types/novelDirector.ts` `DIRECTOR_CANDIDATE_SETUP_STEPS` (4 steps: candidate_seed_alignment / candidate_project_framing / candidate_direction_batch / candidate_title_pack — each `label` + `description`). Convert these `as const` arrays into key constants + `useDirectorCandidatePresets(t)` / `useDirectorCandidateSetupSteps(t)` hooks
+  - _Requirements: 3.2, 3.3_
+
+- [ ] 3.1.2 Wrap Volume / Outline surfaces
+  - `client/src/pages/novels/components/OutlineTab.tsx` (134 CJK lines — readiness checks, volume strategy panels, generate buttons)
+  - `client/src/pages/novels/components/StructuredOutlineWorkspace.tsx` (49)
+  - `client/src/pages/novels/volumePlan.utils.ts` (40)
+  - `client/src/pages/novels/components/VolumePayoffOverviewCard.tsx` (18)
+  - `client/src/pages/novels/components/BookPayoffLedgerCard.tsx` (39)
+  - `client/src/pages/novels/components/StructuredChapterDetailCard.tsx` (43)
+  - `client/src/pages/novels/components/StructuredChapterListCard.tsx` (34)
+  - `client/src/pages/novels/components/StructuredBeatSheetCard.tsx` (21)
+  - `client/src/pages/novels/structuredOutlineSync.utils.ts` (10)
+  - `client/src/pages/novels/structuredOutline.utils.ts` (8)
+  - `client/src/pages/novels/hooks/useNovelVolumePlanning*.ts` (~50 lines across 4 files)
+  - _Requirements: 3.2, 3.3_
+
+- [ ] 3.1.3 Wrap Character preparation surfaces
+  - `client/src/pages/novels/components/CharacterAssetWorkspace.tsx` (116)
+  - `client/src/pages/novels/components/NovelCharacterPanel.tsx` (113)
+  - `client/src/pages/novels/components/CharacterCastOptionsSection.tsx` (77)
+  - `client/src/pages/novels/components/CharacterDynamicsSection.tsx` (40)
+  - `client/src/pages/novels/components/CharacterAssetSidebar.tsx` (13)
+  - `client/src/pages/novels/components/characterPanel.utils.ts` (23)
+  - `client/src/pages/novels/components/characterAssetWorkspace.helpers.ts` (15)
+  - `client/src/pages/novels/components/CharacterFocusSummary.tsx` (10)
+  - `client/src/pages/novels/components/CharacterDiagnosticsSection.tsx` (2)
+  - `client/src/pages/novels/hooks/useNovelCharacterMutations.ts` (25)
+  - _Requirements: 3.2, 3.3_
+
+- [ ] 3.1.4 Wrap Chapter execution / Pipeline surfaces
+  - `client/src/pages/novels/components/PipelineTab.tsx` (99)
+  - `client/src/pages/novels/components/chapterExecution.shared.tsx` (72)
+  - `client/src/pages/novels/components/ChapterExecutionActionPanel.tsx` (62)
+  - `client/src/pages/novels/components/ChapterRuntimePanels.tsx` (57)
+  - `client/src/pages/novels/components/chapterInsights/ChapterExecutionReferencePanel.tsx` (44)
+  - `client/src/pages/novels/components/chapterInsights/TimelinePanel.tsx` (31)
+  - `client/src/pages/novels/components/chapterInsights/ResourceRiskPanel.tsx` (26)
+  - `client/src/pages/novels/components/chapterInsights/ChapterExecutionInsightsSidebar.tsx` (18)
+  - `client/src/pages/novels/components/chapterInsights/ChapterExecutionOverviewPanel.tsx` (17)
+  - `client/src/pages/novels/components/chapterInsights/CharacterDynamicsPanel.tsx` (15)
+  - `client/src/pages/novels/components/ChapterExecutionResultPanel.tsx` (21)
+  - `client/src/pages/novels/components/ChapterManagementTab.tsx` (15)
+  - `client/src/pages/novels/components/ChapterExecutionStatusFlow.tsx` (2)
+  - `client/src/pages/novels/components/ChapterExecutionQueueCard.tsx` (10)
+  - `client/src/pages/novels/components/chapterEditor/*` (~150 lines across 5 files)
+  - `client/src/pages/novels/hooks/useChapterExecutionActions.ts` (33)
+  - `client/src/pages/novels/hooks/useNovelEditChapterRuntime.ts` (11)
+  - `client/src/pages/novels/chapterDetailPlanning.shared.ts` (3)
+  - `client/src/pages/novels/chapterPlanning.shared.ts` (2)
+  - _Requirements: 3.2, 3.3_
+
+- [ ] 3.1.5 Wrap NovelEdit + NovelList + NovelTaskDrawer + Director takeover dialogs
+  - `client/src/pages/novels/NovelEdit.tsx` (97)
+  - `client/src/pages/novels/NovelList.tsx` (63)
+  - `client/src/pages/novels/NovelPreview.tsx` (38)
+  - `client/src/pages/novels/components/NovelTaskDrawer.tsx` (92 — task details, action labels)
+  - `client/src/pages/novels/components/NovelExistingProjectTakeoverDialog.tsx` (63)
+  - `client/src/pages/novels/components/NovelBasicInfoForm.tsx` (62)
+  - `client/src/pages/novels/components/StoryMacroPlanTab.tsx` (52 — already mostly done; sweep remaining issue messages)
+  - `client/src/pages/novels/components/DirectorFactDebugDialog.tsx` (52)
+  - `client/src/pages/novels/components/NovelAutoDirectorProgressPanel.tsx` already done — no-op
+  - `client/src/pages/novels/components/cover/NovelCoverDialog.tsx` (50)
+  - `client/src/pages/novels/components/cover/NovelCoverCard.tsx` (11)
+  - `client/src/pages/novels/components/cover/novelCoverDraft.ts` (10)
+  - `client/src/pages/novels/components/NovelWorldUsageCard.tsx` (42)
+  - `client/src/pages/novels/components/directorAutoExecutionPlan.shared.tsx` (39)
+  - `client/src/pages/novels/components/titleWorkshop/NovelCreateTitleQuickFill.tsx` (46)
+  - `client/src/pages/novels/components/titleWorkshop/NovelTitleWorkshop.tsx` (11)
+  - `client/src/pages/novels/components/NovelStyleRecommendationCard.tsx` (21)
+  - `client/src/pages/novels/components/NovelCreateResourceRecommendationCard.tsx` (14)
+  - `client/src/pages/novels/components/basicInfoForm/ContinuationSourceSection.tsx` (20)
+  - `client/src/pages/novels/components/storylineView.utils.ts` (20)
+  - `client/src/pages/novels/components/NovelAutoDirectorCandidateBatches.tsx` (already in 3.1.1)
+  - `client/src/pages/novels/components/NovelAutoDirectorSetupPanel.tsx` (already done — no-op)
+  - `client/src/pages/novels/novelBasicInfo.shared.ts` (68 — option `summary` strings already partially wrapped via setup-panel hooks; sweep WRITING_MODE / PROJECT_MODE / AI_FREEDOM / PUBLICATION_STATUS / PROJECT_STATUS / BASIC_INFO_FIELD_HINTS)
+  - `client/src/pages/novels/novelEditTakeover.shared.ts` (33)
+  - `client/src/pages/novels/components/VersionHistoryTab.tsx` (21)
+  - `client/src/pages/novels/components/BasicInfoTab.tsx` (7)
+  - `client/src/pages/novels/components/basicInfoForm/BookFramingQuickFillButton.tsx` already done
+  - `client/src/pages/novels/components/basicInfoForm/BookFramingSection.tsx` already done
+  - `client/src/pages/novels/components/basicInfoForm/BasicInfoFormPrimitives.tsx` (1)
+  - `client/src/pages/novels/components/CollapsibleSummary.tsx` (2)
+  - `client/src/pages/novels/components/WorldInjectionHint.tsx` (2)
+  - `client/src/pages/novels/components/DirectorTakeoverEntryPanel.tsx` (1)
+  - `client/src/pages/novels/components/NovelWorkflowRunningIndicator.tsx` (1)
+  - `client/src/pages/novels/components/NovelAutoDirectorCandidateDialog.tsx` (already in 3.1.1)
+  - `client/src/pages/novels/mobile/MobileAutoDirectorStatusCard.tsx` (6)
+  - `client/src/pages/novels/mobile/mobileNovelWorkspaceUtils.ts` (12)
+  - `client/src/pages/novels/hooks/useNovelEditMutations.ts` (12)
+  - `client/src/pages/novels/hooks/useNovelStoryMacro.ts` (9)
+  - `client/src/pages/novels/hooks/useStorylineVersionControl.ts` (17)
+  - `client/src/pages/novels/hooks/useVolumeVersionControl.ts` (21)
+  - `client/src/pages/novels/hooks/useNovelWorldSlice.ts` (2)
+  - `client/src/pages/novels/components/NovelAutoDirectorCandidateBatches.shared.ts`
+  - `client/src/pages/novels/components/NovelAutoDirectorDialog.shared.ts` already done
+  - `client/src/pages/novels/components/useNovelAutoDirectorCandidateMutations.ts` (9)
+  - `client/src/pages/novels/NovelChapterEdit.tsx` (3)
+  - _Requirements: 3.2, 3.3_
+
+- [ ] 3.1.6 Wrap Knowledge / World / Style Engine / Writing Formula / Anti-AI surfaces
+  - `client/src/pages/worlds/components/workspace/WorldStructureTab.tsx` (90)
+  - `client/src/pages/worlds/worldConsistencyUi.ts` (53)
+  - All other `client/src/pages/worlds/**` files (estimated ~100 lines)
+  - `client/src/pages/writingFormula/components/WritingFormulaCreateDialog.tsx` (94)
+  - `client/src/pages/writingFormula/writingFormulaRulePresentation.ts` (86)
+  - `client/src/pages/writingFormula/components/WritingFormulaEditorPanel.tsx` (75)
+  - `client/src/pages/writingFormula/components/WritingFormulaLanding.tsx` (53)
+  - All other `client/src/pages/writingFormula/**` files
+  - `client/src/pages/knowledge/components/KnowledgeEmbeddingSettingsCard.tsx` (68)
+  - All other `client/src/pages/knowledge/**` files
+  - `client/src/pages/storyModes/StoryModeManagementPage.tsx` (58)
+  - `client/src/pages/genres/**`
+  - `client/src/pages/antiAi/**`
+  - `client/src/pages/baseCharacters/**`
+  - _Requirements: 3.2, 3.3_
+
+- [ ] 3.1.7 Wrap Creative Hub + Prompt Workbench + Tasks center surfaces
+  - `client/src/pages/creativeHub/components/CreativeHubSidebar.tsx` (89)
+  - `client/src/pages/creativeHub/components/NovelProductionStarterCard.tsx` (88)
+  - `client/src/pages/creativeHub/components/CreativeHubToolResultCard.tsx` (84)
+  - All other `client/src/pages/creativeHub/**` files
+  - `client/src/pages/promptWorkbench/PromptWorkbenchPage.tsx` (68)
+  - `client/src/pages/tasks/**`
+  - `client/src/pages/autoDirectorFollowUps/**`
+  - `client/src/pages/bookAnalysis/**`
+  - `client/src/pages/titles/**`
+  - `client/src/pages/login/**` (if exists)
+  - _Requirements: 3.2, 3.3_
+
+- [ ] 3.1.8 Wrap layout shells, common components, lib utils
+  - `client/src/components/layout/DesktopBootstrapShell.tsx` (55)
+  - `client/src/components/layout/DesktopLegacyDataImportCard.tsx`
+  - `client/src/components/layout/DesktopUpdateCard.tsx`
+  - `client/src/components/layout/mobile/**`
+  - `client/src/components/autoDirector/**` (sweep AutoDirectorApprovalStrategyPanel, AutoDirectorApprovalPointMultiSelect — small CJK counts)
+  - `client/src/components/workflow/**`
+  - `client/src/lib/directorTaskNotice.ts`
+  - `client/src/lib/novelWorkflowTaskUi.ts`
+  - `client/src/lib/novelWorkflowActivityTags.ts`
+  - `client/src/lib/novelWorkflowContinuation.ts`
+  - `client/src/api/client.ts` (already done — sweep remaining if any)
+  - All other `client/src/components/**` and `client/src/lib/**` files with CJK
+  - _Requirements: 3.2, 3.3_
+
+- [ ] 3.1.9 Final sweep: ensure 0 naked CJK in client/src
+  - Run `pnpm tsx scripts/i18n/extract-cjk-literals.mjs --root client/src`. Result must be empty (zero matches) excluding `.i18nignore` patterns.
+  - For any remaining CJK in source (e.g., comparing against backend constants), add `// i18n-ignore` comment with reason.
+  - _Requirements: 3.3, 3.4_
+
 - [-] 3.2 Translate remaining keys via the LLM script
   - `pnpm tsx scripts/i18n/translate-locale.mjs --target vi-VN`
-  - Manual spot-check of awkward translations, especially in API toast messages and store labels
+  - GPT-5 audit pass for natural Vietnamese (workflow established in commit `d414dbf`): every batch goes through `node scripts/i18n/audit-with-gpt.mjs --filter <namespace>` and the rewrites with score < 4 are applied
   - _Requirements: 3.2, 5.4_
-  - **Status note**: 58 keys translated via DeepSeek `deepseek-v4-flash` in this commit. Quality review caught 5 awkward phrasings (e.g. "继续自动执行前 10 章" handled at runtime; "AI Đạo diễn tự động mở sách" shortened to "Để AI mở sách tự động"; "phương án ứng cử" → "danh sách đề xuất"; "Chất lượng chờ thu hồi" → "Tồn đọng vấn đề chất lượng"; "Kết tinh phong cách" → "Lưu phong cách"). All polish applied via one-off scripts, then scripts removed.
+  - **Status note**: 58+ keys translated via DeepSeek + GPT-5 audit pipeline; 200+ rewrites applied across Settings, Auto Director, Story Macro, Workspace shell. Continues alongside each 3.1.x batch.
 
 - [ ] 3.3 [PBT] Implement Property — no naked CJK literals in client/src
   - Extend `verify-locale-coverage.mjs` with a check that scans `client/src/**/*.{ts,tsx}` for naked CJK literals outside `.i18nignore`; treat any match as a coverage failure
+  - Coverage gate must `process.exit(1)` when violations exist (currently P6 is informational only)
   - _Validates: Requirements 3.3, 3.4_
   - _Requirements: 3.3, 3.4_
 
@@ -240,8 +404,8 @@ Within a phase, tasks numbered with the same parent (e.g., 1.8, 1.9, 1.10) can r
   - _Requirements: 7.2_
 
 - [ ] 3.5 Run Phase 3 verification gates and commit
-  - `pnpm typecheck`, `pnpm dev`, coverage gate
-  - Manual UI tour: every left-nav entry, every modal, every settings sub-page
+  - `pnpm typecheck`, `pnpm dev`, coverage gate (P1-P6 all pass with 0 naked CJK in client/src)
+  - Manual UI tour: every left-nav entry, every modal, every settings sub-page, Auto Director full flow (create → confirm → progress → workspace step pages → chapter execution → pipeline → version history)
   - Update release notes, commit
   - _Requirements: 3.2, 9.1, 9.2_
 
@@ -268,8 +432,40 @@ Within a phase, tasks numbered with the same parent (e.g., 1.8, 1.9, 1.10) can r
   - Leave internal `console.warn` / dev-mode logs unchanged
   - _Requirements: 6.3, 6.4_
 
+- [ ] 4.4.1 Translate server runtime payload that surfaces in the UI as text
+  - The director projection / unified task detail emit several Chinese strings the client renders verbatim. Migrate them to a server-side i18n format step that resolves keys with `res.locals.locale` before returning the response.
+  - Files / fields to migrate (located by `pnpm tsx scripts/i18n/extract-cjk-literals.mjs --root server/src`, excluding `prompting/prompts/**`):
+    - `server/src/services/novel/director/novelDirectorTakeover.ts` (118 lines) — checkpoint summaries (`workflow_completed`, `chapter_batch_ready`, `replan_required`)
+    - `server/src/services/novel/NovelSetupStatusService.ts` (115)
+    - `server/src/services/novel/director/**` and `server/src/services/novel/runtime/**` — `displayState.currentAction`, `displayState.stageLabel`, `displayState.checkpointLabel`, `headline`, `detail`, `nextActionLabel`, `recommendedAction.reason`, `lastEventSummary`, `milestone.summary`, `automationSummary`, `userHeadline`, `currentLabel`, `blockingReason`
+    - `server/src/services/styleEngine/defaults.ts` (157) — default style profile names / descriptions (already user-facing in workspace)
+    - `server/src/agents/runtime/answerComposer.ts` (104), `server/src/agents/planner/intentPromptSupport.ts` (91) — Creative Hub answers (these may stay Chinese in zh-CN flows; in vi-VN flows the AI Output Language Directive should already produce Vietnamese — verify in 4.4.4)
+    - `server/src/services/world/worldServiceShared.ts` (110), `server/src/services/world/worldVisualization.ts` (90)
+    - `server/src/services/novel/chapterEditor/chapterEditorShared.ts` (83)
+    - `server/src/prompting/materials/NovelPromptMaterialExporter.ts` (70) — exporter labels surface in download
+  - Add `serverPayload.*` namespace; document which fields are translated server-side vs which fields are intentionally raw (AI-produced content, internal IDs)
+  - _Requirements: 6.3, 6.4_
+
+- [ ] 4.4.2 Define translation strategy for `task.currentItemLabel`, `task.lastError`, `recentEvents.summary`, `milestone.summary`
+  - These come from various server services and are concatenated freely. Three options the spec must pick from:
+    - (a) Migrate to `code + params` envelope: `{ code: "chapter.draft.write", params: { chapterOrder: 12 } }` and translate on read
+    - (b) Translate server-side in `taskFormatter.ts` middleware before serializing the response
+    - (c) Mark fields as "raw, may contain Chinese" and only translate user-facing wrapper strings around them (less coverage)
+  - Decide and document in `docs/wiki/architecture/i18n.md`. Recommended: (b) for v1 (lowest blast radius), (a) for v2.
+  - _Requirements: 6.3, 6.4_
+
+- [ ] 4.4.3 Translate director runtime checkpoint / step / current-action labels
+  - Migrate Chinese fragments in `server/src/services/novel/director/displayStateBuilder.ts` (or equivalent) so that `displayState.currentAction`, `displayState.stageLabel`, `displayState.checkpointLabel` resolve to localized text
+  - Reuse keys from `autoDirector.progressPanel.steps.*` and `autoDirector.progressPanel.milestoneTypes.*` already added in Phase 3
+  - _Requirements: 6.3, 6.4_
+
+- [ ] 4.4.4 Verify Creative Hub AI answers obey vi-VN directive
+  - Smoke test: with locale=vi-VN, ask the Creative Hub a question that triggers `answerComposer.ts`. Confirm the AI answer is in Vietnamese and the surrounding shell text (greetings, system labels) is also Vietnamese. If shell text leaks Chinese, wrap those literals via `t()` server-side.
+  - _Requirements: 6.3, 4.6_
+
 - [ ] 4.5 [PBT] Implement Property — no inline `error: "中文..."` literals remain in routes
   - Extend `verify-locale-coverage.mjs` to scan `server/src/routes/**/*.ts` for `error:\s*"<CJK>"` patterns; report as coverage failure
+  - Also scan `server/src/services/**/*.ts` for plain Chinese string literals that are returned in user-facing payload fields (`headline`, `detail`, `summary`, `currentAction`, `currentItemLabel`, `stageLabel`, `checkpointLabel`, `nextActionLabel`, `lastError`, `blockingReason`, `automationSummary`, `userReason`, `userHeadline`, `recommendedAction.reason`)
   - _Validates: Requirement 6.2_
   - _Requirements: 6.2_
 
@@ -412,6 +608,20 @@ Within a phase, tasks numbered with the same parent (e.g., 1.8, 1.9, 1.10) can r
   - From the head of `feature/vietnamese-localization`, `git revert <phase-N-commit>` for each phase in isolation (in a scratch worktree) and confirm the resulting tree builds (`pnpm typecheck`) and boots (`pnpm dev`)
   - This is a one-time check before promoting the branch; document the result in the merge PR description
   - _Requirements: 9.1_
+
+- [ ] 7.4 [PBT] Final blocking gate: zero CJK in user-facing surface
+  - Promote P6 from informational to blocking: `verify-locale-coverage.mjs` exits with code 1 when `client/src/**/*.{ts,tsx}` contains naked CJK literals outside `.i18nignore` patterns and `// i18n-ignore` comments.
+  - Promote P5 (server payload P5 from task 4.5) similarly: `server/src/{routes,services,agents,middleware,app.ts}/**/*.ts` (excluding `prompting/prompts/**` and lines marked `// i18n-ignore-internal-log`) must have zero naked CJK in fields whose names match the user-facing payload list.
+  - Add CI hook example to `docs/wiki/architecture/i18n.md` for future contributors.
+  - _Validates: Requirements 3.3, 3.4, 6.2_
+  - _Requirements: 3.3, 6.2, 9.1_
+
+- [ ] 7.5 Sanity check: locale switch + AI smoke after all phases done
+  - Boot fresh app at `vi-VN` and walk every page reachable from sidebar; nothing visible to a beginner user should be Chinese.
+  - Boot at `zh-CN`; verify identical surface in original Chinese.
+  - Run a 3-chapter Auto Director task in `vi-VN`; verify chapter prose, character resource snapshots, audit reports and milestone summaries are all Vietnamese, plus glossary craft terms (`主角→nhân vật chính`, `世界观→thế giới quan`, `章→chương`) consistent across server payload and AI output.
+  - Capture screenshots of: Sidebar, Home, Settings, Auto Director cockpit, Story Macro, Character prep, Volume strategy, Chapter execution, Pipeline, Knowledge, Creative Hub. Attach to PR description.
+  - _Requirements: 9.3, 9.5_
 
 ---
 
