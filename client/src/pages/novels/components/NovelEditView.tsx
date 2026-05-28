@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Loader2 } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import { useIsMobileViewport } from "@/components/layout/mobile/useIsMobileViewport";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -61,6 +62,7 @@ function DesktopNovelEditView(props: NovelEditViewProps) {
     taskDrawer,
     activeStepTakeoverEntry,
   } = props;
+  const { t } = useTranslation();
 
   const [isProjectToolsOpen, setIsProjectToolsOpen] = useState(false);
   const [isExportDialogOpen, setIsExportDialogOpen] = useState(false);
@@ -84,24 +86,24 @@ function DesktopNovelEditView(props: NovelEditViewProps) {
   const pendingResourceProposalCount = taskDrawer?.resourceProposals?.length ?? 0;
   const taskAttentionLabel = (() => {
     if (pendingResourceProposalCount > 0) {
-      return `${pendingResourceProposalCount} 条资源`;
+      return t("novel:workspace.recentTask.resourceCount", { count: pendingResourceProposalCount });
     }
     if (!taskDrawer?.task) {
       return null;
     }
     if (taskDrawer.task.pendingManualRecovery) {
-      return "待恢复";
+      return t("novel:workspace.recentTask.needsRecovery");
     }
     if (taskDrawer.task.status === "failed") {
-      return "异常";
+      return t("novel:workspace.recentTask.exception");
     }
     if (taskDrawer.task.status === "waiting_approval") {
-      return "待审核";
+      return t("novel:workspace.recentTask.needsApproval");
     }
     if (taskDrawer.task.status === "running" || taskDrawer.task.status === "queued") {
-      return "进行中";
+      return t("novel:workspace.recentTask.running");
     }
-    return "最近任务";
+    return t("novel:workspace.recentTask.recentTaskCard");
   })();
 
   const normalizedActiveTab = normalizeNovelWorkspaceTab(activeTab);
@@ -111,19 +113,19 @@ function DesktopNovelEditView(props: NovelEditViewProps) {
       ? "basic"
       : normalizedWorkflowTab
     : normalizedActiveTab;
-  const novelTitle = basicTab.basicForm.title.trim() || "\u672a\u547d\u540d\u5c0f\u8bf4";
+  const novelTitle = basicTab.basicForm.title.trim() || t("novel:workspace.unnamedNovel", { defaultValue: "Tiểu thuyết chưa đặt tên" });
   const directorDisplayState = taskDrawer?.snapshot?.displayState ?? null;
-  const currentPageLabel = getNovelWorkspaceTabLabel(normalizedActiveTab);
+  const currentPageLabel = getNovelWorkspaceTabLabel(t, normalizedActiveTab);
   const currentStepLabel = directorDisplayState?.stageLabel ?? currentPageLabel;
   const recommendedWorkflowTab = directorDisplayState
     ? tabFromDirectorDisplayStage(directorDisplayState.stageKey)
     : normalizedWorkflowTab;
   const workflowStepLabel = recommendedWorkflowTab
-    ? getNovelWorkspaceTabLabel(recommendedWorkflowTab)
+    ? getNovelWorkspaceTabLabel(t, recommendedWorkflowTab)
     : null;
   const stepIndex = directorDisplayState?.stepIndex ?? getNovelWorkspaceFlowStepIndex(guidedFlowTab);
   const progressLabel = stepIndex >= 0
-    ? `\u7b2c ${stepIndex + 1} \u6b65 / \u5171 ${directorDisplayState?.totalSteps ?? NOVEL_WORKSPACE_FLOW_STEPS.length} \u6b65`
+    ? t("novel:workspace.stepCounter", { current: stepIndex + 1, total: directorDisplayState?.totalSteps ?? NOVEL_WORKSPACE_FLOW_STEPS.length, defaultValue: "Bước {current} / Tổng {total} bước" })
     : null;
   const showWorkflowRecommendation = Boolean(
     recommendedWorkflowTab
@@ -183,26 +185,26 @@ function DesktopNovelEditView(props: NovelEditViewProps) {
               isTakeoverLoading ? (
                 <Button type="button" size="sm" disabled>
                   <Loader2 className="animate-spin" />
-                  AI 自动导演接管
+                  {t("novel:workspace.header.directorTakeover")}
                 </Button>
               ) : activeStepTakeoverEntry
             ) : null}
 
             <Dialog open={isExportDialogOpen} onOpenChange={setIsExportDialogOpen}>
               <DialogTrigger asChild>
-                <Button variant="outline">导出</Button>
+                <Button variant="outline">{t("novel:workspace.header.export")}</Button>
               </DialogTrigger>
               <DialogContent className="max-w-2xl">
                 <DialogHeader>
-                  <DialogTitle>导出项目内容</DialogTitle>
+                  <DialogTitle>{t("novel:workspace.header.exportProjectTitle")}</DialogTitle>
                   <DialogDescription>
-                    当前步骤会按你正在查看的工作台导出；整本书会把项目设定、故事规划、角色、卷规划、拆章、章节和质量修复资产一起导出。
+                    {t("novel:workspace.header.exportProjectDescription")}
                   </DialogDescription>
                 </DialogHeader>
                 <div className="grid gap-4 md:grid-cols-2">
                   <Card>
                     <CardHeader>
-                      <CardTitle className="text-base">当前步骤：{currentStepLabel}</CardTitle>
+                      <CardTitle className="text-base">{t("novel:workspace.header.currentStep", { label: currentStepLabel })}</CardTitle>
                     </CardHeader>
                     <CardContent className="flex flex-wrap gap-2">
                       <Button
@@ -210,20 +212,20 @@ function DesktopNovelEditView(props: NovelEditViewProps) {
                         onClick={() => exportControls.onExportCurrent("markdown")}
                         disabled={!exportControls.canExportCurrentStep || exportControls.isExportingCurrentMarkdown}
                       >
-                        {exportControls.isExportingCurrentMarkdown ? "导出中..." : "Markdown"}
+                        {exportControls.isExportingCurrentMarkdown ? t("novel:workspace.header.exporting") : "Markdown"}
                       </Button>
                       <Button
                         variant="outline"
                         onClick={() => exportControls.onExportCurrent("json")}
                         disabled={!exportControls.canExportCurrentStep || exportControls.isExportingCurrentJson}
                       >
-                        {exportControls.isExportingCurrentJson ? "导出中..." : "JSON"}
+                        {exportControls.isExportingCurrentJson ? t("novel:workspace.header.exporting") : "JSON"}
                       </Button>
                     </CardContent>
                   </Card>
                   <Card>
                     <CardHeader>
-                      <CardTitle className="text-base">整本书</CardTitle>
+                      <CardTitle className="text-base">{t("novel:workspace.header.fullBookCardTitle")}</CardTitle>
                     </CardHeader>
                     <CardContent className="flex flex-wrap gap-2">
                       <Button
@@ -231,14 +233,14 @@ function DesktopNovelEditView(props: NovelEditViewProps) {
                         onClick={() => exportControls.onExportFull("markdown")}
                         disabled={exportControls.isExportingFullMarkdown}
                       >
-                        {exportControls.isExportingFullMarkdown ? "导出中..." : "Markdown"}
+                        {exportControls.isExportingFullMarkdown ? t("novel:workspace.header.exporting") : "Markdown"}
                       </Button>
                       <Button
                         variant="outline"
                         onClick={() => exportControls.onExportFull("json")}
                         disabled={exportControls.isExportingFullJson}
                       >
-                        {exportControls.isExportingFullJson ? "导出中..." : "JSON"}
+                        {exportControls.isExportingFullJson ? t("novel:workspace.header.exporting") : "JSON"}
                       </Button>
                     </CardContent>
                   </Card>
@@ -250,27 +252,27 @@ function DesktopNovelEditView(props: NovelEditViewProps) {
 
             <Dialog open={isProjectToolsOpen} onOpenChange={setIsProjectToolsOpen}>
               <DialogTrigger asChild>
-                <Button variant="outline">项目工具</Button>
+                <Button variant="outline">{t("novel:workspace.header.projectTools")}</Button>
               </DialogTrigger>
               <DialogContent className="max-h-[90vh] w-[calc(100vw-2rem)] max-w-4xl overflow-auto">
                 <DialogHeader>
-                  <DialogTitle>项目工具</DialogTitle>
+                  <DialogTitle>{t("novel:workspace.header.projectToolsTitle")}</DialogTitle>
                   <DialogDescription>
-                    这里收纳次级信息。首屏只保留当前步骤和恢复接管入口，避免主工作区被项目辅助信息挤满。
+                    {t("novel:workspace.header.projectToolsDescription")}
                   </DialogDescription>
                 </DialogHeader>
                 <div className="grid gap-3 md:grid-cols-2">
                   <Card>
                     <CardHeader>
-                      <CardTitle>章节进度</CardTitle>
+                      <CardTitle>{t("novel:workspace.header.chapterProgress")}</CardTitle>
                     </CardHeader>
                     <CardContent>
-                      <p>{generatedChapters} / {Math.max(totalChapters, 1)} 已生成</p>
+                      <p>{t("novel:workspace.header.chapterProgressLine", { generated: generatedChapters, total: Math.max(totalChapters, 1) })}</p>
                     </CardContent>
                   </Card>
                   <Card>
                     <CardHeader>
-                      <CardTitle>待修复章节</CardTitle>
+                      <CardTitle>{t("novel:workspace.header.chaptersToFix")}</CardTitle>
                     </CardHeader>
                     <CardContent>
                       <p>{pendingRepairs}</p>
@@ -278,7 +280,7 @@ function DesktopNovelEditView(props: NovelEditViewProps) {
                   </Card>
                   <Card>
                     <CardHeader>
-                      <CardTitle>当前模型</CardTitle>
+                      <CardTitle>{t("novel:workspace.header.currentModel")}</CardTitle>
                     </CardHeader>
                     <CardContent>
                       <p>{currentModel}</p>
@@ -286,14 +288,14 @@ function DesktopNovelEditView(props: NovelEditViewProps) {
                   </Card>
                   <Card>
                     <CardHeader>
-                      <CardTitle>最近任务</CardTitle>
+                      <CardTitle>{t("novel:workspace.header.recentTasks")}</CardTitle>
                     </CardHeader>
                     <CardContent>
                       <p>{pipelineTab.pipelineJob?.status ?? "idle"}</p>
                     </CardContent>
                   </Card>
                 </div>
-                <KnowledgeBindingPanel targetType="novel" targetId={id} title="参考知识" />
+                <KnowledgeBindingPanel targetType="novel" targetId={id} title={t("novel:workspace.header.knowledgeBindingTitle")} />
               </DialogContent>
             </Dialog>
 
@@ -301,7 +303,7 @@ function DesktopNovelEditView(props: NovelEditViewProps) {
               variant={taskDrawer?.task?.status === "failed" ? "destructive" : "outline"}
               onClick={() => taskDrawer?.onOpenChange(true)}
             >
-              执行详情
+              {t("novel:workspace.header.executionDetails")}
               {taskAttentionLabel ? <Badge variant="secondary">{taskAttentionLabel}</Badge> : null}
             </Button>
           </div>

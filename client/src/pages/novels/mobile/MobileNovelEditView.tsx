@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Loader2, MoreHorizontal } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -50,14 +51,15 @@ export default function MobileNovelEditView(props: NovelEditViewProps) {
     taskDrawer,
     activeStepTakeoverEntry,
   } = props;
+  const { t } = useTranslation();
   const [isToolsOpen, setIsToolsOpen] = useState(false);
 
   const normalizedActiveTab = normalizeNovelWorkspaceTab(activeTab);
   const normalizedWorkflowTab = normalizeNovelWorkspaceTab(workflowCurrentTab ?? normalizedActiveTab);
-  const novelTitle = basicTab.basicForm.title.trim() || "未命名小说";
+  const novelTitle = basicTab.basicForm.title.trim() || t("novel:workspace.unnamedNovel", { defaultValue: "Tiểu thuyết chưa đặt tên" });
   const statusText = getMobileNovelWorkspaceStatusText({
-    activeLabel: getNovelWorkspaceTabLabel(normalizedActiveTab),
-    workflowLabel: getNovelWorkspaceTabLabel(normalizedWorkflowTab),
+    activeLabel: getNovelWorkspaceTabLabel(t, normalizedActiveTab),
+    workflowLabel: getNovelWorkspaceTabLabel(t, normalizedWorkflowTab),
   });
   const isTakeoverLoading = takeover?.mode === "loading";
   const hideTakeoverEntry = takeover?.mode === "running" || takeover?.mode === "waiting";
