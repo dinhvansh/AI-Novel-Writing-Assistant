@@ -264,6 +264,360 @@
       },
       "expandSidebar": "Mở rộng thanh điều hướng",
       "collapseSidebar": "Thu gọn thanh điều hướng"
+    },
+    "providers": {
+      "card": {
+        "title": "Nhà cung cấp mô hình",
+        "description": "Quản lý kết nối nhà cung cấp tích hợp sẵn, cũng có thể thêm nhà cung cấp tùy chỉnh tương thích OpenAI.",
+        "addCustom": "Thêm nhà cung cấp tùy chỉnh"
+      },
+      "labels": {
+        "configured": "Đã cấu hình",
+        "notConfigured": "Chưa cấu hình",
+        "custom": "Tùy chỉnh",
+        "model": "Mô hình: {value}",
+        "imageModel": "Mô hình ảnh: {value}",
+        "baseUrl": "API URL: {value}",
+        "empty": "-"
+      },
+      "reasoning": {
+        "title": "Chức năng suy luận",
+        "enabledHelp": "Hiện tại sẽ trả về và hiển thị nội dung suy luận của mô hình.",
+        "disabledHelp": "Hiện tại sẽ ẩn nội dung suy luận; MiniMax sẽ tự động bật tách và làm sạch để tránh <think> rò rỉ vào nội dung chính.",
+        "enabled": "Đã bật",
+        "disabled": "Đã tắt"
+      },
+      "balance": {
+        "title": "Số dư",
+        "lastRefreshed": "Làm mới gần nhất {time}",
+        "loading": "Đang truy vấn số dư...",
+        "customNotSupported": "Nhà cung cấp tùy chỉnh tương thích OpenAI hiện chưa hỗ trợ truy vấn số dư.",
+        "cash": "Số dư tiền mặt: {value}",
+        "voucher": "Số dư phiếu quà tặng: {value}",
+        "charge": "Số dư nạp: {value}",
+        "toppedUp": "Tổng nạp: {value}",
+        "granted": "Hạn mức tặng: {value}",
+        "missing": "Hiện chưa lấy được thông tin số dư.",
+        "needKey": "Vui lòng cấu hình API Key trước."
+      },
+      "actions": {
+        "expandModels": "Mở rộng tất cả {count} mô hình",
+        "collapseModels": "Thu gọn danh sách mô hình",
+        "edit": "Sửa",
+        "configure": "Cấu hình",
+        "testConnection": "Kiểm tra kết nối",
+        "refreshModels": "Làm mới mô hình",
+        "refreshingModels": "Đang làm mới...",
+        "refreshBalance": "Làm mới số dư",
+        "refreshingBalance": "Đang làm mới số dư..."
+      },
+      "dialog": {
+        "submitSaving": "Đang lưu...",
+        "submitCreate": "Tạo nhà cung cấp",
+        "submitSave": "Lưu",
+        "deleteCustom": "Xóa",
+        "deletingCustom": "Đang xóa...",
+        "confirmDeleteCustom": "Xác nhận xóa nhà cung cấp tùy chỉnh {name}?"
+      },
+      "feedback": {
+        "saveSuccess": "Lưu thành công.",
+        "saveFailed": "Lưu thất bại.",
+        "createSuccess": "Tạo nhà cung cấp tùy chỉnh thành công.",
+        "createFailed": "Tạo nhà cung cấp tùy chỉnh thất bại.",
+        "deleteSuccess": "Đã xóa nhà cung cấp tùy chỉnh.",
+        "deleteFailed": "Xóa nhà cung cấp tùy chỉnh thất bại.",
+        "previewModelsCount": "Đã lấy {count} mô hình.",
+        "previewModelsFailed": "Lấy danh sách mô hình thất bại.",
+        "modelsRefreshed": "Danh sách mô hình {name} đã được làm mới ({count} mô hình).",
+        "refreshModelsFailed": "Làm mới danh sách mô hình thất bại.",
+        "reasoningToggled": "Chức năng suy luận của {name} đã {state}.",
+        "reasoningEnabled": "bật",
+        "reasoningDisabled": "tắt",
+        "reasoningToggleFailed": "Cập nhật công tắc suy luận thất bại.",
+        "balanceRefreshed": "Số dư của {name} đã được làm mới.",
+        "balanceRefreshFailed": "Làm mới số dư thất bại.",
+        "connectionTestFailed": "Kiểm tra kết nối thất bại."
+      },
+      "test": {
+        "summary": "Kết nối thành công, tổng thời gian {latency}ms · {plain} · {structured}",
+        "plainOk": "Kết nối thường thành công ({latency}ms)",
+        "plainOkNoLatency": "Kết nối thường thành công",
+        "plainFail": "Kết nối thường thất bại: {error}",
+        "plainFailNoError": "Kết nối thường thất bại",
+        "plainSkipped": "Kết nối thường chưa kiểm tra",
+        "structuredOk": "Cấu trúc hóa thành công",
+        "structuredOkWithStrategy": "Cấu trúc hóa thành công, chiến lược {strategy}",
+        "structuredOkReasoningOff": ", đã tắt thinking",
+        "structuredFail": "Cấu trúc hóa thất bại",
+        "structuredFailWithCategory": "Cấu trúc hóa thất bại, phân loại {category}",
+        "structuredFailWithError": ": {error}",
+        "structuredSkipped": "Cấu trúc hóa chưa kiểm tra"
+      }
+    },
+    "navigationCards": {
+      "rag": {
+        "title": "Cài đặt vector Kho tri thức",
+        "description": "Cấu hình mô hình vector, phạm vi chỉ mục và tham số truy xuất trong mô-đun Kho tri thức.",
+        "providerLabel": "Nhà cung cấp vector",
+        "modelLabel": "Mô hình vector",
+        "connectionState": "Trạng thái kết nối",
+        "keyAvailable": "API Key khả dụng",
+        "keyMissing": "Thiếu API Key",
+        "active": "Đang bật",
+        "inactive": "Chưa bật",
+        "openCta": "Mở cài đặt Kho tri thức",
+        "empty": "-"
+      },
+      "modelRoutes": {
+        "title": "Định tuyến mô hình",
+        "description": "Chọn nhà cung cấp và mô hình mặc định cho các tác vụ viết khác nhau.",
+        "summary": "Quản lý tập trung các mô hình dùng cho các tác vụ như mở sách, chia chương, sinh nội dung, kiểm duyệt.",
+        "openCta": "Vào quản lý định tuyến mô hình"
+      }
+    },
+    "styleEngineRuntime": {
+      "title": "Cài đặt thời gian chạy của công cụ văn phong",
+      "description": "Kiểm soát thời gian chờ tối đa để công cụ văn phong trả về kết quả. Đối với văn bản gốc dài, có thể tăng thời gian; văn bản ngắn nên giữ thời gian ngắn để dễ phát hiện bất thường.",
+      "effectiveBadge": "Giá trị hiệu lực {minutes} phút",
+      "timeoutLabel": "Thời gian chờ trích xuất văn phong (phút)",
+      "saveButton": "Lưu cài đặt",
+      "saving": "Đang lưu...",
+      "rangeHint": "Phạm vi có thể đặt: {min}-{max} phút. Giá trị mặc định: {default} phút. Sau khi lưu, các tác vụ trích xuất văn phong mới hoặc thử lại sẽ sử dụng thời gian chờ này.",
+      "rangeError": "Vui lòng nhập số nguyên từ {min} đến {max} phút.",
+      "saveSuccess": "Lưu cài đặt thời gian chạy của công cụ văn phong thành công.",
+      "saveFailed": "Lưu cài đặt thời gian chạy của công cụ văn phong thất bại."
+    },
+    "providerDialog": {
+      "title": {
+        "createCustom": "Thêm nhà cung cấp tùy chỉnh",
+        "editCustom": "Chỉnh sửa nhà cung cấp tùy chỉnh",
+        "configureBuiltin": "Cấu hình nhà cung cấp mô hình"
+      },
+      "labels": {
+        "providerName": "Tên nhà cung cấp",
+        "providerNamePlaceholder": "Ví dụ: Cổng mô hình của tôi",
+        "apiKeyHint": "Có thể để trống API Key; sau khi điền địa chỉ API có thể lấy danh sách mô hình, hệ thống sẽ chọn một mô hình mặc định.",
+        "apiKeyPlaceholderConfigured": "Để trống sẽ sử dụng API Key đã lưu",
+        "apiKeyPlaceholderNew": "Nhập API Key",
+        "baseUrl": "Địa chỉ API",
+        "baseUrlPlaceholder": "https://api.example.com/v1",
+        "baseUrlHintCustom": "Nhập địa chỉ API tương thích OpenAI, thường kết thúc bằng /v1; địa chỉ Ollama cục bộ phổ biến là http://127.0.0.1:11434/v1.",
+        "baseUrlHintBuiltin": "Để trống sẽ sử dụng địa chỉ mặc định; địa chỉ Ollama cục bộ phổ biến là http://127.0.0.1:11434/v1.",
+        "fetchingModels": "Đang lấy...",
+        "fetchModels": "Lấy danh sách mô hình",
+        "availableModels": "Mô hình khả dụng",
+        "selectModel": "Chọn mô hình",
+        "searchModel": "Tìm kiếm mô hình",
+        "noModels": "Không có mô hình khả dụng",
+        "primaryModelOptional": "Mô hình mặc định (tùy chọn)",
+        "primaryModelDefault": "Mô hình mặc định",
+        "primaryModelBuiltin": "Tên mô hình",
+        "modelHintCustom": "Sau khi lấy danh sách mô hình sẽ tự động điền mô hình khả dụng đầu tiên; nếu giao diện không trả về danh sách, có thể nhập thủ công.",
+        "modelHintCustomEmpty": "Có thể nhấp vào \"Làm mới mô hình\" trên thẻ nhà cung cấp để lấy danh sách, hoặc nhập thủ công mô hình mặc định.",
+        "modelHintBuiltin": "Nếu không có mô hình mục tiêu trong danh sách, có thể nhập thủ công.",
+        "modelManualPlaceholder": "Hoặc có thể nhập trực tiếp tên mô hình",
+        "imageModelLabel": "Mô hình hình ảnh (tùy chọn)",
+        "imageModelHint": "Sau khi điền, khi tạo hình ảnh nhân vật có thể chọn nhà cung cấp này; để trống thì chỉ dùng cho mô hình văn bản.",
+        "selectImageModel": "Chọn mô hình hình ảnh",
+        "searchImageModel": "Tìm kiếm mô hình hình ảnh",
+        "noImageModels": "Không có mô hình hình ảnh khả dụng",
+        "imageModelPlaceholder": "Nhập tên mô hình hình ảnh",
+        "imageModelFooter": "Tạo hình ảnh sẽ gọi giao diện hình ảnh tương thích OpenAI của nhà cung cấp này.",
+        "testConnection": "Kiểm tra kết nối"
+      }
+    },
+    "providerLimits": {
+      "concurrencyLabel": "Giới hạn đồng thời cùng mô hình",
+      "concurrencyHint": "0 nghĩa là không giới hạn. Các yêu cầu vượt quá giới hạn cho cùng nhà cung cấp và mô hình sẽ được xếp hàng đợi.",
+      "intervalLabel": "Khoảng cách yêu cầu cùng mô hình (ms)",
+      "intervalHint": "0 nghĩa là không giới hạn. Dùng để kiểm soát tốc độ gửi yêu cầu liên tiếp cho cùng nhà cung cấp và mô hình.",
+      "summary": "Giới hạn yêu cầu: đồng thời {concurrency} · khoảng cách {interval}",
+      "unlimited": "Không giới hạn",
+      "intervalValue": "{ms}ms"
+    },
+    "modelRoutes": {
+      "actions": {
+        "savedRouteSingle": "Lưu hoàn tất, tác vụ này sẽ sử dụng tuyến mới.",
+        "savedRouteMultiple": "Lưu hoàn tất, {count} tác vụ sẽ sử dụng tuyến mới.",
+        "savedFallback": "Lưu mô hình dự phòng có cấu trúc hoàn tất.",
+        "noTasksToApply": "Không có tác vụ nào cần áp dụng.",
+        "appliedToTasks": "Cài đặt mô hình đã được áp dụng cho {count} tác vụ, có hiệu lực sau khi lưu."
+      },
+      "title": "Quản lý tuyến mô hình",
+      "description": "Chỉ định mô hình phù hợp cho các tác vụ sáng tạo khác nhau và kiểm tra đầu ra JSON có ổn định không.",
+      "detectionHint": "Phát hiện sẽ bao gồm hội thoại thông thường và đầu ra có cấu trúc; các thay đổi trong biểu mẫu cần được lưu để tham gia phát hiện.",
+      "detectionInProgress": "Đang phát hiện tuyến đang hiệu lực...",
+      "detectionSummary": "Kết quả phát hiện: {total} tuyến, khỏe mạnh {healthy}, bất thường {failed}",
+      "detectionEmpty": "Chưa thực hiện phát hiện tương thích mô hình",
+      "detectionTime": "Thời gian phát hiện: {when}",
+      "detectionRunning": "Đang phát hiện...",
+      "detectionRetest": "Phát hiện lại",
+      "backToSettings": "Quay lại cài đặt hệ thống",
+      "bulkApplyTitle": "Áp dụng nhanh mô hình",
+      "bulkApplyDescription": "Chọn một bộ mô hình, sau đó điền vào nhiều tác vụ; sau khi lưu đồng loạt, các sáng tạo tiếp theo sẽ thực thi theo tuyến mới.",
+      "fields": {
+        "maxTokensPlaceholder": "Để trống sẽ dùng mặc định hệ thống",
+        "modelEmptyText": "Nhà cung cấp này không có mô hình khả dụng",
+        "manualModelPlaceholder": "Cũng có thể nhập tên mô hình thủ công"
+      },
+      "bulkSummary": "Có {dirty} tác vụ chờ lưu; {failed} tác vụ phát hiện bất thường; {empty} tuyến trống.",
+      "applyAll": "Áp dụng cho tất cả tác vụ",
+      "applyFailed": "Áp dụng cho tác vụ bất thường",
+      "applyEmpty": "Bổ sung tác vụ trống",
+      "saveAll": "Lưu tất cả thay đổi",
+      "saveAllWithCount": "Lưu tất cả thay đổi ({count})",
+      "saving": "Đang lưu...",
+      "fallbackTitle": "Mô hình dự phòng có cấu trúc",
+      "fallbackDescription": "Khi mô hình chính có thể hội thoại nhưng JSON không ổn định, có thể bật mô hình dự phòng thống nhất cho tất cả tác vụ có cấu trúc.",
+      "fallbackEnable": "Bật dự phòng cấu trúc toàn cục",
+      "fallbackEnableDescription": "Chỉ khi tất cả chiến lược cấu trúc của mô hình chính thất bại, mới chuyển sang bộ mô hình dự phòng này.",
+      "saveFallback": "Lưu mô hình dự phòng",
+      "statusHealthy": "Tương thích bình thường",
+      "statusFailed": "Có bất thường",
+      "statusChecking": "Đang phát hiện",
+      "statusUnknown": "Chưa phát hiện",
+      "dirtyBadge": "Chờ lưu",
+      "taskIdentifier": "Nhận dạng: {taskType}",
+      "useByTask": "Tác vụ sử dụng: {provider}.",
+      "formDirty": "Thay đổi biểu mẫu có hiệu lực sau khi lưu.",
+      "connectivityProtocol": "Giao thức yêu cầu: {protocol},",
+      "connectivityStrategy": "Chiến lược cấu trúc: {strategy},",
+      "thinkingDisabled": "Sẽ tắt thinking",
+      "thinkingPreserved": "Giữ nguyên thinking",
+      "fallbackAvailable": "Mô hình dự phòng khả dụng",
+      "fallbackDisabled": "Mô hình dự phòng chưa bật",
+      "noneValue": "Không",
+      "connectivityDetail": "Kết quả phát hiện từ tuyến đang hiệu lực; sau khi lưu sẽ tự động phát hiện lại.",
+      "saveRoute": "Lưu tuyến",
+      "fields2": {
+        "provider": "Nhà cung cấp",
+        "providerPlaceholder": "Chọn nhà cung cấp",
+        "model": "Mô hình",
+        "modelPlaceholder": "Chọn mô hình",
+        "modelSearchPlaceholder": "Tìm kiếm mô hình",
+        "temperature": "Nhiệt độ",
+        "maxTokens": "Độ dài đầu ra tối đa",
+        "requestProtocol": "Giao thức yêu cầu",
+        "structuredFormat": "Định dạng có cấu trúc",
+        "auto": "Tự động chọn",
+        "openaiCompatible": "Tương thích OpenAI"
+      },
+      "labels": {
+        "planner": {
+          "title": "Lập kế hoạch đại cương",
+          "description": "Trước tiên hiểu mục tiêu sáng tác, sau đó sắp xếp cách thức tiến triển cho đoạn này."
+        },
+        "writer": {
+          "title": "Viết chính",
+          "description": "Tạo nội dung chương, viết đầy đủ nội dung chương."
+        },
+        "review": {
+          "title": "Hiệu đính tổng quát",
+          "description": "Kiểm tra tình tiết, nhịp độ và giọng văn, tìm ra vấn đề chất lượng trong bản nháp."
+        },
+        "lightReview": {
+          "title": "Kiểm tra nhanh cơ bản",
+          "description": "Nhanh chóng đánh giá xem chương có thể tiếp tục tiến triển không, dùng cho kiểm tra chất lượng nhẹ sau nội dung chính."
+        },
+        "criticalReview": {
+          "title": "Hiệu đính nghiêm ngặt",
+          "description": "Xử lý các kiểm tra chất lượng ảnh hưởng đến tính liên tục của toàn bộ tác phẩm, phù hợp cho hiệu đính rủi ro cao và kiểm tra lại."
+        },
+        "repair": {
+          "title": "Sửa chữa chương",
+          "description": "Chỉnh sửa bản thảo dựa trên vấn đề hiệu đính, đưa chương trở lại trạng thái có thể tiếp tục tiến triển."
+        },
+        "replan": {
+          "title": "Lập kế hoạch lại cửa sổ",
+          "description": "Khi sửa chữa cục bộ không hội tụ, sắp xếp lại mục tiêu và kết nối của các chương bị ảnh hưởng."
+        },
+        "stateResolution": {
+          "title": "Phân giải trạng thái",
+          "description": "Đánh giá xem đề xuất trạng thái chương có đáng tin cậy không, giúp Đạo diễn tự động giảm xác nhận thủ công."
+        },
+        "summary": {
+          "title": "Tóm tắt tình tiết",
+          "description": "Tổng hợp các chương dài thành hồi tưởng, tóm tắt và thay đổi chính."
+        },
+        "factExtraction": {
+          "title": "Khảo cứu thiết định",
+          "description": "Sắp xếp thiết định, dòng thời gian và sự kiện chính, giảm mâu thuẫn trước sau."
+        },
+        "chat": {
+          "title": "Viết cùng cảm hứng",
+          "description": "Xử lý hội thoại hàng ngày và tổng hợp kết quả thành nội dung có thể hiểu trực tiếp khi sáng tác."
+        }
+      }
+    },
+    "autoDirectorEvents": {
+      "approvalRequired": {
+        "label": "Tự động tiếp tục đang chờ xử lý",
+        "description": "Thông báo khi Đạo diễn tự động bị kẹt tại nút cần tiếp tục hoặc xác nhận."
+      },
+      "autoApproved": {
+        "label": "AI đã tự động phê duyệt",
+        "description": "Thông báo khi hệ thống phê duyệt điểm kiểm tra theo ủy quyền và tiếp tục thực thi."
+      },
+      "exception": {
+        "label": "Ngoại lệ chạy",
+        "description": "Thông báo khi Đạo diễn tự động báo lỗi, thất bại hoặc vào trạng thái ngoại lệ."
+      },
+      "recovered": {
+        "label": "Phục hồi ngoại lệ",
+        "description": "Thông báo khi tác vụ Đạo diễn tự động trước đó ngoại lệ được phục hồi thực thi."
+      },
+      "completed": {
+        "label": "Thực thi hoàn thành",
+        "description": "Thông báo khi tác vụ Đạo diễn tự động hoàn thành giai đoạn hiện tại hoặc toàn bộ quy trình."
+      },
+      "progressChanged": {
+        "label": "Thay đổi tiến độ",
+        "description": "Thông báo khi Đạo diễn tự động chuyển giai đoạn hoặc thay đổi tiến độ quan trọng."
+      },
+      "noSubscribed": "Chưa đăng ký sự kiện",
+      "joinSeparator": ", ",
+      "extraSummary": "{first} và {count} mục khác"
+    },
+    "autoDirectorChannel": {
+      "title": "Cấu hình kênh theo dõi Đạo diễn",
+      "description": "Tập trung cấu hình webhook, token callback, ánh xạ người dùng và đăng ký sự kiện cho DingTalk và WeCom. Khi chưa cấu hình đầy đủ khả năng callback, tin nhắn sẽ tự động giảm cấp chỉ chuyển hướng trong trang.",
+      "baseUrlLabel": "Địa chỉ truy cập trong trang",
+      "baseUrlHint": "Dùng cho liên kết \"Mở trung tâm theo dõi / Xem chi tiết\" trong tin nhắn DingTalk/WeCom. Nếu không điền sẽ dự phòng về địa chỉ trang web trong môi trường máy chủ.",
+      "channelDingtalk": "DingTalk",
+      "channelWecom": "WeCom",
+      "webhookLabel": "Webhook URL",
+      "callbackTokenLabel": "Token gọi lại",
+      "callbackTokenPlaceholder": "Tùy chọn; nếu không cấu hình thì chỉ giữ chuyển hướng trong trang",
+      "operatorMapLabel": "JSON ánh xạ người dùng",
+      "subscribedEvents": "Sự kiện đã đăng ký",
+      "expand": "Mở rộng",
+      "collapse": "Thu gọn",
+      "viewModelRoutes": "Xem định tuyến mô hình",
+      "saveButton": "Lưu cấu hình kênh theo dõi đạo diễn",
+      "saving": "Đang lưu..."
+    },
+    "autoDirectorApproval": {
+      "title": "Tùy chọn ủy quyền phê duyệt",
+      "description": "Khi đạo diễn tự động thực thi theo phạm vi, sẽ đưa vào ủy quyền mặc định ở đây trước. Các điểm phê duyệt chưa được ủy quyền vẫn sẽ dừng lại chờ bạn xác nhận.",
+      "currentDefault": "Mặc định hiện tại: {summary}",
+      "saveButton": "Lưu tùy chọn ủy quyền phê duyệt",
+      "saving": "Đang lưu...",
+      "savedMessage": "Đã lưu tùy chọn ủy quyền phê duyệt.",
+      "saveFailed": "Lưu tùy chọn ủy quyền phê duyệt thất bại.",
+      "channelsSavedMessage": "Đã lưu cấu hình kênh theo dõi đạo diễn.",
+      "channelsSaveFailed": "Lưu cấu hình kênh theo dõi đạo diễn thất bại."
+    },
+    "modelRouteConnectivity": {
+      "structuredNotRun": "Chẩn đoán cấu trúc: Chưa thực thi",
+      "structuredOk": "Cấu trúc bình thường · {protocol} · {strategy}",
+      "structuredOkThinkingOff": "Cấu trúc bình thường · {protocol} · {strategy} · Sẽ tắt thinking",
+      "structuredFailed": "Cấu trúc bất thường · {category} · {error}",
+      "unknownError": "Lỗi không xác định",
+      "noStatus": "Chưa phát hiện định tuyến hiệu lực.",
+      "plainOkLatency": "Kết nối thường bình thường · {latency}ms",
+      "plainOk": "Kết nối thường bình thường",
+      "plainFailed": "Kết nối thường thất bại · {error}",
+      "summary": "{provider} / {model} · {parts}"
     }
   },
   "serverErrors": {
