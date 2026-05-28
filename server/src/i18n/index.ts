@@ -114,7 +114,8 @@ export async function createI18nServer(): Promise<I18nServerHandle> {
   }
 
   const instance = i18nextRoot.createInstance();
-  await instance.use(ICU as unknown as Parameters<I18nInstance["use"]>[0]).init({
+  const IcuModule = (ICU as unknown as { default?: unknown }).default ?? ICU;
+  await instance.use(IcuModule as Parameters<I18nInstance["use"]>[0]).init({
     resources: buildServerResources(),
     lng: DEFAULT_LOCALE,
     fallbackLng: FALLBACK_LOCALE,

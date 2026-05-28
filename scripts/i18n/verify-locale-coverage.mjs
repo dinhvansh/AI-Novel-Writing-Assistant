@@ -203,10 +203,24 @@ function collectTKeys(roots, isIgnored) {
   for (const root of roots) {
     for (const file of walkSourceFiles(root, isIgnored)) {
       const source = fs.readFileSync(file, "utf8");
+
+      // Pattern A: t("ns:key.path") or t('ns:key.path') with optional backticks
       let match;
       T_CALL_REGEX.lastIndex = 0;
       while ((match = T_CALL_REGEX.exec(source)) !== null) {
+        // Skip server-side `handle.t("namespace", "key", ...)` style — that's
+        // matched by Pattern B below.
+        const before = source.slice(Math.max(0, match.index - 30), match.index);
+        if (/handle\.\s*$/.test(before) || /\bi18n\.\s*$/.test(before)) {
+          continue;
+        }
         calls.push({ file, key: match[1] });
+      }
+
+      // Pattern B: handle.t("namespace", "key.path", ...)
+      const HANDLE_T_REGEX = /\b(?:handle|i18n)\.t\(\s*(?:"|')([a-zA-Z_][\w]*)(?:"|')\s*,\s*(?:"|'|`)([a-zA-Z_][\w.\-]*)(?:"|'|`)/g;
+      while ((match = HANDLE_T_REGEX.exec(source)) !== null) {
+        calls.push({ file, key: `${match[1]}:${match[2]}` });
       }
     }
   }

@@ -266,7 +266,50 @@
       "collapseSidebar": "收起导航栏"
     }
   },
-  "serverErrors": {},
+  "serverErrors": {
+    "routeNotFound": "接口不存在。",
+    "requestBodyTooLarge": "请求体过大，请缩短文本或分段上传。",
+    "validationFailed": "请求参数校验失败。",
+    "internalUnknown": "服务器发生未知错误。",
+    "upstreamConnectionGeneric": "上游模型服务连接失败：当前服务器无法连接到 {target}{code}。请检查该提供商的网络连通性，或切换到其它可用模型提供商。",
+    "upstreamServiceFallbackTarget": "上游模型服务",
+    "validationField": {
+      "id": "项目 ID",
+      "field": "字段",
+      "provider": "模型提供商",
+      "model": "模型",
+      "temperature": "温度",
+      "storyInput": "故事想法输入",
+      "expansion": "故事引擎原型",
+      "decomposition": "推进与兑现摘要",
+      "constraints": "叙事规则",
+      "lockedFields": "锁定字段",
+      "state": "故事状态",
+      "currentPhase": "当前阶段",
+      "progress": "进度",
+      "protagonistState": "主角当前处境"
+    },
+    "validationItem": "第 {index} 项",
+    "validationPath": "{path}：{message}",
+    "zod": {
+      "invalidTypeMissing": "不能为空。",
+      "invalidTypeString": "必须是文本。",
+      "invalidTypeNumber": "必须是数字。",
+      "invalidTypeBoolean": "必须是布尔值。",
+      "invalidTypeGeneric": "类型不正确。",
+      "invalidValueGeneric": "取值不合法。",
+      "tooSmallArray": "至少需要 {minimum} 项。",
+      "tooSmallStringEmpty": "不能为空。",
+      "tooSmallString": "至少 {minimum} 个字符。",
+      "tooSmallNumber": "不能小于 {minimum}。",
+      "tooSmallGeneric": "内容过短。",
+      "tooBigArray": "最多只能填写 {maximum} 项。",
+      "tooBigString": "不能超过 {maximum} 个字符。",
+      "tooBigNumber": "不能大于 {maximum}。",
+      "tooBigGeneric": "内容过长。",
+      "formatGeneric": "格式不正确。"
+    }
+  },
   "serverLogs": {},
   "seedData": {
     "genres": {},

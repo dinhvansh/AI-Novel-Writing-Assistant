@@ -7,7 +7,7 @@ import helmet from "helmet";
 import morgan from "morgan";
 import type { ApiResponse } from "@ai-novel/shared/types/api";
 import { ensureRuntimeDatabaseReady } from "./db/runtimeMigrations";
-import { createI18nServer } from "./i18n";
+import { createI18nServer, getI18nServerHandle } from "./i18n";
 import { errorHandler } from "./middleware/errorHandler";
 import { i18nMiddleware } from "./middleware/i18nMiddleware";
 import { loadProviderApiKeys } from "./llm/factory";
@@ -146,9 +146,14 @@ export function createApp() {
   app.use("/api/astrology", astrologyRouter);
 
   app.use((_req, res) => {
+    const handle = getI18nServerHandle();
+    const lng = (res.locals as { locale?: "vi-VN" | "zh-CN" }).locale ?? "vi-VN";
+    const message = handle
+      ? handle.t("serverErrors", "routeNotFound", { lng })
+      : "接口不存在。";
     const response: ApiResponse<null> = {
       success: false,
-      error: "接口不存在。",
+      error: message,
     };
     res.status(404).json(response);
   });

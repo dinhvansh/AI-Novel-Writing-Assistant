@@ -266,7 +266,50 @@
       "collapseSidebar": "Thu gọn thanh điều hướng"
     }
   },
-  "serverErrors": {},
+  "serverErrors": {
+    "routeNotFound": "Không tìm thấy điểm cuối API.",
+    "requestBodyTooLarge": "Nội dung yêu cầu quá lớn, vui lòng rút ngắn văn bản hoặc tải lên theo từng phần.",
+    "validationFailed": "Kiểm tra tham số yêu cầu thất bại.",
+    "internalUnknown": "Máy chủ gặp lỗi không xác định.",
+    "upstreamConnectionGeneric": "Không thể kết nối đến nhà cung cấp mô hình AI: máy chủ hiện tại không thể kết nối đến {target}{code}. Vui lòng kiểm tra kết nối mạng của nhà cung cấp đó, hoặc chuyển sang nhà cung cấp khác.",
+    "upstreamServiceFallbackTarget": "nhà cung cấp mô hình AI",
+    "validationField": {
+      "id": "ID dự án",
+      "field": "Trường",
+      "provider": "Nhà cung cấp mô hình",
+      "model": "Mô hình",
+      "temperature": "Nhiệt độ",
+      "storyInput": "Đầu vào ý tưởng câu chuyện",
+      "expansion": "Nguyên mẫu công cụ câu chuyện",
+      "decomposition": "Tóm tắt thúc đẩy và hoàn thành",
+      "constraints": "Quy tắc tường thuật",
+      "lockedFields": "Trường bị khóa",
+      "state": "Trạng thái câu chuyện",
+      "currentPhase": "Giai đoạn hiện tại",
+      "progress": "Tiến độ",
+      "protagonistState": "Tình trạng hiện tại của nhân vật chính"
+    },
+    "validationItem": "Mục thứ {index}",
+    "validationPath": "{path}: {message}",
+    "zod": {
+      "invalidTypeMissing": "Không được để trống.",
+      "invalidTypeString": "Phải là văn bản.",
+      "invalidTypeNumber": "Phải là số.",
+      "invalidTypeBoolean": "Phải là giá trị boolean.",
+      "invalidTypeGeneric": "Kiểu dữ liệu không chính xác.",
+      "invalidValueGeneric": "Giá trị không hợp lệ.",
+      "tooSmallArray": "Cần ít nhất {minimum} mục.",
+      "tooSmallStringEmpty": "Không được để trống.",
+      "tooSmallString": "Ít nhất {minimum} ký tự.",
+      "tooSmallNumber": "Không thể nhỏ hơn {minimum}.",
+      "tooSmallGeneric": "Nội dung quá ngắn.",
+      "tooBigArray": "Chỉ có thể nhập tối đa {maximum} mục.",
+      "tooBigString": "Không thể vượt quá {maximum} ký tự.",
+      "tooBigNumber": "Không thể lớn hơn {maximum}.",
+      "tooBigGeneric": "Nội dung quá dài.",
+      "formatGeneric": "Định dạng không đúng."
+    }
+  },
   "serverLogs": {},
   "seedData": {
     "genres": {},
