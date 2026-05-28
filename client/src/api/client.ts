@@ -2,6 +2,7 @@ import axios, { AxiosError } from "axios";
 import type { ApiResponse } from "@ai-novel/shared/types/api";
 import { API_BASE_URL, API_TIMEOUT_MS } from "@/lib/constants";
 import { toast } from "@/components/ui/toast";
+import { getI18nClientHandle } from "@/i18n";
 
 export interface ApiHttpError extends Error {
   status?: number;
@@ -12,6 +13,24 @@ declare module "axios" {
   interface AxiosRequestConfig {
     silentErrorStatuses?: number[];
   }
+}
+
+/**
+ * Resolve a translated common-error string. Falls back to the canonical
+ * Chinese key (or its zh-CN bundle entry) when the i18n handle has not
+ * booted yet — the worst case is the user sees Chinese text, never a
+ * crash or a raw key.
+ */
+function tCommonError(key: "network" | "server" | "request"): string {
+  const handle = getI18nClientHandle();
+  if (!handle) {
+    // Pre-init fallback: keep the original Chinese strings to match the
+    // canonical bundle.
+    if (key === "network") return "网络连接失败，请检查网络后重试。";
+    if (key === "server") return "服务器错误，请稍后重试。";
+    return "请求失败。";
+  }
+  return handle.i18n.t(`common:errors.${key}`);
 }
 
 export const apiClient = axios.create({
@@ -31,19 +50,22 @@ apiClient.interceptors.response.use(
     const backendError = error.response?.data?.error;
     const backendMessage = error.response?.data?.message;
     const silentErrorStatuses = error.config?.silentErrorStatuses ?? [];
-    let title = backendError ?? error.message ?? "请求失败。";
+    let title = backendError ?? error.message ?? tCommonError("request");
     let description = backendMessage && backendMessage !== backendError ? backendMessage : undefined;
 
+    const networkErrorTitle = tCommonError("network");
+    const serverErrorTitle = tCommonError("server");
+
     if (!status) {
-      title = "网络连接失败，请检查网络后重试。";
+      title = networkErrorTitle;
       description = undefined;
     } else if (status >= 500) {
-      title = backendError ?? "服务器错误，请稍后重试。";
+      title = backendError ?? serverErrorTitle;
       description = backendMessage && backendMessage !== title ? backendMessage : undefined;
     }
 
     if (!status || !silentErrorStatuses.includes(status)) {
-      const isGenericServerErrorToast = title === "服务器错误，请稍后重试。";
+      const isGenericServerErrorToast = title === serverErrorTitle;
 
       if (description) {
         toast.error(

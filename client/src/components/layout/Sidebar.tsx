@@ -23,6 +23,7 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import { NavLink } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { listKnowledgeDocuments } from "@/api/knowledge";
 import { queryKeys } from "@/api/queryKeys";
 import { getAutoDirectorFollowUpOverview } from "@/api/autoDirectorFollowUps";
@@ -33,47 +34,49 @@ import { cn } from "@/lib/utils";
 
 interface NavItem {
   to: string;
-  label: string;
+  /** Translation key under the `settings:navigation.items.*` namespace. */
+  labelKey: string;
   icon: LucideIcon;
 }
 
 interface NavGroup {
-  title: string;
+  /** Translation key under the `settings:navigation.groups.*` namespace. */
+  titleKey: string;
   items: NavItem[];
 }
 
 const navGroups: NavGroup[] = [
   {
-    title: "创作",
+    titleKey: "creation",
     items: [
-      { to: "/", label: "首页", icon: House },
-      { to: "/help", label: "新手上路", icon: CircleHelp },
-      { to: "/novels", label: "小说列表", icon: BookOpenText },
-      { to: "/creative-hub", label: "创作中枢", icon: LayoutDashboard },
-      { to: "/book-analysis", label: "拆书", icon: ScanSearch },
-      { to: "/tasks", label: "任务中心", icon: ListTodo },
-      { to: "/auto-director/follow-ups", label: "导演跟进", icon: Workflow },
+      { to: "/", labelKey: "home", icon: House },
+      { to: "/help", labelKey: "help", icon: CircleHelp },
+      { to: "/novels", labelKey: "novels", icon: BookOpenText },
+      { to: "/creative-hub", labelKey: "creativeHub", icon: LayoutDashboard },
+      { to: "/book-analysis", labelKey: "bookAnalysis", icon: ScanSearch },
+      { to: "/tasks", labelKey: "tasks", icon: ListTodo },
+      { to: "/auto-director/follow-ups", labelKey: "autoDirectorFollowUps", icon: Workflow },
     ],
   },
   {
-    title: "资产",
+    titleKey: "assets",
     items: [
-      { to: "/genres", label: "题材基底库", icon: Tags },
-      { to: "/story-modes", label: "推进模式库", icon: Workflow },
-      { to: "/titles", label: "标题工坊", icon: SquarePen },
-      { to: "/knowledge", label: "知识库", icon: Database },
-      { to: "/worlds", label: "世界观", icon: Globe2 },
-      { to: "/style-engine", label: "写法引擎", icon: WandSparkles },
-      { to: "/anti-ai-rules", label: "反 AI 规则", icon: ShieldCheck },
-      { to: "/base-characters", label: "基础角色库", icon: UsersRound },
+      { to: "/genres", labelKey: "genres", icon: Tags },
+      { to: "/story-modes", labelKey: "storyModes", icon: Workflow },
+      { to: "/titles", labelKey: "titles", icon: SquarePen },
+      { to: "/knowledge", labelKey: "knowledge", icon: Database },
+      { to: "/worlds", labelKey: "worlds", icon: Globe2 },
+      { to: "/style-engine", labelKey: "styleEngine", icon: WandSparkles },
+      { to: "/anti-ai-rules", labelKey: "antiAiRules", icon: ShieldCheck },
+      { to: "/base-characters", labelKey: "baseCharacters", icon: UsersRound },
     ],
   },
   {
-    title: "系统",
+    titleKey: "system",
     items: [
-      { to: "/prompt-workbench", label: "提示词管理", icon: Braces },
-      { to: "/settings/model-routes", label: "模型路由", icon: Route },
-      { to: "/settings", label: "系统设置", icon: Settings2 },
+      { to: "/prompt-workbench", labelKey: "promptWorkbench", icon: Braces },
+      { to: "/settings/model-routes", labelKey: "modelRoutes", icon: Route },
+      { to: "/settings", labelKey: "settings", icon: Settings2 },
     ],
   },
 ];
@@ -84,13 +87,13 @@ interface SidebarProps {
 }
 
 export default function Sidebar({ collapsed, onToggle }: SidebarProps) {
+  const { t } = useTranslation();
   const [badgeQueriesEnabled, setBadgeQueriesEnabled] = useState(false);
 
   useEffect(() => {
     const timer = window.setTimeout(() => setBadgeQueriesEnabled(true), 500);
     return () => window.clearTimeout(timer);
   }, []);
-
   const taskQuery = useQuery({
     queryKey: queryKeys.tasks.overview,
     queryFn: getTaskOverview,
@@ -197,8 +200,8 @@ export default function Sidebar({ collapsed, onToggle }: SidebarProps) {
           size="icon"
           className="h-8 w-8 text-muted-foreground"
           onClick={onToggle}
-          aria-label={collapsed ? "展开导航栏" : "收起导航栏"}
-          title={collapsed ? "展开导航栏" : "收起导航栏"}
+          aria-label={collapsed ? t("settings:navigation.expandSidebar") : t("settings:navigation.collapseSidebar")}
+          title={collapsed ? t("settings:navigation.expandSidebar") : t("settings:navigation.collapseSidebar")}
         >
           {collapsed ? <ChevronRight className="h-4 w-4" /> : <ChevronLeft className="h-4 w-4" />}
         </Button>
@@ -206,10 +209,10 @@ export default function Sidebar({ collapsed, onToggle }: SidebarProps) {
 
       <nav className="space-y-4">
         {navGroups.map((group) => (
-          <div key={group.title} className="space-y-1">
+          <div key={group.titleKey} className="space-y-1">
             {!collapsed ? (
               <div className="px-1 text-xs font-semibold uppercase tracking-wide text-muted-foreground/80">
-                {group.title}
+                {t(`settings:navigation.groups.${group.titleKey}`)}
               </div>
             ) : (
               <div className="mx-auto h-px w-8 bg-border/70" />
@@ -218,9 +221,10 @@ export default function Sidebar({ collapsed, onToggle }: SidebarProps) {
             {group.items.map((item) => {
               const Icon = item.icon;
               const isNovelEntry = item.to === "/novels";
+              const label = t(`settings:navigation.items.${item.labelKey}`);
 
               return (
-                <NavLink key={item.to} to={item.to} title={collapsed ? item.label : undefined}>
+                <NavLink key={item.to} to={item.to} title={collapsed ? label : undefined}>
                   {({ isActive }) => (
                     <div
                       className={cn(
@@ -250,7 +254,7 @@ export default function Sidebar({ collapsed, onToggle }: SidebarProps) {
 
                       {!collapsed ? (
                         <span className={cn("truncate", isNovelEntry && "font-semibold")}>
-                          {item.label}
+                          {label}
                         </span>
                       ) : null}
 

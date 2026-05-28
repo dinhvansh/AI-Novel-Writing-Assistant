@@ -1,10 +1,159 @@
 {
-  "common": {},
-  "novel": {},
+  "common": {
+    "actions": {
+      "save": "Lưu",
+      "cancel": "Huỷ",
+      "confirm": "Xác nhận",
+      "retry": "Thử lại",
+      "delete": "Xoá",
+      "edit": "Chỉnh sửa",
+      "close": "Đóng",
+      "back": "Quay lại",
+      "next": "Tiếp theo",
+      "previous": "Quay lại",
+      "submit": "Gửi",
+      "expand": "Mở rộng",
+      "collapse": "Thu gọn"
+    },
+    "states": {
+      "loading": "Đang tải...",
+      "saving": "Đang lưu...",
+      "empty": "Chưa có dữ liệu",
+      "error": "Có lỗi xảy ra",
+      "success": "Thành công"
+    },
+    "errors": {
+      "network": "Kết nối mạng thất bại, vui lòng kiểm tra mạng rồi thử lại.",
+      "server": "Máy chủ gặp sự cố, vui lòng thử lại sau.",
+      "request": "Yêu cầu thất bại.",
+      "generic": "Đã xảy ra lỗi không xác định, vui lòng thử lại sau."
+    }
+  },
+  "novel": {
+    "home": {
+      "metrics": {
+        "liveRunning": "Đang tự động chạy gần đây",
+        "liveRunningHint": "Số dự án gần đây vẫn đang để Đạo diễn tự động hoặc tác vụ tự động chạy ngầm.",
+        "actionRequired": "Đang chờ bạn xử lý",
+        "actionRequiredHint": "Số dự án gần đây cần bạn xét duyệt, hoặc đã thất bại / huỷ và cần quyết định bước kế tiếp.",
+        "readyForExecution": "Sẵn sàng vào thực thi chương",
+        "readyForExecutionHint": "Số dự án gần đây đã chuẩn bị xong và có thể bắt đầu viết chương.",
+        "failedTasks": "Tác vụ thất bại trong nền",
+        "failedTasksHint": "Tổng số tác vụ thất bại từ Trung tâm tác vụ, có thể xử lý gộp."
+      },
+      "starter": {
+        "beginnerTag": "Khuyến nghị cho người mới",
+        "lowBarrierTag": "Khởi tạo dễ dàng",
+        "ctaTitleNew": "Lần đầu sử dụng? Hãy để Đạo diễn tự động dẫn bạn viết một cuốn.",
+        "ctaTitleExisting": "Muốn nhanh chóng mở cuốn tiếp theo? Giao cho Đạo diễn tự động trước.",
+        "ctaDescription": "Bạn chỉ cần một ý tưởng mơ hồ, AI sẽ giúp bạn tạo phương án định hướng, gợi ý tiêu đề và chuẩn bị mở sách, dừng lại ở các giai đoạn quan trọng để bạn xác nhận. Bạn không cần phải nghĩ rõ toàn bộ cấu trúc ngay từ đầu.",
+        "fitFor1": "Phù hợp khi chưa rõ thể loại, điểm bán và 30 chương đầu cam kết.",
+        "fitFor2": "Cũng hợp khi muốn nhanh chóng dựng một dự án mới có thể tiếp tục đẩy.",
+        "directorCta": "Đạo diễn AI mở sách",
+        "manualCta": "Tạo tiểu thuyết thủ công",
+        "helpCta": "Hướng dẫn cho người mới"
+      },
+      "primary": {
+        "title": "Tiếp tục dự án gần đây",
+        "subtitle": "Trang chủ sẽ đưa bạn quay lại cuốn đáng tiếp tục nhất.",
+        "errorTitle": "Hiện tại chưa thể đọc danh sách dự án, trang chủ chưa thể gợi ý bước kế tiếp.",
+        "reload": "Tải lại danh sách dự án",
+        "openProject": "Mở dự án",
+        "executionDetails": "Chi tiết thực thi"
+      },
+      "actions": {
+        "continueExecuting": "Đang tiếp tục...",
+        "continueDirector": "Đang tiếp tục...",
+        "continueDirectorDefault": "Tiếp tục đạo diễn",
+        "continueChapterRangeDefault": "Tiếp tục tự động viết {scope}",
+        "currentChapterRange": "khoảng chương hiện tại",
+        "selectDirection": "Tiếp tục xác nhận hướng đi",
+        "enterChapterExecution": "Vào thực thi chương",
+        "viewProgress": "Xem trạng thái tiến độ",
+        "editNovel": "Chỉnh sửa tiểu thuyết",
+        "errorFallbackContinueRange": "Không thể tiếp tục tự động viết khoảng chương hiện tại.",
+        "errorFallbackContinueDirector": "Không thể tiếp tục đạo diễn tự động."
+      },
+      "labels": {
+        "noWorld": "Dự án hiện tại chưa có tóm tắt, có thể vào trang chỉnh sửa để tiếp tục đẩy.",
+        "boundWorld": "Dự án đã liên kết với thế giới quan «{name}», có thể vào tiếp tục viết.",
+        "updatedAt": "Cập nhật: {date}",
+        "chapterCount": "Số chương: {count}",
+        "characterCount": "Số nhân vật: {count}",
+        "currentStage": "Giai đoạn hiện tại: {stage}",
+        "lastHealthyStage": "Giai đoạn ổn định gần nhất: {stage}",
+        "stage": "Giai đoạn: {stage}",
+        "noTime": "Chưa có",
+        "progressBadge": "Tiến độ {percent}%",
+        "statusPublished": "Đã phát hành",
+        "statusDraft": "Bản nháp",
+        "modeContinuation": "Viết tiếp",
+        "modeOriginal": "Sáng tác mới",
+        "noDirectorTask": "Không có tác vụ đạo diễn"
+      },
+      "quickActions": {
+        "title": "Thao tác nhanh",
+        "subtitle": "Gom các điểm vào dùng thường xuyên và cách mở sách dễ nhất cho người mới.",
+        "newBookAnalysis": "Tạo phân tích sách mới",
+        "backgroundTasks": "Tác vụ nền"
+      },
+      "recent": {
+        "title": "Dự án gần đây",
+        "subtitle": "Không chỉ hiển thị tiêu đề mà còn cho thấy giai đoạn hiện tại và lối khôi phục.",
+        "errorTitle": "Hiện chưa thể tải dự án gần đây, bạn có thể thử lại sau.",
+        "reload": "Tải lại",
+        "empty": "Chưa có dự án nào, hãy bắt đầu với «Tạo tiểu thuyết mới»."
+      }
+    }
+  },
   "autoDirector": {},
   "creativeHub": {},
   "knowledge": {},
-  "settings": {},
+  "settings": {
+    "page": {
+      "title": "Cài đặt hệ thống",
+      "subtitle": "Cấu hình mô hình AI, văn phong, đạo diễn tự động và tuỳ chọn giao diện."
+    },
+    "locale": {
+      "title": "Ngôn ngữ giao diện",
+      "description": "Chuyển đổi ngôn ngữ hiển thị của giao diện. Nội dung chương AI tạo ra cũng sẽ theo ngôn ngữ này.",
+      "currentLabel": "Ngôn ngữ hiện tại",
+      "options": {
+        "vi-VN": "Tiếng Việt (vi-VN)",
+        "zh-CN": "简体中文 (zh-CN)"
+      },
+      "savedToast": "Đã chuyển sang {locale}"
+    },
+    "navigation": {
+      "groups": {
+        "creation": "Sáng tác",
+        "assets": "Tài sản",
+        "system": "Hệ thống"
+      },
+      "items": {
+        "home": "Trang chủ",
+        "help": "Hướng dẫn cho người mới",
+        "novels": "Danh sách tiểu thuyết",
+        "creativeHub": "Xưởng sáng tạo",
+        "bookAnalysis": "Phân tích sách",
+        "tasks": "Trung tâm tác vụ",
+        "autoDirectorFollowUps": "Theo dõi đạo diễn",
+        "genres": "Thư viện thể loại",
+        "storyModes": "Thư viện mô thức truyện",
+        "titles": "Xưởng tiêu đề",
+        "knowledge": "Kho tri thức",
+        "worlds": "Thế giới quan",
+        "styleEngine": "Công cụ văn phong",
+        "antiAiRules": "Quy tắc chống AI",
+        "baseCharacters": "Thư viện nhân vật cơ sở",
+        "promptWorkbench": "Quản lý prompt",
+        "modelRoutes": "Định tuyến mô hình",
+        "settings": "Cài đặt hệ thống"
+      },
+      "expandSidebar": "Mở rộng thanh điều hướng",
+      "collapseSidebar": "Thu gọn thanh điều hướng"
+    }
+  },
   "serverErrors": {},
   "serverLogs": {},
   "seedData": {

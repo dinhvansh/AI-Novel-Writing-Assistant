@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import type { ApiResponse } from "@ai-novel/shared/types/api";
+import { useTranslation } from "react-i18next";
 import type { LLMProvider } from "@ai-novel/shared/types/llm";
 import {
   type APIKeyStatus,
@@ -21,6 +22,10 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Switch } from "@/components/ui/switch";
 import DesktopLegacyDataImportCard from "@/components/layout/DesktopLegacyDataImportCard";
 import DesktopUpdateCard from "@/components/layout/DesktopUpdateCard";
+import { LocaleSwitcher } from "@/components/settings/LocaleSwitcher";
+import { getI18nClientHandle } from "@/i18n";
+import { readPersistedLocale } from "@/lib/localePersistence";
+import type { LocaleCode } from "@ai-novel/shared/localization";
 import AutoDirectorSettingsSection from "./AutoDirectorSettingsSection";
 import { ProviderRequestLimitSummary } from "./components/ProviderRequestLimitFields";
 import SettingsNavigationCards from "./components/SettingsNavigationCards";
@@ -34,8 +39,10 @@ const MODEL_BADGE_COLLAPSE_COUNT = 8;
 
 export default function SettingsPage() {
   const queryClient = useQueryClient();
+  const { i18n } = useTranslation();
   const [editingProvider, setEditingProvider] = useState("");
   const [isCreatingCustomProvider, setIsCreatingCustomProvider] = useState(false);
+  const [currentLocale, setCurrentLocale] = useState<LocaleCode>(() => readPersistedLocale());
   const [expandedProviders, setExpandedProviders] = useState<Record<string, boolean>>({});
   const [form, setForm] = useState<ProviderFormState>({
     displayName: "",
@@ -416,6 +423,24 @@ export default function SettingsPage() {
       <DesktopLegacyDataImportCard forceVisible />
 
       <SettingsNavigationCards />
+
+      <Card className="min-w-0 overflow-hidden">
+        <CardContent className="pt-6">
+          <LocaleSwitcher
+            currentLocale={currentLocale}
+            onLocaleChange={async (next) => {
+              const handle = getI18nClientHandle();
+              if (handle) {
+                await handle.setLocale(next);
+              } else {
+                await i18n.changeLanguage(next);
+              }
+              setCurrentLocale(next);
+            }}
+          />
+        </CardContent>
+      </Card>
+
       <StyleEngineRuntimeSettingsCard />
 
       <AutoDirectorSettingsSection onActionResult={setActionResult} />
