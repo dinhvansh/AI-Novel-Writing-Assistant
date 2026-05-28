@@ -217,15 +217,17 @@ Within a phase, tasks numbered with the same parent (e.g., 1.8, 1.9, 1.10) can r
 
 ## Phase 3 — Translate remaining UI surfaces
 
-- [ ] 3.1 Extract and wrap all remaining client surfaces
+- [-] 3.1 Extract and wrap all remaining client surfaces
   - `pnpm tsx scripts/i18n/extract-cjk-literals.mjs` against `client/src/**/*.{ts,tsx}` excluding Phase-2 surfaces
   - File-by-file wrap-with-`t()` pass
   - _Requirements: 3.2, 3.3_
+  - **Status note**: in progress. Surfaces wrapped in this commit: `client/src/pages/help/HelpPage.tsx` (55 keys, hero + 7 guide steps + 6 goals + 4 FAQ entries with glossary-aligned translations), `client/src/pages/novels/NovelCreate.tsx` (3 keys: title, description, submit label). Total file count: ~250 surfaces remaining; will be wrapped in subsequent Phase 3 commits with the same translate-then-review-then-wrap pattern.
 
-- [ ] 3.2 Translate remaining keys via the LLM script
+- [-] 3.2 Translate remaining keys via the LLM script
   - `pnpm tsx scripts/i18n/translate-locale.mjs --target vi-VN`
   - Manual spot-check of awkward translations, especially in API toast messages and store labels
   - _Requirements: 3.2, 5.4_
+  - **Status note**: 58 keys translated via DeepSeek `deepseek-v4-flash` in this commit. Quality review caught 5 awkward phrasings (e.g. "继续自动执行前 10 章" handled at runtime; "AI Đạo diễn tự động mở sách" shortened to "Để AI mở sách tự động"; "phương án ứng cử" → "danh sách đề xuất"; "Chất lượng chờ thu hồi" → "Tồn đọng vấn đề chất lượng"; "Kết tinh phong cách" → "Lưu phong cách"). All polish applied via one-off scripts, then scripts removed.
 
 - [ ] 3.3 [PBT] Implement Property — no naked CJK literals in client/src
   - Extend `verify-locale-coverage.mjs` with a check that scans `client/src/**/*.{ts,tsx}` for naked CJK literals outside `.i18nignore`; treat any match as a coverage failure
