@@ -27,6 +27,18 @@
       "server": "Máy chủ gặp sự cố, vui lòng thử lại sau.",
       "request": "Yêu cầu thất bại.",
       "generic": "Đã xảy ra lỗi không xác định, vui lòng thử lại sau."
+    },
+    "llmSelector": {
+      "modelBadge": "Mô hình",
+      "selectProvider": "Chọn nhà cung cấp",
+      "noRunnableProvider": "Vui lòng cấu hình nhà cung cấp khả dụng trước",
+      "selectModel": "Chọn mô hình",
+      "noModelAvailable": "Không có mô hình khả dụng",
+      "searchModel": "Tìm kiếm mô hình",
+      "emptyModelHint": "Không có mô hình khả dụng",
+      "noProviderHelp": "Hiện chưa có nhà cung cấp mô hình nào đã cấu hình và bật. Vui lòng vào cài đặt hệ thống để hoàn tất cấu hình API Key và mô hình.",
+      "temperatureLabel": "Nhiệt độ (0~2)",
+      "maxTokensLabel": "Tokens tối đa (để trống = không giới hạn)"
     }
   },
   "novel": {
@@ -421,6 +433,64 @@
         "generating": "Đang tạo...",
         "generateFirstBatch": "Tạo lô phương án đầu tiên",
         "regenerateBatch": "Tiếp tục tạo theo gợi ý sửa"
+      },
+      "runModes": {
+        "fullBookAutopilot": {
+          "label": "Tự động hoàn thành toàn bộ sách (khuyến nghị)",
+          "description": "Bạn chỉ cần chọn hướng đi lúc bắt đầu; hệ thống sẽ dựa trên mục tiêu toàn bộ sách để lập kế hoạch, viết, hiệu đính và sửa lỗi."
+        },
+        "autoToReady": {
+          "label": "Chuẩn bị trước đến khi sẵn sàng viết",
+          "description": "AI sẽ tự tiếp tục cho đến khi tài nguyên Thực thi chương đã sẵn sàng, rồi bàn giao cho bạn."
+        },
+        "autoToExecution": {
+          "label": "Thực thi theo phạm vi",
+          "description": "Có thể chọn toàn bộ sách, N chương đầu hoặc 1 tập đầu, để AI trực tiếp chuẩn bị và thực thi phạm vi mục tiêu."
+        }
+      },
+      "options": {
+        "pov": {
+          "thirdPerson": {
+            "label": "Ngôi thứ ba",
+            "summary": "Ổn định nhất, phù hợp với nhiều nhân vật và mạch chính phức tạp."
+          },
+          "firstPerson": {
+            "label": "Ngôi thứ nhất",
+            "summary": "Dễ tạo cảm giác nhập vai, nhưng thông tin bị giới hạn; phù hợp với lối kể bám sát ngôi kể của nhân vật chính."
+          },
+          "mixed": {
+            "label": "Ngôi kể hỗn hợp",
+            "summary": "Linh hoạt hơn, nhưng cũng dễ mất kiểm soát hơn; phù hợp với dự án đã định hình."
+          }
+        },
+        "pace": {
+          "balanced": {
+            "label": "Cân bằng",
+            "summary": "Cân bằng giữa đẩy câu chuyện tiến lên và xây nền, phù hợp làm lựa chọn mặc định."
+          },
+          "slow": {
+            "label": "Nhịp độ chậm",
+            "summary": "Chú trọng hơn vào xây nền, không khí và ủ cảm xúc."
+          },
+          "fast": {
+            "label": "Nhịp độ nhanh",
+            "summary": "Chú trọng hơn vào sự kiện, chi tiết níu chân người đọc và đẩy truyện liên tục."
+          }
+        },
+        "emotion": {
+          "medium": {
+            "label": "Mức độ cảm xúc trung bình",
+            "summary": "Giữ các biến động nhưng không quá tải, phù hợp làm giá trị mặc định."
+          },
+          "low": {
+            "label": "Mức độ cảm xúc thấp",
+            "summary": "Kiềm chế hơn, phù hợp với kể chuyện điềm tĩnh hoặc tác phẩm thiên về lý trí."
+          },
+          "high": {
+            "label": "Mật độ cảm xúc cao",
+            "summary": "Nhấn mạnh hơn vào bùng nổ, xung đột và những cảnh tác động mạnh."
+          }
+        }
       }
     },
     "dialog": {

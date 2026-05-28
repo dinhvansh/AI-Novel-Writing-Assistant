@@ -44,8 +44,8 @@ import {
 import {
   buildAutoDirectorRequestPayload,
   buildInitialIdea,
+  buildRunModeOptions,
   DEFAULT_VISIBLE_RUN_MODE,
-  RUN_MODE_OPTIONS,
 } from "./NovelAutoDirectorDialog.shared";
 import NovelAutoDirectorCandidateSelectionContent from "./NovelAutoDirectorCandidateSelectionContent";
 import NovelAutoDirectorCandidateDialog from "./NovelAutoDirectorCandidateDialog";
@@ -102,6 +102,7 @@ export default function NovelAutoDirectorDialog({
   const llm = useLLMStore();
   const queryClient = useQueryClient();
   const { t } = useTranslation();
+  const runModeOptions = useMemo(() => buildRunModeOptions(t), [t]);
   const [open, setOpen] = useState(false);
   const [idea, setIdea] = useState("");
   const [feedback, setFeedback] = useState("");
@@ -623,7 +624,7 @@ export default function NovelAutoDirectorDialog({
                 isGeneratingIdeaInspirations={ideaInspirationMutation.isPending}
                 onGenerateIdeaInspirations={() => ideaInspirationMutation.mutate()}
                 runMode={runMode}
-                runModeOptions={RUN_MODE_OPTIONS}
+                runModeOptions={runModeOptions}
                 onRunModeChange={setRunMode}
                 autoExecutionDraft={autoExecutionDraft}
                 maxChapterCount={directorBasicForm.estimatedChapterCount}

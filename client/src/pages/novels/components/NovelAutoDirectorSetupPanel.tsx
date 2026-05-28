@@ -4,6 +4,7 @@ import type {
   DirectorAutoApprovalPoint,
 } from "@ai-novel/shared/types/autoDirectorApproval";
 import type { StyleIntentSummary } from "@ai-novel/shared/types/styleEngine";
+import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import LLMSelector from "@/components/common/LLMSelector";
 import AutoDirectorApprovalStrategyPanel from "@/components/autoDirector/AutoDirectorApprovalStrategyPanel";
@@ -19,6 +20,22 @@ import {
   POV_OPTIONS,
   READER_CHANNEL_OPTIONS,
 } from "../novelBasicInfo.shared";
+
+const POV_KEY_MAP: Record<NovelBasicFormState["narrativePov"], string> = {
+  third_person: "thirdPerson",
+  first_person: "firstPerson",
+  mixed: "mixed",
+};
+const PACE_KEY_MAP: Record<NovelBasicFormState["pacePreference"], string> = {
+  balanced: "balanced",
+  slow: "slow",
+  fast: "fast",
+};
+const EMOTION_KEY_MAP: Record<NovelBasicFormState["emotionIntensity"], string> = {
+  medium: "medium",
+  low: "low",
+  high: "high",
+};
 import {
   type DirectorAutoExecutionDraftState,
   DirectorAutoExecutionPlanFields,
@@ -128,6 +145,22 @@ export default function NovelAutoDirectorSetupPanel(props: NovelAutoDirectorSetu
     onIdeaChange(text);
   };
 
+  const povOptions = useMemo(() => POV_OPTIONS.map((option) => ({
+    ...option,
+    label: t(`autoDirector:setup.options.pov.${POV_KEY_MAP[option.value]}.label`),
+    summary: t(`autoDirector:setup.options.pov.${POV_KEY_MAP[option.value]}.summary`),
+  })), [t]);
+  const paceOptions = useMemo(() => PACE_OPTIONS.map((option) => ({
+    ...option,
+    label: t(`autoDirector:setup.options.pace.${PACE_KEY_MAP[option.value]}.label`),
+    summary: t(`autoDirector:setup.options.pace.${PACE_KEY_MAP[option.value]}.summary`),
+  })), [t]);
+  const emotionOptions = useMemo(() => EMOTION_OPTIONS.map((option) => ({
+    ...option,
+    label: t(`autoDirector:setup.options.emotion.${EMOTION_KEY_MAP[option.value]}.label`),
+    summary: t(`autoDirector:setup.options.emotion.${EMOTION_KEY_MAP[option.value]}.summary`),
+  })), [t]);
+
   return (
     <div className="min-w-0 overflow-hidden rounded-lg border bg-background/80 p-3 sm:p-4">
       <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
@@ -194,11 +227,11 @@ export default function NovelAutoDirectorSetupPanel(props: NovelAutoDirectorSetu
                       narrativePov: event.target.value as NovelBasicFormState["narrativePov"],
                     })}
                   >
-                    {POV_OPTIONS.map((option) => (
+                    {povOptions.map((option) => (
                       <option key={option.value} value={option.value}>{option.label}</option>
                     ))}
                   </select>
-                  <div className={`text-xs text-muted-foreground ${AUTO_DIRECTOR_MOBILE_CLASSES.wrapText}`}>{findOptionSummary(POV_OPTIONS, basicForm.narrativePov)}</div>
+                  <div className={`text-xs text-muted-foreground ${AUTO_DIRECTOR_MOBILE_CLASSES.wrapText}`}>{findOptionSummary(povOptions, basicForm.narrativePov)}</div>
                 </div>
 
                 <div className="space-y-2">
@@ -211,11 +244,11 @@ export default function NovelAutoDirectorSetupPanel(props: NovelAutoDirectorSetu
                       pacePreference: event.target.value as NovelBasicFormState["pacePreference"],
                     })}
                   >
-                    {PACE_OPTIONS.map((option) => (
+                    {paceOptions.map((option) => (
                       <option key={option.value} value={option.value}>{option.label}</option>
                     ))}
                   </select>
-                  <div className={`text-xs text-muted-foreground ${AUTO_DIRECTOR_MOBILE_CLASSES.wrapText}`}>{findOptionSummary(PACE_OPTIONS, basicForm.pacePreference)}</div>
+                  <div className={`text-xs text-muted-foreground ${AUTO_DIRECTOR_MOBILE_CLASSES.wrapText}`}>{findOptionSummary(paceOptions, basicForm.pacePreference)}</div>
                 </div>
 
                 <div className="space-y-2">
@@ -228,11 +261,11 @@ export default function NovelAutoDirectorSetupPanel(props: NovelAutoDirectorSetu
                       emotionIntensity: event.target.value as NovelBasicFormState["emotionIntensity"],
                     })}
                   >
-                    {EMOTION_OPTIONS.map((option) => (
+                    {emotionOptions.map((option) => (
                       <option key={option.value} value={option.value}>{option.label}</option>
                     ))}
                   </select>
-                  <div className={`text-xs text-muted-foreground ${AUTO_DIRECTOR_MOBILE_CLASSES.wrapText}`}>{findOptionSummary(EMOTION_OPTIONS, basicForm.emotionIntensity)}</div>
+                  <div className={`text-xs text-muted-foreground ${AUTO_DIRECTOR_MOBILE_CLASSES.wrapText}`}>{findOptionSummary(emotionOptions, basicForm.emotionIntensity)}</div>
                 </div>
 
                 <div className="space-y-2">

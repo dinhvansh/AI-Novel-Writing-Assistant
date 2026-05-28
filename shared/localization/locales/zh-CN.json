@@ -27,6 +27,18 @@
       "server": "服务器错误，请稍后重试。",
       "request": "请求失败。",
       "generic": "发生未知错误，请稍后重试。"
+    },
+    "llmSelector": {
+      "modelBadge": "模型",
+      "selectProvider": "选择厂商",
+      "noRunnableProvider": "请先配置可用厂商",
+      "selectModel": "选择模型",
+      "noModelAvailable": "暂无可用模型",
+      "searchModel": "搜索模型",
+      "emptyModelHint": "没有可用模型",
+      "noProviderHelp": "当前没有已配置且启用的模型厂商，请先到系统设置里完成 API Key 和模型配置。",
+      "temperatureLabel": "温度 (0~2)",
+      "maxTokensLabel": "最大 Tokens (留空 = 不限制)"
     }
   },
   "novel": {
@@ -251,6 +263,64 @@
       "ideaPlaceholder": "例如：普通女大学生误入异能组织，一边上学打工，一边调查父亲失踪真相。",
       "starterTitle": "导演起始设置",
       "starterDescription": "这里只保留自动导演真正需要你快速确认的参数。先保持默认也可以，只有你明确想要某种手感时再调整。",
+      "runModes": {
+        "fullBookAutopilot": {
+          "label": "全书自动成书（推荐）",
+          "description": "你只在开始选择方向，系统会按整本书目标完成规划、写作、审校和修复。"
+        },
+        "autoToReady": {
+          "label": "先准备到可开写",
+          "description": "AI 会持续推进到章节执行资源准备好后再交给你。"
+        },
+        "autoToExecution": {
+          "label": "按范围执行",
+          "description": "可选择全书、前 N 章或前 1 卷，让 AI 直接准备并执行目标范围。"
+        }
+      },
+      "options": {
+        "pov": {
+          "thirdPerson": {
+            "label": "第三人称",
+            "summary": "最稳，适合多角色和复杂主线。"
+          },
+          "firstPerson": {
+            "label": "第一人称",
+            "summary": "代入感强，但信息受限，适合强主角视角叙事。"
+          },
+          "mixed": {
+            "label": "混合视角",
+            "summary": "更灵活，但更容易失控，适合成熟项目。"
+          }
+        },
+        "pace": {
+          "balanced": {
+            "label": "均衡",
+            "summary": "推进和铺垫兼顾，适合作为默认选择。"
+          },
+          "slow": {
+            "label": "慢节奏",
+            "summary": "更重铺垫、氛围和情绪发酵。"
+          },
+          "fast": {
+            "label": "快节奏",
+            "summary": "更重事件驱动、钩子和连续推进。"
+          }
+        },
+        "emotion": {
+          "medium": {
+            "label": "中情绪浓度",
+            "summary": "保留起伏但不过载，适合作为默认值。"
+          },
+          "low": {
+            "label": "低情绪浓度",
+            "summary": "更克制，适合冷静叙事或偏理性作品。"
+          },
+          "high": {
+            "label": "高情绪浓度",
+            "summary": "更强调爆发、冲突和强刺激场面。"
+          }
+        }
+      },
       "fields": {
         "narrativePov": "叙事视角",
         "pacePreference": "节奏偏好",

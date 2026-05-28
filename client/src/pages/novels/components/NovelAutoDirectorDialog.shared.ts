@@ -1,31 +1,30 @@
 import type { LLMProvider } from "@ai-novel/shared/types/llm";
 import { normalizeCommercialTags } from "@ai-novel/shared/types/novelFraming";
 import type { DirectorRunMode } from "@ai-novel/shared/types/novelDirector";
+import type { TFunction } from "i18next";
 import type { NovelBasicFormState } from "../novelBasicInfo.shared";
 
-export const RUN_MODE_OPTIONS: Array<{
+export interface RunModeOption {
   value: DirectorRunMode;
   label: string;
   description: string;
-}> = [
-  {
-    value: "full_book_autopilot",
-    label: "全书自动成书",
-    description: "你只在开始选择方向，系统会按整本书目标完成规划、写作、审校和修复。",
-  },
-  {
-    value: "auto_to_ready",
-    label: "先准备到可开写（推荐）",
-    description: "AI 会持续推进到章节执行资源准备好后再交给你。",
-  },
-  {
-    value: "auto_to_execution",
-    label: "按范围执行",
-    description: "可选择全书、前 N 章或前 1 卷，让 AI 直接准备并执行目标范围。",
-  },
+}
+
+const RUN_MODE_KEY_MAP: Array<{ value: DirectorRunMode; key: string }> = [
+  { value: "full_book_autopilot", key: "fullBookAutopilot" },
+  { value: "auto_to_ready", key: "autoToReady" },
+  { value: "auto_to_execution", key: "autoToExecution" },
 ];
 
-export const DEFAULT_VISIBLE_RUN_MODE: DirectorRunMode = "auto_to_ready";
+export function buildRunModeOptions(t: TFunction): RunModeOption[] {
+  return RUN_MODE_KEY_MAP.map(({ value, key }) => ({
+    value,
+    label: t("autoDirector:setup.runModes.${key}.label"),
+    description: t("autoDirector:setup.runModes.${key}.description"),
+  }));
+}
+
+export const DEFAULT_VISIBLE_RUN_MODE: DirectorRunMode = "full_book_autopilot";
 
 export interface AutoDirectorRequestLlmOptions {
   provider: LLMProvider;
