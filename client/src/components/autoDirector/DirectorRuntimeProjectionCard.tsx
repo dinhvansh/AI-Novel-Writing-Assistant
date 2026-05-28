@@ -12,6 +12,8 @@ import {
   ShieldCheck,
   XCircle,
 } from "lucide-react";
+import { useTranslation } from "react-i18next";
+import type { TFunction } from "i18next";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 
@@ -21,13 +23,13 @@ interface DirectorRuntimeProjectionCardProps {
   compact?: boolean;
 }
 
-function formatDate(value: string | null | undefined): string {
+function formatDate(t: TFunction, value: string | null | undefined): string {
   if (!value) {
-    return "暂无";
+    return t("autoDirector:runtimeProjection.labels.noTime");
   }
   const date = new Date(value);
   if (Number.isNaN(date.getTime())) {
-    return "暂无";
+    return t("autoDirector:runtimeProjection.labels.noTime");
   }
   return date.toLocaleString();
 }
@@ -37,69 +39,64 @@ function formatTokenCount(value: number | null | undefined): string {
   return count.toLocaleString();
 }
 
-function formatDuration(value: number | null | undefined): string | null {
+function formatDuration(t: TFunction, value: number | null | undefined): string | null {
   if (typeof value !== "number" || !Number.isFinite(value) || value <= 0) {
     return null;
   }
   const seconds = Math.round(value / 1000);
   if (seconds <= 0) {
-    return "<1 秒";
+    return t("autoDirector:runtimeProjection.labels.lessThanOneSecond");
   }
   if (seconds < 60) {
-    return `${seconds} 秒`;
+    return t("autoDirector:cockpit.labels.secondsFormat", { seconds });
   }
   const minutes = Math.floor(seconds / 60);
   const restSeconds = seconds % 60;
-  return restSeconds > 0 ? `${minutes} 分 ${restSeconds} 秒` : `${minutes} 分`;
+  return restSeconds > 0
+    ? t("autoDirector:cockpit.labels.minutesSecondsFormat", { minutes, seconds: restSeconds })
+    : t("autoDirector:cockpit.labels.minutesOnlyFormat", { minutes });
 }
 
-function formatUsageLine(usage: {
+function formatUsageLine(t: TFunction, usage: {
   llmCallCount: number;
   promptTokens: number;
   completionTokens: number;
   totalTokens: number;
   durationMs?: number | null;
 }): string {
-  const duration = formatDuration(usage.durationMs);
+  const duration = formatDuration(t, usage.durationMs);
   return [
-    `${formatTokenCount(usage.llmCallCount)} 次调用`,
-    `输入 ${formatTokenCount(usage.promptTokens)}`,
-    `输出 ${formatTokenCount(usage.completionTokens)}`,
-    `总计 ${formatTokenCount(usage.totalTokens)} Tokens`,
-    duration ? `累计调用耗时 ${duration}` : null,
+    t("autoDirector:cockpit.usage.callCount", { value: formatTokenCount(usage.llmCallCount) }),
+    t("autoDirector:cockpit.usage.promptTokens", { value: formatTokenCount(usage.promptTokens) }),
+    t("autoDirector:cockpit.usage.completionTokens", { value: formatTokenCount(usage.completionTokens) }),
+    t("autoDirector:cockpit.usage.totalTokens", { value: formatTokenCount(usage.totalTokens) }),
+    duration ? t("autoDirector:cockpit.usage.duration", { duration }) : null,
   ].filter(Boolean).join(" · ");
 }
 
-function formatPolicyMode(mode: DirectorPolicyMode): string {
+function formatPolicyMode(t: TFunction, mode: DirectorPolicyMode): string {
   if (mode === "suggest_only") {
-    return "只给建议";
+    return t("autoDirector:runtimeProjection.policyModes.suggestOnly");
   }
   if (mode === "run_next_step") {
-    return "推进下一步";
+    return t("autoDirector:runtimeProjection.policyModes.runNextStep");
   }
   if (mode === "auto_safe_scope") {
-    return "安全范围自动推进";
+    return t("autoDirector:runtimeProjection.policyModes.autoSafeScope");
   }
-  return "推进到检查点";
+  return t("autoDirector:runtimeProjection.policyModes.runToCheckpoint");
 }
 
-function formatStatus(status: DirectorRuntimeProjectionStatus): string {
-  if (status === "running") {
-    return "推进中";
-  }
-  if (status === "waiting_approval") {
-    return "等待确认";
-  }
-  if (status === "blocked") {
-    return "已暂停";
-  }
-  if (status === "failed") {
-    return "失败";
-  }
-  if (status === "completed") {
-    return "已完成";
-  }
-  return "待开始";
+function formatStatus(t: TFunction, status: DirectorRuntimeProjectionStatus): string {
+  const keyMap: Record<DirectorRuntimeProjectionStatus, string> = {
+    idle: "pending",
+    running: "running",
+    waiting_approval: "waitingApproval",
+    blocked: "blocked",
+    failed: "failed",
+    completed: "completed",
+  };
+  return t(`autoDirector:runtimeProjection.statuses.${keyMap[status]}`);
 }
 
 function statusClassName(status: DirectorRuntimeProjectionStatus): string {
@@ -147,40 +144,48 @@ function riskBadgeClassName(level: NonNullable<DirectorRuntimeProjection["visibl
   return "border-sky-200 bg-sky-50 text-sky-700";
 }
 
-function formatQualityDebtSummary(summary: DirectorRuntimeProjection["qualityDebtSummary"] | null | undefined): string | null {
+function formatQualityDebtSummary(t: TFunction, summary: DirectorRuntimeProjection["qualityDebtSummary"] | null | undefined): string | null {
   if (!summary || summary.deferredChapterCount <= 0) {
     return null;
   }
-  const orderText = summary.deferredChapterOrders.length > 0
-    ? `：第 ${summary.deferredChapterOrders.join("、")} 章`
-    : "";
-  return `质量待回收${orderText}。系统会先继续写后续章节，并在质量修复阶段回收这些问题。`;
+  if (summary.deferredChapterOrders.length > 0) {
+    return t("autoDirector:runtimeProjection.qualityDebt.summaryWithChapters", {
+      chapters: summary.deferredChapterOrders.join("、"),
+    });
+  }
+  return t("autoDirector:runtimeProjection.qualityDebt.summaryWithoutChapters");
 }
 
-function formatQualityBudgetSummary(summary: DirectorRuntimeProjection["qualityBudgetSummary"] | null | undefined): string | null {
+function formatQualityBudgetSummary(t: TFunction, summary: DirectorRuntimeProjection["qualityBudgetSummary"] | null | undefined): string | null {
   if (!summary) {
     return null;
   }
-  const chapterText = typeof summary.currentChapterOrder === "number"
-    ? `第 ${summary.currentChapterOrder} 章`
-    : "当前章节";
-  return `${chapterText}质量预算：局部修复 ${summary.patchRepairUsed}/1，整章重写 ${summary.chapterRewriteUsed}/1，窗口重规划 ${summary.windowReplanUsed}/1。${summary.nextActionLabel}`;
+  const chapter = typeof summary.currentChapterOrder === "number"
+    ? t("autoDirector:runtimeProjection.qualityBudget.chapterFormat", { order: summary.currentChapterOrder })
+    : t("autoDirector:runtimeProjection.qualityBudget.currentChapter");
+  return t("autoDirector:runtimeProjection.qualityBudget.summary", {
+    chapter,
+    patch: summary.patchRepairUsed,
+    rewrite: summary.chapterRewriteUsed,
+    replan: summary.windowReplanUsed,
+    action: summary.nextActionLabel,
+  });
 }
 
-function formatRootCauseSummary(projection: DirectorRuntimeProjection): string | null {
+function formatRootCauseSummary(t: TFunction, projection: DirectorRuntimeProjection): string | null {
   if (!projection.rootCauseCode || projection.rootCauseCode === "none") {
     return null;
   }
   if (projection.rootCauseCode === "replan_required") {
-    return "当前问题来自章节职责失配，系统需要先调整附近章节安排。";
+    return t("autoDirector:runtimeProjection.rootCause.replanRequired");
   }
   if (projection.rootCauseCode === "draft_obligation_unmet") {
-    return "正文已经生成，但仍有本章必须完成的内容没有兑现。";
+    return t("autoDirector:runtimeProjection.rootCause.draftObligationUnmet");
   }
   if (projection.rootCauseCode === "draft_repair_exhausted") {
-    return "正文已经生成，但自动修复后仍有阻塞问题需要继续处理。";
+    return t("autoDirector:runtimeProjection.rootCause.draftRepairExhausted");
   }
-  return "正文没有成功生成，需要重新执行当前章节。";
+  return t("autoDirector:runtimeProjection.rootCause.draftMissing");
 }
 
 function formatPercent(value: number | null | undefined): string {
@@ -195,50 +200,75 @@ export default function DirectorRuntimeProjectionCard({
   className,
   compact = false,
 }: DirectorRuntimeProjectionCardProps) {
+  const { t } = useTranslation();
   if (!projection) {
     return null;
   }
   const primaryText = projection.headline?.trim()
     || projection.currentLabel?.trim()
     || projection.lastEventSummary?.trim()
-    || "等待同步当前推进状态";
+    || t("autoDirector:runtimeProjection.fallbackPrimary");
   const detailText = projection.detail?.trim();
   const attentionText = projection.requiresUserAction
     ? projection.blockingReason?.trim()
       || projection.blockedReason?.trim()
       || projection.lastEventSummary?.trim()
-      || "请先处理当前停留点。"
+      || t("autoDirector:runtimeProjection.needsUserActionDefault")
     : projection.blockingReason?.trim() || projection.blockedReason?.trim();
   const progressLine = projection.progressBreakdown?.explanation?.trim()
     || projection.progressSummary?.trim()
     || null;
-  const qualityDebtLine = formatQualityDebtSummary(projection.qualityDebtSummary);
-  const qualityBudgetLine = formatQualityBudgetSummary(projection.qualityBudgetSummary);
-  const rootCauseLine = formatRootCauseSummary(projection);
+  const qualityDebtLine = formatQualityDebtSummary(t, projection.qualityDebtSummary);
+  const qualityBudgetLine = formatQualityBudgetSummary(t, projection.qualityBudgetSummary);
+  const rootCauseLine = formatRootCauseSummary(t, projection);
   const obligationLine = projection.blockingObligations && projection.blockingObligations.length > 0
-    ? `仍需处理：${projection.blockingObligations.slice(0, 3).map((item) => item.summary).join("；")}`
+    ? t("autoDirector:runtimeProjection.labels.obligation", {
+      summary: projection.blockingObligations.slice(0, 3).map((item) => item.summary).join("；"),
+    })
     : null;
   const activeExecutionLine = projection.activeExecution
-    ? `后台执行：${getDirectorNodeDisplayLabel({
-      nodeKey: projection.activeExecution.stepType,
-      fallback: projection.currentAction || "自动导演任务",
-    })}${projection.activeExecution.resourceClass ? ` · ${projection.activeExecution.resourceClass}` : ""}`
+    ? (() => {
+      const baseLabel = getDirectorNodeDisplayLabel({
+        nodeKey: projection.activeExecution.stepType,
+        fallback: projection.currentAction || t("autoDirector:runtimeProjection.labels.fallbackTaskName"),
+      });
+      return projection.activeExecution.resourceClass
+        ? t("autoDirector:runtimeProjection.labels.activeExecution", {
+          label: t("autoDirector:runtimeProjection.labels.activeExecutionResource", {
+            label: baseLabel,
+            resource: projection.activeExecution.resourceClass,
+          }),
+        })
+        : t("autoDirector:runtimeProjection.labels.activeExecution", { label: baseLabel });
+    })()
     : null;
-  const waitingLine = projection.waitingReason ? `等待原因：${projection.waitingReason}` : null;
+  const waitingLine = projection.waitingReason
+    ? t("autoDirector:runtimeProjection.labels.waitingReason", { reason: projection.waitingReason })
+    : null;
   const workerHealthLine = projection.workerHealth
     ? [
-      `执行队列：${projection.workerHealth.queuedCommandCount} 个等待`,
-      projection.workerHealth.runningCommandCount > 0 ? `${projection.workerHealth.runningCommandCount} 个处理中` : null,
-      projection.workerHealth.currentWorkerId ? `执行器：${projection.workerHealth.currentWorkerId}` : null,
+      t("autoDirector:runtimeProjection.labels.queueWaiting", { count: projection.workerHealth.queuedCommandCount }),
+      projection.workerHealth.runningCommandCount > 0
+        ? t("autoDirector:runtimeProjection.labels.queueRunning", { count: projection.workerHealth.runningCommandCount })
+        : null,
+      projection.workerHealth.currentWorkerId
+        ? t("autoDirector:runtimeProjection.labels.currentWorker", { worker: projection.workerHealth.currentWorkerId })
+        : null,
     ].filter(Boolean).join(" · ")
     : null;
   const helperLines = [
     activeExecutionLine,
     waitingLine,
     workerHealthLine,
-    projection.nextActionLabel ? `下一步：${projection.nextActionLabel}` : null,
-    projection.recommendedAction?.reason ? `推荐原因：${projection.recommendedAction.reason}` : null,
-    projection.isAutopilotRecoverable ? "AI 可以从当前进度继续处理。" : null,
+    projection.nextActionLabel
+      ? t("autoDirector:runtimeProjection.labels.nextStep", { label: projection.nextActionLabel })
+      : null,
+    projection.recommendedAction?.reason
+      ? t("autoDirector:runtimeProjection.labels.recommendedReason", { reason: projection.recommendedAction.reason })
+      : null,
+    projection.isAutopilotRecoverable
+      ? t("autoDirector:runtimeProjection.labels.autopilotRecoverable")
+      : null,
     rootCauseLine,
     obligationLine,
     qualityBudgetLine,
@@ -259,12 +289,12 @@ export default function DirectorRuntimeProjectionCard({
         <div className="flex min-w-0 items-start gap-2">
           <span className="mt-0.5 shrink-0">{statusIcon(projection.status)}</span>
           <div className="min-w-0">
-            <div className="text-sm font-semibold text-foreground">导演进度</div>
+            <div className="text-sm font-semibold text-foreground">{t("autoDirector:runtimeProjection.title")}</div>
             <div className="mt-1 text-sm leading-5">{primaryText}</div>
           </div>
         </div>
         <Badge variant="outline" className="shrink-0 bg-background/70">
-          {formatStatus(projection.status)}
+          {formatStatus(t, projection.status)}
         </Badge>
       </div>
 
@@ -281,19 +311,19 @@ export default function DirectorRuntimeProjectionCard({
       {progressBreakdown && !compact ? (
         <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-4">
           <div className="rounded-md border bg-background/70 px-3 py-2">
-            <div className="text-[11px] text-muted-foreground">规划</div>
+            <div className="text-[11px] text-muted-foreground">{t("autoDirector:runtimeProjection.progressLabels.planning")}</div>
             <div className="mt-1 text-sm font-semibold text-foreground">{formatPercent(progressBreakdown.planningProgress ?? progressBreakdown.planningPercent)}</div>
           </div>
           <div className="rounded-md border bg-background/70 px-3 py-2">
-            <div className="text-[11px] text-muted-foreground">章节</div>
+            <div className="text-[11px] text-muted-foreground">{t("autoDirector:runtimeProjection.progressLabels.chapters")}</div>
             <div className="mt-1 text-sm font-semibold text-foreground">{progressBreakdown.continuableChapters}/{progressBreakdown.totalChapters}</div>
           </div>
           <div className="rounded-md border bg-background/70 px-3 py-2">
-            <div className="text-[11px] text-muted-foreground">质量</div>
+            <div className="text-[11px] text-muted-foreground">{t("autoDirector:runtimeProjection.progressLabels.quality")}</div>
             <div className="mt-1 text-sm font-semibold text-foreground">{formatPercent(progressBreakdown.qualityProgress ?? progressBreakdown.qualityRepairPercent)}</div>
           </div>
           <div className="rounded-md border bg-background/70 px-3 py-2">
-            <div className="text-[11px] text-muted-foreground">当前动作</div>
+            <div className="text-[11px] text-muted-foreground">{t("autoDirector:runtimeProjection.progressLabels.currentAction")}</div>
             <div className="mt-1 text-sm font-semibold text-foreground">{formatPercent(progressBreakdown.activeJobProgress)}</div>
           </div>
         </div>
@@ -301,7 +331,9 @@ export default function DirectorRuntimeProjectionCard({
 
       {attentionText ? (
         <div className="mt-3 rounded-md border bg-background/70 px-3 py-2 text-sm leading-5">
-          {projection.requiresUserAction ? "需要你处理：" : "暂停原因："}{attentionText}
+          {projection.requiresUserAction
+            ? t("autoDirector:runtimeProjection.needsUserAction")
+            : t("autoDirector:runtimeProjection.pausedReason")}{attentionText}
         </div>
       ) : null}
 
@@ -323,30 +355,30 @@ export default function DirectorRuntimeProjectionCard({
 
       {usageSummary ? (
         <div className="mt-3 rounded-md border bg-background/70 px-3 py-2 text-xs leading-5 text-muted-foreground">
-          <div className="font-medium text-foreground">AI 用量</div>
-          <div className="mt-1">{formatUsageLine(usageSummary)}</div>
+          <div className="font-medium text-foreground">{t("autoDirector:cockpit.usage.title")}</div>
+          <div className="mt-1">{formatUsageLine(t, usageSummary)}</div>
           {promptUsage.length > 0 && !compact ? (
             <div className="mt-2 space-y-1">
-              <div className="text-[11px] font-medium text-muted-foreground">阶段用量</div>
+              <div className="text-[11px] font-medium text-muted-foreground">{t("autoDirector:cockpit.usage.stageTitle")}</div>
               {promptUsage.map((item) => (
                 <div key={`${item.promptAssetKey}:${item.promptVersion ?? ""}:${item.nodeKey ?? ""}`} className="flex flex-wrap items-center justify-between gap-2 border-t pt-1">
                   <span className="min-w-0 truncate text-foreground">
                     {getDirectorNodeDisplayLabel({ label: item.label ?? item.promptAssetKey, nodeKey: item.nodeKey })}
                   </span>
-                  <span className="shrink-0">{formatUsageLine(item)}</span>
+                  <span className="shrink-0">{formatUsageLine(t, item)}</span>
                 </div>
               ))}
             </div>
           ) : null}
           {stepUsage.length > 0 && !compact ? (
             <div className="mt-2 space-y-1">
-              <div className="text-[11px] font-medium text-muted-foreground">推进步骤</div>
+              <div className="text-[11px] font-medium text-muted-foreground">{t("autoDirector:cockpit.usage.stepTitle")}</div>
               {stepUsage.map((item) => (
                 <div key={item.stepIdempotencyKey} className="flex flex-wrap items-center justify-between gap-2 border-t pt-1">
                   <span className="min-w-0 truncate text-foreground">
                     {getDirectorNodeDisplayLabel({ label: item.label, nodeKey: item.nodeKey })}
                   </span>
-                  <span className="shrink-0">{formatUsageLine(item)}</span>
+                  <span className="shrink-0">{formatUsageLine(t, item)}</span>
                 </div>
               ))}
             </div>
@@ -355,17 +387,17 @@ export default function DirectorRuntimeProjectionCard({
       ) : null}
 
       <div className="mt-3 flex flex-wrap gap-2 text-xs text-muted-foreground">
-        <span className="rounded-full bg-background/70 px-2 py-1">推进方式：{formatPolicyMode(projection.policyMode)}</span>
-        <span className="rounded-full bg-background/70 px-2 py-1">更新时间：{formatDate(projection.updatedAt)}</span>
+        <span className="rounded-full bg-background/70 px-2 py-1">{t("autoDirector:runtimeProjection.labels.policyMode", { mode: formatPolicyMode(t, projection.policyMode) })}</span>
+        <span className="rounded-full bg-background/70 px-2 py-1">{t("autoDirector:runtimeProjection.labels.updatedAt", { time: formatDate(t, projection.updatedAt) })}</span>
       </div>
 
       {recentEvents.length > 0 && !compact ? (
         <div className="mt-3 space-y-2">
-          <div className="text-xs font-medium text-muted-foreground">最近进展</div>
+          <div className="text-xs font-medium text-muted-foreground">{t("autoDirector:runtimeProjection.labels.recentEvents")}</div>
           {recentEvents.map((event) => (
             <div key={event.eventId} className="rounded-md border bg-background/70 px-3 py-2 text-xs leading-5">
               <div className="text-foreground">{event.summary}</div>
-              <div className="mt-1 text-muted-foreground">{formatDate(event.occurredAt)}</div>
+              <div className="mt-1 text-muted-foreground">{formatDate(t, event.occurredAt)}</div>
             </div>
           ))}
         </div>

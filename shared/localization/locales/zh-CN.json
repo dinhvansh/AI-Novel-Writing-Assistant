@@ -218,7 +218,174 @@
       }
     }
   },
-  "autoDirector": {},
+  "autoDirector": {
+    "cockpit": {
+      "title": "AI 驾驶舱",
+      "states": {
+        "processing": "AI 正在处理",
+        "needsConfirmation": "等你确认",
+        "paused": "已暂停",
+        "needsAttention": "出错需处理",
+        "completed": "已完成",
+        "idle": "未开启"
+      },
+      "fallback": {
+        "noTask": "没有需要你处理的 AI 自动推进任务。",
+        "view": "查看"
+      },
+      "labels": {
+        "details": "执行详情",
+        "openNovel": "打开小说",
+        "processing": "处理中...",
+        "confirmContinue": "确认并继续",
+        "continueDefault": "继续处理",
+        "noTime": "暂无",
+        "lessThanOneSecond": "<1 秒",
+        "secondsSuffix": "秒",
+        "minutesSuffix": "分",
+        "minutesSecondsFormat": "{minutes} 分 {seconds} 秒",
+        "minutesOnlyFormat": "{minutes} 分",
+        "secondsFormat": "{seconds} 秒"
+      },
+      "usage": {
+        "callCount": "{value} 次调用",
+        "promptTokens": "输入 {value}",
+        "completionTokens": "输出 {value}",
+        "totalTokens": "总计 {value} Tokens",
+        "duration": "累计调用耗时 {duration}",
+        "title": "AI 用量",
+        "stageTitle": "阶段用量",
+        "stepTitle": "推进步骤"
+      },
+      "background": {
+        "title": "后台执行",
+        "states": {
+          "idle": "未运行",
+          "queuedWaitingWorker": "等待接手",
+          "leasedStarting": "正在接手",
+          "runningStep": "自动推进中",
+          "waitingGate": "等待确认",
+          "autoRecovering": "恢复中",
+          "cancelled": "已停止",
+          "failedRecoverable": "等待恢复",
+          "failedHard": "需要处理",
+          "succeeded": "已完成"
+        },
+        "queueLabel": "排队",
+        "leasedLabel": "接手",
+        "runningLabel": "执行",
+        "staleLabel": "恢复",
+        "waitingForWorker": "等待接手 {duration}",
+        "messageQueued": "任务已排队，后台执行接手后会继续推进。",
+        "messageRunning": "后台执行正在处理当前任务。",
+        "messageStale": "后台执行中断后会从最近进度尝试恢复。",
+        "messageIdle": "当前没有正在排队或执行的后台动作。"
+      },
+      "circuitBreaker": {
+        "title": "自动推进已暂停",
+        "defaultMessage": "系统检测到继续自动推进可能反复失败。",
+        "recoveryHint": "建议：{action}。",
+        "recoveryActions": {
+          "retry": "重试当前步骤",
+          "resumeAfterReview": "查看原因后继续",
+          "switchModel": "切换模型后继续",
+          "confirmProtectedContent": "确认保护内容边界",
+          "manualRepair": "先处理章节问题"
+        }
+      },
+      "artifacts": {
+        "title": "产物记录",
+        "types": {
+          "bookContract": "书级约定",
+          "storyMacro": "故事规划",
+          "characterCast": "角色",
+          "volumeStrategy": "分卷",
+          "chapterTaskSheet": "任务单",
+          "chapterDraft": "正文",
+          "auditReport": "审校",
+          "repairTicket": "修复",
+          "readerPromise": "读者承诺",
+          "characterGovernanceState": "角色状态",
+          "worldSkeleton": "世界框架",
+          "sourceKnowledgePack": "资料包",
+          "chapterRetentionContract": "留存约定",
+          "continuityState": "连续性",
+          "rollingWindowReview": "近期复盘"
+        },
+        "insights": {
+          "affectedChapters": "影响 {count} 个章节",
+          "staleArtifacts": "{count} 个产物需复核",
+          "repairArtifacts": "{count} 条修复记录",
+          "versionedArtifacts": "{count} 个产物有新版本"
+        }
+      },
+      "nextStepLabel": "下一步：{label}",
+      "timeline": {
+        "title": "自动化记录",
+        "duration": "耗时 {duration}"
+      }
+    },
+    "runtimeProjection": {
+      "title": "导演进度",
+      "fallbackPrimary": "等待同步当前推进状态",
+      "needsUserAction": "需要你处理：",
+      "pausedReason": "暂停原因：",
+      "needsUserActionDefault": "请先处理当前停留点。",
+      "policyModes": {
+        "suggestOnly": "只给建议",
+        "runNextStep": "推进下一步",
+        "autoSafeScope": "安全范围自动推进",
+        "runToCheckpoint": "推进到检查点"
+      },
+      "statuses": {
+        "running": "推进中",
+        "waitingApproval": "等待确认",
+        "blocked": "已暂停",
+        "failed": "失败",
+        "completed": "已完成",
+        "pending": "待开始"
+      },
+      "qualityDebt": {
+        "summaryWithChapters": "质量待回收：第 {chapters} 章。系统会先继续写后续章节，并在质量修复阶段回收这些问题。",
+        "summaryWithoutChapters": "质量待回收。系统会先继续写后续章节，并在质量修复阶段回收这些问题。"
+      },
+      "qualityBudget": {
+        "summary": "{chapter}质量预算：局部修复 {patch}/1，整章重写 {rewrite}/1，窗口重规划 {replan}/1。{action}",
+        "currentChapter": "当前章节",
+        "chapterFormat": "第 {order} 章"
+      },
+      "rootCause": {
+        "replanRequired": "当前问题来自章节职责失配，系统需要先调整附近章节安排。",
+        "draftObligationUnmet": "正文已经生成，但仍有本章必须完成的内容没有兑现。",
+        "draftRepairExhausted": "正文已经生成，但自动修复后仍有阻塞问题需要继续处理。",
+        "draftMissing": "正文没有成功生成，需要重新执行当前章节。"
+      },
+      "labels": {
+        "obligation": "仍需处理：{summary}",
+        "activeExecution": "后台执行：{label}",
+        "activeExecutionResource": "{label} · {resource}",
+        "fallbackTaskName": "自动导演任务",
+        "waitingReason": "等待原因：{reason}",
+        "queueWaiting": "执行队列：{count} 个等待",
+        "queueRunning": "{count} 个处理中",
+        "currentWorker": "执行器：{worker}",
+        "nextStep": "下一步：{label}",
+        "recommendedReason": "推荐原因：{reason}",
+        "autopilotRecoverable": "AI 可以从当前进度继续处理。",
+        "policyMode": "推进方式：{mode}",
+        "updatedAt": "更新时间：{time}",
+        "recentEvents": "最近进展",
+        "noTime": "暂无",
+        "lessThanOneSecond": "<1 秒"
+      },
+      "progressLabels": {
+        "planning": "规划",
+        "chapters": "章节",
+        "quality": "质量",
+        "currentAction": "当前动作"
+      }
+    }
+  },
   "creativeHub": {},
   "knowledge": {},
   "settings": {

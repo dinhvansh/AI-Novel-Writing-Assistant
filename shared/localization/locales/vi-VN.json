@@ -218,7 +218,174 @@
       "submitLabel": "Tạo và vào dự án"
     }
   },
-  "autoDirector": {},
+  "autoDirector": {
+    "cockpit": {
+      "title": "Bảng điều khiển AI",
+      "states": {
+        "processing": "AI đang xử lý",
+        "needsConfirmation": "Chờ bạn xác nhận",
+        "paused": "Đã tạm dừng",
+        "needsAttention": "Lỗi cần xử lý",
+        "completed": "Đã hoàn thành",
+        "idle": "Chưa bật"
+      },
+      "fallback": {
+        "noTask": "Không có tác vụ AI tự động nào cần bạn xử lý.",
+        "view": "Xem"
+      },
+      "labels": {
+        "details": "Chi tiết thực thi",
+        "openNovel": "Mở tiểu thuyết",
+        "processing": "Đang xử lý...",
+        "confirmContinue": "Xác nhận và tiếp tục",
+        "continueDefault": "Tiếp tục xử lý",
+        "noTime": "Chưa có",
+        "lessThanOneSecond": "<1 giây",
+        "secondsSuffix": "giây",
+        "minutesSuffix": "phút",
+        "minutesSecondsFormat": "{minutes} phút {seconds} giây",
+        "minutesOnlyFormat": "{minutes} phút",
+        "secondsFormat": "{seconds} giây"
+      },
+      "usage": {
+        "callCount": "{value} lần gọi",
+        "promptTokens": "Đầu vào {value}",
+        "completionTokens": "Đầu ra {value}",
+        "totalTokens": "Tổng cộng {value} Tokens",
+        "duration": "Tổng thời gian gọi {duration}",
+        "title": "Mức sử dụng AI",
+        "stageTitle": "Mức sử dụng theo giai đoạn",
+        "stepTitle": "Các bước triển khai"
+      },
+      "background": {
+        "title": "Chạy trong nền",
+        "states": {
+          "idle": "Chưa chạy",
+          "queuedWaitingWorker": "Đang chờ tiếp nhận",
+          "leasedStarting": "Đang tiếp nhận",
+          "runningStep": "Đang tự động xử lý",
+          "waitingGate": "Đợi xác nhận",
+          "autoRecovering": "Đang phục hồi",
+          "cancelled": "Đã dừng",
+          "failedRecoverable": "Đang chờ phục hồi",
+          "failedHard": "Cần xử lý",
+          "succeeded": "Đã hoàn thành"
+        },
+        "queueLabel": "Xếp hàng",
+        "leasedLabel": "Tiếp nhận",
+        "runningLabel": "Thực thi",
+        "staleLabel": "Phục hồi",
+        "waitingForWorker": "Đang chờ tiếp nhận {duration}",
+        "messageQueued": "Tác vụ đã được đưa vào hàng đợi; khi nền tiếp nhận, tiến trình sẽ tiếp tục.",
+        "messageRunning": "Thực thi nền đang xử lý tác vụ hiện tại.",
+        "messageStale": "Sau khi thực thi nền bị gián đoạn, sẽ cố gắng phục hồi từ tiến độ gần nhất.",
+        "messageIdle": "Hiện không có tác vụ nền nào đang chờ hoặc đang chạy."
+      },
+      "circuitBreaker": {
+        "title": "Đã tạm dừng tự động tiến hành",
+        "defaultMessage": "Hệ thống phát hiện việc tiếp tục tự động tiến hành có thể liên tục thất bại.",
+        "recoveryHint": "Gợi ý: {action}.",
+        "recoveryActions": {
+          "retry": "Thử lại bước hiện tại",
+          "resumeAfterReview": "Tiếp tục sau khi xem xét nguyên nhân",
+          "switchModel": "Tiếp tục sau khi chuyển mô hình",
+          "confirmProtectedContent": "Xác nhận ranh giới nội dung được bảo vệ",
+          "manualRepair": "Xử lý vấn đề chương trước"
+        }
+      },
+      "artifacts": {
+        "title": "Bản ghi kết quả tạo ra",
+        "types": {
+          "bookContract": "Quy ước cấp sách",
+          "storyMacro": "Kế hoạch truyện",
+          "characterCast": "Nhân vật",
+          "volumeStrategy": "Phân tập",
+          "chapterTaskSheet": "Phiếu tác vụ",
+          "chapterDraft": "Nội dung chính",
+          "auditReport": "Rà soát",
+          "repairTicket": "Sửa chữa",
+          "readerPromise": "Cam kết với độc giả",
+          "characterGovernanceState": "Trạng thái nhân vật",
+          "worldSkeleton": "Khung thế giới",
+          "sourceKnowledgePack": "Gói tài liệu",
+          "chapterRetentionContract": "Quy ước giữ chân độc giả",
+          "continuityState": "Tính liên tục",
+          "rollingWindowReview": "Rà soát gần đây"
+        },
+        "insights": {
+          "affectedChapters": "Ảnh hưởng đến {count} chương",
+          "staleArtifacts": "{count} sản phẩm cần rà soát lại",
+          "repairArtifacts": "{count} bản ghi sửa lỗi",
+          "versionedArtifacts": "{count} sản phẩm có phiên bản mới"
+        }
+      },
+      "nextStepLabel": "Bước tiếp theo: {label}",
+      "timeline": {
+        "title": "Bản ghi tự động hóa",
+        "duration": "Mất {duration}"
+      }
+    },
+    "runtimeProjection": {
+      "title": "Tiến độ đạo diễn",
+      "fallbackPrimary": "Đang chờ đồng bộ trạng thái tiến độ hiện tại",
+      "needsUserAction": "Cần bạn xử lý:",
+      "pausedReason": "Lý do tạm dừng:",
+      "needsUserActionDefault": "Vui lòng xử lý điểm dừng hiện tại trước.",
+      "policyModes": {
+        "suggestOnly": "Chỉ gợi ý",
+        "runNextStep": "Thực hiện bước tiếp theo",
+        "autoSafeScope": "Tự động thực hiện trong phạm vi an toàn",
+        "runToCheckpoint": "Tiến đến điểm kiểm tra"
+      },
+      "statuses": {
+        "running": "Đang tiến hành",
+        "waitingApproval": "Chờ xác nhận",
+        "blocked": "Đã tạm dừng",
+        "failed": "Thất bại",
+        "completed": "Đã hoàn thành",
+        "pending": "Chờ bắt đầu"
+      },
+      "qualityDebt": {
+        "summaryWithChapters": "Nợ chất lượng: chương {chapters}. Hệ thống sẽ tiếp tục viết các chương sau trước, rồi xử lý các vấn đề này trong giai đoạn sửa chất lượng.",
+        "summaryWithoutChapters": "Nợ chất lượng. Hệ thống sẽ tiếp tục viết các chương sau trước, rồi xử lý các vấn đề này trong giai đoạn sửa chất lượng."
+      },
+      "qualityBudget": {
+        "summary": "{chapter} ngân sách chất lượng: sửa cục bộ {patch}/1, viết lại toàn chương {rewrite}/1, lên lại kế hoạch cho nhóm chương {replan}/1. {action}",
+        "currentChapter": "Chương hiện tại",
+        "chapterFormat": "Chương {order}"
+      },
+      "rootCause": {
+        "replanRequired": "Vấn đề hiện tại xuất phát từ việc vai trò của chương chưa khớp, hệ thống cần điều chỉnh sắp xếp các chương lân cận trước.",
+        "draftObligationUnmet": "Nội dung chính đã được tạo, nhưng vẫn còn những nội dung bắt buộc của chương này chưa được hoàn thành.",
+        "draftRepairExhausted": "Nội dung chính đã được tạo, nhưng sau khi tự động sửa vẫn còn vấn đề gây chặn cần tiếp tục xử lý.",
+        "draftMissing": "Nội dung chính không được tạo thành công, cần thực thi lại chương hiện tại."
+      },
+      "labels": {
+        "obligation": "Cần xử lý: {summary}",
+        "activeExecution": "Đang chạy nền: {label}",
+        "activeExecutionResource": "{label} · {resource}",
+        "fallbackTaskName": "Tác vụ Đạo diễn tự động",
+        "waitingReason": "Lý do chờ: {reason}",
+        "queueWaiting": "Hàng đợi thực thi: {count} đang chờ",
+        "queueRunning": "{count} đang xử lý",
+        "currentWorker": "Trình thực thi: {worker}",
+        "nextStep": "Bước tiếp theo: {label}",
+        "recommendedReason": "Lý do đề xuất: {reason}",
+        "autopilotRecoverable": "AI có thể tiếp tục xử lý từ tiến độ hiện tại.",
+        "policyMode": "Cách tiến hành: {mode}",
+        "updatedAt": "Thời gian cập nhật: {time}",
+        "recentEvents": "Tiến triển gần đây",
+        "noTime": "Chưa có",
+        "lessThanOneSecond": "<1 giây"
+      },
+      "progressLabels": {
+        "planning": "Lập kế hoạch",
+        "chapters": "Chương",
+        "quality": "Chất lượng",
+        "currentAction": "Hành động hiện tại"
+      }
+    }
+  },
   "creativeHub": {},
   "knowledge": {},
   "settings": {

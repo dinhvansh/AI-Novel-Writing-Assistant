@@ -15,6 +15,8 @@ import {
   PauseCircle,
   ShieldCheck,
 } from "lucide-react";
+import { useTranslation } from "react-i18next";
+import type { TFunction } from "i18next";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -32,16 +34,16 @@ export interface AICockpitProps {
   onOpenFallbackDetails?: () => void;
 }
 
-function displayStateLabel(state: DirectorBookAutomationDisplayState): string {
-  const labels: Record<DirectorBookAutomationDisplayState, string> = {
-    processing: "AI 正在处理",
-    needs_confirmation: "等你确认",
-    paused: "已暂停",
-    needs_attention: "出错需处理",
-    completed: "已完成",
-    idle: "未开启",
+function displayStateLabel(t: TFunction, state: DirectorBookAutomationDisplayState): string {
+  const keyMap: Record<DirectorBookAutomationDisplayState, string> = {
+    processing: "processing",
+    needs_confirmation: "needsConfirmation",
+    paused: "paused",
+    needs_attention: "needsAttention",
+    completed: "completed",
+    idle: "idle",
   };
-  return labels[state];
+  return t(`autoDirector:cockpit.states.${keyMap[state]}`);
 }
 
 function stateBadgeVariant(state: DirectorBookAutomationDisplayState): "default" | "secondary" | "outline" | "destructive" {
@@ -95,13 +97,13 @@ function stateIcon(state: DirectorBookAutomationDisplayState) {
   return <ShieldCheck className="h-4 w-4" />;
 }
 
-function formatDate(value: string | null | undefined): string {
+function formatDate(t: TFunction, value: string | null | undefined): string {
   if (!value) {
-    return "暂无";
+    return t("autoDirector:cockpit.labels.noTime");
   }
   const date = new Date(value);
   if (Number.isNaN(date.getTime())) {
-    return "暂无";
+    return t("autoDirector:cockpit.labels.noTime");
   }
   return date.toLocaleString();
 }
@@ -111,44 +113,47 @@ function formatTokenCount(value: number | null | undefined): string {
   return count.toLocaleString();
 }
 
-function formatDuration(value: number | null | undefined): string | null {
+function formatDuration(t: TFunction, value: number | null | undefined): string | null {
   if (typeof value !== "number" || !Number.isFinite(value) || value <= 0) {
     return null;
   }
   const seconds = Math.round(value / 1000);
   if (seconds <= 0) {
-    return "<1 秒";
+    return t("autoDirector:cockpit.labels.lessThanOneSecond");
   }
   if (seconds < 60) {
-    return `${seconds} 秒`;
+    return t("autoDirector:cockpit.labels.secondsFormat", { seconds });
   }
   const minutes = Math.floor(seconds / 60);
   const restSeconds = seconds % 60;
-  return restSeconds > 0 ? `${minutes} 分 ${restSeconds} 秒` : `${minutes} 分`;
+  return restSeconds > 0
+    ? t("autoDirector:cockpit.labels.minutesSecondsFormat", { minutes, seconds: restSeconds })
+    : t("autoDirector:cockpit.labels.minutesOnlyFormat", { minutes });
 }
 
-function formatUsageLine(usage: {
+function formatUsageLine(t: TFunction, usage: {
   llmCallCount: number;
   promptTokens: number;
   completionTokens: number;
   totalTokens: number;
   durationMs?: number | null;
 }): string {
-  const duration = formatDuration(usage.durationMs);
+  const duration = formatDuration(t, usage.durationMs);
   return [
-    `${formatTokenCount(usage.llmCallCount)} 次调用`,
-    `输入 ${formatTokenCount(usage.promptTokens)}`,
-    `输出 ${formatTokenCount(usage.completionTokens)}`,
-    `总计 ${formatTokenCount(usage.totalTokens)} Tokens`,
-    duration ? `累计调用耗时 ${duration}` : null,
+    t("autoDirector:cockpit.usage.callCount", { value: formatTokenCount(usage.llmCallCount) }),
+    t("autoDirector:cockpit.usage.promptTokens", { value: formatTokenCount(usage.promptTokens) }),
+    t("autoDirector:cockpit.usage.completionTokens", { value: formatTokenCount(usage.completionTokens) }),
+    t("autoDirector:cockpit.usage.totalTokens", { value: formatTokenCount(usage.totalTokens) }),
+    duration ? t("autoDirector:cockpit.usage.duration", { duration }) : null,
   ].filter(Boolean).join(" · ");
 }
 
-function fallbackProjectionReason(props: Pick<AICockpitProps, "fallbackSummary">): string {
-  return props.fallbackSummary?.trim() || "没有需要你处理的 AI 自动推进任务。";
+function fallbackProjectionReason(t: TFunction, props: Pick<AICockpitProps, "fallbackSummary">): string {
+  return props.fallbackSummary?.trim() || t("autoDirector:cockpit.fallback.noTask");
 }
 
 function renderActionLabel(
+  t: TFunction,
   action: DirectorBookAutomationAction,
   displayState?: DirectorBookAutomationDisplayState,
 ): string {
@@ -156,77 +161,82 @@ function renderActionLabel(
     displayState === "needs_confirmation"
     && (action.type === "continue" || action.type === "auto_execute_range")
   ) {
-    return "确认并继续";
+    return t("autoDirector:cockpit.labels.confirmContinue");
   }
-  return action.label || "继续处理";
+  return action.label || t("autoDirector:cockpit.labels.continueDefault");
 }
 
-function artifactTypeLabel(type: string): string {
-  const labels: Record<string, string> = {
-    book_contract: "书级约定",
-    story_macro: "故事规划",
-    character_cast: "角色",
-    volume_strategy: "分卷",
-    chapter_task_sheet: "任务单",
-    chapter_draft: "正文",
-    audit_report: "审校",
-    repair_ticket: "修复",
-    reader_promise: "读者承诺",
-    character_governance_state: "角色状态",
-    world_skeleton: "世界框架",
-    source_knowledge_pack: "资料包",
-    chapter_retention_contract: "留存约定",
-    continuity_state: "连续性",
-    rolling_window_review: "近期复盘",
+function artifactTypeLabel(t: TFunction, type: string): string {
+  const keyMap: Record<string, string> = {
+    book_contract: "bookContract",
+    story_macro: "storyMacro",
+    character_cast: "characterCast",
+    volume_strategy: "volumeStrategy",
+    chapter_task_sheet: "chapterTaskSheet",
+    chapter_draft: "chapterDraft",
+    audit_report: "auditReport",
+    repair_ticket: "repairTicket",
+    reader_promise: "readerPromise",
+    character_governance_state: "characterGovernanceState",
+    world_skeleton: "worldSkeleton",
+    source_knowledge_pack: "sourceKnowledgePack",
+    chapter_retention_contract: "chapterRetentionContract",
+    continuity_state: "continuityState",
+    rolling_window_review: "rollingWindowReview",
   };
-  return labels[type] ?? type;
+  const suffix = keyMap[type];
+  return suffix ? t(`autoDirector:cockpit.artifacts.types.${suffix}`) : type;
 }
 
 function recoveryActionLabel(
+  t: TFunction,
   action: NonNullable<DirectorBookAutomationProjection["circuitBreaker"]>["recoveryAction"],
 ): string | null {
-  const labels: Record<string, string> = {
-    retry: "重试当前步骤",
-    resume_after_review: "查看原因后继续",
-    switch_model: "切换模型后继续",
-    confirm_protected_content: "确认保护内容边界",
-    manual_repair: "先处理章节问题",
+  const keyMap: Record<string, string> = {
+    retry: "retry",
+    resume_after_review: "resumeAfterReview",
+    switch_model: "switchModel",
+    confirm_protected_content: "confirmProtectedContent",
+    manual_repair: "manualRepair",
   };
-  return action ? labels[action] ?? null : null;
+  if (!action) return null;
+  const suffix = keyMap[action];
+  return suffix ? t(`autoDirector:cockpit.circuitBreaker.recoveryActions.${suffix}`) : null;
 }
 
 function workerStateLabel(
+  t: TFunction,
   state: NonNullable<DirectorBookAutomationProjection["workerHealth"]>["derivedState"],
 ): string {
-  const labels: Record<NonNullable<DirectorBookAutomationProjection["workerHealth"]>["derivedState"], string> = {
-    idle: "未运行",
-    queued_waiting_worker: "等待接手",
-    leased_starting: "正在接手",
-    running_step: "自动推进中",
-    waiting_gate: "等待确认",
-    auto_recovering: "恢复中",
-    cancelled: "已停止",
-    failed_recoverable: "等待恢复",
-    failed_hard: "需要处理",
-    succeeded: "已完成",
+  const keyMap: Record<NonNullable<DirectorBookAutomationProjection["workerHealth"]>["derivedState"], string> = {
+    idle: "idle",
+    queued_waiting_worker: "queuedWaitingWorker",
+    leased_starting: "leasedStarting",
+    running_step: "runningStep",
+    waiting_gate: "waitingGate",
+    auto_recovering: "autoRecovering",
+    cancelled: "cancelled",
+    failed_recoverable: "failedRecoverable",
+    failed_hard: "failedHard",
+    succeeded: "succeeded",
   };
-  return labels[state] ?? state;
+  return t(`autoDirector:cockpit.background.states.${keyMap[state]}`);
 }
 
-function workerStateDetail(health: NonNullable<DirectorBookAutomationProjection["workerHealth"]>): string {
+function workerStateDetail(t: TFunction, health: NonNullable<DirectorBookAutomationProjection["workerHealth"]>): string {
   if (health.message?.trim()) {
     return health.message.trim();
   }
   if (health.queuedCommandCount > 0) {
-    return "任务已排队，后台执行接手后会继续推进。";
+    return t("autoDirector:cockpit.background.messageQueued");
   }
   if (health.runningCommandCount > 0 || health.leasedCommandCount > 0) {
-    return "后台执行正在处理当前任务。";
+    return t("autoDirector:cockpit.background.messageRunning");
   }
   if (health.staleCommandCount > 0) {
-    return "后台执行中断后会从最近进度尝试恢复。";
+    return t("autoDirector:cockpit.background.messageStale");
   }
-  return "当前没有正在排队或执行的后台动作。";
+  return t("autoDirector:cockpit.background.messageIdle");
 }
 
 export default function AICockpit(props: AICockpitProps) {
@@ -240,6 +250,7 @@ export default function AICockpit(props: AICockpitProps) {
     onOpenNovel,
     onOpenFallbackDetails,
   } = props;
+  const { t } = useTranslation();
   const focusProjection = props.projection ?? null;
   const isCompact = mode === "compact";
 
@@ -250,15 +261,15 @@ export default function AICockpit(props: AICockpitProps) {
           <div className="flex min-w-0 items-start gap-2">
             <span className="mt-0.5 shrink-0 text-foreground">{stateIcon("idle")}</span>
             <div className="min-w-0">
-              <div className="text-sm font-semibold text-foreground">AI 驾驶舱</div>
-              <div className="mt-1 text-xs leading-5 text-muted-foreground">{fallbackProjectionReason(props)}</div>
+              <div className="text-sm font-semibold text-foreground">{t("autoDirector:cockpit.title")}</div>
+              <div className="mt-1 text-xs leading-5 text-muted-foreground">{fallbackProjectionReason(t, props)}</div>
             </div>
           </div>
-          <Badge variant="secondary" className="shrink-0">{fallbackStatusLabel ?? "未开启"}</Badge>
+          <Badge variant="secondary" className="shrink-0">{fallbackStatusLabel ?? t("autoDirector:cockpit.states.idle")}</Badge>
         </div>
         {onOpenFallbackDetails ? (
           <Button type="button" size="sm" variant="outline" className="mt-3 w-full" onClick={onOpenFallbackDetails}>
-            查看
+            {t("autoDirector:cockpit.fallback.view")}
           </Button>
         ) : null}
       </div>
@@ -274,27 +285,27 @@ export default function AICockpit(props: AICockpitProps) {
   const stepUsage = focusProjection.stepUsage?.slice(0, 2) ?? [];
   const promptUsage = focusProjection.promptUsage?.slice(0, 6) ?? [];
   const circuitBreaker = focusProjection.circuitBreaker?.status === "open" ? focusProjection.circuitBreaker : null;
-  const circuitRecovery = recoveryActionLabel(circuitBreaker?.recoveryAction ?? null);
+  const circuitRecovery = recoveryActionLabel(t, circuitBreaker?.recoveryAction ?? null);
   const workerHealth = focusProjection.workerHealth ?? null;
   const artifactInsightLines = [
     focusProjection.artifactSummary.affectedChapterCount
-      ? `影响 ${focusProjection.artifactSummary.affectedChapterCount} 个章节`
+      ? t("autoDirector:cockpit.artifacts.insights.affectedChapters", { count: focusProjection.artifactSummary.affectedChapterCount })
       : null,
     focusProjection.artifactSummary.recentStaleArtifacts?.length
-      ? `${focusProjection.artifactSummary.recentStaleArtifacts.length} 个产物需复核`
+      ? t("autoDirector:cockpit.artifacts.insights.staleArtifacts", { count: focusProjection.artifactSummary.recentStaleArtifacts.length })
       : null,
     focusProjection.artifactSummary.recentRepairArtifacts?.length
-      ? `${focusProjection.artifactSummary.recentRepairArtifacts.length} 条修复记录`
+      ? t("autoDirector:cockpit.artifacts.insights.repairArtifacts", { count: focusProjection.artifactSummary.recentRepairArtifacts.length })
       : null,
     focusProjection.artifactSummary.recentVersionedArtifacts?.length
-      ? `${focusProjection.artifactSummary.recentVersionedArtifacts.length} 个产物有新版本`
+      ? t("autoDirector:cockpit.artifacts.insights.versionedArtifacts", { count: focusProjection.artifactSummary.recentVersionedArtifacts.length })
       : null,
   ].filter((line): line is string => Boolean(line));
   const reason = focusProjection.userReason?.trim()
     || focusProjection.blockedReason?.trim()
     || focusProjection.detail?.trim()
     || focusProjection.automationSummary?.trim()
-    || fallbackProjectionReason(props);
+    || fallbackProjectionReason(t, props);
 
   const handlePrimaryAction = () => {
     if (primaryAction && onAction) {
@@ -327,18 +338,18 @@ export default function AICockpit(props: AICockpitProps) {
           <div className="flex min-w-0 items-start gap-2">
             <span className="mt-0.5 shrink-0 text-foreground">{stateIcon(focusProjection.displayState)}</span>
             <div className="min-w-0">
-              <div className="text-sm font-semibold text-foreground">AI 驾驶舱</div>
+              <div className="text-sm font-semibold text-foreground">{t("autoDirector:cockpit.title")}</div>
               <div className="mt-1 line-clamp-1 text-xs leading-5 text-muted-foreground">
                 {focusProjection.userHeadline || focusProjection.headline || reason}
               </div>
             </div>
           </div>
           <Badge variant={stateBadgeVariant(focusProjection.displayState)} className="shrink-0">
-            {displayStateLabel(focusProjection.displayState)}
+            {displayStateLabel(t, focusProjection.displayState)}
           </Badge>
         </div>
         <Button type="button" size="sm" variant="outline" className="mt-3 w-full" onClick={handleCompactOpen}>
-          查看
+          {t("autoDirector:cockpit.fallback.view")}
         </Button>
       </div>
     );
@@ -350,7 +361,7 @@ export default function AICockpit(props: AICockpitProps) {
         <div className="flex min-w-0 items-start gap-2">
           <span className="mt-0.5 shrink-0 text-foreground">{stateIcon(focusProjection.displayState)}</span>
           <div className="min-w-0">
-            <div className="text-sm font-semibold text-foreground">AI 驾驶舱</div>
+            <div className="text-sm font-semibold text-foreground">{t("autoDirector:cockpit.title")}</div>
             {!isCompact ? (
               <div className="mt-1 truncate text-xs font-medium text-foreground">{focusProjection.focusNovel.title}</div>
             ) : null}
@@ -360,7 +371,7 @@ export default function AICockpit(props: AICockpitProps) {
           </div>
         </div>
         <Badge variant={stateBadgeVariant(focusProjection.displayState)} className="shrink-0">
-          {displayStateLabel(focusProjection.displayState)}
+          {displayStateLabel(t, focusProjection.displayState)}
         </Badge>
       </div>
 
@@ -377,32 +388,34 @@ export default function AICockpit(props: AICockpitProps) {
           <div className="flex flex-wrap items-center justify-between gap-2">
             <div className="flex items-center gap-2 font-medium text-foreground">
               <Database className="h-3.5 w-3.5" />
-              后台执行
+              {t("autoDirector:cockpit.background.title")}
             </div>
-            <Badge variant="outline">{workerStateLabel(workerHealth.derivedState)}</Badge>
+            <Badge variant="outline">{workerStateLabel(t, workerHealth.derivedState)}</Badge>
           </div>
-          <div className="mt-1">{workerStateDetail(workerHealth)}</div>
+          <div className="mt-1">{workerStateDetail(t, workerHealth)}</div>
           <div className="mt-2 grid gap-2 sm:grid-cols-4">
             <div className="rounded-md bg-muted/40 px-2 py-1">
-              <div className="text-[11px] text-muted-foreground">排队</div>
+              <div className="text-[11px] text-muted-foreground">{t("autoDirector:cockpit.background.queueLabel")}</div>
               <div className="font-medium text-foreground">{workerHealth.queuedCommandCount}</div>
             </div>
             <div className="rounded-md bg-muted/40 px-2 py-1">
-              <div className="text-[11px] text-muted-foreground">接手</div>
+              <div className="text-[11px] text-muted-foreground">{t("autoDirector:cockpit.background.leasedLabel")}</div>
               <div className="font-medium text-foreground">{workerHealth.leasedCommandCount}</div>
             </div>
             <div className="rounded-md bg-muted/40 px-2 py-1">
-              <div className="text-[11px] text-muted-foreground">执行</div>
+              <div className="text-[11px] text-muted-foreground">{t("autoDirector:cockpit.background.runningLabel")}</div>
               <div className="font-medium text-foreground">{workerHealth.runningCommandCount}</div>
             </div>
             <div className="rounded-md bg-muted/40 px-2 py-1">
-              <div className="text-[11px] text-muted-foreground">恢复</div>
+              <div className="text-[11px] text-muted-foreground">{t("autoDirector:cockpit.background.staleLabel")}</div>
               <div className="font-medium text-foreground">{workerHealth.staleCommandCount}</div>
             </div>
           </div>
           {workerHealth.oldestQueuedWaitMs ? (
             <div className="mt-2 text-[11px] text-muted-foreground">
-              等待接手 {formatDuration(workerHealth.oldestQueuedWaitMs) ?? "<1 秒"}
+              {t("autoDirector:cockpit.background.waitingForWorker", {
+                duration: formatDuration(t, workerHealth.oldestQueuedWaitMs) ?? t("autoDirector:cockpit.labels.lessThanOneSecond"),
+              })}
             </div>
           ) : null}
         </div>
@@ -410,38 +423,40 @@ export default function AICockpit(props: AICockpitProps) {
 
       {circuitBreaker ? (
         <div className="mt-3 rounded-md border border-destructive/30 bg-destructive/5 px-3 py-2 text-xs leading-5 text-destructive">
-          <div className="font-medium">自动推进已暂停</div>
-          <div className="mt-1">{circuitBreaker.message || "系统检测到继续自动推进可能反复失败。"}</div>
-          {circuitRecovery ? <div className="mt-1">建议：{circuitRecovery}。</div> : null}
+          <div className="font-medium">{t("autoDirector:cockpit.circuitBreaker.title")}</div>
+          <div className="mt-1">{circuitBreaker.message || t("autoDirector:cockpit.circuitBreaker.defaultMessage")}</div>
+          {circuitRecovery ? (
+            <div className="mt-1">{t("autoDirector:cockpit.circuitBreaker.recoveryHint", { action: circuitRecovery })}</div>
+          ) : null}
         </div>
       ) : null}
 
       {usageSummary ? (
         <div className="mt-3 rounded-md border bg-background/70 px-3 py-2 text-xs leading-5 text-muted-foreground">
-          <div className="font-medium text-foreground">AI 用量</div>
-          <div className="mt-1">{formatUsageLine(usageSummary)}</div>
+          <div className="font-medium text-foreground">{t("autoDirector:cockpit.usage.title")}</div>
+          <div className="mt-1">{formatUsageLine(t, usageSummary)}</div>
           {promptUsage.length > 0 ? (
             <div className="mt-2 space-y-1">
-              <div className="text-[11px] font-medium text-muted-foreground">阶段用量</div>
+              <div className="text-[11px] font-medium text-muted-foreground">{t("autoDirector:cockpit.usage.stageTitle")}</div>
               {promptUsage.map((item) => (
                 <div key={`${item.promptAssetKey}:${item.promptVersion ?? ""}:${item.nodeKey ?? ""}`} className="flex flex-wrap items-center justify-between gap-2 border-t pt-1">
                   <span className="min-w-0 truncate text-foreground">
                     {getDirectorNodeDisplayLabel({ label: item.label ?? item.promptAssetKey, nodeKey: item.nodeKey })}
                   </span>
-                  <span className="shrink-0">{formatUsageLine(item)}</span>
+                  <span className="shrink-0">{formatUsageLine(t, item)}</span>
                 </div>
               ))}
             </div>
           ) : null}
           {stepUsage.length > 0 ? (
             <div className="mt-2 space-y-1">
-              <div className="text-[11px] font-medium text-muted-foreground">推进步骤</div>
+              <div className="text-[11px] font-medium text-muted-foreground">{t("autoDirector:cockpit.usage.stepTitle")}</div>
               {stepUsage.map((item) => (
                 <div key={item.stepIdempotencyKey} className="flex flex-wrap items-center justify-between gap-2 border-t pt-1">
                   <span className="min-w-0 truncate text-foreground">
                     {getDirectorNodeDisplayLabel({ label: item.label, nodeKey: item.nodeKey })}
                   </span>
-                  <span className="shrink-0">{formatUsageLine(item)}</span>
+                  <span className="shrink-0">{formatUsageLine(t, item)}</span>
                 </div>
               ))}
             </div>
@@ -453,12 +468,12 @@ export default function AICockpit(props: AICockpitProps) {
         <div className="mt-3 rounded-md border bg-background/70 px-3 py-2">
           <div className="flex items-center gap-1 text-xs font-medium text-muted-foreground">
             <Database className="h-3.5 w-3.5" />
-            产物记录
+            {t("autoDirector:cockpit.artifacts.title")}
           </div>
           <div className="mt-2 flex flex-wrap gap-1.5">
             {artifactRows.map((item) => (
               <Badge key={item.artifactType} variant={item.staleCount > 0 ? "outline" : "secondary"} className="text-[11px]">
-                {artifactTypeLabel(String(item.artifactType))}
+                {artifactTypeLabel(t, String(item.artifactType))}
                 <span className="ml-1 text-muted-foreground">{item.activeCount}/{item.totalCount}</span>
               </Badge>
             ))}
@@ -475,7 +490,7 @@ export default function AICockpit(props: AICockpitProps) {
 
       {focusProjection.nextActionLabel ? (
         <div className="mt-2 rounded-md border bg-background/70 px-3 py-2 text-xs leading-5 text-muted-foreground">
-          下一步：{focusProjection.nextActionLabel}
+          {t("autoDirector:cockpit.nextStepLabel", { label: focusProjection.nextActionLabel })}
         </div>
       ) : null}
 
@@ -483,17 +498,19 @@ export default function AICockpit(props: AICockpitProps) {
         <div className="mt-3 space-y-2">
           <div className="flex items-center gap-1 text-xs font-medium text-muted-foreground">
             <History className="h-3.5 w-3.5" />
-            自动化记录
+            {t("autoDirector:cockpit.timeline.title")}
           </div>
           {recentItems.map((item) => (
             <div key={item.id} className="rounded-md border bg-background/70 px-3 py-2 text-xs leading-5">
               <div className="line-clamp-2 text-foreground">{item.title}</div>
               {item.usage ? (
-                <div className="mt-1 text-muted-foreground">{formatUsageLine(item.usage)}</div>
+                <div className="mt-1 text-muted-foreground">{formatUsageLine(t, item.usage)}</div>
               ) : item.durationMs ? (
-                <div className="mt-1 text-muted-foreground">耗时 {formatDuration(item.durationMs)}</div>
+                <div className="mt-1 text-muted-foreground">
+                  {t("autoDirector:cockpit.timeline.duration", { duration: formatDuration(t, item.durationMs) })}
+                </div>
               ) : null}
-              <div className="mt-1 text-muted-foreground">{formatDate(item.occurredAt)}</div>
+              <div className="mt-1 text-muted-foreground">{formatDate(t, item.occurredAt)}</div>
             </div>
           ))}
         </div>
@@ -501,16 +518,16 @@ export default function AICockpit(props: AICockpitProps) {
 
       <div className={cn("mt-3 flex gap-2", isCompact && canOpenDetails && "grid grid-cols-2")}>
         <Button type="button" size="sm" className="flex-1" onClick={handlePrimaryAction} disabled={isActionPending}>
-          {isActionPending ? "处理中..." : renderActionLabel(primaryAction ?? {
+          {isActionPending ? t("autoDirector:cockpit.labels.processing") : renderActionLabel(t, primaryAction ?? {
             type: "open_novel",
-            label: "打开小说",
+            label: t("autoDirector:cockpit.labels.openNovel"),
             target: { novelId: focusProjection.novelId },
           }, focusProjection.displayState)}
         </Button>
         {canOpenDetails ? (
           <Button type="button" size="sm" variant="outline" onClick={handleDetails}>
             <ExternalLink className="h-4 w-4" />
-            执行详情
+            {t("autoDirector:cockpit.labels.details")}
           </Button>
         ) : null}
       </div>
