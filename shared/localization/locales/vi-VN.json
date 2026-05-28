@@ -384,6 +384,71 @@
         "quality": "Chất lượng",
         "currentAction": "Hành động hiện tại"
       }
+    },
+    "setup": {
+      "ideaTitle": "Ý tưởng khởi đầu của bạn",
+      "ideaPlaceholder": "Ví dụ: Nữ sinh đại học bình thường vô tình lạc vào tổ chức dị năng, vừa đi học làm thêm, vừa điều tra sự thật về việc cha mất tích.",
+      "starterTitle": "Thiết lập ban đầu cho Đạo diễn tự động",
+      "starterDescription": "Chỉ giữ lại các tham số mà Đạo diễn tự động thực sự cần bạn xác nhận nhanh. Có thể giữ mặc định, chỉ điều chỉnh khi bạn muốn một cảm giác cụ thể.",
+      "fields": {
+        "narrativePov": "Ngôi kể",
+        "pacePreference": "Ưu tiên nhịp độ",
+        "emotionIntensity": "Mức độ cảm xúc",
+        "estimatedChapterCount": "Số chương dự kiến",
+        "estimatedChapterHint": "Sẽ được dùng làm tham chiếu cho mật độ cấu trúc toàn sách và kế hoạch tập/chương sau, không phải giới hạn cứng.",
+        "boundWorld": "Gắn thế giới quan",
+        "noBoundWorld": "Không gắn thế giới quan",
+        "noWorldOptions": "Hiện không có thế giới quan để chọn",
+        "boundWorldHint": "Sau khi chọn, Đạo diễn tự động sẽ dùng quy tắc và bối cảnh của thế giới này làm ranh giới lập kế hoạch.",
+        "noWorldHint": "Khi không có thế giới quan để chọn, bạn có thể bắt đầu viết truyện từ ý tưởng khởi đầu.",
+        "styleProfile": "Cách viết mặc định cho toàn sách",
+        "styleProfileHintLabel": "Tùy chọn. Sau khi chọn, nửa đầu Đạo diễn tự động chỉ đọc tóm tắt cách viết rút gọn; đến giai đoạn viết nội dung chính mới dùng đầy đủ quy tắc viết.",
+        "styleProfileNone": "Trước tiên chỉ dùng từ khóa giọng văn",
+        "styleProfileEmptyHint": "Nếu đã có bộ quy tắc viết được đúc kết sẵn, bạn nên chọn trực tiếp một bộ để dễ hình dung Đạo diễn tự động sẽ viết như thế nào.",
+        "styleProfileSummary": "Tóm tắt cách viết chỉ có hiệu lực ở giai đoạn này: {summary}"
+      },
+      "modelSettings": "Cài đặt mô hình",
+      "runMode": {
+        "title": "Cách thức chạy của Đạo diễn tự động",
+        "postGenerationReviewLabel": "Kiểm tra dấu vết AI và chỉnh sửa sau khi tạo nội dung chính",
+        "postGenerationReviewHint": "Khi bật, sau khi tạo xong nội dung chương, hệ thống sẽ kiểm tra nguy cơ có dấu vết AI và tạo bản chỉnh sửa nếu gặp vấn đề có thể sửa.",
+        "postGenerationReviewAria": "Kiểm tra dấu vết AI và chỉnh sửa sau khi tạo nội dung chính",
+        "fullBookTitle": "Tự động hoàn thành toàn sách",
+        "fullBookHint": "Hệ thống sẽ lập kế hoạch, chia chương, tạo chính văn, hiệu đính và sửa chữa với mục tiêu hoàn thành toàn bộ sách. Chỉ dừng khi mô hình không khả dụng, dịch vụ bất thường, bảo vệ chính văn hoặc rủi ro không thể khôi phục."
+      },
+      "actions": {
+        "viewExisting": "Xem phương án đã tạo",
+        "generating": "Đang tạo...",
+        "generateFirstBatch": "Tạo lô phương án đầu tiên",
+        "regenerateBatch": "Tiếp tục tạo theo gợi ý sửa"
+      }
+    },
+    "dialog": {
+      "title": {
+        "candidateSelection": "Tạo Đạo diễn tự động bằng AI",
+        "executionFailed": "Thực thi Đạo diễn tự động bằng AI thất bại",
+        "executionInProgress": "Đang thực thi Đạo diễn tự động bằng AI"
+      },
+      "description": {
+        "candidateSelection": "Trước tiên hãy bổ sung thiết định ban đầu cho đạo diễn, rồi để AI đưa ra 2 hướng đi cho toàn bộ cuốn sách. Bạn có thể tiếp tục tạo lại một lô mới, hoặc chỉ sửa một phương án hay nhóm tiêu đề của phương án đó.",
+        "executionFailed": "Quy trình dài của đạo diễn đã bị gián đoạn. Hiện hệ thống sẽ ưu tiên hiển thị tóm tắt lỗi, cột mốc gần nhất và mục để khôi phục.",
+        "executionInProgress": "Hiện tại sẽ hiển thị thời gian thực tiến độ quy trình chính của đạo diễn, hành động hiện tại và lịch sử cột mốc."
+      },
+      "trigger": {
+        "viewProgress": "Xem tiến độ đạo diễn",
+        "create": "Tạo Đạo diễn tự động bằng AI"
+      },
+      "feedback": {
+        "confirmFailedNoCommand": "Không xác nhận được phương án, chưa nhận được lệnh đạo diễn.",
+        "confirmedToast": "Hệ thống đã nhận hướng đi cho toàn bộ cuốn sách, sẽ tạo dự án tiểu thuyết và tiếp tục lập kế hoạch.",
+        "executionFailed": "Thực thi tác vụ đạo diễn thất bại.",
+        "noContinuableTask": "Hiện không có tác vụ Đạo diễn tự động nào có thể tiếp tục.",
+        "continuedToast": "Đã xác nhận, AI sẽ tiếp tục xử lý.",
+        "continueFailed": "Không thể tiếp tục Đạo diễn tự động.",
+        "createdToast": "Đạo diễn tự động đã tạo dự án tiểu thuyết và sẽ tiếp tục lập kế hoạch.",
+        "createTaskFailed": "Không thể tạo tác vụ chính của Đạo diễn tự động.",
+        "backgroundContinueToast": "Tác vụ Đạo diễn tự động sẽ tiếp tục chạy ở nền; bạn có thể xem tiến độ trong Bảng điều khiển AI."
+      }
     }
   },
   "creativeHub": {},

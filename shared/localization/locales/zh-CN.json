@@ -219,6 +219,71 @@
     }
   },
   "autoDirector": {
+    "dialog": {
+      "title": {
+        "candidateSelection": "AI 自动导演创建",
+        "executionFailed": "AI 自动导演执行失败",
+        "executionInProgress": "AI 自动导演执行中"
+      },
+      "description": {
+        "candidateSelection": "先补导演起始设置，再让 AI 给你 2 套整本书方向。你可以继续重生新批次，也可以只修某一套方案或它的标题组。",
+        "executionFailed": "导演长流程已中断，当前会优先显示失败摘要、最近里程碑和恢复入口。",
+        "executionInProgress": "当前会实时显示导演主流程进度、当前动作和里程碑历史。"
+      },
+      "trigger": {
+        "viewProgress": "查看导演进度",
+        "create": "AI 自动导演创建"
+      },
+      "feedback": {
+        "confirmFailedNoCommand": "确认方案失败，未返回导演命令。",
+        "confirmedToast": "系统收到书级方向，会创建小说项目并继续推进规划。",
+        "executionFailed": "导演任务执行失败。",
+        "noContinuableTask": "当前没有可继续的自动导演任务。",
+        "continuedToast": "已确认，AI 会继续推进。",
+        "continueFailed": "继续自动导演失败。",
+        "createdToast": "自动导演创建小说项目，并继续推进规划。",
+        "createTaskFailed": "创建导演主任务失败。",
+        "backgroundContinueToast": "导演任务会继续在后台运行，可在 AI 驾驶舱查看进度。"
+      }
+    },
+    "setup": {
+      "ideaTitle": "你的起始想法",
+      "ideaPlaceholder": "例如：普通女大学生误入异能组织，一边上学打工，一边调查父亲失踪真相。",
+      "starterTitle": "导演起始设置",
+      "starterDescription": "这里只保留自动导演真正需要你快速确认的参数。先保持默认也可以，只有你明确想要某种手感时再调整。",
+      "fields": {
+        "narrativePov": "叙事视角",
+        "pacePreference": "节奏偏好",
+        "emotionIntensity": "情绪浓度",
+        "estimatedChapterCount": "预计章节数",
+        "estimatedChapterHint": "会作为整书结构密度和后续卷章规划的参考，不是硬性上限。",
+        "boundWorld": "绑定世界观",
+        "noBoundWorld": "不绑定世界观",
+        "noWorldOptions": "暂无可选世界观",
+        "boundWorldHint": "选择后，自动导演会把这个世界的规则和舞台作为规划边界。",
+        "noWorldHint": "没有可选世界观时，可以先用起始想法开书。",
+        "styleProfile": "书级默认写法",
+        "styleProfileHintLabel": "可选。选定后，导演前半段会只读取轻量写法摘要，正文阶段再继续使用完整写法规则。",
+        "styleProfileNone": "先只用文风关键词",
+        "styleProfileEmptyHint": "有沉淀好的写法资产时，建议直接选一套，帮助你更清楚地预期导演会怎样写。",
+        "styleProfileSummary": "本阶段仅生效的写法摘要：{summary}"
+      },
+      "modelSettings": "模型设置",
+      "runMode": {
+        "title": "自动导演运行方式",
+        "postGenerationReviewLabel": "正文后去 AI 检测与修正",
+        "postGenerationReviewHint": "开启后，章节正文生成完成时会检测 AI 味风险，并在命中可修正问题时生成修订稿。",
+        "postGenerationReviewAria": "正文后去 AI 检测与修正",
+        "fullBookTitle": "全书自动成书",
+        "fullBookHint": "系统会以整本书为目标完成规划、拆章、正文生成、审校和修复。只有模型不可用、服务异常、正文保护或不可恢复风险会停下。"
+      },
+      "actions": {
+        "viewExisting": "查看已生成方案",
+        "generating": "生成中...",
+        "generateFirstBatch": "生成第一批方案",
+        "regenerateBatch": "按修正建议继续生成"
+      }
+    },
     "cockpit": {
       "title": "AI 驾驶舱",
       "states": {
