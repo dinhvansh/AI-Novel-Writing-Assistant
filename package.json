@@ -62,6 +62,8 @@
   },
   "devDependencies": {
     "concurrently": "^9.2.1",
+    "fast-check": "^3.23.0",
+    "i18next-parser": "^9.0.0",
     "typescript": "^5.9.3"
   }
 }

@@ -1,0 +1,16 @@
+{
+  "common": {},
+  "novel": {},
+  "autoDirector": {},
+  "creativeHub": {},
+  "knowledge": {},
+  "settings": {},
+  "serverErrors": {},
+  "serverLogs": {},
+  "seedData": {
+    "genres": {},
+    "storyModes": {},
+    "styleTemplates": {},
+    "antiAiRules": {}
+  }
+}

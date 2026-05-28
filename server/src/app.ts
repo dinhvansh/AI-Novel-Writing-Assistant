@@ -7,7 +7,9 @@ import helmet from "helmet";
 import morgan from "morgan";
 import type { ApiResponse } from "@ai-novel/shared/types/api";
 import { ensureRuntimeDatabaseReady } from "./db/runtimeMigrations";
+import { createI18nServer } from "./i18n";
 import { errorHandler } from "./middleware/errorHandler";
+import { i18nMiddleware } from "./middleware/i18nMiddleware";
 import { loadProviderApiKeys } from "./llm/factory";
 import astrologyRouter from "./routes/astrology";
 import agentCatalogRouter from "./routes/agentCatalog";
@@ -111,6 +113,7 @@ export function createApp() {
     return `${method} ${url} ${status} ${responseTime} ms - ${contentLength}${errorSuffix}`;
   }));
   app.use(express.json({ limit: jsonBodyLimit }));
+  app.use(i18nMiddleware);
 
   app.use("/api/health", healthRouter);
   app.use("/api/agent-catalog", agentCatalogRouter);
@@ -265,6 +268,7 @@ function initializeBackgroundServices(): BackgroundServicesHandle {
 
 export async function startServer(options?: ServerStartOptions): Promise<StartedServer> {
   await ensureRuntimeDatabaseReady();
+  await createI18nServer();
 
   const ragCompatibilityReport = await initializeRagSettingsCompatibility();
   if (
