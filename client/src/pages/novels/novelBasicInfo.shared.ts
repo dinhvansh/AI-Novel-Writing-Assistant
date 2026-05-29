@@ -128,6 +128,33 @@ export const PROJECT_MODE_OPTIONS: BasicInfoOption<NovelBasicFormState["projectM
   },
 ];
 
+export function useReaderChannelOptions(t: TFunction): BasicInfoOption<NovelBasicFormState["readerChannelPreference"]>[] {
+  return [
+    {
+      value: "ai_judge",
+      label: t("novel:basicInfo.readerChannel.aiJudge.label"),
+      summary: t("novel:basicInfo.readerChannel.aiJudge.summary"),
+      recommended: true,
+    },
+    {
+      value: "male_oriented",
+      label: t("novel:basicInfo.readerChannel.maleOriented.label"),
+      summary: t("novel:basicInfo.readerChannel.maleOriented.summary"),
+    },
+    {
+      value: "female_oriented",
+      label: t("novel:basicInfo.readerChannel.femaleOriented.label"),
+      summary: t("novel:basicInfo.readerChannel.femaleOriented.summary"),
+    },
+    {
+      value: "general",
+      label: t("novel:basicInfo.readerChannel.general.label"),
+      summary: t("novel:basicInfo.readerChannel.general.summary"),
+    },
+  ];
+}
+
+/** @deprecated Use useReaderChannelOptions(t) instead */ // i18n-ignore: deprecated fallback constants
 export const READER_CHANNEL_OPTIONS: BasicInfoOption<NovelBasicFormState["readerChannelPreference"]>[] = [
   {
     value: "ai_judge",

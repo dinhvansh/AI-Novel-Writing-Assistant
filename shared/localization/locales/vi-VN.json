@@ -1296,13 +1296,30 @@
         "error": "Xuất thất bại."
       },
       "takeover": {
-        "dismissedToast": "Đã thu gọn thông báo tiếp quản đạo diễn này. Khi cần vẫn có thể tiếp tục xử lý từ chi tiết thực thi."
+        "dismissedToast": "Đã thu gọn thông báo tiếp quản đạo diễn này. Khi cần vẫn có thể tiếp tục xử lý từ chi tiết thực thi.",
+        "currentProject": "Dự án hiện tại",
+        "confirmDirection": "Xác nhận hướng cấp sách",
+        "goToReviewStage": "Đến giai đoạn xét duyệt"
       },
       "director": {
         "noTaskError": "Hiện không có tác vụ Đạo diễn tự động nào để tiếp tục.",
         "continueError": "Tiếp tục Đạo diễn tự động thất bại.",
         "noAutoExecTaskError": "Hiện không có tác vụ Đạo diễn tự động nào để tiếp tục tự động thực thi.",
-        "continueAutoExecError": "Tiếp tục tự động thực thi {scope} thất bại."
+        "continueAutoExecError": "Tiếp tục tự động thực thi {scope} thất bại.",
+        "noActionError": "Hiện không có tác vụ đạo diễn nào có thể thực hiện.",
+        "actionExecuted": "Đã thực hiện thao tác.",
+        "actionFailed": "Thực hiện thao tác thất bại, vui lòng thử lại sau.",
+        "noRetryableTask": "Hiện không có tác vụ đạo diễn nào có thể thử lại.",
+        "switchedModelAndRestarted": "Đã chuyển sang {provider} / {model} và khởi động lại.",
+        "switchModelRetryFailed": "Chuyển mô hình và thử lại thất bại.",
+        "restartedWithTaskModel": "Đã khởi động lại với mô hình tác vụ.",
+        "taskModelRetryFailed": "Thử lại với mô hình tác vụ thất bại.",
+        "noCancellableTask": "Hiện không có tác vụ đạo diễn nào có thể hủy.",
+        "taskCancelled": "Tác vụ đạo diễn đã được hủy.",
+        "cancelFailed": "Hủy tác vụ đạo diễn thất bại.",
+        "noArchivableTask": "Hiện không có tác vụ đạo diễn nào có thể lưu trữ.",
+        "taskArchived": "Tác vụ đạo diễn đã được lưu trữ.",
+        "archiveFailed": "Lưu trữ tác vụ đạo diễn thất bại."
       },
       "consistency": {
         "missingCharactersTitle": "《{title}》sản phẩm đạo diễn chưa bổ sung chuẩn bị nhân vật",
@@ -1336,6 +1353,37 @@
         "archiving": "Đang thu gọn...",
         "completeAndArchive": "Hoàn thành và thu gọn",
         "execDetails": "Chi tiết thực thi"
+      },
+      "chapterTitleRepair": {
+        "navigatedToVolume": "Đã chuyển đến tập tương ứng.",
+        "navigatedToStructured": "Đã chuyển đến phân chương theo nhịp độ.",
+        "aiRepairing": "AI đang sửa chữa...",
+        "unsavedDraftError": "Hiện có bản nháp tập chưa lưu."
+      },
+      "workflowSync": {
+        "basicOpened": "Đã mở thiết định dự án",
+        "storyMacroOpened": "Đã mở hoạch định vĩ mô câu chuyện",
+        "characterOpened": "Đã mở chuẩn bị nhân vật",
+        "outlineOpened": "Đã mở chiến lược tập",
+        "structuredOpened": "Đã mở phân chương theo nhịp độ",
+        "chapterViewing": "Đang xem chương {order}",
+        "chapterOpened": "Đã mở thực thi chương",
+        "pipelineOpened": "Đã mở sửa chữa chất lượng",
+        "mainFlowOpened": "Đã mở luồng chính"
+      },
+      "characterResources": {
+        "proposalConfirmed": "Đã xác nhận thay đổi tài nguyên nhân vật.",
+        "confirmFailed": "Xác nhận thay đổi tài nguyên nhân vật thất bại.",
+        "proposalRejected": "Đã từ chối thay đổi tài nguyên nhân vật.",
+        "rejectFailed": "Từ chối thay đổi tài nguyên nhân vật thất bại.",
+        "selectChapterFirst": "Vui lòng chọn một chương trước.",
+        "reviewedWithPending": "Đã xét duyệt, {count} thay đổi chờ xác nhận.",
+        "reviewedWithCommitted": "Đã xét duyệt và ghi nhận {count} thay đổi.",
+        "reviewedNoChanges": "Đã xét duyệt, không phát hiện thay đổi.",
+        "reviewFailed": "Xét duyệt tài nguyên nhân vật thất bại.",
+        "backfilledWithPending": "Đã hồi điền {scanned} chương, {pending} thay đổi chờ xác nhận.",
+        "backfilledWithCommitted": "Đã hồi điền {scanned} chương, ghi nhận {committed} thay đổi.",
+        "backfillFailed": "Hồi điền tài nguyên nhân vật thất bại."
       }
     },
     "basicInfo": {
@@ -1464,6 +1512,24 @@
         "status": "Chỉ là đánh dấu vòng đời tác phẩm, không ảnh hưởng đến khả năng sáng tác cơ bản, nhưng sẽ ảnh hưởng đến danh sách và trạng thái quản lý dự án.",
         "continuationSourceType": "Khi viết tiếp, chọn tham chiếu tiểu thuyết trong nền tảng hay phiên bản tài liệu trong Kho tri thức.",
         "continuationBookAnalysis": "Nội dung phân tích sách sẽ được dùng làm ngữ cảnh có cấu trúc với trọng số cao, phù hợp để dự án viết tiếp giữ văn phong và thiết định nhất quán."
+      },
+      "readerChannel": {
+        "aiJudge": {
+          "label": "AI phán đoán",
+          "summary": "Để AI phán đoán xu hướng kênh độc giả mặc định."
+        },
+        "maleOriented": {
+          "label": "Hướng nam",
+          "summary": "Nhấn mạnh hơn vào mục tiêu, thăng cấp, cạnh tranh."
+        },
+        "femaleOriented": {
+          "label": "Hướng nữ",
+          "summary": "Nhấn mạnh hơn vào tuyến quan hệ, kéo cảm xúc."
+        },
+        "general": {
+          "label": "Độc giả đại chúng / Không giới hạn",
+          "summary": "Không giới hạn xu hướng kênh."
+        }
       }
     },
     "takeover": {
@@ -1581,7 +1647,10 @@
       "strategyDesc": {
         "continueExisting": "Ưu tiên bỏ qua tài sản đã hoàn thành, chỉ bổ sung phần thiếu hoặc khôi phục lô hiện tại.",
         "restartCurrentStep": "Xóa sạch đầu ra của bước hiện tại, sau đó tạo lại theo bước đó."
-      }
+      },
+      "advancedSettings": "Cài đặt nâng cao",
+      "storyMacroPlan": "Hoạch định vĩ mô câu chuyện",
+      "bookContract": "Book Contract"
     },
     "taskDrawer": {
       "title": "Chi tiết thực thi",
@@ -2155,6 +2224,53 @@
           "conflictSource": "Nguồn gốc xung đột",
           "nextTurnPoint": "Điểm ngoặt tiếp theo"
         }
+      },
+      "create": {
+        "triggerBtn": "Tạo nhân vật",
+        "dialogTitle": "Tạo nhân vật",
+        "manualTitle": "Tạo nhân vật thủ công",
+        "namePlaceholder": "Tên nhân vật",
+        "rolePlaceholder": "Vị trí nhân vật (nhân vật chính/phản diện/nhân vật phụ)",
+        "personalityPlaceholder": "Đặc điểm tính cách",
+        "backgroundPlaceholder": "Câu chuyện nền",
+        "developmentPlaceholder": "Hành trình phát triển",
+        "creating": "Đang tạo...",
+        "createBtn": "Tạo nhân vật",
+        "aiTitle": "AI tạo nhân vật",
+        "aiDescPlaceholder": "Nhập mô tả nhân vật, ví dụ: kiếm sĩ trẻ lạnh lùng lý trí nhưng mang thù nhà",
+        "advancedSettings": "Cài đặt nâng cao (tùy chọn)",
+        "clearAdvanced": "Xóa tất cả cài đặt nâng cao",
+        "storyFunctionLabel": "Vị trí chức năng nhân vật",
+        "notSpecified": "Không chỉ định",
+        "roleProtagonist": "Nhân vật chính",
+        "roleAntagonist": "Phản diện",
+        "roleMentor": "Người hướng dẫn",
+        "roleContrast": "Nhóm đối chiếu",
+        "roleSupporting": "Nhân vật phụ",
+        "growthStageLabel": "Giai đoạn phát triển",
+        "stageStart": "Khởi điểm",
+        "stageSetback": "Vấp ngã",
+        "stageTurning": "Bước ngoặt",
+        "stageAwakening": "Thức tỉnh",
+        "stageResolution": "Kết thúc",
+        "externalGoalPlaceholder": "Mục tiêu bên ngoài (muốn đạt được gì)",
+        "internalNeedPlaceholder": "Nhu cầu nội tâm (thực sự khao khát gì)",
+        "coreFearPlaceholder": "Nỗi sợ cốt lõi",
+        "moralBottomLinePlaceholder": "Giới hạn đạo đức",
+        "secretPlaceholder": "Bí mật không thể nói",
+        "coreFlawPlaceholder": "Khuyết điểm cốt lõi",
+        "relationshipHooksPlaceholder": "Móc quan hệ (xung đột/ràng buộc với người khác)",
+        "toneStylePlaceholder": "Phong cách giọng điệu (ví dụ: lạnh lùng kiềm chế, hài hước cay độc)",
+        "knowledgeDocsLabel": "Tham khảo kho tri thức (có thể chọn nhiều)",
+        "loading": "Đang tải...",
+        "noKnowledgeDocs": "Chưa có tài liệu tri thức nào để chọn.",
+        "noKnowledgeHint": "Nếu không chọn sẽ không tham chiếu nội dung kho tri thức.",
+        "bookAnalysisLabel": "Tham khảo phân tích sách (có thể chọn nhiều)",
+        "noBookAnalysis": "Chưa có phân tích sách nào để chọn.",
+        "bookAnalysisHint": "Chỉ hiển thị các phân tích sách đã hoàn thành.",
+        "selectedRefs": "Đã chọn tham khảo: kho tri thức {knowledge} mục, phân tích sách {book} mục.",
+        "generating": "Đang tạo...",
+        "generateBtn": "Tạo và lưu vào thư viện"
       }
     },
     "chapter": {
@@ -3446,6 +3562,55 @@
         "autoReviewOnly": "Tự động kiểm duyệt sau văn bản, không tự động sửa",
         "noAutoReview": "Không tự động kiểm duyệt và sửa sau văn bản"
       }
+    },
+    "titleWorkshop": {
+      "triggerButton": "Xưởng tiêu đề",
+      "dialogTitle": "Xưởng tiêu đề",
+      "dialogDescription": "Tạo ý tưởng tiêu đề hoặc chọn từ thư viện tiêu đề, điền vào dự án hiện tại.",
+      "tabs": {
+        "generate": "AI tạo",
+        "library": "Thư viện tiêu đề"
+      },
+      "generate": {
+        "autoBriefHint": "Hệ thống đã tự động tổng hợp một bản tóm tắt tạo sinh từ thông tin dự án hiện tại.",
+        "briefLabel": "Bổ sung hướng (tùy chọn)",
+        "briefPlaceholder": "Ví dụ: muốn có cảm giác hồi hộp, có twist",
+        "briefHint": "Phần bổ sung này sẽ được thêm vào bản tóm tắt tự động, không thay thế nó.",
+        "referenceTitleLabel": "Tiêu đề tham khảo (tùy chọn)",
+        "referenceTitlePlaceholder": "Ví dụ: Đấu Phá Thương Khung",
+        "referenceActiveHint": "Đã điền tiêu đề tham khảo, AI sẽ tạo biến thể dựa trên phong cách và cấu trúc của nó.",
+        "referenceEmptyHint": "Điền tiêu đề tham khảo để AI tạo biến thể dựa trên phong cách và cấu trúc của nó.",
+        "autoBriefSectionTitle": "Bản tóm tắt tự động hiện tại",
+        "autoBriefEmpty": "Thông tin dự án hiện tại còn ít, nên điền thêm tóm tắt, thể loại hoặc từ khóa phong cách.",
+        "countLabel": "Số lượng tạo",
+        "generating": "Đang tạo...",
+        "generateButton": "Tạo tiêu đề",
+        "noContextWarning": "Vui lòng điền tóm tắt dự án hoặc tiêu đề tham khảo trước khi tạo.",
+        "noContextError": "Vui lòng điền tóm tắt dự án hoặc tiêu đề tham khảo.",
+        "generatedCount": "Đã tạo {count} ý tưởng tiêu đề.",
+        "savedToLibrary": "Đã lưu vào thư viện tiêu đề.",
+        "emptyMessage": "Chưa có kết quả tạo, hãy điền hướng rồi nhấn tạo.",
+        "extraSupplementPrefix": "Bổ sung hướng: {text}"
+      },
+      "apply": {
+        "fillTitle": "Điền tiêu đề",
+        "appliedFromGenerated": "Đã điền tiêu đề được tạo.",
+        "appliedFromLibrary": "Đã điền tiêu đề từ thư viện.",
+        "copiedToClipboard": "Đã sao chép vào clipboard."
+      },
+      "library": {
+        "title": "Thư viện tiêu đề",
+        "sortHintWithGenre": "Sắp xếp theo tỷ lệ nhấp, ưu tiên hiển thị tiêu đề phù hợp với thể loại hiện tại.",
+        "sortHint": "Sắp xếp theo tỷ lệ nhấp.",
+        "searchPlaceholder": "Tìm kiếm tiêu đề...",
+        "loading": "Đang tải...",
+        "empty": "Thư viện tiêu đề chưa có nội dung, hãy dùng AI tạo và lưu một số tiêu đề.",
+        "estimatedClickRate": "Tỷ lệ nhấp {rate}",
+        "usedCount": "Đã dùng {count} lần",
+        "currentlySelected": "Đang chọn",
+        "keywordsPrefix": "Từ khóa: {keywords}",
+        "defaultDescription": "Chưa có mô tả"
+      }
     }
   },
   "autoDirector": {
@@ -4517,7 +4682,96 @@
       }
     }
   },
-  "knowledge": {},
+  "knowledge": {
+    "embedding": {
+      "title": "Cài đặt nhúng vector",
+      "collectionVersionBadge": "v{version}",
+      "ragEnabled": "RAG đã bật",
+      "ragPaused": "RAG đã tạm dừng",
+      "headerDescription": "Cấu hình mô hình nhúng vector, kết nối cơ sở dữ liệu vector và tham số truy xuất.",
+      "saving": "Đang lưu...",
+      "saveButton": "Lưu cài đặt",
+      "vectorModel": {
+        "title": "Mô hình nhúng",
+        "description": "Chọn mô hình nhúng để tạo vector văn bản.",
+        "providerLabel": "Nhà cung cấp mô hình",
+        "connectionConfigured": "Đã cấu hình",
+        "connectionPending": "Chờ cấu hình",
+        "available": "Khả dụng",
+        "notEnabled": "Chưa bật",
+        "modelLabel": "Mô hình",
+        "loadingModels": "Đang tải danh sách mô hình...",
+        "selectModelPlaceholder": "Chọn mô hình",
+        "searchModelPlaceholder": "Tìm kiếm mô hình",
+        "noMatchingModel": "Không có mô hình phù hợp",
+        "remoteModelCount": "Mô hình từ xa {count} cái",
+        "useRecommendedHint": "Nên dùng mô hình nhúng được nhà cung cấp khuyến nghị."
+      },
+      "vectorStore": {
+        "title": "Cơ sở dữ liệu vector",
+        "description": "Cấu hình kết nối Qdrant.",
+        "urlLabel": "Địa chỉ Qdrant",
+        "urlHint": "Triển khai cục bộ mặc định là http://127.0.0.1:6333.",
+        "apiKeyLabel": "API Key",
+        "keyAvailable": "Đã cấu hình",
+        "keyNotSet": "Chưa đặt",
+        "keepSavedKeyPlaceholder": "Giữ Key đã lưu",
+        "enterApiKeyPlaceholder": "Nhập API Key",
+        "clearKeyOnSave": "Xóa API Key khi lưu"
+      },
+      "advanced": {
+        "title": "Cài đặt nâng cao",
+        "description": "Đặt tên collection, tham số kết nối, truy xuất và hành vi nhúng.",
+        "expand": "Mở rộng",
+        "collapse": "Thu gọn"
+      },
+      "collection": {
+        "title": "Cài đặt collection",
+        "description": "Cấu hình cách đặt tên collection và hành vi tự động xây dựng lại chỉ mục.",
+        "namingModeLabel": "Cách đặt tên",
+        "autoGenerate": "Tự động tạo",
+        "manualSpecify": "Chỉ định thủ công",
+        "tagLabel": "Nhãn collection",
+        "tagHint": "Dùng để phân biệt các collection có mục đích khác nhau, ví dụ kb / prod.",
+        "autoNameLabel": "Tên collection tự động tạo",
+        "manualNameLabel": "Tên collection chỉ định thủ công",
+        "autoReindexLabel": "Tự động xây dựng lại chỉ mục khi mô hình thay đổi",
+        "reindexOn": "Tự động xây dựng lại",
+        "reindexOff": "Không tự động xây dựng lại",
+        "targetCollection": "Collection mục tiêu"
+      },
+      "connectionParams": {
+        "title": "Tham số kết nối",
+        "description": "Trạng thái RAG và cài đặt timeout kết nối Qdrant.",
+        "ragStatusLabel": "Trạng thái RAG",
+        "ragEnabled": "Bật",
+        "ragPaused": "Tạm dừng",
+        "qdrantTimeoutLabel": "Timeout Qdrant (ms)",
+        "upsertMaxBytesLabel": "Byte tối đa mỗi lần ghi"
+      },
+      "retrieval": {
+        "title": "Tham số truy xuất",
+        "description": "Kích thước chunk, độ chồng lấp và số lượng ứng viên truy xuất.",
+        "chunkSizeLabel": "Kích thước chunk",
+        "chunkOverlapLabel": "Độ chồng lấp chunk",
+        "finalTopKLabel": "Top-K cuối cùng",
+        "vectorCandidatesLabel": "Số ứng viên vector",
+        "keywordCandidatesLabel": "Số ứng viên từ khóa"
+      },
+      "embeddingBehavior": {
+        "title": "Hành vi nhúng",
+        "description": "Kích thước batch, timeout và tham số thử lại.",
+        "batchSizeLabel": "Kích thước batch",
+        "timeoutLabel": "Timeout (ms)",
+        "maxRetriesLabel": "Số lần thử lại tối đa",
+        "retryBaseIntervalLabel": "Khoảng thời gian thử lại cơ bản (ms)",
+        "workerPollIntervalLabel": "Khoảng thời gian polling worker (ms)",
+        "workerMaxAttemptsLabel": "Số lần thử tối đa của worker",
+        "workerRetryBaseIntervalLabel": "Khoảng thời gian thử lại cơ bản của worker (ms)",
+        "httpTimeoutLabel": "HTTP timeout (ms)"
+      }
+    }
+  },
   "settings": {
     "page": {
       "title": "Cài đặt hệ thống",
@@ -6154,6 +6408,67 @@
     },
     "shared": {
       "titleStudio": "Xưởng tiêu đề"
+    }
+  },
+  "storyModes": {
+    "page": {
+      "toastCreated": "Đã tạo mô thức truyện.",
+      "toastUpdated": "Đã cập nhật mô thức truyện.",
+      "toastDeleted": "Đã xóa mô thức truyện.",
+      "toastBatchCreated": "Đã tạo hàng loạt {count} mô thức truyện con.",
+      "toastChildGenerated": "AI đã tạo {count} bản nháp mô thức truyện con.",
+      "toastTreeGenerated": "Bản nháp cây mô thức truyện AI đã được tạo.",
+      "errorNoParent": "Mô thức truyện cha không tồn tại.",
+      "errorNoChildSelected": "Vui lòng chọn ít nhất một ứng viên con.",
+      "errorNotFound": "Mô thức truyện không tồn tại.",
+      "deleteConfirm": "Xác nhận xóa mô thức truyện「{name}」? Thao tác này không thể hoàn tác.",
+      "deleteConfirmWithChildren": "Xác nhận xóa mô thức truyện「{name}」? Thao tác này sẽ đồng thời xóa {count} mô thức con bên dưới và không thể hoàn tác.",
+      "mountAsRoot": "Tạo làm mô thức truyện gốc",
+      "createTitle": "Tạo mô thức truyện mới",
+      "createChildTitle": "Thêm mô thức truyện con",
+      "createDesc": "Xác định vị trí gắn kết trước, sau đó điền profile thủ công hoặc để AI tạo bản nháp cây hai cấp.",
+      "createChildDesc": "Hiện tại sẽ thêm mô thức con dưới lớp cha được chỉ định. Bạn có thể điền thủ công hoặc để AI tạo nhiều ứng viên con dựa trên lớp cha và các nút anh em hiện có, rồi chọn nhiều để lưu hàng loạt.",
+      "mountPosition": "Vị trí gắn kết hiện tại",
+      "aiGenerateTitle": "AI tạo bản nháp",
+      "aiGenerateChildTitle": "AI tạo bản nháp mô thức con",
+      "aiGenerateHint": "AI sẽ xuất ra một bản nháp cây mô thức truyện có thể chỉnh sửa trực tiếp, vẫn sẽ kiểm tra cấu trúc profile trước khi lưu.",
+      "aiGenerateChildHint": "AI sẽ xuất ra một hoặc nhiều bản nháp nút mô thức con dựa trên lớp cha và các nút anh em hiện có, không tạo thêm toàn bộ cây. Hướng bổ sung có thể để trống. Vẫn sẽ kiểm tra cấu trúc profile trước khi lưu.",
+      "derivationCount": "Số lượng phái sinh",
+      "countOption": "{count} cái",
+      "treePromptPlaceholder": "Nhập hướng cây mô thức truyện bạn muốn tạo.",
+      "childPromptPlaceholder": "Tùy chọn: bổ sung hướng mô thức con bạn muốn. Nếu để trống AI sẽ tự phái sinh dựa trên lớp cha và các nút anh em.",
+      "generating": "Đang tạo...",
+      "generateTreeBtn": "Tạo bản nháp mô thức truyện",
+      "generateChildBtn": "Tạo bản nháp mô thức con",
+      "resetDraft": "Đặt lại bản nháp",
+      "generatedCandidates": "Ứng viên mô thức con đã tạo",
+      "selectedCount": "Đã chọn {selected} / {total}",
+      "candidateHint": "Tích chọn để lưu hàng loạt; nhấp vào thẻ ứng viên để chuyển sang chỉnh sửa trong biểu mẫu bên dưới.",
+      "currentEditing": "Đang chỉnh sửa",
+      "candidateN": "Ứng viên {n}",
+      "fieldName": "Tên",
+      "fieldDesc": "Mô tả",
+      "fieldTemplate": "Bổ sung mẫu thủ công",
+      "cancel": "Hủy",
+      "saving": "Đang lưu...",
+      "batchSaving": "Đang lưu hàng loạt...",
+      "batchSaveBtn": "Lưu hàng loạt mô thức con đã chọn ({count})",
+      "saveBtn": "Lưu mô thức truyện",
+      "saveChildBtn": "Lưu mô thức con hiện tại",
+      "editTitle": "Chỉnh sửa mô thức truyện",
+      "editDesc": "Có thể sửa tên, mô tả, mẫu và profile. Giới hạn cây hai cấp vẫn được giữ nguyên.",
+      "currentParent": "Lớp cha hiện tại",
+      "notFound": "Không tìm thấy",
+      "rootNode": "Nút gốc",
+      "saveEditBtn": "Lưu thay đổi",
+      "cardTitle": "Thư viện mô thức truyện",
+      "cardDescription": "Đây là nơi duy trì các mô thức truyện của tác phẩm, ví dụ: hệ thống lưu, vô địch lưu, điền viên lưu, chữa lành hàng ngày. Nó trả lời câu hỏi \"cuốn sách này dựa vào gì để tiếp tục đẩy tiến và thực hiện\", sẽ được dùng làm đầu vào ràng buộc cứng cho quy hoạch và tạo nội dung tiếp theo.",
+      "totalCount": "Số mô thức truyện hiện tại: {count}",
+      "createTreeBtn": "Tạo cây mô thức truyện mới",
+      "loading": "Đang tải cây mô thức truyện...",
+      "emptyTitle": "Chưa có mô thức truyện nào",
+      "emptyHint": "Bạn có thể tạo thủ công một mô thức truyện gốc, hoặc để AI tạo một bản nháp có cấu trúc.",
+      "startCreate": "Bắt đầu tạo"
     }
   }
 }

@@ -1389,6 +1389,24 @@
         "status": "只是作品生命周期标记，不影响基础创作能力，但会影响列表和项目管理状态。",
         "continuationSourceType": "续写时选择是引用站内小说，还是知识库里的文档版本。",
         "continuationBookAnalysis": "拆书内容会作为高权重结构化上下文，适合续写项目保持风格和设定一致。"
+      },
+      "readerChannel": {
+        "aiJudge": {
+          "label": "AI 判断",
+          "summary": "让 AI 根据题材、卖点和起始想法判断默认读者频道倾向，适合作为默认选择。"
+        },
+        "maleOriented": {
+          "label": "男频向",
+          "summary": "更强调目标、升级、竞争、爽点兑现和外部事件推进。"
+        },
+        "femaleOriented": {
+          "label": "女频向",
+          "summary": "更强调关系线、情绪牵引、人物选择和细腻的阶段性反馈。"
+        },
+        "general": {
+          "label": "泛读者 / 不限定",
+          "summary": "不限定频道倾向，让 AI 优先按故事本身和目标读者描述来规划。"
+        }
       }
     },
     "novelList": {
@@ -1598,13 +1616,30 @@
         "error": "导出失败。"
       },
       "takeover": {
-        "dismissedToast": "已收起这条导演接管提醒。需要时仍可从执行详情继续处理。"
+        "dismissedToast": "已收起这条导演接管提醒。需要时仍可从执行详情继续处理。",
+        "currentProject": "当前项目",
+        "confirmDirection": "确认书级方向",
+        "goToReviewStage": "前往审核阶段"
       },
       "director": {
         "noTaskError": "当前没有可继续的自动导演任务。",
         "continueError": "继续自动导演失败。",
         "noAutoExecTaskError": "当前没有可继续自动执行的自动导演任务。",
-        "continueAutoExecError": "继续自动执行{scope}失败。"
+        "continueAutoExecError": "继续自动执行{scope}失败。",
+        "noActionError": "当前没有可执行操作的导演任务。",
+        "actionExecuted": "操作已执行。",
+        "actionFailed": "操作执行失败，请稍后重试。",
+        "noRetryableTask": "当前没有可重试的导演任务。",
+        "switchedModelAndRestarted": "已切换到 {provider} / {model} 并重新启动。",
+        "switchModelRetryFailed": "切换模型重试失败，请稍后重试。",
+        "restartedWithTaskModel": "已使用任务模型重新启动。",
+        "taskModelRetryFailed": "使用任务模型重试失败，请稍后重试。",
+        "noCancellableTask": "当前没有可取消的导演任务。",
+        "taskCancelled": "导演任务已取消。",
+        "cancelFailed": "取消导演任务失败，请稍后重试。",
+        "noArchivableTask": "当前没有可归档的导演任务。",
+        "taskArchived": "导演任务已归档。",
+        "archiveFailed": "归档导演任务失败，请稍后重试。"
       },
       "consistency": {
         "missingCharactersTitle": "《{title}》导演产物未补齐角色准备",
@@ -1638,6 +1673,37 @@
         "archiving": "收起中...",
         "completeAndArchive": "完成并收起",
         "execDetails": "执行详情"
+      },
+      "chapterTitleRepair": {
+        "navigatedToVolume": "已跳转到对应卷。",
+        "navigatedToStructured": "已跳转到节奏拆章。",
+        "aiRepairing": "AI 修复中...",
+        "unsavedDraftError": "当前有未保存的卷草稿，请先保存后再修复章节标题。"
+      },
+      "workflowSync": {
+        "basicOpened": "已打开项目设定",
+        "storyMacroOpened": "已打开故事宏观规划",
+        "characterOpened": "已打开角色准备",
+        "outlineOpened": "已打开卷战略",
+        "structuredOpened": "已打开节奏拆章",
+        "chapterViewing": "正在查看第 {order} 章",
+        "chapterOpened": "已打开章节执行",
+        "pipelineOpened": "已打开质量修复",
+        "mainFlowOpened": "已打开主流程"
+      },
+      "characterResources": {
+        "proposalConfirmed": "角色资源变更已确认。",
+        "confirmFailed": "确认角色资源变更失败，请稍后重试。",
+        "proposalRejected": "角色资源变更已拒绝。",
+        "rejectFailed": "拒绝角色资源变更失败，请稍后重试。",
+        "selectChapterFirst": "请先选择一个章节。",
+        "reviewedWithPending": "已审查，{count} 条变更待确认。",
+        "reviewedWithCommitted": "已审查并提交 {count} 条变更。",
+        "reviewedNoChanges": "已审查，没有检测到变更。",
+        "reviewFailed": "审查角色资源失败，请稍后重试。",
+        "backfilledWithPending": "已回填 {scanned} 章，{pending} 条变更待确认。",
+        "backfilledWithCommitted": "已回填 {scanned} 章，提交 {committed} 条变更。",
+        "backfillFailed": "回填角色资源失败，请稍后重试。"
       }
     },
     "chapter": {
@@ -2216,6 +2282,53 @@
           "noChapter": "无章节归属",
           "emptyHint": "暂无事件，先点击\"同步角色时间线\"。"
         }
+      },
+      "create": {
+        "triggerBtn": "创建角色",
+        "dialogTitle": "创建角色",
+        "manualTitle": "手动创建角色",
+        "namePlaceholder": "角色名称",
+        "rolePlaceholder": "角色定位（主角/反派/配角）",
+        "personalityPlaceholder": "性格特征",
+        "backgroundPlaceholder": "背景故事",
+        "developmentPlaceholder": "成长轨迹",
+        "creating": "创建中...",
+        "createBtn": "创建角色",
+        "aiTitle": "AI 生成角色",
+        "aiDescPlaceholder": "输入角色描述，例如：冷静理智但背负家仇的年轻剑士",
+        "advancedSettings": "高级设定（可选）",
+        "clearAdvanced": "一键清空高级设定",
+        "storyFunctionLabel": "角色功能位",
+        "notSpecified": "不指定",
+        "roleProtagonist": "主角",
+        "roleAntagonist": "反派",
+        "roleMentor": "导师",
+        "roleContrast": "对照组",
+        "roleSupporting": "配角",
+        "growthStageLabel": "成长阶段",
+        "stageStart": "起点",
+        "stageSetback": "受挫",
+        "stageTurning": "转折",
+        "stageAwakening": "觉醒",
+        "stageResolution": "收束",
+        "externalGoalPlaceholder": "外显目标（想达成什么）",
+        "internalNeedPlaceholder": "内在需求（真正渴望）",
+        "coreFearPlaceholder": "核心恐惧",
+        "moralBottomLinePlaceholder": "道德底线",
+        "secretPlaceholder": "不能说的秘密",
+        "coreFlawPlaceholder": "核心缺陷",
+        "relationshipHooksPlaceholder": "关系钩子（与他人的冲突/纠葛）",
+        "toneStylePlaceholder": "语气风格（如冷系克制、幽默辛辣）",
+        "knowledgeDocsLabel": "参考知识库（可多选）",
+        "loading": "加载中...",
+        "noKnowledgeDocs": "暂无可选知识文档。",
+        "noKnowledgeHint": "未选择则不引用知识库内容。",
+        "bookAnalysisLabel": "参考拆书分析（可多选）",
+        "noBookAnalysis": "暂无可选拆书分析。",
+        "bookAnalysisHint": "仅展示已完成的拆书分析。",
+        "selectedRefs": "已选参考：知识库 {knowledge} 项，拆书 {book} 项。",
+        "generating": "生成中...",
+        "generateBtn": "生成并入库"
       }
     },
     "takeover": {
@@ -2333,7 +2446,10 @@
       "strategyDesc": {
         "continueExisting": "优先跳过已完成资产，只补缺失部分或恢复当前批次。",
         "restartCurrentStep": "先清空当前步骤产出，再按该步骤重新生成。"
-      }
+      },
+      "advancedSettings": "高级设置",
+      "storyMacroPlan": "故事宏观规划",
+      "bookContract": "Book Contract"
     },
     "writingFormula": {
       "create": {
@@ -3419,6 +3535,55 @@
         "autoReviewAndRepair": "正文后自动审核 + 自动修复",
         "autoReviewOnly": "正文后自动审核，不自动修复",
         "noAutoReview": "正文后不做自动审核与修复"
+      }
+    },
+    "titleWorkshop": {
+      "triggerButton": "标题工坊",
+      "dialogTitle": "标题工坊",
+      "dialogDescription": "生成标题创意或从标题库中选择，填入当前项目。",
+      "tabs": {
+        "generate": "AI 生成",
+        "library": "标题库"
+      },
+      "generate": {
+        "autoBriefHint": "系统已根据当前项目信息自动整理了一份生成简报，你可以在下方补充更多方向。",
+        "briefLabel": "补充方向（可选）",
+        "briefPlaceholder": "例如：想要有悬念感、带反转、适合男频",
+        "briefHint": "这里的补充会叠加到自动简报上，不会替换它。",
+        "referenceTitleLabel": "参考标题（可选）",
+        "referenceTitlePlaceholder": "例如：斗破苍穹",
+        "referenceActiveHint": "已填写参考标题，AI 会基于它的风格和结构生成变体。",
+        "referenceEmptyHint": "填写参考标题后，AI 会基于它的风格和结构生成变体。",
+        "autoBriefSectionTitle": "当前自动简报",
+        "autoBriefEmpty": "当前项目信息较少，建议先填写概述、题材或风格关键词。",
+        "countLabel": "生成数量",
+        "generating": "生成中...",
+        "generateButton": "生成标题",
+        "noContextWarning": "请先填写项目概述或参考标题，再生成。",
+        "noContextError": "请先填写项目概述或参考标题。",
+        "generatedCount": "已生成 {count} 个标题创意。",
+        "savedToLibrary": "已保存到标题库。",
+        "emptyMessage": "还没有生成结果，先填写方向再点击生成。",
+        "extraSupplementPrefix": "补充方向：{text}"
+      },
+      "apply": {
+        "fillTitle": "填入标题",
+        "appliedFromGenerated": "已填入生成的标题。",
+        "appliedFromLibrary": "已填入标题库中的标题。",
+        "copiedToClipboard": "已复制到剪贴板。"
+      },
+      "library": {
+        "title": "标题库",
+        "sortHintWithGenre": "按点击率排序，优先展示与当前题材匹配的标题。",
+        "sortHint": "按点击率排序展示。",
+        "searchPlaceholder": "搜索标题...",
+        "loading": "加载中...",
+        "empty": "标题库暂无内容，先用 AI 生成并保存一些标题。",
+        "estimatedClickRate": "点击率 {rate}",
+        "usedCount": "已用 {count} 次",
+        "currentlySelected": "当前选中",
+        "keywordsPrefix": "关键词：{keywords}",
+        "defaultDescription": "暂无描述"
       }
     }
   },
@@ -5211,7 +5376,96 @@
       "titleStudio": "标题工坊"
     }
   },
-  "knowledge": {},
+  "knowledge": {
+    "embedding": {
+      "title": "向量嵌入设置",
+      "collectionVersionBadge": "v{version}",
+      "ragEnabled": "RAG 已启用",
+      "ragPaused": "RAG 已暂停",
+      "headerDescription": "配置向量嵌入模型、向量数据库连接和检索参数。",
+      "saving": "保存中...",
+      "saveButton": "保存设置",
+      "vectorModel": {
+        "title": "嵌入模型",
+        "description": "选择用于生成文本向量的嵌入模型。",
+        "providerLabel": "模型厂商",
+        "connectionConfigured": "已配置",
+        "connectionPending": "待配置",
+        "available": "可用",
+        "notEnabled": "未启用",
+        "modelLabel": "模型",
+        "loadingModels": "加载模型列表...",
+        "selectModelPlaceholder": "选择模型",
+        "searchModelPlaceholder": "搜索模型",
+        "noMatchingModel": "没有匹配的模型",
+        "remoteModelCount": "远程模型 {count} 个",
+        "useRecommendedHint": "建议使用厂商推荐的嵌入模型。"
+      },
+      "vectorStore": {
+        "title": "向量数据库",
+        "description": "配置 Qdrant 向量数据库连接。",
+        "urlLabel": "Qdrant 地址",
+        "urlHint": "本地部署默认为 http://127.0.0.1:6333。",
+        "apiKeyLabel": "API Key",
+        "keyAvailable": "已配置",
+        "keyNotSet": "未设置",
+        "keepSavedKeyPlaceholder": "保留已保存的 Key",
+        "enterApiKeyPlaceholder": "输入 API Key",
+        "clearKeyOnSave": "保存时清除 API Key"
+      },
+      "advanced": {
+        "title": "高级设置",
+        "description": "集合命名、连接参数、检索参数和嵌入行为。",
+        "expand": "展开",
+        "collapse": "收起"
+      },
+      "collection": {
+        "title": "集合设置",
+        "description": "配置向量集合的命名方式和自动重建索引行为。",
+        "namingModeLabel": "命名方式",
+        "autoGenerate": "自动生成",
+        "manualSpecify": "手动指定",
+        "tagLabel": "集合标签",
+        "tagHint": "用于区分不同用途的集合，例如 kb / prod。",
+        "autoNameLabel": "自动生成的集合名",
+        "manualNameLabel": "手动指定的集合名",
+        "autoReindexLabel": "模型变更时自动重建索引",
+        "reindexOn": "自动重建",
+        "reindexOff": "不自动重建",
+        "targetCollection": "目标集合"
+      },
+      "connectionParams": {
+        "title": "连接参数",
+        "description": "RAG 状态和 Qdrant 连接超时设置。",
+        "ragStatusLabel": "RAG 状态",
+        "ragEnabled": "启用",
+        "ragPaused": "暂停",
+        "qdrantTimeoutLabel": "Qdrant 超时 (ms)",
+        "upsertMaxBytesLabel": "单次写入最大字节"
+      },
+      "retrieval": {
+        "title": "检索参数",
+        "description": "分块大小、重叠和检索候选数量。",
+        "chunkSizeLabel": "分块大小",
+        "chunkOverlapLabel": "分块重叠",
+        "finalTopKLabel": "最终返回 Top-K",
+        "vectorCandidatesLabel": "向量候选数",
+        "keywordCandidatesLabel": "关键词候选数"
+      },
+      "embeddingBehavior": {
+        "title": "嵌入行为",
+        "description": "批量大小、超时和重试参数。",
+        "batchSizeLabel": "批量大小",
+        "timeoutLabel": "超时 (ms)",
+        "maxRetriesLabel": "最大重试次数",
+        "retryBaseIntervalLabel": "重试基础间隔 (ms)",
+        "workerPollIntervalLabel": "Worker 轮询间隔 (ms)",
+        "workerMaxAttemptsLabel": "Worker 最大尝试次数",
+        "workerRetryBaseIntervalLabel": "Worker 重试基础间隔 (ms)",
+        "httpTimeoutLabel": "HTTP 超时 (ms)"
+      }
+    }
+  },
   "settings": {
     "page": {
       "title": "系统设置",
@@ -5876,5 +6130,66 @@
     "storyModes": {},
     "styleTemplates": {},
     "antiAiRules": {}
+  },
+  "storyModes": {
+    "page": {
+      "toastCreated": "推进模式已创建。",
+      "toastUpdated": "推进模式已更新。",
+      "toastDeleted": "推进模式已删除。",
+      "toastBatchCreated": "已批量创建 {count} 个推进模式子类。",
+      "toastChildGenerated": "AI 已生成 {count} 个推进模式子类草稿。",
+      "toastTreeGenerated": "AI 推进模式树草稿已生成。",
+      "errorNoParent": "父级推进模式不存在。",
+      "errorNoChildSelected": "请至少选择一个子类候选。",
+      "errorNotFound": "推进模式不存在。",
+      "deleteConfirm": "确认删除推进模式「{name}」吗？此操作不可恢复。",
+      "deleteConfirmWithChildren": "确认删除推进模式「{name}」吗？这会同时删除其下 {count} 个子类，此操作不可恢复。",
+      "mountAsRoot": "作为根推进模式创建",
+      "createTitle": "新建推进模式",
+      "createChildTitle": "新增推进模式子类",
+      "createDesc": "先确定挂载位置，再手动填写 profile，或者先让 AI 生成一份两级树草稿。",
+      "createChildDesc": "当前会在指定父类下新增子类。你可以手动填写，也可以先让 AI 基于父类和现有兄弟节点生成多个子类候选，再多选批量保存。",
+      "mountPosition": "当前挂载位置",
+      "aiGenerateTitle": "AI 生成草稿",
+      "aiGenerateChildTitle": "AI 生成子类草稿",
+      "aiGenerateHint": "AI 会输出一个可直接编辑的推进模式树草稿，保存前仍然会校验 profile 结构。",
+      "aiGenerateChildHint": "AI 会基于当前父类和现有兄弟节点输出一个或多个子类节点草稿，不会再生成整棵树。补充方向可以留空。保存前仍然会校验 profile 结构。",
+      "derivationCount": "衍生数量",
+      "countOption": "{count} 个",
+      "treePromptPlaceholder": "请输入你希望生成的推进模式树方向。",
+      "childPromptPlaceholder": "可选：补充你想偏向的子类方向。不填则 AI 会直接基于父类和现有兄弟节点衍生。",
+      "generating": "生成中...",
+      "generateTreeBtn": "生成推进模式草稿",
+      "generateChildBtn": "生成子类草稿",
+      "resetDraft": "重置草稿",
+      "generatedCandidates": "已生成的子类候选",
+      "selectedCount": "已选 {selected} / {total}",
+      "candidateHint": "勾选后可批量保存；点击候选卡片会切换到下方表单进行单独编辑。",
+      "currentEditing": "当前编辑",
+      "candidateN": "候选 {n}",
+      "fieldName": "名称",
+      "fieldDesc": "描述",
+      "fieldTemplate": "人工模板补充",
+      "cancel": "取消",
+      "saving": "保存中...",
+      "batchSaving": "批量保存中...",
+      "batchSaveBtn": "批量保存选中子类 ({count})",
+      "saveBtn": "保存推进模式",
+      "saveChildBtn": "保存当前子类",
+      "editTitle": "编辑推进模式",
+      "editDesc": "可以修改名称、描述、模板和 profile。两级树限制仍会保留。",
+      "currentParent": "当前父级",
+      "notFound": "未找到",
+      "rootNode": "根节点",
+      "saveEditBtn": "保存修改",
+      "cardTitle": "推进模式库",
+      "cardDescription": "这里维护作品的推进模式，例如系统流、无敌流、种田流、治愈日常。它回答的是“这本书靠什么持续推进和兑现”，会作为后续规划和生成的硬约束输入。",
+      "totalCount": "当前推进模式数：{count}",
+      "createTreeBtn": "新建推进模式树",
+      "loading": "正在加载推进模式树...",
+      "emptyTitle": "还没有任何推进模式",
+      "emptyHint": "可以先手动建一个根推进模式，也可以直接让 AI 生成一份结构化草稿。",
+      "startCreate": "开始创建"
+    }
   }
 }

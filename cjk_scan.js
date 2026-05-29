@@ -19,12 +19,14 @@ for (const file of files) {
   const lines = content.split('\n');
   let count = 0;
   for (const line of lines) {
-    if (CJK.test(line) && !line.trim().startsWith('//') && !line.includes('i18n-ignore')) {
-      count++;
-    }
+    if (CJK.test(line) && !line.trim().startsWith('//') && !line.includes('i18n-ignore')) count++;
   }
   if (count > 0) withCJK.push({file: file.replace(/.*client.src./, ''), count});
 }
 withCJK.sort((a,b) => b.count - a.count);
-for (const {file, count} of withCJK.slice(0, 25)) process.stdout.write(count + '\t' + file + '\n');
-process.stdout.write('Total files: ' + withCJK.length + '\n');
+let total = 0;
+for (const {file, count} of withCJK.slice(0, 30)) {
+  process.stdout.write(count + '\t' + file + '\n');
+  total += count;
+}
+process.stdout.write('...\nTotal files: ' + withCJK.length + ', shown top 30 lines: ' + total + '\n');
