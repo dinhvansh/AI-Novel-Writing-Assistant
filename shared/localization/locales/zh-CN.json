@@ -1265,38 +1265,98 @@
     },
     "basicInfo": {
       "writingMode": {
-        "original": { "label": "原创", "summary": "从零开始创建世界、角色和主线，适合大多数新项目。" },
-        "continuation": { "label": "续写", "summary": "基于已有小说或知识文档继续创作，后续会优先注入既有设定和拆书内容。" }
+        "original": {
+          "label": "原创",
+          "summary": "从零开始创建世界、角色和主线，适合大多数新项目。"
+        },
+        "continuation": {
+          "label": "续写",
+          "summary": "基于已有小说或知识文档继续创作，后续会优先注入既有设定和拆书内容。"
+        }
       },
       "projectMode": {
-        "coPilot": { "label": "AI 副驾", "summary": "你定方向，AI 提方案和草稿，适合前期打磨和高频人工决策。" },
-        "aiLed": { "label": "AI 接管", "summary": "AI 负责主推进，你在关键节点审核，适合已有明确目标的项目。" },
-        "draftMode": { "label": "草稿优先", "summary": "先快速产出文本和方向，结构约束较弱，适合试故事和找感觉。" },
-        "autoPipeline": { "label": "流水线优先", "summary": "适合设定较完整后按规划、生成、审计、修复连续推进。" }
+        "coPilot": {
+          "label": "AI 副驾",
+          "summary": "你定方向，AI 提方案和草稿，适合前期打磨和高频人工决策。"
+        },
+        "aiLed": {
+          "label": "AI 接管",
+          "summary": "AI 负责主推进，你在关键节点审核，适合已有明确目标的项目。"
+        },
+        "draftMode": {
+          "label": "草稿优先",
+          "summary": "先快速产出文本和方向，结构约束较弱，适合试故事和找感觉。"
+        },
+        "autoPipeline": {
+          "label": "流水线优先",
+          "summary": "适合设定较完整后按规划、生成、审计、修复连续推进。"
+        }
       },
       "pov": {
-        "thirdPerson": { "label": "第三人称", "summary": "最稳，适合多角色和复杂主线。" },
-        "firstPerson": { "label": "第一人称", "summary": "代入感强，但信息受限，适合强主角视角叙事。" },
-        "mixed": { "label": "混合视角", "summary": "更灵活，但更容易失控，适合成熟项目。" }
+        "thirdPerson": {
+          "label": "第三人称",
+          "summary": "最稳，适合多角色和复杂主线。"
+        },
+        "firstPerson": {
+          "label": "第一人称",
+          "summary": "代入感强，但信息受限，适合强主角视角叙事。"
+        },
+        "mixed": {
+          "label": "混合视角",
+          "summary": "更灵活，但更容易失控，适合成熟项目。"
+        }
       },
       "pace": {
-        "balanced": { "label": "均衡", "summary": "推进和铺垫兼顾，适合作为默认选择。" },
-        "slow": { "label": "慢节奏", "summary": "更重铺垫、氛围和情绪发酵。" },
-        "fast": { "label": "快节奏", "summary": "更重事件驱动、钩子和连续推进。" }
+        "balanced": {
+          "label": "均衡",
+          "summary": "推进和铺垫兼顾，适合作为默认选择。"
+        },
+        "slow": {
+          "label": "慢节奏",
+          "summary": "更重铺垫、氛围和情绪发酵。"
+        },
+        "fast": {
+          "label": "快节奏",
+          "summary": "更重事件驱动、钩子和连续推进。"
+        }
       },
       "emotion": {
-        "medium": { "label": "中情绪浓度", "summary": "保留起伏但不过载，适合作为默认值。" },
-        "low": { "label": "低情绪浓度", "summary": "更克制，适合冷静叙事或偏理性作品。" },
-        "high": { "label": "高情绪浓度", "summary": "更强调爆发、冲突和强刺激场面。" }
+        "medium": {
+          "label": "中情绪浓度",
+          "summary": "保留起伏但不过载，适合作为默认值。"
+        },
+        "low": {
+          "label": "低情绪浓度",
+          "summary": "更克制，适合冷静叙事或偏理性作品。"
+        },
+        "high": {
+          "label": "高情绪浓度",
+          "summary": "更强调爆发、冲突和强刺激场面。"
+        }
       },
       "aiFreedom": {
-        "medium": { "label": "中自由度", "summary": "允许 AI 在设定内补充细节和局部推进，适合作为默认值。" },
-        "low": { "label": "低自由度", "summary": "严格按设定和规划执行，适合前期控盘。" },
-        "high": { "label": "高自由度", "summary": "允许 AI 主动扩展剧情和细节，适合中后期稳定项目。" }
+        "medium": {
+          "label": "中自由度",
+          "summary": "允许 AI 在设定内补充细节和局部推进，适合作为默认值。"
+        },
+        "low": {
+          "label": "低自由度",
+          "summary": "严格按设定和规划执行，适合前期控盘。"
+        },
+        "high": {
+          "label": "高自由度",
+          "summary": "允许 AI 主动扩展剧情和细节，适合中后期稳定项目。"
+        }
       },
       "publicationStatus": {
-        "draft": { "label": "草稿", "summary": "仍在开发和打磨阶段，适合绝大多数项目。" },
-        "published": { "label": "已发布", "summary": "用于标记已成型或已对外发布的作品。" }
+        "draft": {
+          "label": "草稿",
+          "summary": "仍在开发和打磨阶段，适合绝大多数项目。"
+        },
+        "published": {
+          "label": "已发布",
+          "summary": "用于标记已成型或已对外发布的作品。"
+        }
       },
       "projectStatus": {
         "notStarted": "未开始",
@@ -2051,12 +2111,30 @@
           "applicableCount": "可写入 {count} 项",
           "noApplicable": "没有可写入项",
           "fields": {
-            "appearance": { "label": "样貌记忆点", "placeholder": "眉眼、发型、表情习惯等能被读者记住的样貌特征" },
-            "physique": { "label": "体态基底", "placeholder": "年龄感、身形、行动姿态、身体状态基底" },
-            "attireStyle": { "label": "常见穿着", "placeholder": "日常穿着、身份外观、阶层或职业痕迹" },
-            "signatureDetail": { "label": "标志细节", "placeholder": "标志物、动作、微习惯、气味或反复可用的细节" },
-            "voiceTexture": { "label": "声音口吻", "placeholder": "声线、说话节奏、句式习惯、口吻" },
-            "presenceImpression": { "label": "登场印象", "placeholder": "首次或常规登场时给读者的直观感受" }
+            "appearance": {
+              "label": "样貌记忆点",
+              "placeholder": "眉眼、发型、表情习惯等能被读者记住的样貌特征"
+            },
+            "physique": {
+              "label": "体态基底",
+              "placeholder": "年龄感、身形、行动姿态、身体状态基底"
+            },
+            "attireStyle": {
+              "label": "常见穿着",
+              "placeholder": "日常穿着、身份外观、阶层或职业痕迹"
+            },
+            "signatureDetail": {
+              "label": "标志细节",
+              "placeholder": "标志物、动作、微习惯、气味或反复可用的细节"
+            },
+            "voiceTexture": {
+              "label": "声音口吻",
+              "placeholder": "声线、说话节奏、句式习惯、口吻"
+            },
+            "presenceImpression": {
+              "label": "登场印象",
+              "placeholder": "首次或常规登场时给读者的直观感受"
+            }
           }
         },
         "resource": {
@@ -2181,6 +2259,80 @@
         "continue": "继续自动执行{scope}",
         "skipRepair": "跳过本次建议，继续{scope}",
         "continueToast": "自动导演已继续执行{scope}，并会在后台自动审核与修复。"
+      },
+      "triggerButton": "AI 自动导演接管",
+      "dialogTitle": "让 AI 从当前项目继续自动导演",
+      "dialogDescription": "先读取当前项目真实进度，再明确告诉你这次会跳过、继续还是重跑哪些步骤。",
+      "contextTitle": "当前项目信息会作为自动导演输入",
+      "contextEmpty": "当前信息较少，建议至少补一句故事概述或书级卖点后再接管。",
+      "contextLabel": {
+        "description": "概述：{value}",
+        "targetAudience": "目标读者：{value}",
+        "bookSellingPoint": "书级卖点：{value}",
+        "genre": "题材：{value}",
+        "primaryStoryMode": "主推进模式：{value}",
+        "world": "世界观：{value}",
+        "commercialTags": "商业标签：{value}"
+      },
+      "modelSettings": "模型设置",
+      "runModeTitle": "自动导演运行方式",
+      "postGenStyleReview": "正文后去 AI 检测与修正",
+      "postGenStyleReviewHint": "开启后，章节正文生成完成时会检测 AI 味风险，并在命中可修正问题时生成修订稿。",
+      "runMode": {
+        "fullBookAutopilot": "全书自动接管",
+        "autoToReady": "推进到可开写",
+        "autoToExecution": "按范围执行"
+      },
+      "runModeDesc": {
+        "fullBookAutopilot": "AI 会按整本书目标补齐规划、继续写作、审校和修复。",
+        "autoToReady": "AI 会持续推进到章节执行资源准备好后再交接。",
+        "autoToExecution": "按全书、章节范围或卷范围接管，并继续准备目标范围的章节执行。"
+      },
+      "fullBookAutopilotTitle": "全书自动接管",
+      "fullBookAutopilotDesc": "系统会以整本书为目标接管当前项目，继续补齐规划、章节执行、审校和修复。只有模型不可用、服务异常、正文保护或不可恢复风险会停下。",
+      "styleTitle": "本次接管使用的写法",
+      "styleHint": "绑定书级默认写法后，接管时建议沿用它。前半段导演只读取轻量摘要，避免干扰结构规划。",
+      "styleOnlyKeywords": "先只沿用文风关键词",
+      "currentStyleBinding": "当前书级默认写法",
+      "stageSummary": "本阶段仅生效的写法摘要",
+      "entryStepTitle": "从哪一步开始接管",
+      "loading": "读取中",
+      "loadReadinessFailed": "读取接管状态失败。",
+      "hasAsset": "已具备",
+      "noAsset": "未具备",
+      "characterCount": "角色数量",
+      "volumeChapterCount": "卷 / 当前卷章节",
+      "hasActiveTask": "当前已有自动导演任务",
+      "hasActiveTaskHint": "为避免重复接管，请先处理当前自动导演任务。",
+      "handleCurrentTask": "处理当前任务",
+      "recommended": "推荐",
+      "scopeRestrictionHint": "当前范围不能从这一步开始。章节范围从节奏拆章开始，卷范围从卷战略开始。",
+      "previewTitle": "本次接管预览",
+      "currentPage": "当前页",
+      "effectiveStep": "实际接管",
+      "effectiveStage": "执行阶段",
+      "restoreCurrentBatch": "恢复当前批次",
+      "activeBatch": "当前活动批次",
+      "batchRange": "范围 {start}-{end}",
+      "latestCheckpoint": "最近检查点",
+      "checkpointChapter": " · 第{order}章",
+      "executableRange": "当前可执行范围：第 {start}-{end} 章",
+      "nextChapter": " · 下一章第 {order} 章",
+      "skipSteps": "会跳过",
+      "starting": "启动中...",
+      "startTakeover": "从这一阶段开始接管",
+      "startFailed": "启动自动导演失败，未返回任务信息。",
+      "submittedFullBook": "自动导演接管任务已提交，可在 AI 驾驶舱查看全书执行进度。",
+      "submittedRange": "自动导演接管任务已提交，可在 AI 驾驶舱查看 {label} 的执行进度。",
+      "submittedDefault": "自动导演接管任务已提交，可在 AI 驾驶舱查看排队和执行进度。",
+      "startTakeoverFailed": "启动自动导演接管失败。",
+      "strategy": {
+        "continueExisting": "继续已有进度",
+        "restartCurrentStep": "重新生成当前步"
+      },
+      "strategyDesc": {
+        "continueExisting": "优先跳过已完成资产，只补缺失部分或恢复当前批次。",
+        "restartCurrentStep": "先清空当前步骤产出，再按该步骤重新生成。"
       }
     },
     "writingFormula": {
@@ -2281,19 +2433,43 @@
           "archived": "归档"
         },
         "presets": {
-          "imitate": { "label": "尽量贴近原文", "summary": "尽量保留强烈指纹和表达习惯，适合短期临摹、风格试写和对照学习。" },
-          "balanced": { "label": "保留主要读感", "summary": "保留读感和推进节奏，弱化过强指纹，适合大多数项目直接使用。" },
-          "transfer": { "label": "只迁移可复用骨架", "summary": "更多保留可复用的节奏、结构和对白逻辑，适合长期项目和整书默认写法。" }
+          "imitate": {
+            "label": "尽量贴近原文",
+            "summary": "尽量保留强烈指纹和表达习惯，适合短期临摹、风格试写和对照学习。"
+          },
+          "balanced": {
+            "label": "保留主要读感",
+            "summary": "保留读感和推进节奏，弱化过强指纹，适合大多数项目直接使用。"
+          },
+          "transfer": {
+            "label": "只迁移可复用骨架",
+            "summary": "更多保留可复用的节奏、结构和对白逻辑，适合长期项目和整书默认写法。"
+          }
         },
         "sources": {
-          "directText": { "label": "直接粘贴文本", "summary": "把样本文本交给后台提取任务，适合手里已有片段或章节。" },
-          "knowledgeDocument": { "label": "知识库原文", "summary": "选择知识库文档活动版本，系统冻结全文快照后用代表性样本学习写法。" },
-          "bookAnalysis": { "label": "拆书结果", "summary": "直接使用拆书里的文风与技法结果生成写法。" }
+          "directText": {
+            "label": "直接粘贴文本",
+            "summary": "把样本文本交给后台提取任务，适合手里已有片段或章节。"
+          },
+          "knowledgeDocument": {
+            "label": "知识库原文",
+            "summary": "选择知识库文档活动版本，系统冻结全文快照后用代表性样本学习写法。"
+          },
+          "bookAnalysis": {
+            "label": "拆书结果",
+            "summary": "直接使用拆书里的文风与技法结果生成写法。"
+          }
         },
         "processing": {
           "recommended": "推荐",
-          "representativeSample": { "label": "智能抽样", "summary": "从开篇、中段、后段和收束抽取代表性样本，适合长篇原文，速度和稳定性更好。" },
-          "fullText": { "label": "全文提取", "summary": "把活动版本全文作为模型输入，适合短文档；长篇可能更慢，也更容易触发模型上下文或超时限制。" }
+          "representativeSample": {
+            "label": "智能抽样",
+            "summary": "从开篇、中段、后段和收束抽取代表性样本，适合长篇原文，速度和稳定性更好。"
+          },
+          "fullText": {
+            "label": "全文提取",
+            "summary": "把活动版本全文作为模型输入，适合短文档；长篇可能更慢，也更容易触发模型上下文或超时限制。"
+          }
         }
       },
       "fields": {
@@ -2352,7 +2528,9 @@
           "pressureContinue": "压力延续式收尾",
           "bitterAftertaste": "苦涩余味收尾"
         },
-        "povSwitchStyle": { "controlled": "受控切换" },
+        "povSwitchStyle": {
+          "controlled": "受控切换"
+        },
         "emotionExpression": {
           "behaviorOnly": "只通过动作外露",
           "dialogueAndAction": "对白和动作共同外露",
@@ -2381,21 +2559,66 @@
           "flexible": "随角色灵活变化",
           "professional": "专业克制"
         },
-        "sentenceVariation": { "high": "变化大", "medium": "变化适中", "mediumHigh": "变化偏大" },
-        "pace": { "mediumFast": "中快", "fast": "快", "medium": "中速", "mediumSlow": "中慢", "balanced": "均衡", "slow": "慢" },
-        "paragraphDensity": { "high": "高密度", "medium": "中密度", "mediumHigh": "中高密度" }
+        "sentenceVariation": {
+          "high": "变化大",
+          "medium": "变化适中",
+          "mediumHigh": "变化偏大"
+        },
+        "pace": {
+          "mediumFast": "中快",
+          "fast": "快",
+          "medium": "中速",
+          "mediumSlow": "中慢",
+          "balanced": "均衡",
+          "slow": "慢"
+        },
+        "paragraphDensity": {
+          "high": "高密度",
+          "medium": "中密度",
+          "mediumHigh": "中高密度"
+        }
       },
       "booleans": {
-        "default": { "true": "是", "false": "否" },
-        "multiPov": { "true": "允许多视角切换", "false": "尽量保持单视角" },
-        "looping": { "true": "允许循环回钩", "false": "尽量直线推进" },
-        "allowSelfReflection": { "true": "允许明确自省", "false": "尽量少做直白自省" },
-        "facePriority": { "true": "优先保住体面", "false": "不强求体面" },
-        "allowIncompleteSentences": { "true": "允许不完整句", "false": "句子尽量完整" },
-        "allowSwearing": { "true": "允许带一点粗口或脏字", "false": "尽量避免粗口" },
-        "allowUselessDetails": { "true": "允许保留生活杂音", "false": "尽量减少无关杂音" },
-        "allowFragmentedFlow": { "true": "允许碎片化推进", "false": "尽量保持完整推进" },
-        "actionOverExplanation": { "true": "动作先于解释", "false": "解释比动作更重要" }
+        "default": {
+          "true": "是",
+          "false": "否"
+        },
+        "multiPov": {
+          "true": "允许多视角切换",
+          "false": "尽量保持单视角"
+        },
+        "looping": {
+          "true": "允许循环回钩",
+          "false": "尽量直线推进"
+        },
+        "allowSelfReflection": {
+          "true": "允许明确自省",
+          "false": "尽量少做直白自省"
+        },
+        "facePriority": {
+          "true": "优先保住体面",
+          "false": "不强求体面"
+        },
+        "allowIncompleteSentences": {
+          "true": "允许不完整句",
+          "false": "句子尽量完整"
+        },
+        "allowSwearing": {
+          "true": "允许带一点粗口或脏字",
+          "false": "尽量避免粗口"
+        },
+        "allowUselessDetails": {
+          "true": "允许保留生活杂音",
+          "false": "尽量减少无关杂音"
+        },
+        "allowFragmentedFlow": {
+          "true": "允许碎片化推进",
+          "false": "尽量保持完整推进"
+        },
+        "actionOverExplanation": {
+          "true": "动作先于解释",
+          "false": "解释比动作更重要"
+        }
       },
       "editor": {
         "title": "写法编辑",
@@ -2415,7 +2638,7 @@
         },
         "sourceSection": {
           "title": "来源与特征",
-          "hint": "这部分是这套写法的\u201c证据层\u201d。从文本或知识库原文提取出来的写法，后续回看和重提取都会依赖这里。这里会把特征说明、证据、分数、预设建议和推荐规则一起展示出来。"
+          "hint": "这部分是这套写法的“证据层”。从文本或知识库原文提取出来的写法，后续回看和重提取都会依赖这里。这里会把特征说明、证据、分数、预设建议和推荐规则一起展示出来。"
         },
         "analysisSection": {
           "title": "写法分析摘要",
@@ -2423,12 +2646,12 @@
         },
         "advancedRules": {
           "title": "机器规则层",
-          "hint": "这四块是系统真正执行时会读取的机器规则层。不了解字段含义时，可以先看标题和说明，再决定是否要改。如果当前主要显示\u201c总述\u201d字段，说明这次提取更多给出了摘要级规则，细颗粒兼容字段还不算多。",
+          "hint": "这四块是系统真正执行时会读取的机器规则层。不了解字段含义时，可以先看标题和说明，再决定是否要改。如果当前主要显示“总述”字段，说明这次提取更多给出了摘要级规则，细颗粒兼容字段还不算多。",
           "compatibilityNote": "兼容字段（{fields}）会被旧版写法执行链读取，建议保留。"
         },
         "antiAiSection": {
           "title": "去 AI 味规则绑定",
-          "hint": "这里决定系统在检测和修正文稿时优先防什么问题。规则绑得越清楚，\u201c去 AI 味\u201d越有方向感。"
+          "hint": "这里决定系统在检测和修正文稿时优先防什么问题。规则绑得越清楚，“去 AI 味”越有方向感。"
         },
         "fields": {
           "name": {
@@ -2477,7 +2700,7 @@
           "fingerprintRisk": "指纹风险",
           "ruleLabel": "规则：{label}",
           "summaryOnly": "仅摘要",
-          "noFeatures": "这条文本写法还没生成可选特征条目。可以点\u201c重新提取特征\u201d，重新从原文样本生成完整特征池。"
+          "noFeatures": "这条文本写法还没生成可选特征条目。可以点“重新提取特征”，重新从原文样本生成完整特征池。"
         },
         "featureDecision": {
           "keep": "保留",
@@ -2564,7 +2787,7 @@
           "rhythmRules": "节奏规则",
           "antiAi": "去 AI 味约束",
           "antiAiHint": "这套写法绑定的去 AI 味规则和提取推荐。",
-          "noAntiAi": "这套写法还没有绑定明确的反 AI 约束，所以\u201c去 AI 味\u201d时可读性会偏弱。",
+          "noAntiAi": "这套写法还没有绑定明确的反 AI 约束，所以“去 AI 味”时可读性会偏弱。",
           "extractionAntiAiCount": "提取时推荐了 {count} 条去 AI 味规则，可在编辑页绑定。",
           "assetOverview": "资产概览",
           "assetOverviewHint": "这套写法的来源、更新时间和绑定情况。",
@@ -2585,9 +2808,9 @@
           "notFilled": "未填写",
           "nextSteps": "下一步",
           "nextStepsHint": "常用操作入口。",
-          "editDesc": "点\u201c编辑写法\u201d可以修改名称、说明、规则和去 AI 味绑定。",
-          "applyDesc": "点\u201c应用 & 试写\u201d可以在写作台用这套写法生成一段试写。",
-          "removeAiDesc": "点\u201c去 AI 味\u201d可以用这套写法对已有文稿做去 AI 味处理。"
+          "editDesc": "点“编辑写法”可以修改名称、说明、规则和去 AI 味绑定。",
+          "applyDesc": "点“应用 & 试写”可以在写作台用这套写法生成一段试写。",
+          "removeAiDesc": "点“去 AI 味”可以用这套写法对已有文稿做去 AI 味处理。"
         }
       }
     },
@@ -2752,6 +2975,448 @@
         "issueDetail": {
           "fallback": "请检查 {field} 的相关设定是否与世界整体逻辑一致。"
         }
+      }
+    },
+    "pipeline": {
+      "takeoverTitle": "从质量修复接管",
+      "takeoverDescription": "AI 会优先判断当前是否有活动中的章节批次或待修检查点，再决定恢复当前修复还是新开批次。",
+      "batchTitle": "批量生成与质检",
+      "noCharactersWarning": "请先添加至少 1 个角色，再执行流水线。",
+      "goToCharacters": "去角色管理",
+      "currentFocus": "当前重点",
+      "pendingRepairCount": "先处理 {count} 个低分章节",
+      "noLowScoreChapters": "当前没有明显低分章节",
+      "qualityThreshold": "质量阈值",
+      "currentRunMode": "当前运行模式",
+      "runModeFast": "快速",
+      "runModePolish": "精修",
+      "repairCenterTitle": "质量修复中心",
+      "chapterOption": "第{order}章 - {title}",
+      "reviewAction": "执行审校",
+      "repairAction": "执行修复",
+      "hookAction": "生成钩子",
+      "reviewScoreTitle": "审校评分",
+      "scoreCoherence": "连贯性",
+      "scoreRepetition": "重复率",
+      "scorePacing": "节奏",
+      "scoreVoice": "口吻",
+      "scoreEngagement": "追更感",
+      "scoreOverall": "综合",
+      "noContent": "暂无",
+      "repairResultPlaceholder": "修复执行后显示",
+      "lowScoreFilter": "低分章节筛选（阈值 {threshold}）",
+      "configSectionTitle": "流水线配置、运行与模型设置",
+      "configSectionDescription": "批量任务、模型和高级参数都收在这里。默认先处理当前问题章节，只有需要批量推进时再展开。",
+      "modelConfigTitle": "模型与配置",
+      "startChapter": "起始章节",
+      "endChapter": "结束章节",
+      "maxRetries": "失败重试",
+      "runModeLabel": "运行模式",
+      "repairModeLabel": "修复模式",
+      "repairMode": {
+        "detectOnly": "只检测不修复",
+        "lightRepair": "自动轻修",
+        "heavyRepair": "自动重修",
+        "continuityOnly": "只修连续性",
+        "characterOnly": "只修人设",
+        "endingOnly": "只修结尾力度"
+      },
+      "autoReview": "自动审校",
+      "autoRepair": "自动修复",
+      "skipCompleted": "跳过已完成章节",
+      "currentSettings": "当前设置：{runMode} | 阈值 {threshold} | {repairMode}",
+      "stageVisualizationTitle": "阶段可视化",
+      "stageStatus": {
+        "pending": "待执行",
+        "active": "进行中",
+        "completed": "已完成",
+        "failed": "异常"
+      },
+      "runPanelTitle": "运行面板",
+      "startBatch": "启动批量生成",
+      "rerunLowScore": "仅重跑低分章节",
+      "exportReport": "导出任务报告",
+      "generateBible": "生成圣经",
+      "stopBible": "停止圣经",
+      "generateBeats": "生成拍点",
+      "stopBeats": "停止拍点",
+      "lowScoreRangeInfo": "低分章节 {count} 个，可重跑范围：第 {start} 章 - 第 {end} 章。",
+      "taskStatusTitle": "任务状态",
+      "taskId": "任务ID",
+      "taskStatusLabel": "状态",
+      "currentStage": "当前阶段",
+      "currentItem": "当前章节",
+      "progress": "进度",
+      "completed": "完成",
+      "retries": "重试",
+      "errorType": "失败分类",
+      "error": "错误",
+      "noRunningTask": "暂无运行中的流水线任务。",
+      "reportSectionTitle": "质量报告与衍生产物",
+      "reportSectionDescription": "全量质量报告、已保存圣经和拍点都属于查看型信息，默认收起。",
+      "qualityReportTitle": "质量报告总览",
+      "noQualityReport": "暂无质量报告。",
+      "chapterLabel": "章节",
+      "fullBook": "全书",
+      "savedBibleTitle": "已保存圣经",
+      "bibleMainPromise": "主线承诺",
+      "bibleCoreSetting": "核心设定",
+      "bibleWorldRules": "世界规则",
+      "noBible": "暂无作品圣经。",
+      "savedBeatsTitle": "已保存拍点",
+      "beatChapterLabel": "第 {order} 章 · {title}",
+      "beatType": "类型",
+      "noBeats": "暂无剧情拍点。"
+    },
+    "basicInfoForm": {
+      "fillSuggestionTitle": "填写建议",
+      "fillSuggestionDescription": "建议先想清楚这本书写给谁、靠什么吸引人、前 30 章要兑现什么，再补创作模式、世界边界和写法确认。这里的设置会直接影响后续主线规划、卷章推进和正文生成。",
+      "positioningTitle": "作品定位",
+      "positioningDescription": "先定义这是什么作品，以及它是从零开始还是基于既有内容继续创作。",
+      "titleLabel": "小说标题",
+      "titlePlaceholder": "例如：雾港审判局",
+      "descriptionLabel": "一句话概述",
+      "descriptionPlaceholder": "用 2-4 句话说明主角、核心冲突和故事看点。",
+      "writingModeLabel": "创作模式",
+      "genreVsModeTitle": "题材基底与推进模式的区别",
+      "genreVsModeDescription": "题材基底回答“这是什么书”，例如修仙、都市、历史架空；推进模式回答“这本书靠什么持续推进和兑现”，例如系统流、无敌流、种田流。",
+      "genreLabel": "题材基底",
+      "genrePlaceholder": "暂不设置题材基底",
+      "worldLabel": "绑定世界观",
+      "worldPlaceholder": "不绑定世界观",
+      "defaultChapterLengthLabel": "默认章节字数",
+      "defaultChapterLengthHint": "推荐先设为 2500-3500，后续仍可按章节单独调整。",
+      "estimatedChaptersLabel": "预计章节数",
+      "estimatedChaptersHint": "会作为大纲、拍点和流水线默认范围的参考，后续仍可调整。",
+      "primaryStoryModeLabel": "主推进模式",
+      "primaryStoryModePlaceholder": "暂不设置主推进模式",
+      "secondaryStoryModeLabel": "副推进模式",
+      "secondaryStoryModePlaceholder": "不叠加副推进模式",
+      "primaryStoryModeSummary": "主推进模式摘要",
+      "secondaryStoryModeSummary": "副推进模式摘要",
+      "coreDrive": "核心驱动",
+      "readerReward": "补充读者奖励",
+      "narrativeAdvancedTitle": "叙事体验与 AI 协作高级设置",
+      "narrativeAdvancedDescription": "这部分会影响后续生成风格和 AI 自动化程度，但不是新手首屏必须立刻决定的内容。",
+      "narrativeExperienceTitle": "叙事体验",
+      "narrativeExperienceDescription": "这些字段定义读者会如何感知这部作品，也会直接影响章节规划的语气、密度和推进方式。",
+      "povLabel": "叙事视角",
+      "paceLabel": "节奏偏好",
+      "emotionLabel": "情绪浓度",
+      "styleToneLabel": "文风关键词",
+      "styleTonePlaceholder": "例如：冷峻、克制、黑色幽默",
+      "aiCollabTitle": "AI 协作方式",
+      "aiCollabDescription": "这部分定义你和 AI 如何分工，以及系统后续可以自动推进到什么程度。",
+      "projectModeLabel": "项目模式",
+      "aiFreedomLabel": "AI 自由度",
+      "resourceReadyScoreLabel": "资源完备度",
+      "resourceReadyScoreHint": "0 表示刚起步，100 表示设定、角色和规划都比较完备。",
+      "postGenStyleReviewLabel": "正文后去 AI 检测与修正",
+      "postGenStyleReviewHint": "开启后，章节正文生成完成时会检测 AI 味风险，并在命中可修正问题时生成修订稿。",
+      "continuationSourceTitle": "续写来源设置",
+      "continuationSourceDescription": "当前是续写模式，这部分是必填项，所以默认展开。",
+      "expandSettings": "展开设置",
+      "collapseSettings": "收起设置",
+      "projectStatusTitle": "项目状态与进度字段",
+      "projectStatusDescription": "这些主要服务于项目管理和流程判断，不是首屏必须立即处理的内容。",
+      "expandFields": "展开字段",
+      "collapseFields": "收起字段",
+      "productionStatusTitle": "生产进度与状态",
+      "productionStatusDescription": "这些状态主要服务于项目管理和后续流程判断，不是一次性填死，后续可以按阶段调整。",
+      "projectStatusLabel": "项目状态",
+      "storylineStatusLabel": "主线状态",
+      "outlineStatusLabel": "大纲状态",
+      "publicationStatusLabel": "发布状态",
+      "continuationSourceMissingWarning": "续写模式下需要先选择明确的上游来源，才能保存当前基本信息。",
+      "continuationAnalysisSectionMissingWarning": "你已经选择了拆书结果，但还没有选择要注入的拆书章节。"
+    },
+    "chapterRuntime": {
+      "lengthCardTitle": "长度控制与执行回放",
+      "controlMode": "控制模式",
+      "wordControlMode": {
+        "promptOnly": "自然优先",
+        "balanced": "标准控字",
+        "hybrid": "混合控字"
+      },
+      "closingPhaseActive": "已进入收尾区",
+      "normalProgress": "仍按常规推进",
+      "targetAndResult": "目标与结果",
+      "chars": "字",
+      "variance": "偏差",
+      "budgetRange": "预算区间",
+      "hardMax": "硬上限",
+      "executionSignal": "执行信号",
+      "hardStop": "硬停",
+      "times": "次",
+      "lengthRepairPath": "长度修整路径",
+      "noLengthRepair": "本次未触发额外长度修整。",
+      "overlengthRepairApplied": "本次触发过超长修整。",
+      "noOverlengthRepair": "本次未触发超长修整。",
+      "roundCount": "轮次",
+      "closingPhaseControl": "包含收尾区控制",
+      "roundLabel": "第 {index} 轮",
+      "suggested": "建议",
+      "actual": "实际",
+      "finalRound": "最终轮",
+      "midRound": "中间轮",
+      "hardStopTriggered": "触发硬停",
+      "naturalEnd": "自然结束",
+      "trimmedAtSentence": "按句边界截断",
+      "noLengthReplay": "当前还没有长度控制回放。生成本章后，这里会显示预算执行结果。",
+      "contextCardTitle": "本章目标与上下文",
+      "chapterPlan": "章节规划",
+      "planRole": "职责",
+      "phaseLabel": "阶段",
+      "participants": "参与角色",
+      "mustAdvance": "本章必须推进",
+      "mustPreserve": "本章必须保留",
+      "replannedNote": "本章来自一次重规划调整。",
+      "sourceIssues": "本章参考了 {count} 条待处理审计问题。",
+      "noSupplement": "无补充",
+      "noPlan": "暂无章节规划。",
+      "stateSnapshot": "状态快照",
+      "noSummary": "暂无摘要",
+      "knowledgeState": "知识状态",
+      "noStateSnapshot": "暂无状态快照。",
+      "activeConflicts": "活跃冲突",
+      "lastSeen": "最近出现",
+      "chapterOrder": "第 {order} 章",
+      "suggestion": "建议",
+      "noActiveConflicts": "暂无活跃冲突。",
+      "auditCardTitle": "当前问题与修复建议",
+      "totalScore": "总分",
+      "needsHandle": "需处理",
+      "canContinue": "可继续",
+      "auditReportCount": "审计报告 {count} 份，未解决问题 {openCount} 条。",
+      "replanPlan": "后续章节计划",
+      "replanRecommended": "建议调整",
+      "replanNotNeeded": "暂不调整",
+      "replanning": "调整中...",
+      "executeReplan": "执行重规划",
+      "viewReplan": "查看重规划",
+      "highRiskIssues": "高风险问题",
+      "lastReplanTitle": "最近一次规划调整",
+      "affectedChapters": "影响章节",
+      "none": "暂无",
+      "adjustWindow": "调整窗口",
+      "triggerType": "触发方式",
+      "sourceIssueCount": "来源问题",
+      "evidence": "证据",
+      "fixSuggestion": "建议",
+      "noOpenIssues": "当前没有待处理问题。"
+    },
+    "directorDebug": {
+      "debugButton": "调试检查",
+      "dialogTitle": "导演步骤完整度检查",
+      "dialogDescription": "这里展示的是每一步基于真实产出的检查结果。你可以直接看到哪一步已经有结果、哪一步缺前置条件、系统现在准备先补哪里。",
+      "completedCount": "已确认完成 {count}/{total}",
+      "blockedCount": "还需补前置条件 {count}",
+      "currentStepLabel": "当前先看 {label}",
+      "recheck": "重新检查",
+      "loading": "正在读取当前导演链的完整度检查结果...",
+      "loadError": "无法完成这次检查。",
+      "noTask": "当前还没有可检查的导演任务。先启动或接手一次 AI 导演流程，这里才会出现逐步骤检查结果。",
+      "currentFactStepTitle": "当前系统会先补这一段",
+      "reJudging": "系统正在重新判断下一步",
+      "partialInspectWarning": "有些步骤的检查没有拿到完整结果。通常是因为当前任务现场不完整，或者这一段还需要补更多事实来源。",
+      "currentFactStep": "当前判断会先处理这里",
+      "activeRuntimeStep": "后台此刻正在碰这一步",
+      "completeness": "这一段的完整度",
+      "canContinueLabel": "现在能不能继续做",
+      "canStart": "可以开始或继续",
+      "needsPrerequisite": "还要先补前置事实",
+      "nextStepLabel": "系统判断的下一步",
+      "resumeFromLabel": "如果中断，建议从哪继续",
+      "latestFactDesc": "这一步最近的事实描述",
+      "noExtraDesc": "暂时没有额外描述",
+      "blockedReason": "现在卡住的原因",
+      "evidence": "判断依据",
+      "noActionSuggestion": "当前没有额外动作建议",
+      "stages": {
+        "candidateSelection": "开书方向",
+        "candidateConfirm": "创建项目",
+        "storyMacro": "故事宏观规划",
+        "bookContract": "书级创作约定",
+        "characterSetup": "角色准备",
+        "volumeStrategy": "卷规划",
+        "structuredOutline": "节奏与拆章",
+        "chapterExecution": "正文生成",
+        "qualityRepair": "质量闭环",
+        "takeover": "接手已有项目"
+      },
+      "actions": {
+        "runChapterDetailGeneration": "继续细化剩余章节任务单",
+        "runChapterListGeneration": "继续补齐卷拆章列表",
+        "syncExecutionContracts": "同步章节执行合同"
+      },
+      "resumeFrom": {
+        "label": "如果中断，建议从哪继续",
+        "reJudge": "按当前现场重新判断",
+        "chapterDetailBundle": "从剩余未细化章节继续",
+        "chapterList": "从卷拆章列表继续",
+        "beatSheet": "从卷节奏板继续",
+        "chapterOrder": "第 {order} 章"
+      },
+      "stepTone": {
+        "error": "检查没有完成",
+        "done": "已确认完成",
+        "blocked": "还不能执行",
+        "current": "当前优先补这一段",
+        "working": "还没闭环"
+      },
+      "stepDetail": {
+        "done": "系统已经找到这一步对应的真实产出，可以直接复用。",
+        "blocked": "上游事实还没补齐，所以这一步暂时不能开始。",
+        "current": "这是系统根据现有事实判断出的下一段主处理步骤。",
+        "working": "这一步已经具备执行条件，但事实还没有完全闭环。"
+      }
+    },
+    "cover": {
+      "dialogTitle": "生成小说封面主画面",
+      "cannotGenerate": "还不能开始生成",
+      "noImageModelDesc1": "当前没有已配置的图像模型。请先到",
+      "settingsLink": "系统设置",
+      "noImageModelDesc2": "补全支持图像生成的厂商和模型，再回到这里继续。",
+      "sourcePromptTitle": "小说信息整理稿 / AI优化输入",
+      "sourcePromptHint": "系统已经根据当前小说基础信息整理了一版封面输入草稿。你可以直接改，也可以先点“AI优化Prompt”再继续手动调整。",
+      "sourcePromptPlaceholder": "描述这本书想突出什么样的封面主画面。",
+      "optimizeLanguageLabel": "优化输出语言",
+      "languageZh": "中文",
+      "optimizing": "优化中...",
+      "optimizePromptButton": "AI优化Prompt",
+      "restoreOriginal": "恢复原链路",
+      "currentSendMode": "当前发送模式",
+      "sendMode": {
+        "optimized": "AI优化 Prompt",
+        "manual": "手动编辑 Prompt",
+        "original": "原链路 Prompt"
+      },
+      "finalPromptTitle": "最终发送 Prompt 预览",
+      "finalPromptHint": "这里展示最终会发送给图像模型的 prompt。你可以直接编辑，也可以在 AI 优化后继续做细调。",
+      "stylePresetPlaceholder": "风格预设，例如：电影感插画，高辨识度",
+      "negativePromptPlaceholder": "负向提示词，例如：文字、水印、低清晰度、畸形",
+      "providerLabel": "模型厂商",
+      "noProviderOption": "请先在系统设置中填写图像模型",
+      "noProviderError": "请先在系统设置里配置支持图像生成的厂商和模型。",
+      "sizeLabel": "尺寸",
+      "sizePortrait": "1024x1536（推荐竖版）",
+      "countLabel": "生成张数",
+      "count1": "1 张",
+      "count2": "2 张",
+      "count3": "3 张",
+      "count4": "4 张",
+      "submitting": "提交任务中...",
+      "startGenerate": "开始生成",
+      "optimizeError": "AI 优化失败，请稍后重试。",
+      "submitError": "提交图片任务失败，请稍后重试。",
+      "taskStatus": "当前任务状态",
+      "galleryTitle": "封面图库",
+      "galleryHint": "生成成功后会自动回到这里。第一张成功图会在当前没有主封面时自动设为主图。",
+      "loadingGallery": "正在读取封面图库...",
+      "emptyGallery": "还没有封面图。先提交一次生成任务，成功后会出现在这里。",
+      "primaryCover": "当前主封面",
+      "candidateCover": "候选图",
+      "sizeUnknown": "尺寸待定",
+      "localPath": "本地路径",
+      "setPrimary": "设为当前封面",
+      "deleting": "删除中...",
+      "delete": "删除",
+      "deleteConfirm": "确认删除这张封面图？如果它是当前主封面，系统会自动补一张新的主图。",
+      "deleteError": "删除封面失败，请稍后重试。",
+      "novelFallback": "小说",
+      "coverAlt": "封面候选图",
+      "status": {
+        "queued": "排队中",
+        "running": "生成中",
+        "succeeded": "生成成功",
+        "failed": "生成失败",
+        "cancelled": "已取消"
+      }
+    },
+    "worldUsage": {
+      "title": "围绕这本书的世界边界",
+      "description": "系统会结合这本书的目标读者、卖点和前期承诺，从已绑定世界里裁出真正会用到的组织、地点和规则。你通常只需要确认主舞台、前期必须保留项和不要越界的边界说明。",
+      "needsRefresh": "需要刷新",
+      "generated": "已生成",
+      "refreshing": "正在刷新...",
+      "refreshButton": "重新整理世界设定",
+      "saving": "正在保存...",
+      "saveButton": "保存这本书的保留项",
+      "noWorldHint": "这本小说还没有绑定世界观。先在上面的“基本信息”里选择一个世界，系统才会帮你整理可用设定。",
+      "boundWorld": "已绑定世界",
+      "unnamedWorld": "未命名世界",
+      "storyInputSourceLabel": "当前故事想法来源",
+      "storyInputSource": {
+        "explicit": "来自你这次手动输入的故事想法",
+        "storyMacro": "来自故事宏观规划里的故事想法",
+        "novelDescription": "来自小说简介",
+        "none": "暂无"
+      },
+      "currentContent": "这本书当前会用到的内容",
+      "coreWorldFrame": "世界底色",
+      "activeForces": "当前会用到的组织",
+      "activeLocations": "当前会用到的地点",
+      "appliedRules": "核心规则",
+      "pressureSources": "主要压力来源",
+      "storyScopeBoundary": "这本书先不要越过的边界",
+      "manualOverrideTitle": "如果你想手动指定，只改这几项就够了",
+      "manualOverrideHint": "主舞台 = 故事最常发生的地点。前期必须保留 = 无论系统怎么裁剪，都要强制带进来的组织、地点或规则。",
+      "primaryLocation": "主舞台",
+      "primaryLocationPlaceholder": "请选择主舞台",
+      "noExtraSpec": "不额外指定",
+      "requiredForces": "前期必须保留的组织",
+      "noForces": "当前世界里还没有可选组织。",
+      "requiredLocations": "前期必须保留的地点",
+      "noLocations": "当前世界里还没有可选地点。",
+      "requiredRules": "前期必须保留的规则",
+      "noRules": "当前世界里还没有可选规则。",
+      "scopeNoteLabel": "前期不要越界的边界说明",
+      "scopeNoteHint": "如果你想补一句边界说明，比如“保留现实都市基底，不要转成玄幻升级文”，写在这里。",
+      "scopeNotePlaceholder": "例如：保留原作的现实商业环境和人物压迫感，不要引入超自然体系。",
+      "noSliceHint": "系统还没有整理出这本书会用到的世界设定。点击“重新整理世界设定”后，会根据当前世界和故事想法自动生成一版可用结果。"
+    },
+    "autoExecution": {
+      "scope": {
+        "book": "全书",
+        "chapterRange": "第 1-N 章",
+        "volume": "前 1 卷",
+        "chapterRangeTakeover": "章节范围",
+        "volumeTakeover": "卷范围"
+      },
+      "scopeDesc": {
+        "bookNew": "适合直接让 AI 从规划到正文执行覆盖整本书。",
+        "chapterRangeNew": "适合先跑出开局样章，默认第 1-10 章，可按整书章节数调整。",
+        "volumeNew": "适合先让 AI 完成第一卷的拆章、写作、审校和修复。",
+        "bookTakeover": "适合让 AI 重新校验全本规划，并按整本书范围继续执行。",
+        "chapterRangeTakeover": "适合只让 AI 接手某一段，比如第 11-20 章。",
+        "volumeTakeover": "适合让 AI 接管指定卷及卷下章节。"
+      },
+      "chapterLabel": "第 {order} 章",
+      "chapterRangeLabel": "第 {start}-{end} 章",
+      "volumeLabel": "第 {order} 卷",
+      "scopeTitle": "自动执行范围",
+      "willExecute": "当前将执行",
+      "chapterCount": "章节数量",
+      "chapterCountPlaceholder": "例如 10",
+      "maxChapterHint": "最多不超过全书规划的 {count} 章。",
+      "startChapter": "起始章节",
+      "startChapterPlaceholder": "例如 11",
+      "endChapter": "结束章节",
+      "endChapterPlaceholder": "例如 20",
+      "volumeOrder": "卷序号",
+      "volumeOrderPlaceholder": "例如 2",
+      "autoReviewLabel": "正文生成后自动审核",
+      "autoReviewHint": "关闭后，正文生成完成即结束当前章节，质量校验交给你手动处理。",
+      "autoReviewAriaLabel": "切换正文生成后是否自动审核",
+      "autoRepairLabel": "审核不通过时自动修复",
+      "autoRepairHint": "只在开启自动审核后生效；关闭时会保留问题，等待你手动处理或重跑。",
+      "autoRepairAriaLabel": "切换审核后是否自动修复",
+      "systemNote": "系统会按你选定的范围，自动准备节奏板、拆章和章节执行资源，再继续写作。",
+      "currentQualityPolicy": "当前质量策略",
+      "reviewLabel": {
+        "autoReviewAndRepair": "正文后自动审核 + 自动修复",
+        "autoReviewOnly": "正文后自动审核，不自动修复",
+        "noAutoReview": "正文后不做自动审核与修复"
       }
     }
   },

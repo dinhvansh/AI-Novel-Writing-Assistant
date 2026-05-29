@@ -1,3 +1,4 @@
+﻿import { useTranslation } from "react-i18next";
 import { useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { AlertTriangle, Bug, CheckCircle2, Loader2, RefreshCw } from "lucide-react";
@@ -19,25 +20,27 @@ function formatPercent(ratio: number): string {
   return `${Math.max(0, Math.min(100, Math.round(ratio * 100)))}%`;
 }
 
-function formatStageLabel(stage: string): string {
-  if (stage === "candidate_selection") return "开书方向";
-  if (stage === "candidate_confirm") return "创建项目";
-  if (stage === "story_macro") return "故事宏观规划";
-  if (stage === "book_contract") return "书级创作约定";
-  if (stage === "character_setup") return "角色准备";
-  if (stage === "volume_strategy") return "卷规划";
-  if (stage === "structured_outline") return "节奏与拆章";
-  if (stage === "chapter_execution") return "正文生成";
-  if (stage === "quality_repair") return "质量闭环";
-  if (stage === "takeover") return "接手已有项目";
-  return stage;
+function formatStageLabel(stage: string, t: (key: string) => string): string {
+  const stageMap: Record<string, string> = {
+    candidate_selection: t("novel:directorDebug.stages.candidateSelection"),
+    candidate_confirm: t("novel:directorDebug.stages.candidateConfirm"),
+    story_macro: t("novel:directorDebug.stages.storyMacro"),
+    book_contract: t("novel:directorDebug.stages.bookContract"),
+    character_setup: t("novel:directorDebug.stages.characterSetup"),
+    volume_strategy: t("novel:directorDebug.stages.volumeStrategy"),
+    structured_outline: t("novel:directorDebug.stages.structuredOutline"),
+    chapter_execution: t("novel:directorDebug.stages.chapterExecution"),
+    quality_repair: t("novel:directorDebug.stages.qualityRepair"),
+    takeover: t("novel:directorDebug.stages.takeover"),
+  };
+  return stageMap[stage] ?? stage;
 }
 
-function formatNextAction(action?: string | null): string {
-  if (!action) return "当前没有额外动作建议";
-  if (action === "run_chapter_detail_generation") return "继续细化剩余章节任务单";
-  if (action === "run_chapter_list_generation") return "继续补齐卷拆章列表";
-  if (action === "sync_execution_contracts") return "同步章节执行合同";
+function formatNextAction(action?: string | null, t?: (key: string) => string): string {
+  if (!action) return t ? t("novel:directorDebug.noActionSuggestion") : "当前没有额外动作建议";
+  if (action === "run_chapter_detail_generation") return t ? t("novel:directorDebug.actions.runChapterDetailGeneration") : "继续细化剩余章节任务单";
+  if (action === "run_chapter_list_generation") return t ? t("novel:directorDebug.actions.runChapterListGeneration") : "继续补齐卷拆章列表";
+  if (action === "sync_execution_contracts") return t ? t("novel:directorDebug.actions.syncExecutionContracts") : "同步章节执行合同";
   const text = action
     .replace(/_/g, " ")
     .replace(/\./g, " ")
@@ -45,22 +48,22 @@ function formatNextAction(action?: string | null): string {
   return text || action;
 }
 
-function formatResumeFrom(resumeFrom?: string | null): string {
-  if (!resumeFrom) return "按当前现场重新判断";
-  if (resumeFrom === "chapter_detail_bundle") return "从剩余未细化章节继续";
-  if (resumeFrom === "chapter_list") return "从卷拆章列表继续";
-  if (resumeFrom === "beat_sheet") return "从卷节奏板继续";
+function formatResumeFrom(resumeFrom?: string | null, t?: (key: string, opts?: Record<string, unknown>) => string): string {
+  if (!resumeFrom) return t ? t("novel:directorDebug.resumeFrom.reJudge") : "按当前现场重新判断";
+  if (resumeFrom === "chapter_detail_bundle") return t ? t("novel:directorDebug.resumeFrom.chapterDetailBundle") : "从剩余未细化章节继续";
+  if (resumeFrom === "chapter_list") return t ? t("novel:directorDebug.resumeFrom.chapterList") : "从卷拆章列表继续";
+  if (resumeFrom === "beat_sheet") return t ? t("novel:directorDebug.resumeFrom.beatSheet") : "从卷节奏板继续";
   if (resumeFrom.startsWith("chapter:")) {
     const rawOrder = resumeFrom.slice("chapter:".length).trim();
     const order = Number(rawOrder);
     if (Number.isFinite(order) && order > 0) {
-      return `第 ${order} 章`;
+      return t ? t("novel:directorDebug.resumeFrom.chapterOrder", { order }) : `第 ${order} 章`;
     }
   }
   return resumeFrom.replace(/_/g, " ").trim() || resumeFrom;
 }
 
-function summarizeStep(step: DirectorTaskFactInspectionStep): {
+function summarizeStep(step: DirectorTaskFactInspectionStep, t: (key: string) => string): {
   tone: "done" | "current" | "blocked" | "working" | "error";
   title: string;
   detail: string;
@@ -68,39 +71,39 @@ function summarizeStep(step: DirectorTaskFactInspectionStep): {
   if (step.inspectError) {
     return {
       tone: "error",
-      title: "检查没有完成",
+      title: t("novel:directorDebug.stepTone.error"),
       detail: step.inspectError,
     };
   }
   if (step.completed) {
     return {
       tone: "done",
-      title: "已确认完成",
-      detail: "系统已经找到这一步对应的真实产出，可以直接复用。",
+      title: t("novel:directorDebug.stepTone.done"),
+      detail: t("novel:directorDebug.stepDetail.done"),
     };
   }
   if (!step.ready) {
     return {
       tone: "blocked",
-      title: "还不能执行",
-      detail: step.blockers[0]?.reason || "上游事实还没补齐，所以这一步暂时不能开始。",
+      title: t("novel:directorDebug.stepTone.blocked"),
+      detail: step.blockers[0]?.reason || t("novel:directorDebug.stepDetail.blocked"),
     };
   }
   if (step.isCurrentFactStep) {
     return {
       tone: "current",
-      title: "当前优先补这一段",
-      detail: step.progress?.label || "这是系统根据现有事实判断出的下一段主处理步骤。",
+      title: t("novel:directorDebug.stepTone.current"),
+      detail: step.progress?.label || t("novel:directorDebug.stepDetail.current"),
     };
   }
   return {
     tone: "working",
-    title: "还没闭环",
-    detail: step.progress?.label || "这一步已经具备执行条件，但事实还没有完全闭环。",
+    title: t("novel:directorDebug.stepTone.working"),
+    detail: step.progress?.label || t("novel:directorDebug.stepDetail.working"),
   };
 }
 
-function toneBadgeVariant(tone: ReturnType<typeof summarizeStep>["tone"]): "default" | "secondary" | "outline" | "destructive" {
+function toneBadgeVariant(tone: "done" | "current" | "blocked" | "working" | "error"): "default" | "secondary" | "outline" | "destructive" {
   if (tone === "done") return "secondary";
   if (tone === "current") return "default";
   if (tone === "blocked" || tone === "error") return "destructive";
@@ -108,7 +111,8 @@ function toneBadgeVariant(tone: ReturnType<typeof summarizeStep>["tone"]): "defa
 }
 
 function StepFactCard({ step }: { step: DirectorTaskFactInspectionStep }) {
-  const summary = summarizeStep(step);
+  const { t } = useTranslation();
+  const summary = summarizeStep(step, t);
 
   return (
     <Card className="rounded-lg">
@@ -116,11 +120,11 @@ function StepFactCard({ step }: { step: DirectorTaskFactInspectionStep }) {
         <div className="flex flex-wrap items-start justify-between gap-3">
           <div className="min-w-0 space-y-1">
             <div className="text-sm font-semibold text-foreground">{step.label}</div>
-            <div className="text-xs text-muted-foreground">{formatStageLabel(step.stage)}</div>
+            <div className="text-xs text-muted-foreground">{formatStageLabel(step.stage, t)}</div>
           </div>
           <div className="flex flex-wrap items-center gap-2">
-            {step.isCurrentFactStep ? <Badge>当前判断会先处理这里</Badge> : null}
-            {step.isActiveRuntimeStep ? <Badge variant="outline">后台此刻正在碰这一步</Badge> : null}
+            {step.isCurrentFactStep ? <Badge>{t("novel:directorDebug.currentFactStep")}</Badge> : null}
+            {step.isActiveRuntimeStep ? <Badge variant="outline">{t("novel:directorDebug.activeRuntimeStep")}</Badge> : null}
             <Badge variant={toneBadgeVariant(summary.tone)}>{summary.title}</Badge>
           </div>
         </div>
@@ -129,7 +133,7 @@ function StepFactCard({ step }: { step: DirectorTaskFactInspectionStep }) {
       <CardContent className="space-y-4 p-4 pt-0">
         <div className="space-y-2">
           <div className="flex items-center justify-between text-xs text-muted-foreground">
-            <span>这一段的完整度</span>
+            <span>{t("novel:directorDebug.completeness")}</span>
             <span>{formatPercent(step.completenessRatio)}</span>
           </div>
           <div className="h-2 overflow-hidden rounded-full bg-muted">
@@ -142,28 +146,28 @@ function StepFactCard({ step }: { step: DirectorTaskFactInspectionStep }) {
 
         <div className="grid gap-3 md:grid-cols-2">
           <div className="rounded-lg border border-border/70 bg-muted/10 p-3">
-            <div className="text-xs text-muted-foreground">现在能不能继续做</div>
+            <div className="text-xs text-muted-foreground">{t("novel:directorDebug.canContinue")}</div>
             <div className="mt-1 text-sm font-medium text-foreground">
-              {step.ready ? "可以开始或继续" : "还要先补前置事实"}
+              {step.ready ? t("novel:directorDebug.canStart") : t("novel:directorDebug.needsPrerequisite")}
             </div>
           </div>
           <div className="rounded-lg border border-border/70 bg-muted/10 p-3">
-            <div className="text-xs text-muted-foreground">系统判断的下一步</div>
-            <div className="mt-1 text-sm font-medium text-foreground">{formatNextAction(step.nextAction)}</div>
+            <div className="text-xs text-muted-foreground">{t("novel:directorDebug.nextStep")}</div>
+            <div className="mt-1 text-sm font-medium text-foreground">{formatNextAction(step.nextAction, t)}</div>
           </div>
           <div className="rounded-lg border border-border/70 bg-muted/10 p-3">
-            <div className="text-xs text-muted-foreground">如果中断，建议从哪继续</div>
-            <div className="mt-1 text-sm font-medium text-foreground">{formatResumeFrom(step.resumeFrom)}</div>
+            <div className="text-xs text-muted-foreground">{t("novel:directorDebug.resumeFrom.label")}</div>
+            <div className="mt-1 text-sm font-medium text-foreground">{formatResumeFrom(step.resumeFrom, t)}</div>
           </div>
           <div className="rounded-lg border border-border/70 bg-muted/10 p-3">
-            <div className="text-xs text-muted-foreground">这一步最近的事实描述</div>
-            <div className="mt-1 text-sm font-medium text-foreground">{step.progress?.label || "暂时没有额外描述"}</div>
+            <div className="text-xs text-muted-foreground">{t("novel:directorDebug.latestFactDesc")}</div>
+            <div className="mt-1 text-sm font-medium text-foreground">{step.progress?.label || t("novel:directorDebug.noExtraDesc")}</div>
           </div>
         </div>
 
         {step.blockers.length > 0 ? (
           <div className="space-y-2 rounded-lg border border-destructive/30 bg-destructive/5 p-3">
-            <div className="text-sm font-medium text-destructive">现在卡住的原因</div>
+            <div className="text-sm font-medium text-destructive">{t("novel:directorDebug.blockedReason")}</div>
             <ul className="space-y-2 text-sm leading-6 text-destructive/90">
               {step.blockers.map((blocker) => (
                 <li key={`${step.stepId}:${blocker.code}`}>{blocker.reason}</li>
@@ -174,7 +178,7 @@ function StepFactCard({ step }: { step: DirectorTaskFactInspectionStep }) {
 
         {step.evidence ? (
           <div className="space-y-2">
-            <div className="text-sm font-medium text-foreground">判断依据</div>
+            <div className="text-sm font-medium text-foreground">{t("novel:directorDebug.evidence")}</div>
             <pre className="overflow-x-auto rounded-lg border border-border/70 bg-muted/20 p-3 text-xs leading-5 text-muted-foreground">
               {JSON.stringify(step.evidence, null, 2)}
             </pre>
@@ -190,6 +194,7 @@ export default function DirectorFactDebugDialog(input: {
   taskId?: string | null;
   disabled?: boolean;
 }) {
+  const { t } = useTranslation();
   const { novelId, disabled = false } = input;
   const [open, setOpen] = useState(false);
   const query = useQuery({
@@ -214,14 +219,14 @@ export default function DirectorFactDebugDialog(input: {
       <DialogTrigger asChild>
         <Button variant="outline" disabled={disabled || !novelId}>
           <Bug className="h-4 w-4" />
-          调试检查
+          {t("novel:directorDebug.debugButton")}
         </Button>
       </DialogTrigger>
       <DialogContent className="max-h-[90vh] w-[calc(100vw-2rem)] max-w-5xl overflow-hidden p-0">
         <DialogHeader className="border-b border-border/70 px-6 py-5">
-          <DialogTitle>导演步骤完整度检查</DialogTitle>
+          <DialogTitle>{t("novel:directorDebug.dialogTitle")}</DialogTitle>
           <DialogDescription>
-            这里展示的是每一步基于真实产出的检查结果。你可以直接看到哪一步已经有结果、哪一步缺前置条件、系统现在准备先补哪里。
+            {t("novel:directorDebug.dialogDescription")}
           </DialogDescription>
         </DialogHeader>
 
@@ -229,14 +234,14 @@ export default function DirectorFactDebugDialog(input: {
           <div className="flex items-center justify-between gap-3 border-b border-border/70 px-6 py-4">
             <div className="flex flex-wrap items-center gap-2">
               <Badge variant="secondary">
-                已确认完成 {summary.completedCount}/{inspection?.steps.length ?? 0}
+                {t("novel:directorDebug.completedCount", { count: summary.completedCount, total: inspection?.steps.length ?? 0 })}
               </Badge>
               <Badge variant={summary.blockedCount > 0 ? "destructive" : "outline"}>
-                还需补前置条件 {summary.blockedCount}
+                {t("novel:directorDebug.blockedCount", { count: summary.blockedCount })}
               </Badge>
               {summary.currentStep ? (
                 <Badge>
-                  当前先看 {summary.currentStep.label}
+                  {t("novel:directorDebug.currentStepLabel", { label: summary.currentStep.label })}
                 </Badge>
               ) : null}
             </div>
@@ -248,7 +253,7 @@ export default function DirectorFactDebugDialog(input: {
               disabled={query.isFetching || !novelId}
             >
               {query.isFetching ? <Loader2 className="h-4 w-4 animate-spin" /> : <RefreshCw className="h-4 w-4" />}
-              重新检查
+              {t("novel:directorDebug.recheck")}
             </Button>
           </div>
 
@@ -256,18 +261,18 @@ export default function DirectorFactDebugDialog(input: {
             {query.isLoading || query.isFetching ? (
               <div className="flex min-h-[240px] items-center justify-center text-sm text-muted-foreground">
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                正在读取当前导演链的完整度检查结果...
+                {t("novel:directorDebug.loading")}
               </div>
             ) : query.isError ? (
               <div className="flex min-h-[240px] items-center justify-center">
                 <div className="max-w-md rounded-lg border border-destructive/30 bg-destructive/5 px-4 py-4 text-sm text-destructive">
-                  无法完成这次检查。{query.error instanceof Error ? query.error.message : "请稍后重试。"}
+                  {t("novel:directorDebug.loadError")} {query.error instanceof Error ? query.error.message : t("common:actions.retry")}
                 </div>
               </div>
             ) : !inspection ? (
               <div className="flex min-h-[240px] items-center justify-center">
                 <div className="max-w-md rounded-lg border border-border/70 bg-muted/10 px-4 py-4 text-sm text-muted-foreground">
-                  当前还没有可检查的导演任务。先启动或接手一次 AI 导演流程，这里才会出现逐步骤检查结果。
+                  {t("novel:directorDebug.noTask")}
                 </div>
               </div>
             ) : (
@@ -277,11 +282,11 @@ export default function DirectorFactDebugDialog(input: {
                     <CardHeader className="p-4 pb-2">
                       <CardTitle className="flex items-center gap-2 text-base">
                         <CheckCircle2 className="h-4 w-4" />
-                        当前系统会先补这一段
+                        {t("novel:directorDebug.currentFactStepTitle")}
                       </CardTitle>
                     </CardHeader>
                     <CardContent className="space-y-3 p-4 pt-0">
-                      <div className="text-sm text-foreground">{inspection.currentFactStepLabel || "系统正在重新判断下一步"}</div>
+                      <div className="text-sm text-foreground">{inspection.currentFactStepLabel || t("novel:directorDebug.reJudging")}</div>
                       <pre className="overflow-x-auto rounded-lg border border-border/70 bg-background/70 p-3 text-xs leading-5 text-muted-foreground">
                         {JSON.stringify(inspection.currentFactEvidence, null, 2)}
                       </pre>
@@ -298,7 +303,7 @@ export default function DirectorFactDebugDialog(input: {
                 {inspection.steps.some((step) => step.inspectError) ? (
                   <div className="flex items-start gap-2 rounded-lg border border-amber-300/60 bg-amber-50/60 px-4 py-3 text-sm text-amber-900">
                     <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0" />
-                    有些步骤的检查没有拿到完整结果。通常是因为当前任务现场不完整，或者这一段还需要补更多事实来源。
+                    {t("novel:directorDebug.partialInspectWarning")}
                   </div>
                 ) : null}
               </div>
@@ -309,3 +314,6 @@ export default function DirectorFactDebugDialog(input: {
     </Dialog>
   );
 }
+
+
+

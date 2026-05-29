@@ -1,3 +1,4 @@
+﻿import { useTranslation } from "react-i18next";
 import type { ChapterRuntimePackage } from "@ai-novel/shared/types/chapterRuntime";
 import type { AuditReport, ReplanRecommendation, ReplanResult, StoryPlan, StoryStateSnapshot } from "@ai-novel/shared/types/novel";
 import { Badge } from "@/components/ui/badge";
@@ -116,14 +117,14 @@ function buildTriggerLabel(triggerType: string): string {
   }
 }
 
-function buildWordControlModeLabel(mode: "prompt_only" | "balanced" | "hybrid" | string): string {
+function buildWordControlModeLabel(mode: "prompt_only" | "balanced" | "hybrid" | string, t: (key: string) => string): string {
   switch (mode) {
     case "prompt_only":
-      return "自然优先";
+      return t("chapterRuntime.wordControlMode.promptOnly");
     case "balanced":
-      return "标准控字";
+      return t("chapterRuntime.wordControlMode.balanced");
     case "hybrid":
-      return "混合控字";
+      return t("chapterRuntime.wordControlMode.hybrid");
     default:
       return mode;
   }
@@ -142,37 +143,38 @@ function SeverityBadge({ severity }: { severity: string }) {
 export function ChapterRuntimeLengthCard(props: {
   runtimePackage: ChapterRuntimePackage | null;
 }) {
+  const { t } = useTranslation("novel");
   const lengthControl = props.runtimePackage?.lengthControl ?? null;
 
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="text-base">长度控制与执行回放</CardTitle>
+        <CardTitle className="text-base">{t("chapterRuntime.lengthCardTitle")}</CardTitle>
       </CardHeader>
       <CardContent className="space-y-3 text-sm">
         {lengthControl ? (
           <>
             <div className="grid gap-2 sm:grid-cols-2 xl:grid-cols-4">
               <div className="rounded-md border p-3">
-                <div className="text-xs text-muted-foreground">控制模式</div>
-                <div className="mt-1 font-medium">{buildWordControlModeLabel(lengthControl.wordControlMode)}</div>
+                <div className="text-xs text-muted-foreground">{t("chapterRuntime.controlMode")}</div>
+                <div className="mt-1 font-medium">{buildWordControlModeLabel(lengthControl.wordControlMode, t)}</div>
                 <div className="mt-1 text-xs text-muted-foreground">
-                  {lengthControl.closingPhaseTriggered ? "已进入收尾区" : "仍按常规推进"}
+                  {lengthControl.closingPhaseTriggered ? t("chapterRuntime.closingPhaseActive") : t("chapterRuntime.normalProgress")}
                 </div>
               </div>
               <div className="rounded-md border p-3">
-                <div className="text-xs text-muted-foreground">目标与结果</div>
-                <div className="mt-1 font-medium">{lengthControl.finalWordCount} / {lengthControl.targetWordCount} 字</div>
-                <div className="mt-1 text-xs text-muted-foreground">偏差 {formatVariance(lengthControl.variance)}</div>
+                <div className="text-xs text-muted-foreground">{t("chapterRuntime.targetAndResult")}</div>
+                <div className="mt-1 font-medium">{lengthControl.finalWordCount} / {lengthControl.targetWordCount} {t("chapterRuntime.chars")}</div>
+                <div className="mt-1 text-xs text-muted-foreground">{t("chapterRuntime.variance")} {formatVariance(lengthControl.variance)}</div>
               </div>
               <div className="rounded-md border p-3">
-                <div className="text-xs text-muted-foreground">预算区间</div>
-                <div className="mt-1 font-medium">{lengthControl.softMinWordCount} - {lengthControl.softMaxWordCount} 字</div>
-                <div className="mt-1 text-xs text-muted-foreground">硬上限 {lengthControl.hardMaxWordCount} 字</div>
+                <div className="text-xs text-muted-foreground">{t("chapterRuntime.budgetRange")}</div>
+                <div className="mt-1 font-medium">{lengthControl.softMinWordCount} - {lengthControl.softMaxWordCount} {t("chapterRuntime.chars")}</div>
+                <div className="mt-1 text-xs text-muted-foreground">{t("chapterRuntime.hardMax")} {lengthControl.hardMaxWordCount} {t("chapterRuntime.chars")}</div>
               </div>
               <div className="rounded-md border p-3">
-                <div className="text-xs text-muted-foreground">执行信号</div>
-                <div className="mt-1 font-medium">硬停 {lengthControl.hardStopsTriggered} 次</div>
+                <div className="text-xs text-muted-foreground">{t("chapterRuntime.executionSignal")}</div>
+                <div className="mt-1 font-medium">{t("chapterRuntime.hardStop")} {lengthControl.hardStopsTriggered} {t("chapterRuntime.times")}</div>
                 <div className="mt-1 text-xs text-muted-foreground">
                   scene {lengthControl.generatedSceneCount}/{lengthControl.plannedSceneCount}
                 </div>
@@ -180,14 +182,14 @@ export function ChapterRuntimeLengthCard(props: {
             </div>
 
             <div className="rounded-md border p-3 text-xs text-muted-foreground">
-              <div className="font-medium text-foreground">长度修整路径</div>
+              <div className="font-medium text-foreground">{t("chapterRuntime.lengthRepairPath")}</div>
               <div className="mt-1">
                 {lengthControl.lengthRepairPath.length > 0
                   ? lengthControl.lengthRepairPath.join(" -> ")
-                  : "本次未触发额外长度修整。"}
+                  : t("chapterRuntime.noLengthRepair")}
               </div>
               <div className="mt-1">
-                {lengthControl.overlengthRepairApplied ? "本次触发过超长修整。" : "本次未触发超长修整。"}
+                {lengthControl.overlengthRepairApplied ? t("chapterRuntime.overlengthRepairApplied") : t("chapterRuntime.noOverlengthRepair")}
               </div>
             </div>
 
@@ -197,22 +199,22 @@ export function ChapterRuntimeLengthCard(props: {
                   <div key={`${scene.sceneIndex}-${index}`} className="rounded-md border p-3 text-xs">
                     <div className="flex flex-wrap items-center gap-2">
                       <Badge variant="outline">Scene {scene.sceneIndex}</Badge>
-                      <Badge variant="secondary">{scene.actualWordCount} 字</Badge>
-                      <Badge variant="outline">{buildWordControlModeLabel(scene.wordControlMode)}</Badge>
+                      <Badge variant="secondary">{scene.actualWordCount} {t("chapterRuntime.chars")}</Badge>
+                      <Badge variant="outline">{buildWordControlModeLabel(scene.wordControlMode, t)}</Badge>
                       <Badge variant={scene.sceneStatus === "compressed" ? "default" : "outline"}>{scene.sceneStatus}</Badge>
                     </div>
                     <div className="mt-2 text-muted-foreground">
-                      轮次 {scene.roundCount}，硬停 {scene.hardStopCount} 次
-                      {scene.closingPhaseTriggered ? "，包含收尾区控制" : ""}
+                      {t("chapterRuntime.roundCount")} {scene.roundCount}，{t("chapterRuntime.hardStop")} {scene.hardStopCount} {t("chapterRuntime.times")}
+                      {scene.closingPhaseTriggered ? `，${t("chapterRuntime.closingPhaseControl")}` : ""}
                     </div>
                     {scene.roundResults.length > 0 ? (
                       <div className="mt-2 space-y-1 rounded-md border bg-muted/15 p-2">
                         {scene.roundResults.map((round) => (
                           <div key={`${scene.sceneIndex}-${round.roundIndex}`} className="text-muted-foreground">
-                            第 {round.roundIndex} 轮：建议 {round.suggestedWordCount ?? "-"} 字，实际 {round.actualWordCount} 字，
-                            {round.isFinalRound ? "最终轮" : "中间轮"}，
-                            {round.hardStopTriggered ? "触发硬停" : "自然结束"}
-                            {round.trimmedAtSentenceBoundary ? "，按句边界截断" : ""}
+                            {t("chapterRuntime.roundLabel", { index: round.roundIndex })}：{t("chapterRuntime.suggested")} {round.suggestedWordCount ?? "-"} {t("chapterRuntime.chars")}，{t("chapterRuntime.actual")} {round.actualWordCount} {t("chapterRuntime.chars")}，
+                            {round.isFinalRound ? t("chapterRuntime.finalRound") : t("chapterRuntime.midRound")}，
+                            {round.hardStopTriggered ? t("chapterRuntime.hardStopTriggered") : t("chapterRuntime.naturalEnd")}
+                            {round.trimmedAtSentenceBoundary ? `，${t("chapterRuntime.trimmedAtSentence")}` : ""}
                           </div>
                         ))}
                       </div>
@@ -223,7 +225,7 @@ export function ChapterRuntimeLengthCard(props: {
             ) : null}
           </>
         ) : (
-          <div className="text-muted-foreground">当前还没有长度控制回放。生成本章后，这里会显示预算执行结果。</div>
+          <div className="text-muted-foreground">{t("chapterRuntime.noLengthReplay")}</div>
         )}
       </CardContent>
     </Card>
@@ -235,6 +237,7 @@ export function ChapterRuntimeContextCard(props: {
   chapterPlan?: StoryPlan | null;
   stateSnapshot?: StoryStateSnapshot | null;
 }) {
+  const { t } = useTranslation("novel");
   const plan = buildPlanView(props.runtimePackage, props.chapterPlan);
   const stateSnapshot = buildStateView(props.runtimePackage, props.stateSnapshot);
   const openConflicts = buildOpenConflictView(props.runtimePackage);
@@ -242,34 +245,34 @@ export function ChapterRuntimeContextCard(props: {
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="text-base">本章目标与上下文</CardTitle>
+        <CardTitle className="text-base">{t("chapterRuntime.contextCardTitle")}</CardTitle>
       </CardHeader>
       <CardContent className="space-y-3 text-sm">
         <div className="space-y-1">
-          <div className="font-medium">章节规划</div>
+          <div className="font-medium">{t("chapterRuntime.chapterPlan")}</div>
           {plan ? (
             <>
               <div className="text-muted-foreground">{plan.title}</div>
               <div>{plan.objective}</div>
               {(plan.planRole || plan.phaseLabel) ? (
                 <div className="text-xs text-muted-foreground">
-                  {[plan.planRole ? `职责：${plan.planRole}` : "", plan.phaseLabel ? `阶段：${plan.phaseLabel}` : ""].filter(Boolean).join(" | ")}
+                  {[plan.planRole ? `${t("chapterRuntime.planRole")}：${plan.planRole}` : "", plan.phaseLabel ? `${t("chapterRuntime.phaseLabel")}：${plan.phaseLabel}` : ""].filter(Boolean).join(" | ")}
                 </div>
               ) : null}
               {plan.participants.length > 0 ? (
-                <div className="text-xs text-muted-foreground">参与角色：{plan.participants.join("、")}</div>
+                <div className="text-xs text-muted-foreground">{t("chapterRuntime.participants")}：{plan.participants.join("、")}</div>
               ) : null}
               {plan.mustAdvance.length > 0 ? (
-                <div className="text-xs text-muted-foreground">本章必须推进：{plan.mustAdvance.join("；")}</div>
+                <div className="text-xs text-muted-foreground">{t("chapterRuntime.mustAdvance")}：{plan.mustAdvance.join("；")}</div>
               ) : null}
               {plan.mustPreserve.length > 0 ? (
-                <div className="text-xs text-muted-foreground">本章必须保留：{plan.mustPreserve.join("；")}</div>
+                <div className="text-xs text-muted-foreground">{t("chapterRuntime.mustPreserve")}：{plan.mustPreserve.join("；")}</div>
               ) : null}
               {plan.replannedFromPlanId ? (
-                <div className="text-xs text-muted-foreground">本章来自一次重规划调整。</div>
+                <div className="text-xs text-muted-foreground">{t("chapterRuntime.replannedNote")}</div>
               ) : null}
               {plan.sourceIssueIds.length > 0 ? (
-                <div className="text-xs text-muted-foreground">本章参考了 {plan.sourceIssueIds.length} 条待处理审计问题。</div>
+                <div className="text-xs text-muted-foreground">{t("chapterRuntime.sourceIssues", { count: plan.sourceIssueIds.length })}</div>
               ) : null}
               {plan.scenes.length > 0 ? (
                 <div className="space-y-1 rounded-md border p-2 text-xs">
@@ -277,7 +280,7 @@ export function ChapterRuntimeContextCard(props: {
                     <div key={scene.id}>
                       <div className="font-medium">{scene.sortOrder}. {scene.title}</div>
                       <div className="text-muted-foreground">
-                        {[scene.objective, scene.conflict, scene.reveal, scene.emotionBeat].filter(Boolean).join(" | ") || "无补充"}
+                        {[scene.objective, scene.conflict, scene.reveal, scene.emotionBeat].filter(Boolean).join(" | ") || t("chapterRuntime.noSupplement")}
                       </div>
                     </div>
                   ))}
@@ -285,15 +288,15 @@ export function ChapterRuntimeContextCard(props: {
               ) : null}
             </>
           ) : (
-            <div className="text-muted-foreground">暂无章节规划。</div>
+            <div className="text-muted-foreground">{t("chapterRuntime.noPlan")}</div>
           )}
         </div>
 
         <div className="space-y-1">
-          <div className="font-medium">状态快照</div>
+          <div className="font-medium">{t("chapterRuntime.stateSnapshot")}</div>
           {stateSnapshot ? (
             <>
-              <div>{stateSnapshot.summary || "暂无摘要"}</div>
+              <div>{stateSnapshot.summary || t("chapterRuntime.noSummary")}</div>
               {stateSnapshot.characterStates.length > 0 ? (
                 <div className="rounded-md border p-2 text-xs">
                   {stateSnapshot.characterStates.slice(0, 4).map((item) => (
@@ -305,17 +308,17 @@ export function ChapterRuntimeContextCard(props: {
               ) : null}
               {stateSnapshot.informationStates.length > 0 ? (
                 <div className="text-xs text-muted-foreground">
-                  知识状态：{stateSnapshot.informationStates.slice(0, 3).map((item) => item.fact).join("；")}
+                  {t("chapterRuntime.knowledgeState")}：{stateSnapshot.informationStates.slice(0, 3).map((item) => item.fact).join("；")}
                 </div>
               ) : null}
             </>
           ) : (
-            <div className="text-muted-foreground">暂无状态快照。</div>
+            <div className="text-muted-foreground">{t("chapterRuntime.noStateSnapshot")}</div>
           )}
         </div>
 
         <div className="space-y-1">
-          <div className="font-medium">活跃冲突</div>
+          <div className="font-medium">{t("chapterRuntime.activeConflicts")}</div>
           {openConflicts.length > 0 ? (
             <div className="space-y-2">
               {openConflicts.slice(0, 4).map((item) => (
@@ -326,16 +329,16 @@ export function ChapterRuntimeContextCard(props: {
                   </div>
                   <div>{item.summary}</div>
                   {typeof item.lastSeenChapterOrder === "number" ? (
-                    <div className="mt-1 text-muted-foreground">最近出现：第 {item.lastSeenChapterOrder} 章</div>
+                    <div className="mt-1 text-muted-foreground">{t("chapterRuntime.lastSeen")}：{t("chapterRuntime.chapterOrder", { order: item.lastSeenChapterOrder })}</div>
                   ) : null}
                   {item.resolutionHint ? (
-                    <div className="mt-1 text-muted-foreground">建议：{item.resolutionHint}</div>
+                    <div className="mt-1 text-muted-foreground">{t("chapterRuntime.suggestion")}：{item.resolutionHint}</div>
                   ) : null}
                 </div>
               ))}
             </div>
           ) : (
-            <div className="text-muted-foreground">暂无活跃冲突。</div>
+            <div className="text-muted-foreground">{t("chapterRuntime.noActiveConflicts")}</div>
           )}
         </div>
       </CardContent>
@@ -351,6 +354,7 @@ export function ChapterRuntimeAuditCard(props: {
   isReplanning?: boolean;
   lastReplanResult?: ReplanResult | null;
 }) {
+  const { t } = useTranslation("novel");
   const audit = buildAuditView(props.runtimePackage, props.auditReports);
   const replanSummary = buildReplanSummary(
     props.runtimePackage,
@@ -361,23 +365,23 @@ export function ChapterRuntimeAuditCard(props: {
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="text-base">当前问题与修复建议</CardTitle>
+        <CardTitle className="text-base">{t("chapterRuntime.auditCardTitle")}</CardTitle>
       </CardHeader>
       <CardContent className="space-y-3 text-sm">
         <div className="flex items-center gap-2">
-          <div className="font-medium">总分 {audit.score.overall}</div>
+          <div className="font-medium">{t("chapterRuntime.totalScore")} {audit.score.overall}</div>
           <Badge variant={audit.hasBlockingIssues ? "default" : "outline"}>
-            {audit.hasBlockingIssues ? "需处理" : "可继续"}
+            {audit.hasBlockingIssues ? t("chapterRuntime.needsHandle") : t("chapterRuntime.canContinue")}
           </Badge>
         </div>
         <div className="text-xs text-muted-foreground">
-          审计报告 {audit.reports.length} 份，未解决问题 {audit.openIssues.length} 条。
+          {t("chapterRuntime.auditReportCount", { count: audit.reports.length, openCount: audit.openIssues.length })}
         </div>
         {replanSummary ? (
           <div className="rounded-md border p-2 text-xs">
             <div className="flex items-center justify-between gap-2">
               <div className="font-medium">
-                后续章节计划：{replanSummary.recommended ? "建议调整" : "暂不调整"}
+                {t("chapterRuntime.replanPlan")}：{replanSummary.recommended ? t("chapterRuntime.replanRecommended") : t("chapterRuntime.replanNotNeeded")}
               </div>
               {typeof props.onReplan === "function" ? (
                 <Button
@@ -386,30 +390,30 @@ export function ChapterRuntimeAuditCard(props: {
                   onClick={props.onReplan}
                   disabled={props.isReplanning}
                 >
-                  {props.isReplanning ? "调整中..." : replanSummary.recommended ? "执行重规划" : "查看重规划"}
+                  {props.isReplanning ? t("chapterRuntime.replanning") : replanSummary.recommended ? t("chapterRuntime.executeReplan") : t("chapterRuntime.viewReplan")}
                 </Button>
               ) : null}
             </div>
             <div className="text-muted-foreground">{replanSummary.reason}</div>
             {replanSummary.blockingIssueIds.length > 0 ? (
               <div className="mt-1 text-muted-foreground">
-                高风险问题：{replanSummary.blockingIssueIds.length}
+                {t("chapterRuntime.highRiskIssues")}：{replanSummary.blockingIssueIds.length}
               </div>
             ) : null}
           </div>
         ) : null}
         {props.lastReplanResult ? (
           <div className="rounded-md border bg-muted/20 p-2 text-xs">
-            <div className="font-medium">最近一次规划调整</div>
+            <div className="font-medium">{t("chapterRuntime.lastReplanTitle")}</div>
             <div className="mt-1 text-muted-foreground">
-              影响章节：{props.lastReplanResult.affectedChapterOrders.join(", ") || "暂无"}
+              {t("chapterRuntime.affectedChapters")}：{props.lastReplanResult.affectedChapterOrders.join(", ") || t("chapterRuntime.none")}
             </div>
             <div className="text-muted-foreground">
-              调整窗口：{props.lastReplanResult.windowSize} | 触发方式：{buildTriggerLabel(props.lastReplanResult.triggerType)}
+              {t("chapterRuntime.adjustWindow")}：{props.lastReplanResult.windowSize} | {t("chapterRuntime.triggerType")}：{buildTriggerLabel(props.lastReplanResult.triggerType)}
             </div>
             {props.lastReplanResult.sourceIssueIds.length > 0 ? (
               <div className="text-muted-foreground">
-                来源问题：{props.lastReplanResult.sourceIssueIds.length}
+                {t("chapterRuntime.sourceIssueCount")}：{props.lastReplanResult.sourceIssueIds.length}
               </div>
             ) : null}
           </div>
@@ -423,13 +427,13 @@ export function ChapterRuntimeAuditCard(props: {
                   <span className="font-medium">{issue.code}</span>
                 </div>
                 <div>{issue.description}</div>
-                <div className="mt-1 text-muted-foreground">证据：{issue.evidence}</div>
-                <div className="mt-1 text-muted-foreground">建议：{issue.fixSuggestion}</div>
+                <div className="mt-1 text-muted-foreground">{t("chapterRuntime.evidence")}：{issue.evidence}</div>
+                <div className="mt-1 text-muted-foreground">{t("chapterRuntime.fixSuggestion")}：{issue.fixSuggestion}</div>
               </div>
             ))}
           </div>
         ) : (
-          <div className="text-muted-foreground">当前没有待处理问题。</div>
+          <div className="text-muted-foreground">{t("chapterRuntime.noOpenIssues")}</div>
         )}
       </CardContent>
     </Card>
