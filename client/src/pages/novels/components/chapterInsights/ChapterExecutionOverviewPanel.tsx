@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import type { ChapterRuntimePackage } from "@ai-novel/shared/types/chapterRuntime";
 import type { Chapter, StoryPlan } from "@ai-novel/shared/types/novel";
 import { Badge } from "@/components/ui/badge";
@@ -47,6 +48,7 @@ function OverviewStat(props: { label: string; value: string; hint?: string }) {
 }
 
 export default function ChapterExecutionOverviewPanel(props: ChapterExecutionOverviewPanelProps) {
+  const { t } = useTranslation();
   const {
     selectedChapter,
     chapterPlan,
@@ -71,8 +73,8 @@ export default function ChapterExecutionOverviewPanel(props: ChapterExecutionOve
   const lengthControl = runtimePackage?.lengthControl ?? null;
   const qualityOverall = chapterQualityReport?.overall ?? selectedChapter.qualityScore ?? null;
   const displayedStatus = resolveDisplayedChapterStatus(selectedChapter);
-  const statusLabel = chapterStatusLabel(displayedStatus);
-  const generationLabel = generationStateLabel(selectedChapter.generationState);
+  const statusLabel = chapterStatusLabel(displayedStatus, t);
+  const generationLabel = generationStateLabel(selectedChapter.generationState, t);
   const currentWordCount = runtimePackage?.draft.wordCount ?? selectedChapter.content?.trim().length ?? 0;
   const targetWordCount = selectedChapter.targetWordCount ?? null;
   const issueCount = openAuditIssues.length || reviewResult?.issues?.length || 0;

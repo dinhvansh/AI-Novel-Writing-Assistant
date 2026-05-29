@@ -1,4 +1,5 @@
 import type { WorldConsistencyIssue, WorldConsistencyReport } from "@ai-novel/shared/types/world";
+import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
@@ -21,6 +22,7 @@ interface WorldConsistencyTabProps {
 
 export default function WorldConsistencyTab(props: WorldConsistencyTabProps) {
   const { report, issues, checkPending, onCheck, onPatchIssue } = props;
+  const { t } = useTranslation();
 
   return (
     <Card>
@@ -35,7 +37,7 @@ export default function WorldConsistencyTab(props: WorldConsistencyTabProps) {
           <div className="grid gap-3 md:grid-cols-4">
             <div className="rounded-md border p-3 text-sm">
               <div className="text-xs text-muted-foreground">检查状态</div>
-              <div className="mt-1 font-semibold">{localizeConsistencyStatus(report.status)}</div>
+              <div className="mt-1 font-semibold">{localizeConsistencyStatus(report.status, t)}</div>
             </div>
             <div className="rounded-md border p-3 text-sm">
               <div className="text-xs text-muted-foreground">一致性分数</div>
@@ -55,16 +57,16 @@ export default function WorldConsistencyTab(props: WorldConsistencyTabProps) {
         {issues.map((issue) => (
           <div key={issue.id} className="rounded-md border p-3 space-y-2">
             <div className="font-medium">
-              [{localizeConsistencySeverity(issue.severity)}] {localizeConsistencyIssueTitle(issue.code)}
+              [{localizeConsistencySeverity(issue.severity, t)}] {localizeConsistencyIssueTitle(issue.code, t)}
             </div>
-            <div className="text-sm">{localizeConsistencyIssueMessage(issue)}</div>
+            <div className="text-sm">{localizeConsistencyIssueMessage(issue, t)}</div>
             <div className="text-xs text-muted-foreground">
-              {localizeConsistencyIssueDetail(issue) ?? "暂无补充说明"}
+              {localizeConsistencyIssueDetail(issue, t) ?? "暂无补充说明"}
             </div>
             <div className="text-xs text-muted-foreground">
-              来源：{localizeConsistencySource(issue.source)} | 影响字段：
-              {localizeConsistencyField(issue.targetField)} | 当前状态：
-              {localizeConsistencyStatus(issue.status)}
+              来源：{localizeConsistencySource(issue.source, t)} | 影响字段：
+              {localizeConsistencyField(issue.targetField, t)} | 当前状态：
+              {localizeConsistencyStatus(issue.status, t)}
             </div>
             <div className="flex gap-2">
               <Button

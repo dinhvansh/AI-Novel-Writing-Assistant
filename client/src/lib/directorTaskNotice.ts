@@ -1,3 +1,4 @@
+import type { TFunction } from "i18next";
 import type { DirectorTaskNotice } from "@ai-novel/shared/types/novelDirector";
 import type { UnifiedTaskDetail } from "@ai-novel/shared/types/task";
 
@@ -26,7 +27,7 @@ export function parseDirectorTaskNotice(meta: Record<string, unknown> | null | u
         type: notice.action.type === "open_structured_outline" ? "open_structured_outline" : "open_structured_outline",
         label: typeof notice.action.label === "string" && notice.action.label.trim()
           ? notice.action.label.trim()
-          : "快速修复章节标题",
+          : "快速修复章节标题", // i18n-ignore: server-emitted label, resolved at display time
         volumeId: typeof notice.action.volumeId === "string" && notice.action.volumeId.trim()
           ? notice.action.volumeId.trim()
           : null,
@@ -40,6 +41,7 @@ export function isChapterTitleDiversitySummary(value: string | null | undefined)
   if (!normalized) {
     return false;
   }
+  // i18n-ignore: matching against server-emitted Chinese strings
   return normalized.includes("章节标题结构过于集中")
     || normalized.includes("相邻章节标题结构过于重复")
     || normalized.includes("章节标题出现重复");
@@ -77,7 +79,10 @@ export function buildTaskNoticeRoute(
   );
 }
 
-export function resolveChapterTitleWarning(task: StructuredOutlineTaskLike | null | undefined): {
+export function resolveChapterTitleWarning(
+  task: StructuredOutlineTaskLike | null | undefined,
+  t?: TFunction,
+): {
   summary: string;
   route: string | null;
   label: string;
@@ -86,6 +91,7 @@ export function resolveChapterTitleWarning(task: StructuredOutlineTaskLike | nul
   if (!task) {
     return null;
   }
+  const quickFixLabel = t ? t("autoDirector:directorNotice.quickFixChapterTitle") : "快速修复章节标题";
   const seedResumeTarget = task.meta && typeof task.meta === "object"
     ? (task.meta as { seedPayload?: { resumeTarget?: { volumeId?: string | null } | null } | null }).seedPayload?.resumeTarget
     : null;
@@ -94,7 +100,7 @@ export function resolveChapterTitleWarning(task: StructuredOutlineTaskLike | nul
     return {
       summary: taskNotice.summary,
       route: buildTaskNoticeRoute(task, taskNotice),
-      label: "快速修复章节标题",
+      label: quickFixLabel,
       volumeId: taskNotice.action?.volumeId ?? task.resumeTarget?.volumeId ?? seedResumeTarget?.volumeId ?? null,
     };
   }
@@ -104,7 +110,7 @@ export function resolveChapterTitleWarning(task: StructuredOutlineTaskLike | nul
   return {
     summary: task.failureSummary?.trim() ?? "",
     route: buildStructuredOutlineRoute(task, task.resumeTarget?.volumeId ?? seedResumeTarget?.volumeId ?? null),
-    label: "快速修复章节标题",
+    label: quickFixLabel,
     volumeId: task.resumeTarget?.volumeId ?? seedResumeTarget?.volumeId ?? null,
   };
 }

@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import type { BookAnalysisDetail, BookAnalysisPublishResult, BookAnalysisSection } from "@ai-novel/shared/types/bookAnalysis";
 import { Link } from "react-router-dom";
 import { Badge } from "@/components/ui/badge";
@@ -52,6 +53,7 @@ interface BookAnalysisDetailPanelProps {
 }
 
 export default function BookAnalysisDetailPanel(props: BookAnalysisDetailPanelProps) {
+  const { t } = useTranslation();
   const {
     selectedAnalysis,
     novelOptions,
@@ -82,10 +84,10 @@ export default function BookAnalysisDetailPanel(props: BookAnalysisDetailPanelPr
     return (
       <Card>
         <CardHeader>
-          <CardTitle>拆书分析工作区</CardTitle>
+          <CardTitle>{t("bookAnalysis:detail.workspaceTitle")}</CardTitle>
         </CardHeader>
         <CardContent className="text-sm text-muted-foreground">
-          请先在左侧选择一个分析，或从知识文档创建新分析。
+          {t("bookAnalysis:detail.noSelection")}
         </CardContent>
       </Card>
     );
@@ -99,18 +101,18 @@ export default function BookAnalysisDetailPanel(props: BookAnalysisDetailPanelPr
             <div className="space-y-1">
               <CardTitle>{selectedAnalysis.title}</CardTitle>
               <div className="text-sm text-muted-foreground">
-                {selectedAnalysis.documentTitle} | 源版本 v{selectedAnalysis.documentVersionNumber}
-                {selectedAnalysis.isCurrentVersion ? "" : ` | 当前激活版本 v${selectedAnalysis.currentDocumentVersionNumber}`}
+                {selectedAnalysis.documentTitle} | {t("bookAnalysis:detail.sourceVersion", { version: selectedAnalysis.documentVersionNumber })}
+                {selectedAnalysis.isCurrentVersion ? "" : ` | ${t("bookAnalysis:detail.currentVersion", { version: selectedAnalysis.currentDocumentVersionNumber })}`}
               </div>
             </div>
             <div className="flex flex-wrap gap-2">
-              <Badge variant="outline">{formatStatus(selectedAnalysis.status)}</Badge>
+              <Badge variant="outline">{formatStatus(selectedAnalysis.status, t)}</Badge>
               {selectedAnalysis.publishedDocumentId && (
-                <Badge variant="secondary">已发布</Badge>
+                <Badge variant="secondary">{t("bookAnalysis:detail.published")}</Badge>
               )}
-              <Badge variant="outline">进度 {Math.round(selectedAnalysis.progress * 100)}%</Badge>
+              <Badge variant="outline">{t("bookAnalysis:detail.progress", { percent: Math.round(selectedAnalysis.progress * 100) })}</Badge>
               <Button size="sm" variant="outline" onClick={onCopy} disabled={pending.copy}>
-                复制
+                {t("bookAnalysis:detail.copy")}
               </Button>
               <Button
                 size="sm"
@@ -118,16 +120,16 @@ export default function BookAnalysisDetailPanel(props: BookAnalysisDetailPanelPr
                 onClick={() => onRebuild(selectedAnalysis.id)}
                 disabled={pending.rebuild || selectedAnalysis.status === "archived"}
               >
-                重新生成
+                {t("bookAnalysis:detail.rebuild")}
               </Button>
               <Button asChild size="sm" variant="outline">
-                <Link to={`/tasks?kind=book_analysis&id=${selectedAnalysis.id}`}>在任务中心查看</Link>
+                <Link to={`/tasks?kind=book_analysis&id=${selectedAnalysis.id}`}>{t("bookAnalysis:detail.viewInTasks")}</Link>
               </Button>
               <Button size="sm" variant="outline" onClick={() => onDownload("markdown")}>
-                导出 Markdown
+                {t("bookAnalysis:detail.exportMarkdown")}
               </Button>
               <Button size="sm" variant="outline" onClick={() => onDownload("json")}>
-                导出 JSON
+                {t("bookAnalysis:detail.exportJson")}
               </Button>
               <Button
                 size="sm"
@@ -135,7 +137,7 @@ export default function BookAnalysisDetailPanel(props: BookAnalysisDetailPanelPr
                 onClick={onCreateStyleProfile}
                 disabled={pending.createStyleProfile || selectedAnalysis.status === "archived"}
               >
-                {pending.createStyleProfile ? "生成写法中..." : "从拆书生成写法"}
+                {pending.createStyleProfile ? t("bookAnalysis:detail.creatingStyleProfile") : t("bookAnalysis:detail.createStyleProfile")}
               </Button>
               <Button
                 size="sm"
@@ -143,7 +145,7 @@ export default function BookAnalysisDetailPanel(props: BookAnalysisDetailPanelPr
                 onClick={() => onArchive(selectedAnalysis.id)}
                 disabled={pending.archive || selectedAnalysis.status === "archived"}
               >
-                归档
+                {t("bookAnalysis:detail.archive")}
               </Button>
             </div>
           </div>
@@ -184,7 +186,7 @@ export default function BookAnalysisDetailPanel(props: BookAnalysisDetailPanelPr
             </div>
             {publishFeedback ? <div className="mt-2 text-xs text-muted-foreground">{publishFeedback}</div> : null}
             {lastPublishResult ? (
-              <div className="mt-1 text-xs text-muted-foreground">发布时间：{formatDate(lastPublishResult.publishedAt)}</div>
+              <div className="mt-1 text-xs text-muted-foreground">发布时间：{formatDate(lastPublishResult.publishedAt, t)}</div>
             ) : null}
           </div>
           <div className="grid gap-3 md:grid-cols-2">
@@ -201,11 +203,11 @@ export default function BookAnalysisDetailPanel(props: BookAnalysisDetailPanelPr
                 <div>模型：{selectedAnalysis.model || "默认"}</div>
                 <div>温度：{selectedAnalysis.temperature ?? "默认"}</div>
                 <div>最大 Tokens：{selectedAnalysis.maxTokens ?? "默认"}</div>
-                <div>当前阶段：{formatStage(selectedAnalysis.currentStage)}</div>
+                <div>当前阶段：{formatStage(selectedAnalysis.currentStage, t)}</div>
                 <div>当前 section：{selectedAnalysis.currentItemLabel ?? "暂无"}</div>
-                <div>最近心跳：{formatDate(selectedAnalysis.heartbeatAt)}</div>
-                <div>最近运行：{formatDate(selectedAnalysis.lastRunAt)}</div>
-                <div>创建时间：{formatDate(selectedAnalysis.createdAt)}</div>
+                <div>最近心跳：{formatDate(selectedAnalysis.heartbeatAt, t)}</div>
+                <div>最近运行：{formatDate(selectedAnalysis.lastRunAt, t)}</div>
+                <div>创建时间：{formatDate(selectedAnalysis.createdAt, t)}</div>
               </div>
             </div>
           </div>

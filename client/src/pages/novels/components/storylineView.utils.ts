@@ -46,6 +46,7 @@ function buildFallbackPhases(lines: string[]): { early: string; middle: string; 
 export function parseStorylineStructuredView(draftText: string): StorylineStructuredView {
   const lines = normalizeLines(draftText);
   const fallbackPhases = buildFallbackPhases(lines);
+  // i18n-ignore: these are Chinese keyword patterns used to parse AI-generated text, not UI display strings
   const coreTheme = findByKeywords(lines, ["核心主题", "主题"]);
   const mainGoal = findByKeywords(lines, ["主线目标", "目标", "核心任务"]);
   const earlyPhase = findByKeywords(lines, ["前期", "开篇", "第一阶段"]) || fallbackPhases.early;
@@ -57,6 +58,7 @@ export function parseStorylineStructuredView(draftText: string): StorylineStruct
   const endingDirection = findByKeywords(lines, ["结局", "终局", "收尾"]);
   const forbiddenItems = findByKeywords(lines, ["禁止", "避免", "禁忌"]);
 
+  // i18n-ignore: "未标注" is a fallback marker for unparsed AI content, not a UI label
   return {
     coreTheme: coreTheme || "未标注",
     mainGoal: mainGoal || "未标注",

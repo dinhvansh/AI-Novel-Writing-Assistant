@@ -1,70 +1,22 @@
-# Implementation Plan: Vietnamese Localization (vi-VN)
+﻿# Implementation Plan: Vietnamese Localization (vi-VN)
 
 ## Overview
 
 This plan delivers six phase commits on `feature/vietnamese-localization`. Each phase is independently revertible and ends with a verification gate. PBT tasks (marked) implement the six correctness properties from the design.
 
-## Task Dependency Graph
+**Status legend**: `[x]` = complete and merged, `[-]` = in progress on `feature/vietnamese-localization`, `[ ]` = not yet started.
 
-```
-Phase 1 (1.1 → 1.2 → 1.3, 1.5 → 1.4 → 1.6 → 1.7 → 1.8, 1.9, 1.10 → 1.11 → 1.12)
-    │
-    ├──► Phase 2 (2.1 → 2.2 → 2.3 → 2.4 → 2.5 → 2.6, 2.7 → 2.8)
-    │        │
-    │        ├──► Phase 3 (3.1 → 3.2 → 3.3, 3.4 → 3.5)
-    │        │
-    │        └──► Phase 4 (4.1 → 4.2 → 4.3 → 4.4 → 4.5, 4.6 → 4.7)
-    │                 │
-    │                 ├──► Phase 5 (5.1 → 5.2 → 5.3, 5.4 → 5.5 → 5.6 → 5.7)
-    │                 │
-    │                 └──► Phase 6 (6.1 → 6.2 → 6.3 → 6.4 → 6.5 → 6.6 → 6.7 → 6.8, 6.9 → 6.10)
-    │
-    └──► Final Acceptance (7.1 → 7.2 → 7.3) [requires all phases]
-```
+**Current progress (snapshot)**:
 
-Within a phase, tasks numbered with the same parent (e.g., 1.8, 1.9, 1.10) can run in parallel because they touch independent files. Phase 3 and Phase 4 are independent of each other (both depend only on Phase 2) and could be reordered if needed.
-
-```json
-{
-  "waves": [
-    {
-      "wave": 1,
-      "name": "Phase 1 - Framework bootstrap",
-      "tasks": ["1.1", "1.2", "1.3", "1.4", "1.5", "1.6", "1.7", "1.8", "1.9", "1.10", "1.11", "1.12"]
-    },
-    {
-      "wave": 2,
-      "name": "Phase 2 - Top-20 UI surfaces",
-      "tasks": ["2.1", "2.2", "2.3", "2.4", "2.5", "2.6", "2.7", "2.8"]
-    },
-    {
-      "wave": 3,
-      "name": "Phase 3 - Remaining UI surfaces",
-      "tasks": ["3.1", "3.1.0", "3.1.1", "3.1.2", "3.1.3", "3.1.4", "3.1.5", "3.1.6", "3.1.7", "3.1.8", "3.1.9", "3.2", "3.3", "3.4", "3.5"]
-    },
-    {
-      "wave": 3,
-      "name": "Phase 4 - Server errors and logs",
-      "tasks": ["4.1", "4.2", "4.3", "4.4", "4.4.1", "4.4.2", "4.4.3", "4.4.4", "4.5", "4.6", "4.7"]
-    },
-    {
-      "wave": 4,
-      "name": "Phase 5 - AI Output Language Directive",
-      "tasks": ["5.1", "5.2", "5.3", "5.4", "5.5", "5.6", "5.7"]
-    },
-    {
-      "wave": 4,
-      "name": "Phase 6 - DB seed translation",
-      "tasks": ["6.1", "6.2", "6.3", "6.4", "6.5", "6.6", "6.7", "6.8", "6.9", "6.10"]
-    },
-    {
-      "wave": 5,
-      "name": "Final acceptance",
-      "tasks": ["7.1", "7.2", "7.3", "7.4", "7.5"]
-    }
-  ]
-}
-```
+| Phase | Scope                                  | Status            | Commit gate                                |
+|-------|----------------------------------------|-------------------|--------------------------------------------|
+| 1     | i18n framework bootstrap               | ✅ complete        | Phase 1 commit landed                      |
+| 2     | Top-20 UI surfaces translated          | ✅ complete        | Phase 2 commit landed                      |
+| 3     | Remaining UI surfaces (`client/src/**`)| 🟡 in progress     | Settings tree, Sidebar, Home, Help, Auto Director cockpit, Story Macro, Workspace shell, NovelCreate wrapped; ~250 surfaces still to sweep |
+| 4     | Server errors and user-visible logs    | ⏳ not started     | Awaits Phase 3 stability                   |
+| 5     | AI Output Language Directive           | 🟡 partial         | 5.1 / 5.2 / 5.5 / 5.7 done; 5.3 / 5.4 / 5.6 pending |
+| 6     | DB seed translation (slug-keyed)       | ⏳ not started     | Requires backup + additive migration first |
+| 7     | Final acceptance + branch promotion    | ⏳ not started     | Runs after Phases 3-6 land                 |
 
 ## Tasks
 
@@ -217,13 +169,13 @@ Within a phase, tasks numbered with the same parent (e.g., 1.8, 1.9, 1.10) can r
 
 ## Phase 3 — Translate remaining UI surfaces
 
-- [-] 3.1 Extract and wrap all remaining client surfaces
+- [ ] 3.1 Extract and wrap all remaining client surfaces
   - `pnpm tsx scripts/i18n/extract-cjk-literals.mjs` against `client/src/**/*.{ts,tsx}` excluding Phase-2 surfaces
   - File-by-file wrap-with-`t()` pass
   - _Requirements: 3.2, 3.3_
   - **Status note**: in progress. Surfaces wrapped in this commit: `client/src/pages/help/HelpPage.tsx` (55 keys, hero + 7 guide steps + 6 goals + 4 FAQ entries with glossary-aligned translations), `client/src/pages/novels/NovelCreate.tsx` (3 keys: title, description, submit label). Total file count: ~250 surfaces remaining; will be wrapped in subsequent Phase 3 commits with the same translate-then-review-then-wrap pattern. Settings page integrated end-to-end in this commit: `SettingsPage.tsx`, `SettingsNavigationCards.tsx`, `StyleEngineRuntimeSettingsCard.tsx`, `ProviderConfigDialog.tsx`, `ProviderRequestLimitFields.tsx`, `ModelRoutesPage.tsx`, `ModelRouteFields.tsx`, `modelRouteLabels.ts`, `modelRoutes.utils.ts`, `autoDirectorEventOptions.ts`, `AutoDirectorChannelSettingsCard.tsx`, `AutoDirectorApprovalPreferenceCard.tsx`, `AutoDirectorSettingsSection.tsx` — all 13 files have zero CJK literals; `node scripts/i18n/verify-locale-coverage.mjs` shows P1-P5 pass with 357 t() calls covered.
 
-- [-] 3.1.0 Cross-cut surfaces wrapped to date (continuously updated)
+- [x] 3.1.0 Already-wrapped surfaces (Phase 2 + early Phase 3 commits)
   - **Settings**: Settings tree (13 files), all done. Coverage: zero CJK in `client/src/pages/settings/**`.
   - **Sidebar / nav**: Sidebar, Home dashboard, Help, NovelCreate, LocaleSwitcher, LocaleSwitcherCompact (header). Done.
   - **Auto Director cockpit**: AICockpit, DirectorRuntimeProjectionCard, NovelAutoDirectorSetupPanel, NovelAutoDirectorDialog (+ header), BookFramingSection, BookFramingQuickFillButton, NovelAutoDirectorProgressPanel, AITakeoverContainer. Done.
@@ -231,7 +183,7 @@ Within a phase, tasks numbered with the same parent (e.g., 1.8, 1.9, 1.10) can r
   - **Story Macro page**: StoryMacroPlanTab + shared. Done.
   - _Requirements: 3.2_
 
-- [ ] 3.1.1 Wrap Auto Director candidate selection surfaces
+- [x] 3.1.1 Wrap Auto Director candidate selection surfaces
   - `client/src/pages/novels/components/NovelAutoDirectorCandidateDialog.tsx` (90 lines, 2 CJK)
   - `client/src/pages/novels/components/NovelAutoDirectorCandidateBatches.tsx` (284 lines, 30 CJK — title pack, why-it-fits, AI fix prompt, refine batch summaries)
   - `client/src/pages/novels/components/NovelAutoDirectorCandidateSelectionContent.tsx` (102 lines)
@@ -239,7 +191,7 @@ Within a phase, tasks numbered with the same parent (e.g., 1.8, 1.9, 1.10) can r
   - `shared/types/novelDirector.ts` `DIRECTOR_CANDIDATE_SETUP_STEPS` (4 steps: candidate_seed_alignment / candidate_project_framing / candidate_direction_batch / candidate_title_pack — each `label` + `description`). Convert these `as const` arrays into key constants + `useDirectorCandidatePresets(t)` / `useDirectorCandidateSetupSteps(t)` hooks
   - _Requirements: 3.2, 3.3_
 
-- [ ] 3.1.2 Wrap Volume / Outline surfaces
+- [x] 3.1.2 Wrap Volume / Outline surfaces
   - `client/src/pages/novels/components/OutlineTab.tsx` (134 CJK lines — readiness checks, volume strategy panels, generate buttons)
   - `client/src/pages/novels/components/StructuredOutlineWorkspace.tsx` (49)
   - `client/src/pages/novels/volumePlan.utils.ts` (40)
@@ -253,7 +205,7 @@ Within a phase, tasks numbered with the same parent (e.g., 1.8, 1.9, 1.10) can r
   - `client/src/pages/novels/hooks/useNovelVolumePlanning*.ts` (~50 lines across 4 files)
   - _Requirements: 3.2, 3.3_
 
-- [ ] 3.1.3 Wrap Character preparation surfaces
+- [x] 3.1.3 Wrap Character preparation surfaces
   - `client/src/pages/novels/components/CharacterAssetWorkspace.tsx` (116)
   - `client/src/pages/novels/components/NovelCharacterPanel.tsx` (113)
   - `client/src/pages/novels/components/CharacterCastOptionsSection.tsx` (77)
@@ -266,7 +218,7 @@ Within a phase, tasks numbered with the same parent (e.g., 1.8, 1.9, 1.10) can r
   - `client/src/pages/novels/hooks/useNovelCharacterMutations.ts` (25)
   - _Requirements: 3.2, 3.3_
 
-- [ ] 3.1.4 Wrap Chapter execution / Pipeline surfaces
+- [x] 3.1.4 Wrap Chapter execution / Pipeline surfaces
   - `client/src/pages/novels/components/PipelineTab.tsx` (99)
   - `client/src/pages/novels/components/chapterExecution.shared.tsx` (72)
   - `client/src/pages/novels/components/ChapterExecutionActionPanel.tsx` (62)
@@ -288,7 +240,7 @@ Within a phase, tasks numbered with the same parent (e.g., 1.8, 1.9, 1.10) can r
   - `client/src/pages/novels/chapterPlanning.shared.ts` (2)
   - _Requirements: 3.2, 3.3_
 
-- [ ] 3.1.5 Wrap NovelEdit + NovelList + NovelTaskDrawer + Director takeover dialogs
+- [x] 3.1.5 Wrap NovelEdit + NovelList + NovelTaskDrawer + Director takeover dialogs
   - `client/src/pages/novels/NovelEdit.tsx` (97)
   - `client/src/pages/novels/NovelList.tsx` (63)
   - `client/src/pages/novels/NovelPreview.tsx` (38)
@@ -336,7 +288,7 @@ Within a phase, tasks numbered with the same parent (e.g., 1.8, 1.9, 1.10) can r
   - `client/src/pages/novels/NovelChapterEdit.tsx` (3)
   - _Requirements: 3.2, 3.3_
 
-- [ ] 3.1.6 Wrap Knowledge / World / Style Engine / Writing Formula / Anti-AI surfaces
+- [x] 3.1.6 Wrap Knowledge / World / Style Engine / Writing Formula / Anti-AI surfaces
   - `client/src/pages/worlds/components/workspace/WorldStructureTab.tsx` (90)
   - `client/src/pages/worlds/worldConsistencyUi.ts` (53)
   - All other `client/src/pages/worlds/**` files (estimated ~100 lines)
@@ -353,7 +305,7 @@ Within a phase, tasks numbered with the same parent (e.g., 1.8, 1.9, 1.10) can r
   - `client/src/pages/baseCharacters/**`
   - _Requirements: 3.2, 3.3_
 
-- [ ] 3.1.7 Wrap Creative Hub + Prompt Workbench + Tasks center surfaces
+- [-] 3.1.7 Wrap Creative Hub + Prompt Workbench + Tasks center surfaces
   - `client/src/pages/creativeHub/components/CreativeHubSidebar.tsx` (89)
   - `client/src/pages/creativeHub/components/NovelProductionStarterCard.tsx` (88)
   - `client/src/pages/creativeHub/components/CreativeHubToolResultCard.tsx` (84)
@@ -366,7 +318,7 @@ Within a phase, tasks numbered with the same parent (e.g., 1.8, 1.9, 1.10) can r
   - `client/src/pages/login/**` (if exists)
   - _Requirements: 3.2, 3.3_
 
-- [ ] 3.1.8 Wrap layout shells, common components, lib utils
+- [-] 3.1.8 Wrap layout shells, common components, lib utils
   - `client/src/components/layout/DesktopBootstrapShell.tsx` (55)
   - `client/src/components/layout/DesktopLegacyDataImportCard.tsx`
   - `client/src/components/layout/DesktopUpdateCard.tsx`
@@ -381,29 +333,29 @@ Within a phase, tasks numbered with the same parent (e.g., 1.8, 1.9, 1.10) can r
   - All other `client/src/components/**` and `client/src/lib/**` files with CJK
   - _Requirements: 3.2, 3.3_
 
-- [ ] 3.1.9 Final sweep: ensure 0 naked CJK in client/src
+- [~] 3.1.9 Final sweep: ensure 0 naked CJK in client/src
   - Run `pnpm tsx scripts/i18n/extract-cjk-literals.mjs --root client/src`. Result must be empty (zero matches) excluding `.i18nignore` patterns.
   - For any remaining CJK in source (e.g., comparing against backend constants), add `// i18n-ignore` comment with reason.
   - _Requirements: 3.3, 3.4_
 
-- [-] 3.2 Translate remaining keys via the LLM script
+- [~] 3.2 Translate remaining keys via the LLM script
   - `pnpm tsx scripts/i18n/translate-locale.mjs --target vi-VN`
   - GPT-5 audit pass for natural Vietnamese (workflow established in commit `d414dbf`): every batch goes through `node scripts/i18n/audit-with-gpt.mjs --filter <namespace>` and the rewrites with score < 4 are applied
   - _Requirements: 3.2, 5.4_
   - **Status note**: 58+ keys translated via DeepSeek + GPT-5 audit pipeline; 200+ rewrites applied across Settings, Auto Director, Story Macro, Workspace shell. Continues alongside each 3.1.x batch.
 
-- [ ] 3.3 [PBT] Implement Property — no naked CJK literals in client/src
+- [~] 3.3 [PBT] Implement Property — no naked CJK literals in client/src
   - Extend `verify-locale-coverage.mjs` with a check that scans `client/src/**/*.{ts,tsx}` for naked CJK literals outside `.i18nignore`; treat any match as a coverage failure
   - Coverage gate must `process.exit(1)` when violations exist (currently P6 is informational only)
   - _Validates: Requirements 3.3, 3.4_
   - _Requirements: 3.3, 3.4_
 
-- [ ] 3.4 [PBT] Implement Property 5 — ICU placeholder identity across locales
+- [~] 3.4 [PBT] Implement Property 5 — ICU placeholder identity across locales
   - In `verify-locale-coverage.mjs`, traverse both bundles in lockstep; for every key whose value contains ICU placeholders, assert `extractPlaceholders(viValue) === extractPlaceholders(zhValue)` (multiset equality of placeholder names and types)
   - _Validates: Requirement 7.2_
   - _Requirements: 7.2_
 
-- [ ] 3.5 Run Phase 3 verification gates and commit
+- [~] 3.5 Run Phase 3 verification gates and commit
   - `pnpm typecheck`, `pnpm dev`, coverage gate (P1-P6 all pass with 0 naked CJK in client/src)
   - Manual UI tour: every left-nav entry, every modal, every settings sub-page, Auto Director full flow (create → confirm → progress → workspace step pages → chapter execution → pipeline → version history)
   - Update release notes, commit
@@ -413,16 +365,16 @@ Within a phase, tasks numbered with the same parent (e.g., 1.8, 1.9, 1.10) can r
 
 ## Phase 4 — Server error and log message translation
 
-- [ ] 4.1 Inventory inline Chinese in `server/src/routes/**`
+- [-] 4.1 Inventory inline Chinese in `server/src/routes/**`
   - `pnpm tsx scripts/i18n/extract-cjk-literals.mjs --root server/src/routes`
   - Categorize each: HTTP error response (translate via `serverErrors`), log line surfaced to user (translate via `serverLogs`), internal log (leave Chinese, mark with `// i18n-ignore-internal-log`)
   - _Requirements: 6.1, 6.2, 6.3, 6.4_
 
-- [ ] 4.2 Refactor `errorHandler` middleware to translate by `error.code`
+- [~] 4.2 Refactor `errorHandler` middleware to translate by `error.code`
   - Update `server/src/middleware/errorHandler.ts` to look up `t('serverErrors.<error.code>', { lng: res.locals.locale })` for the response body, falling back to the original message when no `error.code` is available
   - _Requirements: 6.1_
 
-- [ ] 4.3 Replace inline error literals in route handlers
+- [~] 4.3 Replace inline error literals in route handlers
   - Touch every file under `server/src/routes/**` and `server/src/app.ts` with inline `error: "..."` Chinese strings; replace with `error: t('serverErrors.<code>')` and add the `<code>` mapping to `zh-CN.json`/`vi-VN.json`
   - Includes the `app.ts` 404 handler (`接口不存在。` → `serverErrors.routeNotFound`)
   - _Requirements: 6.2_
@@ -432,7 +384,7 @@ Within a phase, tasks numbered with the same parent (e.g., 1.8, 1.9, 1.10) can r
   - Leave internal `console.warn` / dev-mode logs unchanged
   - _Requirements: 6.3, 6.4_
 
-- [ ] 4.4.1 Translate server runtime payload that surfaces in the UI as text
+- [~] 4.4.1 Translate server runtime payload that surfaces in the UI as text
   - The director projection / unified task detail emit several Chinese strings the client renders verbatim. Migrate them to a server-side i18n format step that resolves keys with `res.locals.locale` before returning the response.
   - Files / fields to migrate (located by `pnpm tsx scripts/i18n/extract-cjk-literals.mjs --root server/src`, excluding `prompting/prompts/**`):
     - `server/src/services/novel/director/novelDirectorTakeover.ts` (118 lines) — checkpoint summaries (`workflow_completed`, `chapter_batch_ready`, `replan_required`)
@@ -446,7 +398,7 @@ Within a phase, tasks numbered with the same parent (e.g., 1.8, 1.9, 1.10) can r
   - Add `serverPayload.*` namespace; document which fields are translated server-side vs which fields are intentionally raw (AI-produced content, internal IDs)
   - _Requirements: 6.3, 6.4_
 
-- [ ] 4.4.2 Define translation strategy for `task.currentItemLabel`, `task.lastError`, `recentEvents.summary`, `milestone.summary`
+- [-] 4.4.2 Define translation strategy for `task.currentItemLabel`, `task.lastError`, `recentEvents.summary`, `milestone.summary`
   - These come from various server services and are concatenated freely. Three options the spec must pick from:
     - (a) Migrate to `code + params` envelope: `{ code: "chapter.draft.write", params: { chapterOrder: 12 } }` and translate on read
     - (b) Translate server-side in `taskFormatter.ts` middleware before serializing the response
@@ -454,26 +406,26 @@ Within a phase, tasks numbered with the same parent (e.g., 1.8, 1.9, 1.10) can r
   - Decide and document in `docs/wiki/architecture/i18n.md`. Recommended: (b) for v1 (lowest blast radius), (a) for v2.
   - _Requirements: 6.3, 6.4_
 
-- [ ] 4.4.3 Translate director runtime checkpoint / step / current-action labels
+- [~] 4.4.3 Translate director runtime checkpoint / step / current-action labels
   - Migrate Chinese fragments in `server/src/services/novel/director/displayStateBuilder.ts` (or equivalent) so that `displayState.currentAction`, `displayState.stageLabel`, `displayState.checkpointLabel` resolve to localized text
   - Reuse keys from `autoDirector.progressPanel.steps.*` and `autoDirector.progressPanel.milestoneTypes.*` already added in Phase 3
   - _Requirements: 6.3, 6.4_
 
-- [ ] 4.4.4 Verify Creative Hub AI answers obey vi-VN directive
+- [~] 4.4.4 Verify Creative Hub AI answers obey vi-VN directive
   - Smoke test: with locale=vi-VN, ask the Creative Hub a question that triggers `answerComposer.ts`. Confirm the AI answer is in Vietnamese and the surrounding shell text (greetings, system labels) is also Vietnamese. If shell text leaks Chinese, wrap those literals via `t()` server-side.
   - _Requirements: 6.3, 4.6_
 
-- [ ] 4.5 [PBT] Implement Property — no inline `error: "中文..."` literals remain in routes
+- [~] 4.5 [PBT] Implement Property — no inline `error: "中文..."` literals remain in routes
   - Extend `verify-locale-coverage.mjs` to scan `server/src/routes/**/*.ts` for `error:\s*"<CJK>"` patterns; report as coverage failure
   - Also scan `server/src/services/**/*.ts` for plain Chinese string literals that are returned in user-facing payload fields (`headline`, `detail`, `summary`, `currentAction`, `currentItemLabel`, `stageLabel`, `checkpointLabel`, `nextActionLabel`, `lastError`, `blockingReason`, `automationSummary`, `userReason`, `userHeadline`, `recommendedAction.reason`)
   - _Validates: Requirement 6.2_
   - _Requirements: 6.2_
 
-- [ ] 4.6 Add example test for upstream LLM SDK error pass-through
+- [~] 4.6 Add example test for upstream LLM SDK error pass-through
   - Add `server/tests/i18n.errorHandler.test.ts` that injects a fake error with no `error.code` and verifies the response message is preserved verbatim (not translated)
   - _Requirements: 6.5_
 
-- [ ] 4.7 Run Phase 4 verification gates and commit
+- [~] 4.7 Run Phase 4 verification gates and commit
   - `pnpm typecheck`, `pnpm test` (server route tests), coverage gate
   - Smoke: trigger known error paths (POST with bad payload, navigate to bogus route), confirm Vietnamese error messages
   - Update release notes, commit
@@ -498,14 +450,14 @@ Within a phase, tasks numbered with the same parent (e.g., 1.8, 1.9, 1.10) can r
   - _Requirements: 4.2_
   - **Status note**: wired via two layers. (a) Added `outputLanguage` to `PromptExecutionOptions` in `server/src/prompting/core/promptTypes.ts` for explicit control. (b) Added AsyncLocalStorage carrier `server/src/runtime/requestLocaleContext.ts` so existing service call sites do NOT need to be touched — they automatically pick up the request's locale. The `i18nMiddleware` opens the scope; `promptRunner.prepareMessages` reads `options.outputLanguage ?? getCurrentRequestLocale()` and appends the directive after `appendStructuredOutputHintMessages`. Client `axios` interceptor (`client/src/api/client.ts`) sets `Accept-Language` per request so the locale arrives at the server.
 
-- [-] 5.3 [PBT] Implement Property 6 — Output Language Directive invariant
+- [~] 5.3 [PBT] Implement Property 6 — Output Language Directive invariant
   - Add `server/tests/i18n.outputDirective.property.test.ts` using `fast-check`
   - For every registered prompt asset (use `listRegisteredPromptAssets()`) and every locale in `SUPPORTED_LOCALES`, render the system message and assert: when locale is `vi-VN`, the system message contains the substring `越南语` AND contains at least 10 `(zh: vi)` glossary pairs; when locale is `zh-CN`, the system message is identical to the pre-Phase-5 baseline (capture baselines as snapshot fixtures)
   - _Validates: Requirements 4.1, 4.2, 4.4_
   - _Requirements: 4.1, 4.2, 4.4_
   - **Status note**: structurally satisfied. `appendOutputLanguageDirective` for `zh-CN` returns the input messages by reference (same array, not copy) — verified by code inspection. For `vi-VN` the appended `SystemMessage` content always contains the literal `越南语` and a glossary block of at least 10 `(zh -> vi)` pairs (asserted by `formatGlossaryHint` reading 16 craft entries; the glossary has 25 craft-category entries today). A formal fast-check property test that boots every registered prompt asset is deferred — it would require booting the LLM factory and DB which has high test overhead; the inline invariant in `outputLanguage.ts` is sufficient for the v1 smoke walk.
 
-- [-] 5.4 [PBT] Implement Property — no Vietnamese in prompt asset source files
+- [~] 5.4 [PBT] Implement Property — no Vietnamese in prompt asset source files
   - Extend `verify-locale-coverage.mjs` to scan `server/src/prompting/prompts/**/*.ts` for Vietnamese diacritics (`ă|â|ê|ô|ơ|ư|đ|...`); treat as a coverage failure
   - This protects against accidentally translating prompt instructions
   - _Validates: Requirement 4.5_
@@ -516,7 +468,7 @@ Within a phase, tasks numbered with the same parent (e.g., 1.8, 1.9, 1.10) can r
   - Sections: Background (why prompts stay Chinese), Decision (directive at invocation, not asset rewrite), Current Rule (every reader-visible PromptAsset invocation appends directive), Examples (sample directive output for vi-VN and zh-CN), Failure Modes (missing glossary, drift, schema field-name leakage), Related Modules (prompting/core, prompting/registry, services/novel), Source Documents
   - _Requirements: 9.6_
 
-- [-] 5.6 Run Phase 5 AI smoke test
+- [~] 5.6 Run Phase 5 AI smoke test
   - With locale = `vi-VN`, create a new novel with a 1-sentence Vietnamese inspiration; trigger Auto Director "Plan 10 chapters and continue"; let it generate 3 chapters
   - Verify (a) chapter prose is in Vietnamese, (b) glossary craft terms used consistently (`主角`→`nhân vật chính`, `世界观`→`thế giới quan`, `章`→`chương` etc.), (c) structured-output JSON field names are unchanged
   - With locale = `zh-CN`, run the same flow; verify the output is indistinguishable from a pre-Phase-5 baseline (capture sample chapter as comment in commit message)
@@ -532,56 +484,56 @@ Within a phase, tasks numbered with the same parent (e.g., 1.8, 1.9, 1.10) can r
 
 ## Phase 6 — Database seed translation
 
-- [ ] 6.1 Backup `server/dev.db` before any migration (Data Protection)
+- [-] 6.1 Backup `server/dev.db` before any migration (Data Protection)
   - Copy `server/dev.db` to `server/dev.db.bak.<ISO-timestamp>`
   - Verify backup exists and size > 0; record path and size in the upcoming commit message
   - DO NOT proceed if backup fails
   - _Requirements: 8.2_
 
-- [ ] 6.2 Add additive migration for nullable `slug` columns
+- [~] 6.2 Add additive migration for nullable `slug` columns
   - Update `server/src/prisma/schema.sqlite.prisma` and `server/src/prisma/schema.prisma`: add `slug String? @unique` to `Genre`, `StoryMode`, `StyleTemplate`, `AntiAiRule`
   - Run `pnpm --filter @ai-novel/server prisma:migrate` with name `add_seed_slugs_nullable`
   - _Requirements: 8.1_
 
-- [ ] 6.3 Implement deterministic slugifier and backfill script
+- [~] 6.3 Implement deterministic slugifier and backfill script
   - Add `scripts/i18n/zh-pinyin-slug.mjs` — a deterministic function `zh → ascii-slug` using a built-in pinyin table (no external pinyin package; use a curated subset sufficient for the existing seed rows)
   - Add `scripts/i18n/seed-slug-overrides.json` (initially empty) for manual disambiguation
   - Add `scripts/i18n/backfill-seed-slugs.mjs` that reads each row from each affected table, slugifies the Chinese name, writes the slug; aborts on collision
   - Run the backfill against the dev DB
   - _Requirements: 8.1_
 
-- [ ] 6.4 Add follow-up migration making slug NOT NULL + UNIQUE
+- [~] 6.4 Add follow-up migration making slug NOT NULL + UNIQUE
   - Run `pnpm --filter @ai-novel/server prisma:migrate` with name `seed_slugs_required` after backfill confirms all rows have slugs
   - _Requirements: 8.1_
 
-- [ ] 6.5 Implement `SeedTranslator` service
+- [~] 6.5 Implement `SeedTranslator` service
   - Add `server/src/services/localization/SeedTranslator.ts` exporting `createSeedTranslator()` and `localizeGenre`, `localizeStoryMode`, `localizeStyleTemplate`, `localizeAntiAiRule`
   - Each function: lookup `seedData.<table>.<row.slug>` in the locale bundle; if found, return `{ id, slug, name: bundle.name, description: bundle.description, raw: row }`; else return `{ id, slug, name: row.name, description: row.description ?? '', raw: row }` (Chinese fallback)
   - Pure function — no DB writes, no caching beyond bundle reads
   - _Requirements: 8.3, 8.4_
 
-- [ ] 6.6 Wire `SeedTranslator` into route read paths
+- [~] 6.6 Wire `SeedTranslator` into route read paths
   - In `server/src/routes/genre.ts`, `server/src/routes/storyMode.ts`, `server/src/routes/styleEngine.ts`: route every list/detail response through `SeedTranslator` using `res.locals.locale`
   - Preserve the response shape (only `name` and `description` are localized; `id`, `slug`, and other fields untouched)
   - _Requirements: 8.5_
 
-- [ ] 6.7 Translate all existing seed slugs
+- [~] 6.7 Translate all existing seed slugs
   - Add `seedData.genres.<slug>`, `seedData.storyModes.<slug>`, `seedData.styleTemplates.<slug>`, `seedData.antiAiRules.<slug>` entries to `zh-CN.json` (mirroring the current Chinese row data) and to `vi-VN.json` (translated via the existing `translate-locale.mjs` pipeline with the glossary)
   - Manually review the Vietnamese genre/style names (these are user-facing and proper-noun-heavy)
   - _Requirements: 8.6_
 
-- [ ] 6.8 [PBT] Implement Property — SeedTranslator pure function with fallback
+- [~] 6.8 [PBT] Implement Property — SeedTranslator pure function with fallback
   - Add `server/tests/i18n.seedTranslator.property.test.ts` using `fast-check`
   - Generate arbitrary seed rows (some with slugs present in vi-VN, some with slugs absent); assert: when slug is present, returned `name` equals bundle entry; when absent, returned `name` equals the row's stored Chinese name
   - _Validates: Requirements 8.3, 8.4_
   - _Requirements: 8.3, 8.4_
 
-- [ ] 6.9 [PBT] Extend coverage gate — every existing seed slug has a vi entry
+- [~] 6.9 [PBT] Extend coverage gate — every existing seed slug has a vi entry
   - In `verify-locale-coverage.mjs`, query the dev DB (or a fixture export of slugs) and for each slug assert `seedData.<table>.<slug>` exists in `vi-VN.json`
   - _Validates: Requirement 8.6_
   - _Requirements: 8.6_
 
-- [ ] 6.10 Run Phase 6 verification gates and commit
+- [~] 6.10 Run Phase 6 verification gates and commit
   - `pnpm typecheck`, `pnpm test`, coverage gate
   - Manual smoke: in vi-VN locale, the genre dropdown, story mode list, and style template list all show Vietnamese names; in zh-CN locale, they show the original Chinese
   - Verify a user-created genre with no Vietnamese translation falls back to its stored Chinese name (no error)
@@ -592,31 +544,31 @@ Within a phase, tasks numbered with the same parent (e.g., 1.8, 1.9, 1.10) can r
 
 ## Final acceptance (post-Phase-6)
 
-- [ ] 7.1 [PBT] Implement Property 4 — glossary consistency end-to-end
+- [~] 7.1 [PBT] Implement Property 4 — glossary consistency end-to-end
   - In `verify-locale-coverage.mjs`, for every glossary entry `(zh, vi)`: count occurrences of `zh` (with word boundaries appropriate for CJK) in the canonical `zh-CN.json`; count occurrences of `vi` in `vi-VN.json`; assert the counts match within a tolerance (since some occurrences may be inside placeholders); separately assert no two `craft` glossary entries share the same `vi` value
   - _Validates: Requirement 5.4_
   - _Requirements: 5.1, 5.4_
 
-- [ ] 7.2 End-to-end smoke walk-through before merging to `beta`
+- [~] 7.2 End-to-end smoke walk-through before merging to `beta`
   - With locale = `vi-VN`: boot → login → dashboard → create novel from 1-sentence inspiration (Vietnamese) → Auto Director plans 10 chapters → verify chapter outline is in Vietnamese → run "continue 10 chapters" until 3-chapter check-in → verify check-in panel is in Vietnamese
   - Switch locale to `zh-CN` mid-session: verify UI re-renders Chinese; verify draft and novel state preserved
   - Switch back to `vi-VN`: verify state still preserved
   - Capture results as a final smoke note; merge `feature/vietnamese-localization` into `beta`
   - _Requirements: 9.5_
 
-- [ ] 7.3 Verify all six phase commits are independently revertible
+- [~] 7.3 Verify all six phase commits are independently revertible
   - From the head of `feature/vietnamese-localization`, `git revert <phase-N-commit>` for each phase in isolation (in a scratch worktree) and confirm the resulting tree builds (`pnpm typecheck`) and boots (`pnpm dev`)
   - This is a one-time check before promoting the branch; document the result in the merge PR description
   - _Requirements: 9.1_
 
-- [ ] 7.4 [PBT] Final blocking gate: zero CJK in user-facing surface
+- [~] 7.4 [PBT] Final blocking gate: zero CJK in user-facing surface
   - Promote P6 from informational to blocking: `verify-locale-coverage.mjs` exits with code 1 when `client/src/**/*.{ts,tsx}` contains naked CJK literals outside `.i18nignore` patterns and `// i18n-ignore` comments.
   - Promote P5 (server payload P5 from task 4.5) similarly: `server/src/{routes,services,agents,middleware,app.ts}/**/*.ts` (excluding `prompting/prompts/**` and lines marked `// i18n-ignore-internal-log`) must have zero naked CJK in fields whose names match the user-facing payload list.
   - Add CI hook example to `docs/wiki/architecture/i18n.md` for future contributors.
   - _Validates: Requirements 3.3, 3.4, 6.2_
   - _Requirements: 3.3, 6.2, 9.1_
 
-- [ ] 7.5 Sanity check: locale switch + AI smoke after all phases done
+- [~] 7.5 Sanity check: locale switch + AI smoke after all phases done
   - Boot fresh app at `vi-VN` and walk every page reachable from sidebar; nothing visible to a beginner user should be Chinese.
   - Boot at `zh-CN`; verify identical surface in original Chinese.
   - Run a 3-chapter Auto Director task in `vi-VN`; verify chapter prose, character resource snapshots, audit reports and milestone summaries are all Vietnamese, plus glossary craft terms (`主角→nhân vật chính`, `世界观→thế giới quan`, `章→chương`) consistent across server payload and AI output.
@@ -634,3 +586,26 @@ Within a phase, tasks numbered with the same parent (e.g., 1.8, 1.9, 1.10) can r
 - Per AGENTS.md Prompt Governance: Phase 5 does NOT migrate inline prompts into the registry. The directive is appended at invocation time, leaving the existing inline prompts unchanged for now. Future inline-prompt migration is tracked separately.
 - Each phase commit message MUST include: `pnpm typecheck` result, `pnpm dev` boot status, coverage-gate result, phase-specific smoke checklist, and (for Phase 6) the backup file path and size.
 - Translation script (`translate-locale.mjs`) must NOT be run against any bundle that contains user-private data. Locale bundles are public UI copy only.
+
+## Task Dependency Graph
+
+Only incomplete leaf tasks appear below. Phase 1, Phase 2, and the completed Phase 5 sub-tasks (5.1, 5.2, 5.5, 5.7) are already merged and excluded. The 3.1 parent and 4.4 parent are excluded as parents of finer-grained sub-tasks. The 3.1.0 inventory snapshot is also excluded because the surfaces it lists are already wrapped.
+
+Tasks that mutate `scripts/i18n/verify-locale-coverage.mjs` are serialized across waves (each property addition is its own wave). Source-code wraps in Phase 3 are parallelized across page directories. Phase 6 schema work is split: nullable migration → backfill → NOT NULL migration in three sequential waves.
+
+```json
+{
+  "waves": [
+    { "id": 0, "tasks": ["3.1.1", "3.1.2", "3.1.3", "3.1.4", "3.1.5", "3.1.6", "3.1.7", "3.1.8", "4.1", "4.4.2", "6.1"] },
+    { "id": 1, "tasks": ["3.1.9", "3.2", "4.2", "4.3", "4.4", "4.4.1", "4.4.4", "4.6", "5.3", "5.6", "6.2", "6.5"] },
+    { "id": 2, "tasks": ["3.3", "4.4.3", "6.3", "6.7"] },
+    { "id": 3, "tasks": ["3.4", "6.4", "6.6", "6.8"] },
+    { "id": 4, "tasks": ["3.5", "4.5"] },
+    { "id": 5, "tasks": ["4.7", "5.4"] },
+    { "id": 6, "tasks": ["6.9"] },
+    { "id": 7, "tasks": ["6.10", "7.1"] },
+    { "id": 8, "tasks": ["7.4"] },
+    { "id": 9, "tasks": ["7.2", "7.3", "7.5"] }
+  ]
+}
+```

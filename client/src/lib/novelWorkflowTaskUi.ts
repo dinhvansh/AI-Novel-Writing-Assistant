@@ -1,4 +1,5 @@
-﻿import type { NovelAutoDirectorTaskSummary } from "@ai-novel/shared/types/novel";
+﻿import type { TFunction } from "i18next";
+import type { NovelAutoDirectorTaskSummary } from "@ai-novel/shared/types/novel";
 import type { NovelWorkflowCheckpoint } from "@ai-novel/shared/types/novelWorkflow";
 import type { TaskStatus } from "@ai-novel/shared/types/task";
 
@@ -15,48 +16,51 @@ type WorkflowTaskLike = {
 export const LIVE_TASK_STATUSES = new Set<TaskStatus>(["queued", "running", "waiting_approval"]);
 export const BACKGROUND_RUNNING_TASK_STATUSES = new Set<TaskStatus>(["running"]);
 
-function getExecutionScopeLabel(scopeLabel?: string | null, fallback = "第 1-10 章"): string {
-  return scopeLabel?.trim() || fallback;
+function getExecutionScopeLabel(scopeLabel?: string | null, t?: TFunction): string {
+  return scopeLabel?.trim() || (t ? t("autoDirector:taskUi.defaultScopeLabel") : "第 1-10 章");
 }
 
-function buildAutoExecutionRunningLabel(scopeLabel?: string | null): string {
-  return `${getExecutionScopeLabel(scopeLabel)}自动执行中`;
+function buildAutoExecutionRunningLabel(scopeLabel?: string | null, t?: TFunction): string {
+  const scope = getExecutionScopeLabel(scopeLabel, t);
+  return t ? t("autoDirector:taskUi.autoExecutionRunning", { scope }) : `${scope}自动执行中`;
 }
 
-function buildAutoExecutionPausedLabel(scopeLabel?: string | null): string {
-  return `${getExecutionScopeLabel(scopeLabel)}自动执行已暂停`;
+function buildAutoExecutionPausedLabel(scopeLabel?: string | null, t?: TFunction): string {
+  const scope = getExecutionScopeLabel(scopeLabel, t);
+  return t ? t("autoDirector:taskUi.autoExecutionPaused", { scope }) : `${scope}自动执行已暂停`;
 }
 
-function buildAutoExecutionCancelledLabel(scopeLabel?: string | null): string {
-  return `${getExecutionScopeLabel(scopeLabel)}自动执行已取消`;
+function buildAutoExecutionCancelledLabel(scopeLabel?: string | null, t?: TFunction): string {
+  const scope = getExecutionScopeLabel(scopeLabel, t);
+  return t ? t("autoDirector:taskUi.autoExecutionCancelled", { scope }) : `${scope}自动执行已取消`;
 }
 
-export function formatWorkflowCheckpoint(checkpoint?: NovelWorkflowCheckpoint | null, scopeLabel?: string | null): string {
+export function formatWorkflowCheckpoint(checkpoint?: NovelWorkflowCheckpoint | null, scopeLabel?: string | null, t?: TFunction): string {
   if (checkpoint === "candidate_selection_required") {
-    return "等待确认书级方向";
+    return t ? t("autoDirector:taskUi.checkpoints.candidateSelection") : "等待确认书级方向";
   }
   if (checkpoint === "book_contract_ready") {
-    return "Book Contract 已就绪";
+    return t ? t("autoDirector:taskUi.checkpoints.bookContractReady") : "Book Contract 已就绪";
   }
   if (checkpoint === "character_setup_required") {
-    return "角色准备待审核";
+    return t ? t("autoDirector:taskUi.checkpoints.characterSetup") : "角色准备待审核";
   }
   if (checkpoint === "volume_strategy_ready") {
-    return "卷战略待审核";
+    return t ? t("autoDirector:taskUi.checkpoints.volumeStrategy") : "卷战略待审核";
   }
   if (checkpoint === "chapter_batch_ready") {
-    return buildAutoExecutionPausedLabel(scopeLabel);
+    return buildAutoExecutionPausedLabel(scopeLabel, t);
   }
   if (checkpoint === "replan_required") {
-    return "等待重规划";
+    return t ? t("autoDirector:taskUi.checkpoints.replanRequired") : "等待重规划";
   }
   if (checkpoint === "workflow_completed") {
-    return "自动导演已完成";
+    return t ? t("autoDirector:taskUi.checkpoints.workflowCompleted") : "自动导演已完成";
   }
-  return "自动导演";
+  return t ? t("autoDirector:taskUi.checkpoints.autoDirector") : "自动导演";
 }
 
-export function getWorkflowBadge(task?: NovelAutoDirectorTaskSummary | null): {
+export function getWorkflowBadge(task?: NovelAutoDirectorTaskSummary | null, t?: TFunction): {
   label: string;
   variant: WorkflowBadgeVariant;
 } | null {
@@ -69,57 +73,57 @@ export function getWorkflowBadge(task?: NovelAutoDirectorTaskSummary | null): {
     && task.checkpointType === "chapter_batch_ready"
   ) {
     return {
-      label: displayStatus ?? buildAutoExecutionRunningLabel(task.executionScopeLabel),
+      label: displayStatus ?? buildAutoExecutionRunningLabel(task.executionScopeLabel, t),
       variant: "default",
     };
   }
   if ((task.status === "failed" || task.status === "cancelled") && task.checkpointType === "chapter_batch_ready") {
     return {
       label: displayStatus ?? (task.status === "failed"
-        ? buildAutoExecutionPausedLabel(task.executionScopeLabel)
-        : buildAutoExecutionCancelledLabel(task.executionScopeLabel)),
+        ? buildAutoExecutionPausedLabel(task.executionScopeLabel, t)
+        : buildAutoExecutionCancelledLabel(task.executionScopeLabel, t)),
       variant: task.status === "failed" ? "destructive" : "outline",
     };
   }
   if (task.status === "waiting_approval") {
     return {
-      label: displayStatus ?? formatWorkflowCheckpoint(task.checkpointType, task.executionScopeLabel),
+      label: displayStatus ?? formatWorkflowCheckpoint(task.checkpointType, task.executionScopeLabel, t),
       variant: "secondary",
     };
   }
   if (task.status === "running") {
     return {
-      label: displayStatus ?? "自动导演进行中",
+      label: displayStatus ?? (t ? t("autoDirector:taskUi.status.running") : "自动导演进行中"),
       variant: "default",
     };
   }
   if (task.status === "queued") {
     return {
-      label: displayStatus ?? "自动导演排队中",
+      label: displayStatus ?? (t ? t("autoDirector:taskUi.status.queued") : "自动导演排队中"),
       variant: "secondary",
     };
   }
   if (task.status === "failed") {
     return {
-      label: displayStatus ?? "自动导演失败",
+      label: displayStatus ?? (t ? t("autoDirector:taskUi.status.failed") : "自动导演失败"),
       variant: "destructive",
     };
   }
   if (task.status === "cancelled") {
     return {
-      label: displayStatus ?? "自动导演已取消",
+      label: displayStatus ?? (t ? t("autoDirector:taskUi.status.cancelled") : "自动导演已取消"),
       variant: "outline",
     };
   }
   return {
     label: displayStatus ?? (task.checkpointType === "workflow_completed"
-      ? "自动导演已完成"
-      : formatWorkflowCheckpoint(task.checkpointType, task.executionScopeLabel)),
+      ? (t ? t("autoDirector:taskUi.checkpoints.workflowCompleted") : "自动导演已完成")
+      : formatWorkflowCheckpoint(task.checkpointType, task.executionScopeLabel, t)),
     variant: "outline",
   };
 }
 
-export function getWorkflowDescription(task?: NovelAutoDirectorTaskSummary | null): string | null {
+export function getWorkflowDescription(task?: NovelAutoDirectorTaskSummary | null, t?: TFunction): string | null {
   if (!task) {
     return null;
   }
@@ -127,10 +131,17 @@ export function getWorkflowDescription(task?: NovelAutoDirectorTaskSummary | nul
     (task.status === "queued" || task.status === "running")
     && task.checkpointType === "chapter_batch_ready"
   ) {
-    return `AI 正在后台继续执行${getExecutionScopeLabel(task.executionScopeLabel)}，当前进度 ${Math.round(task.progress * 100)}%。`;
+    const scope = getExecutionScopeLabel(task.executionScopeLabel, t);
+    const percent = Math.round(task.progress * 100);
+    return t
+      ? t("autoDirector:taskUi.description.autoExecutionProgress", { scope, percent })
+      : `AI 正在后台继续执行${scope}，当前进度 ${percent}%。`;
   }
   if ((task.status === "failed" || task.status === "cancelled") && task.checkpointType === "chapter_batch_ready") {
-    return `${getExecutionScopeLabel(task.executionScopeLabel)}自动执行在批量阶段暂停了，建议先查看任务，再决定是否继续自动执行。`;
+    const scope = getExecutionScopeLabel(task.executionScopeLabel, t);
+    return t
+      ? t("autoDirector:taskUi.description.autoExecutionPausedBatch", { scope })
+      : `${scope}自动执行在批量阶段暂停了，建议先查看任务，再决定是否继续自动执行。`;
   }
   if (task.blockingReason?.trim()) {
     return task.blockingReason.trim();
@@ -142,10 +153,14 @@ export function getWorkflowDescription(task?: NovelAutoDirectorTaskSummary | nul
     return task.currentItemLabel.trim();
   }
   if (task.resumeAction?.trim()) {
-    return `推荐继续：${task.resumeAction.trim()}`;
+    return t
+      ? t("autoDirector:taskUi.description.recommendContinue", { action: task.resumeAction.trim() })
+      : `推荐继续：${task.resumeAction.trim()}`;
   }
   if (task.nextActionLabel?.trim()) {
-    return `下一步：${task.nextActionLabel.trim()}`;
+    return t
+      ? t("autoDirector:taskUi.description.nextStep", { label: task.nextActionLabel.trim() })
+      : `下一步：${task.nextActionLabel.trim()}`;
   }
   return null;
 }

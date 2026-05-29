@@ -3,6 +3,7 @@ import {
   type StyleBinding,
   type StyleProfile,
 } from "@ai-novel/shared/types/styleEngine";
+import type { TFunction } from "i18next";
 import {
   buildReadableRuleEntries,
   buildReadableRuleSummary,
@@ -42,6 +43,7 @@ interface BuildLandingProfileItemsParams {
   profiles: StyleProfile[];
   allBindings: StyleBinding[];
   novelTitleMap: Record<string, string>;
+  t: TFunction;
 }
 
 function compactText(value: unknown): string {
@@ -95,20 +97,20 @@ function formatUpdatedAtLabel(value: string): string {
   }).format(date);
 }
 
-function buildNarrativeSummary(profile: StyleProfile): string {
-  return buildReadableRuleSummary("narrativeRules", profile.narrativeRules, "还没有明确剧情推进摘要。");
+function buildNarrativeSummary(profile: StyleProfile, t: TFunction): string {
+  return buildReadableRuleSummary("narrativeRules", profile.narrativeRules, "还没有明确剧情推进摘要。", t);
 }
 
-function buildCharacterSummary(profile: StyleProfile): string {
-  return buildReadableRuleSummary("characterRules", profile.characterRules, "还没有明确人物表达摘要。");
+function buildCharacterSummary(profile: StyleProfile, t: TFunction): string {
+  return buildReadableRuleSummary("characterRules", profile.characterRules, "还没有明确人物表达摘要。", t);
 }
 
-function buildLanguageSummary(profile: StyleProfile): string {
-  return buildReadableRuleSummary("languageRules", profile.languageRules, "还没有明确语言质感摘要。");
+function buildLanguageSummary(profile: StyleProfile, t: TFunction): string {
+  return buildReadableRuleSummary("languageRules", profile.languageRules, "还没有明确语言质感摘要。", t);
 }
 
-function buildRhythmSummary(profile: StyleProfile): string {
-  return buildReadableRuleSummary("rhythmRules", profile.rhythmRules, "还没有明确节奏控制摘要。");
+function buildRhythmSummary(profile: StyleProfile, t: TFunction): string {
+  return buildReadableRuleSummary("rhythmRules", profile.rhythmRules, "还没有明确节奏控制摘要。", t);
 }
 
 function buildSourceContentPreview(sourceContent?: string | null): string | null {
@@ -121,7 +123,7 @@ function buildSourceContentPreview(sourceContent?: string | null): string | null
 }
 
 export function buildLandingProfileItems(params: BuildLandingProfileItemsParams): LandingProfileItem[] {
-  const { profiles, allBindings, novelTitleMap } = params;
+  const { profiles, allBindings, novelTitleMap, t } = params;
   const recentNovelBindingsByProfileId = allBindings
     .filter((binding) => binding.targetType === "novel")
     .reduce<Map<string, StyleBinding>>((result, binding) => {
@@ -150,14 +152,14 @@ export function buildLandingProfileItems(params: BuildLandingProfileItemsParams)
     })
     .map((profile) => {
       const profileSummary = buildStyleIntentSummary({ styleProfile: profile });
-      const characterEntries = buildReadableRuleEntries("characterRules", profile.characterRules);
+      const characterEntries = buildReadableRuleEntries("characterRules", profile.characterRules, t);
       const dialogueEntry = characterEntries.find((entry) => entry.key === "dialogueStyle");
       const emotionEntry = characterEntries.find((entry) => entry.key === "emotionExpression");
       const detailLines = [
         firstNonEmptyText(profile.description, profileSummary?.readingFeel)
           ? `读感承诺：${firstNonEmptyText(profile.description, profileSummary?.readingFeel)}`
           : "",
-        `语言质感：${buildLanguageSummary(profile)}`,
+        `语言质感：${buildLanguageSummary(profile, t)}`,
         dialogueEntry ? `对白风格：${dialogueEntry.value}` : "",
         emotionEntry ? `情绪外显：${emotionEntry.value}` : "",
         profileSummary?.antiAiFocus.length
@@ -185,10 +187,10 @@ export function buildLandingProfileItems(params: BuildLandingProfileItemsParams)
         category: profile.category,
         tags: Array.from(new Set([...profile.tags, ...profile.applicableGenres].filter(Boolean))).slice(0, 6),
         applicableGenres: profile.applicableGenres.filter(Boolean),
-        narrativeSummary: buildNarrativeSummary(profile),
-        characterSummary: buildCharacterSummary(profile),
-        languageSummary: buildLanguageSummary(profile),
-        rhythmSummary: buildRhythmSummary(profile),
+        narrativeSummary: buildNarrativeSummary(profile, t),
+        characterSummary: buildCharacterSummary(profile, t),
+        languageSummary: buildLanguageSummary(profile, t),
+        rhythmSummary: buildRhythmSummary(profile, t),
         antiAiFocus: profileSummary?.antiAiFocus ?? [],
         antiAiRuleNames: profile.antiAiRules.map((rule) => rule.name).slice(0, 6),
         sourceTypeLabel: formatSourceTypeLabel(profile.sourceType),

@@ -1,3 +1,4 @@
+import type { TFunction } from "i18next";
 import type {
   VolumeBeatSheet,
   VolumeChapterPlan,
@@ -26,20 +27,22 @@ export interface VolumeSyncOptions {
 }
 
 export function buildVolumePlanningReadiness(params: {
+  t?: TFunction;
   volumes: VolumePlan[];
   strategyPlan: VolumeStrategyPlan | null;
   beatSheets: VolumeBeatSheet[];
 }): VolumePlanningReadiness {
-  const { volumes, strategyPlan, beatSheets } = params;
+  const { volumes, strategyPlan, beatSheets, t } = params;
+  const tr = t ?? ((key: string) => key);
   const blockingReasons: string[] = [];
   if (!strategyPlan) {
-    blockingReasons.push("请先生成卷战略建议，再确认卷骨架。");
+    blockingReasons.push(tr("novel:volumePlan.readiness.blockingMissingStrategy"));
   }
   if (volumes.length === 0) {
-    blockingReasons.push("当前还没有卷骨架。");
+    blockingReasons.push(tr("novel:volumePlan.readiness.blockingMissingVolumes"));
   }
   if (!beatSheets.some((sheet) => sheet.beats.length > 0)) {
-    blockingReasons.push("当前卷还没有节奏板，默认不能直接拆章节列表。");
+    blockingReasons.push(tr("novel:volumePlan.readiness.blockingMissingBeatSheet"));
   }
   return {
     canGenerateStrategy: true,
@@ -58,12 +61,13 @@ function createLocalId(prefix: string): string {
   return `${prefix}-${globalThis.crypto?.randomUUID?.() ?? Math.random().toString(36).slice(2)}`;
 }
 
-export function createEmptyVolume(sortOrder: number): VolumePlan {
+export function createEmptyVolume(sortOrder: number, t?: TFunction): VolumePlan {
+  const tr = t ?? ((key: string, opts?: Record<string, unknown>) => opts ? `${key}` : key);
   return {
     id: createLocalId("volume"),
     novelId: "",
     sortOrder,
-    title: `第${sortOrder}卷`,
+    title: tr("novel:volumePlan.fallback.volumeTitle", { order: sortOrder }),
     summary: "",
     openingHook: "",
     mainPromise: "",
@@ -85,13 +89,14 @@ export function createEmptyVolume(sortOrder: number): VolumePlan {
   };
 }
 
-export function createEmptyChapter(chapterOrder: number): VolumeChapterPlan {
+export function createEmptyChapter(chapterOrder: number, t?: TFunction): VolumeChapterPlan {
+  const tr = t ?? ((key: string, opts?: Record<string, unknown>) => opts ? `${key}` : key);
   return {
     id: createLocalId("chapter"),
     volumeId: "",
     chapterOrder,
     beatKey: null,
-    title: `第${chapterOrder}章`,
+    title: tr("novel:volumePlan.fallback.chapterTitle", { order: chapterOrder }),
     summary: "",
     purpose: "",
     conflictLevel: null,
@@ -105,14 +110,15 @@ export function createEmptyChapter(chapterOrder: number): VolumeChapterPlan {
   };
 }
 
-export function buildTaskSheetFromVolumeChapter(chapter: VolumeChapterPlan): string {
+export function buildTaskSheetFromVolumeChapter(chapter: VolumeChapterPlan, t?: TFunction): string {
+  const tr = t ?? ((key: string, opts?: Record<string, unknown>) => opts ? `${key}` : key);
   const lines = [
-    `章节目标：${chapter.purpose || chapter.summary || "推进主线"}`,
-    typeof chapter.conflictLevel === "number" ? `冲突等级：${chapter.conflictLevel}` : "",
-    typeof chapter.revealLevel === "number" ? `揭露等级：${chapter.revealLevel}` : "",
-    typeof chapter.targetWordCount === "number" ? `目标字数：${chapter.targetWordCount}` : "",
-    chapter.mustAvoid?.trim() ? `禁止事项：${chapter.mustAvoid.trim()}` : "",
-    chapter.payoffRefs.length > 0 ? `兑现关联：${chapter.payoffRefs.join("、")}` : "",
+    tr("novel:volumePlan.taskSheet.purpose", { value: chapter.purpose || chapter.summary || tr("novel:volumePlan.taskSheet.purposeFallback") }),
+    typeof chapter.conflictLevel === "number" ? tr("novel:volumePlan.taskSheet.conflictLevel", { value: chapter.conflictLevel }) : "",
+    typeof chapter.revealLevel === "number" ? tr("novel:volumePlan.taskSheet.revealLevel", { value: chapter.revealLevel }) : "",
+    typeof chapter.targetWordCount === "number" ? tr("novel:volumePlan.taskSheet.targetWordCount", { value: chapter.targetWordCount }) : "",
+    chapter.mustAvoid?.trim() ? tr("novel:volumePlan.taskSheet.mustAvoid", { value: chapter.mustAvoid.trim() }) : "",
+    chapter.payoffRefs.length > 0 ? tr("novel:volumePlan.taskSheet.payoffRefs", { value: chapter.payoffRefs.join("、") }) : "",
   ].filter(Boolean);
   return lines.join("\n");
 }
@@ -152,28 +158,29 @@ export function normalizeVolumeDraft(volumes: VolumePlan[]): VolumePlan[] {
     });
 }
 
-export function buildOutlinePreviewFromVolumes(volumes: VolumePlan[]): string {
+export function buildOutlinePreviewFromVolumes(volumes: VolumePlan[], t?: TFunction): string {
+  const tr = t ?? ((key: string, opts?: Record<string, unknown>) => opts ? `${key}` : key);
   return normalizeVolumeDraft(volumes)
     .map((volume) => {
       const chapterSpan = volume.chapters.length > 0
         ? `${volume.chapters[0]?.chapterOrder ?? "-"}-${volume.chapters[volume.chapters.length - 1]?.chapterOrder ?? "-"}`
-        : "未拆章";
+        : tr("novel:volumePlan.preview.noChapters");
       return [
-        `【第${volume.sortOrder}卷】${volume.title}`,
-        volume.summary?.trim() ? `卷摘要：${volume.summary.trim()}` : "",
-        volume.openingHook?.trim() ? `开卷抓手：${volume.openingHook.trim()}` : "",
-        volume.mainPromise?.trim() ? `主承诺：${volume.mainPromise.trim()}` : "",
-        volume.primaryPressureSource?.trim() ? `主压迫源：${volume.primaryPressureSource.trim()}` : "",
-        volume.coreSellingPoint?.trim() ? `核心卖点：${volume.coreSellingPoint.trim()}` : "",
-        volume.escalationMode?.trim() ? `升级方式：${volume.escalationMode.trim()}` : "",
-        volume.protagonistChange?.trim() ? `主角变化：${volume.protagonistChange.trim()}` : "",
-        volume.midVolumeRisk?.trim() ? `中段风险：${volume.midVolumeRisk.trim()}` : "",
-        volume.climax?.trim() ? `卷末高潮：${volume.climax.trim()}` : "",
-        volume.payoffType?.trim() ? `兑现类型：${volume.payoffType.trim()}` : "",
-        volume.nextVolumeHook?.trim() ? `下卷钩子：${volume.nextVolumeHook.trim()}` : "",
-        volume.resetPoint?.trim() ? `重置点：${volume.resetPoint.trim()}` : "",
-        volume.openPayoffs.length > 0 ? `未兑现事项：${volume.openPayoffs.join("；")}` : "",
-        `章节范围：${chapterSpan}`,
+        tr("novel:volumePlan.preview.volumeHeader", { order: volume.sortOrder, title: volume.title }),
+        volume.summary?.trim() ? tr("novel:volumePlan.preview.summary", { value: volume.summary.trim() }) : "",
+        volume.openingHook?.trim() ? tr("novel:volumePlan.preview.openingHook", { value: volume.openingHook.trim() }) : "",
+        volume.mainPromise?.trim() ? tr("novel:volumePlan.preview.mainPromise", { value: volume.mainPromise.trim() }) : "",
+        volume.primaryPressureSource?.trim() ? tr("novel:volumePlan.preview.primaryPressureSource", { value: volume.primaryPressureSource.trim() }) : "",
+        volume.coreSellingPoint?.trim() ? tr("novel:volumePlan.preview.coreSellingPoint", { value: volume.coreSellingPoint.trim() }) : "",
+        volume.escalationMode?.trim() ? tr("novel:volumePlan.preview.escalationMode", { value: volume.escalationMode.trim() }) : "",
+        volume.protagonistChange?.trim() ? tr("novel:volumePlan.preview.protagonistChange", { value: volume.protagonistChange.trim() }) : "",
+        volume.midVolumeRisk?.trim() ? tr("novel:volumePlan.preview.midVolumeRisk", { value: volume.midVolumeRisk.trim() }) : "",
+        volume.climax?.trim() ? tr("novel:volumePlan.preview.climax", { value: volume.climax.trim() }) : "",
+        volume.payoffType?.trim() ? tr("novel:volumePlan.preview.payoffType", { value: volume.payoffType.trim() }) : "",
+        volume.nextVolumeHook?.trim() ? tr("novel:volumePlan.preview.nextVolumeHook", { value: volume.nextVolumeHook.trim() }) : "",
+        volume.resetPoint?.trim() ? tr("novel:volumePlan.preview.resetPoint", { value: volume.resetPoint.trim() }) : "",
+        volume.openPayoffs.length > 0 ? tr("novel:volumePlan.preview.openPayoffs", { value: volume.openPayoffs.join("；") }) : "",
+        tr("novel:volumePlan.preview.chapterRange", { value: chapterSpan }),
       ].filter(Boolean).join("\n");
     })
     .join("\n\n");
@@ -248,15 +255,16 @@ function compareNumber(a: number | null | undefined, b: number | null | undefine
   return (typeof a === "number" ? a : null) === (typeof b === "number" ? b : null);
 }
 
-function getChangedFields(existing: ExistingOutlineChapter, chapter: VolumeChapterPlan, action: "update" | "move"): string[] {
-  const changed: string[] = action === "move" ? ["章节顺序"] : [];
-  if (!compareText(existing.title, chapter.title)) changed.push("标题");
-  if (!compareText(existing.expectation, chapter.summary)) changed.push("摘要");
-  if (!compareNumber(existing.targetWordCount, chapter.targetWordCount)) changed.push("目标字数");
-  if (!compareNumber(existing.conflictLevel, chapter.conflictLevel)) changed.push("冲突等级");
-  if (!compareNumber(existing.revealLevel, chapter.revealLevel)) changed.push("揭露等级");
-  if (!compareText(existing.mustAvoid, chapter.mustAvoid)) changed.push("禁止事项");
-  if (!compareText(existing.taskSheet, chapter.taskSheet)) changed.push("任务单");
+function getChangedFields(existing: ExistingOutlineChapter, chapter: VolumeChapterPlan, action: "update" | "move", t?: TFunction): string[] {
+  const tr = t ?? ((key: string) => key);
+  const changed: string[] = action === "move" ? [tr("novel:volumePlan.syncFields.chapterOrder")] : [];
+  if (!compareText(existing.title, chapter.title)) changed.push(tr("novel:volumePlan.syncFields.title"));
+  if (!compareText(existing.expectation, chapter.summary)) changed.push(tr("novel:volumePlan.syncFields.summary"));
+  if (!compareNumber(existing.targetWordCount, chapter.targetWordCount)) changed.push(tr("novel:volumePlan.syncFields.targetWordCount"));
+  if (!compareNumber(existing.conflictLevel, chapter.conflictLevel)) changed.push(tr("novel:volumePlan.syncFields.conflictLevel"));
+  if (!compareNumber(existing.revealLevel, chapter.revealLevel)) changed.push(tr("novel:volumePlan.syncFields.revealLevel"));
+  if (!compareText(existing.mustAvoid, chapter.mustAvoid)) changed.push(tr("novel:volumePlan.syncFields.mustAvoid"));
+  if (!compareText(existing.taskSheet, chapter.taskSheet)) changed.push(tr("novel:volumePlan.syncFields.taskSheet"));
   return changed;
 }
 
@@ -264,6 +272,7 @@ export function buildVolumeSyncPreview(
   volumes: VolumePlan[],
   existingChapters: ExistingOutlineChapter[],
   options: VolumeSyncOptions,
+  t?: TFunction,
 ): VolumeSyncPreview {
   const normalizedVolumes = normalizeVolumeDraft(volumes);
   const flattened = normalizedVolumes.flatMap((volume) => volume.chapters.map((chapter) => ({ volume, chapter })));
@@ -310,14 +319,14 @@ export function buildVolumeSyncPreview(
         chapterOrder: entry.chapter.chapterOrder,
         nextTitle: entry.chapter.title,
         hasContent: false,
-        changedFields: ["新章节"],
+        changedFields: [t ? t("novel:volumePlan.syncFields.newChapter") : "新章节" /* i18n-ignore: fallback when t not provided */],
       });
       continue;
     }
 
     matchedChapterIds.add(existing.id);
     const action = existing.order === entry.chapter.chapterOrder ? "update" : "move";
-    const changedFields = getChangedFields(existing, entry.chapter, action);
+    const changedFields = getChangedFields(existing, entry.chapter, action, t);
     const hasContent = Boolean(existing.content?.trim());
     if (changedFields.length === 0) {
       keepCount += 1;
@@ -364,23 +373,23 @@ export function buildVolumeSyncPreview(
       deleteCount += 1;
       items.push({
         action: "delete",
-        volumeTitle: "未匹配",
+        volumeTitle: t ? t("novel:volumePlan.syncFields.unmatchedVolumeTitle") : "未匹配", /* i18n-ignore: fallback when t not provided */
         chapterOrder: chapter.order,
         nextTitle: chapter.title,
         previousTitle: chapter.title,
         hasContent,
-        changedFields: ["从卷纲移除"],
+        changedFields: [t ? t("novel:volumePlan.syncFields.removeFromOutline") : "从卷纲移除" /* i18n-ignore: fallback when t not provided */],
       });
     } else {
       deleteCandidateCount += 1;
       items.push({
         action: "delete_candidate",
-        volumeTitle: "未匹配",
+        volumeTitle: t ? t("novel:volumePlan.syncFields.unmatchedVolumeTitle") : "未匹配", /* i18n-ignore: fallback when t not provided */
         chapterOrder: chapter.order,
         nextTitle: chapter.title,
         previousTitle: chapter.title,
         hasContent,
-        changedFields: ["待确认删除"],
+        changedFields: [t ? t("novel:volumePlan.syncFields.deleteCandidate") : "待确认删除" /* i18n-ignore: fallback when t not provided */],
       });
     }
   }

@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import type { BookAnalysisSection } from "@ai-novel/shared/types/bookAnalysis";
 import MarkdownViewer from "@/components/common/MarkdownViewer";
 import { Badge } from "@/components/ui/badge";
@@ -24,6 +25,7 @@ interface BookAnalysisSectionCardProps {
 }
 
 export default function BookAnalysisSectionCard(props: BookAnalysisSectionCardProps) {
+  const { t } = useTranslation();
   const {
     section,
     draft,
@@ -49,7 +51,7 @@ export default function BookAnalysisSectionCard(props: BookAnalysisSectionCardPr
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div className="flex items-center gap-2">
             <CardTitle>{section.title}</CardTitle>
-            <Badge variant="outline">{formatStatus(section.status)}</Badge>
+            <Badge variant="outline">{formatStatus(section.status, t)}</Badge>
             {draft.frozen ? <Badge variant="secondary">已冻结</Badge> : null}
           </div>
           <div className="flex flex-wrap gap-2">

@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import type {
   StyleBinding,
@@ -48,6 +49,7 @@ import { normalizeWritingFormulaMode } from "./writingFormulaV2.shared";
 type WorkspaceDialog = null | "editor" | "workbench" | "clean";
 
 export default function WritingFormulaPage() {
+  const { t } = useTranslation();
   const llm = useLLMStore();
   const queryClient = useQueryClient();
   const navigate = useNavigate();
@@ -151,8 +153,8 @@ export default function WritingFormulaPage() {
     [profiles, selectedProfileId],
   );
   const landingProfileItems = useMemo(
-    () => buildLandingProfileItems({ profiles, allBindings, novelTitleMap }),
-    [allBindings, novelTitleMap, profiles],
+    () => buildLandingProfileItems({ profiles, allBindings, novelTitleMap, t }),
+    [allBindings, novelTitleMap, profiles, t],
   );
 
   const openWorkspaceDialog = (dialog: Exclude<WorkspaceDialog, null>, profileId?: string) => {

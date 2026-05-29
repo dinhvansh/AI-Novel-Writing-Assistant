@@ -1,4 +1,6 @@
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
+import type { TFunction } from "i18next";
 import AiButton from "@/components/common/AiButton";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -12,10 +14,31 @@ import DirectorTakeoverEntryPanel from "./DirectorTakeoverEntryPanel";
 
 type OutlineCharacterResource = NonNullable<OutlineTabViewProps["characterResources"]>[number];
 
-function versionStatusLabel(status: "draft" | "active" | "frozen"): string {
-  if (status === "active") return "已生效";
-  if (status === "frozen") return "已冻结";
-  return "草稿";
+type ReadinessStepKey =
+  | "canGenerateStrategy"
+  | "canGenerateSkeleton"
+  | "canGenerateBeatSheet"
+  | "canGenerateChapterList";
+
+const READINESS_STEP_KEYS: readonly ReadinessStepKey[] = [
+  "canGenerateStrategy",
+  "canGenerateSkeleton",
+  "canGenerateBeatSheet",
+  "canGenerateChapterList",
+] as const;
+
+function buildReadinessSteps(t: TFunction) {
+  return READINESS_STEP_KEYS.map((key) => ({
+    key,
+    label: t(`novel:outline.readiness.steps.${key}.label`),
+    description: t(`novel:outline.readiness.steps.${key}.description`),
+  }));
+}
+
+function versionStatusLabel(status: "draft" | "active" | "frozen", t: TFunction): string {
+  if (status === "active") return t("novel:outline.versionControl.statusActive");
+  if (status === "frozen") return t("novel:outline.versionControl.statusFrozen");
+  return t("novel:outline.versionControl.statusDraft");
 }
 
 function versionStatusVariant(status: "draft" | "active" | "frozen"): "secondary" | "outline" | "default" {
@@ -24,60 +47,42 @@ function versionStatusVariant(status: "draft" | "active" | "frozen"): "secondary
   return "secondary";
 }
 
-const readinessSteps = [
-  {
-    key: "canGenerateStrategy",
-    label: "卷战略",
-    description: "先拿到推荐卷数、硬/软规划和升级梯度。",
-  },
-  {
-    key: "canGenerateSkeleton",
-    label: "卷骨架",
-    description: "确认每卷的开卷抓手、压迫源和兑现方式。",
-  },
-  {
-    key: "canGenerateBeatSheet",
-    label: "节奏板",
-    description: "卷骨架稳定后，才适合进入单卷节奏拆分。",
-  },
-  {
-    key: "canGenerateChapterList",
-    label: "拆章节",
-    description: "节奏板准备好后，才能继续拆到章节级别。",
-  },
-] as const;
-
-function getNextOutlineAction(readiness: OutlineTabViewProps["readiness"]): string {
-  if (!readiness.canGenerateStrategy) return "先生成卷战略建议";
-  if (!readiness.canGenerateSkeleton) return "现在适合生成全书卷骨架";
-  if (!readiness.canGenerateBeatSheet) return "卷骨架已准备好，下一步进入节奏 / 拆章";
-  if (!readiness.canGenerateChapterList) return "先做当前卷节奏板，再拆当前卷章节";
-  return "卷战略阶段已齐备，可以继续进入节奏 / 拆章";
+function getNextOutlineAction(readiness: OutlineTabViewProps["readiness"], t: TFunction): string {
+  if (!readiness.canGenerateStrategy) return t("novel:outline.readiness.nextActions.generateStrategyFirst");
+  if (!readiness.canGenerateSkeleton) return t("novel:outline.readiness.nextActions.generateSkeletonNow");
+  if (!readiness.canGenerateBeatSheet) return t("novel:outline.readiness.nextActions.skeletonReady");
+  if (!readiness.canGenerateChapterList) return t("novel:outline.readiness.nextActions.doBeatSheetThenChapters");
+  return t("novel:outline.readiness.nextActions.stageComplete");
 }
 
-function getResourceStatusLabel(status: OutlineCharacterResource["status"]): string {
-  const labels: Record<OutlineCharacterResource["status"], string> = {
-    available: "可用",
-    hidden: "隐藏",
-    borrowed: "借用",
-    transferred: "已转交",
-    lost: "已丢失",
-    consumed: "已消耗",
-    damaged: "受损",
-    destroyed: "毁坏",
-    stale: "淡出",
+function getResourceStatusLabel(status: OutlineCharacterResource["status"], t: TFunction): string {
+  const map: Record<OutlineCharacterResource["status"], string> = {
+    available: t("novel:outline.resourceCommitment.statusAvailable"),
+    hidden: t("novel:outline.resourceCommitment.statusHidden"),
+    borrowed: t("novel:outline.resourceCommitment.statusBorrowed"),
+    transferred: t("novel:outline.resourceCommitment.statusTransferred"),
+    lost: t("novel:outline.resourceCommitment.statusLost"),
+    consumed: t("novel:outline.resourceCommitment.statusConsumed"),
+    damaged: t("novel:outline.resourceCommitment.statusDamaged"),
+    destroyed: t("novel:outline.resourceCommitment.statusDestroyed"),
+    stale: t("novel:outline.resourceCommitment.statusStale"),
   };
-  return labels[status] ?? status;
+  return map[status] ?? status;
 }
 
-function getVolumeResourceWindow(resource: OutlineCharacterResource): string {
+function getVolumeResourceWindow(resource: OutlineCharacterResource, t: TFunction): string {
   if (resource.expectedUseStartChapterOrder || resource.expectedUseEndChapterOrder) {
-    return `预计第${resource.expectedUseStartChapterOrder ?? "?"}章至第${resource.expectedUseEndChapterOrder ?? "?"}章使用`;
+    return t("novel:outline.resourceCommitment.windowExpected", {
+      start: resource.expectedUseStartChapterOrder ?? t("novel:outline.resourceCommitment.unknownChapter"),
+      end: resource.expectedUseEndChapterOrder ?? t("novel:outline.resourceCommitment.unknownChapter"),
+    });
   }
   if (resource.lastTouchedChapterOrder) {
-    return `最近触达第${resource.lastTouchedChapterOrder}章`;
+    return t("novel:outline.resourceCommitment.windowLastTouched", {
+      order: resource.lastTouchedChapterOrder,
+    });
   }
-  return "后续章节可参考";
+  return t("novel:outline.resourceCommitment.windowFallback");
 }
 
 function isResourceRelevantToVolume(
@@ -104,6 +109,7 @@ function VolumeResourceCommitmentCard(props: {
   selectedVolume: OutlineTabViewProps["volumes"][number] | undefined;
   resources: OutlineCharacterResource[];
 }) {
+  const { t } = useTranslation();
   const relevantResources = props.resources
     .filter((resource) => isResourceRelevantToVolume(resource, props.selectedVolume))
     .slice(0, 6);
@@ -111,9 +117,9 @@ function VolumeResourceCommitmentCard(props: {
   return (
     <Card>
       <CardHeader className="pb-3">
-        <CardTitle className="text-base">本卷关键资源承诺</CardTitle>
+        <CardTitle className="text-base">{t("novel:outline.resourceCommitment.title")}</CardTitle>
         <div className="text-sm text-muted-foreground">
-          只显示会影响本卷行动边界、铺垫或后续兑现的资源。
+          {t("novel:outline.resourceCommitment.description")}
         </div>
       </CardHeader>
       <CardContent className="space-y-3">
@@ -123,19 +129,19 @@ function VolumeResourceCommitmentCard(props: {
               <div className="flex flex-wrap items-center gap-2">
                 <div className="min-w-0 flex-1 text-sm font-medium text-foreground">{resource.name}</div>
                 <Badge variant={resource.status === "available" || resource.status === "borrowed" ? "outline" : "secondary"}>
-                  {getResourceStatusLabel(resource.status)}
+                  {getResourceStatusLabel(resource.status, t)}
                 </Badge>
               </div>
               <div className="mt-1 text-xs leading-5 text-muted-foreground">{resource.summary}</div>
               <div className="mt-2 flex flex-wrap gap-2">
                 {resource.holderCharacterName ? <Badge variant="outline">{resource.holderCharacterName}</Badge> : null}
-                <Badge variant="outline">{getVolumeResourceWindow(resource)}</Badge>
+                <Badge variant="outline">{getVolumeResourceWindow(resource, t)}</Badge>
               </div>
             </div>
           ))
         ) : (
           <div className="rounded-xl border border-dashed px-4 py-5 text-sm text-muted-foreground">
-            当前卷没有需要特别盯住的角色资源承诺。
+            {t("novel:outline.resourceCommitment.emptyHint")}
           </div>
         )}
       </CardContent>
@@ -144,6 +150,8 @@ function VolumeResourceCommitmentCard(props: {
 }
 
 export default function OutlineTab(props: OutlineTabViewProps) {
+  const { t } = useTranslation();
+  const readinessSteps = buildReadinessSteps(t);
   const {
     worldInjectionSummary,
     hasCharacters,
@@ -202,14 +210,14 @@ export default function OutlineTab(props: OutlineTabViewProps) {
   const selectedVersion = volumeVersions.find((item) => item.id === selectedVersionId);
   const completedReadinessCount = readinessSteps.filter((item) => readiness[item.key]).length;
   const readinessProgress = Math.round((completedReadinessCount / Math.max(readinessSteps.length, 1)) * 100);
-  const nextOutlineAction = getNextOutlineAction(readiness);
+  const nextOutlineAction = getNextOutlineAction(readiness, t);
   const outlineStageReady = completedReadinessCount === readinessSteps.length;
   const [selectedVolumeId, setSelectedVolumeId] = useState(volumes[0]?.id ?? "");
   const volumeCountModeLabel = volumeCountGuidance.userPreferredVolumeCount != null
-    ? `当前固定 ${volumeCountGuidance.userPreferredVolumeCount} 卷`
+    ? t("novel:outline.volumeCount.modeFixed", { count: volumeCountGuidance.userPreferredVolumeCount })
     : volumeCountGuidance.respectedExistingVolumeCount != null
-      ? `当前沿用草稿 ${volumeCountGuidance.respectedExistingVolumeCount} 卷`
-      : `当前按系统建议 ${volumeCountGuidance.systemRecommendedVolumeCount} 卷`;
+      ? t("novel:outline.volumeCount.modeRespectExisting", { count: volumeCountGuidance.respectedExistingVolumeCount })
+      : t("novel:outline.volumeCount.modeSystemRecommended", { count: volumeCountGuidance.systemRecommendedVolumeCount });
 
   useEffect(() => {
     if (!volumes.some((volume) => volume.id === selectedVolumeId)) {
@@ -225,28 +233,38 @@ export default function OutlineTab(props: OutlineTabViewProps) {
   return (
     <div className="space-y-4">
       <DirectorTakeoverEntryPanel
-        title="从卷战略接管"
-        description="AI 会先判断卷战略和卷骨架是否已齐，再决定继续补缺失部分还是重跑当前步骤。"
+        title={t("novel:outline.tab.takeoverTitle")}
+        description={t("novel:outline.tab.takeoverDescription")}
         entry={props.directorTakeoverEntry}
       />
       <Card>
       <CardHeader className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
         <div className="space-y-1">
-          <CardTitle>卷战略 / 卷骨架</CardTitle>
-          <div className="text-sm text-muted-foreground">先让系统帮你决定卷数和硬/软规划，再确认可继续拆节奏板的卷骨架。</div>
+          <CardTitle>{t("novel:outline.tab.title")}</CardTitle>
+          <div className="text-sm text-muted-foreground">{t("novel:outline.tab.description")}</div>
         </div>
         <div className="flex flex-wrap gap-2">
           <AiButton variant="outline" onClick={onGenerateStrategy} disabled={isGeneratingStrategy}>
-            {isGeneratingStrategy ? "生成中..." : "生成卷战略建议"}
+            {isGeneratingStrategy
+              ? t("novel:outline.tab.actions.generating")
+              : t("novel:outline.tab.actions.generateStrategy")}
           </AiButton>
           <AiButton variant="outline" onClick={onCritiqueStrategy} disabled={isCritiquingStrategy || !strategyPlan}>
-            {isCritiquingStrategy ? "审查中..." : "AI审查卷战略"}
+            {isCritiquingStrategy
+              ? t("novel:outline.tab.actions.critiquing")
+              : t("novel:outline.tab.actions.critiqueStrategy")}
           </AiButton>
           <AiButton onClick={onGenerateSkeleton} disabled={isGeneratingSkeleton || !readiness.canGenerateSkeleton}>
-            {isGeneratingSkeleton ? "生成中..." : volumes.length > 0 ? "重生成全书卷骨架" : "生成全书卷骨架"}
+            {isGeneratingSkeleton
+              ? t("novel:outline.tab.actions.generating")
+              : volumes.length > 0
+                ? t("novel:outline.tab.actions.regenerateSkeleton")
+                : t("novel:outline.tab.actions.generateSkeleton")}
           </AiButton>
           <Button variant="secondary" onClick={onSave} disabled={isSaving}>
-            {isSaving ? "保存中..." : "保存卷工作区"}
+            {isSaving
+              ? t("novel:outline.tab.actions.saving")
+              : t("novel:outline.tab.actions.saveWorkspace")}
           </Button>
         </div>
       </CardHeader>
@@ -254,28 +272,28 @@ export default function OutlineTab(props: OutlineTabViewProps) {
         <WorldInjectionHint worldInjectionSummary={worldInjectionSummary} />
         {!hasCharacters ? (
           <div className="flex items-center justify-between gap-2 rounded-md border border-amber-200 bg-amber-50 p-2 text-xs text-amber-800">
-            <span>建议先补齐角色，再生成卷战略和卷骨架。</span>
-            <Button size="sm" variant="outline" onClick={onGoToCharacterTab}>去角色管理</Button>
+            <span>{t("novel:outline.tab.missingCharactersWarning")}</span>
+            <Button size="sm" variant="outline" onClick={onGoToCharacterTab}>{t("novel:outline.tab.goToCharacterTab")}</Button>
           </div>
         ) : null}
         <div className="flex flex-wrap items-center gap-2 rounded-md border border-border/70 bg-muted/20 p-2 text-xs text-muted-foreground">
           <span>{generationNotice}</span>
-          {hasUnsavedVolumeDraft ? <Badge variant="secondary">含未保存草稿</Badge> : null}
+          {hasUnsavedVolumeDraft ? <Badge variant="secondary">{t("novel:outline.tab.unsavedDraftBadge")}</Badge> : null}
         </div>
         <div className="grid items-start gap-3 lg:grid-cols-[1.1fr_0.9fr]">
           <div className="space-y-3">
             <Card className="self-start">
               <CardHeader className="pb-3">
                 <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-                  <CardTitle className="text-base">阶段就绪度</CardTitle>
+                  <CardTitle className="text-base">{t("novel:outline.readiness.title")}</CardTitle>
                   <Badge variant={outlineStageReady ? "default" : "outline"}>
-                    {completedReadinessCount}/{readinessSteps.length} 已就绪
+                    {t("novel:outline.readiness.completed", { count: completedReadinessCount, total: readinessSteps.length })}
                   </Badge>
                 </div>
               </CardHeader>
               <CardContent className="space-y-3 text-sm">
                 <div className="rounded-xl border border-border/70 bg-muted/20 p-3">
-                  <div className="text-xs text-muted-foreground">推荐下一步</div>
+                  <div className="text-xs text-muted-foreground">{t("novel:outline.readiness.nextRecommendation")}</div>
                   <div className="mt-1 font-medium text-foreground">{nextOutlineAction}</div>
                   <div className="mt-3 h-2 overflow-hidden rounded-full bg-muted">
                     <div
@@ -285,10 +303,10 @@ export default function OutlineTab(props: OutlineTabViewProps) {
                   </div>
                   <div className="mt-2 text-xs text-muted-foreground">
                     {outlineStageReady
-                      ? "当前卷战略阶段已经具备完整推进条件。"
+                      ? t("novel:outline.readiness.stageReady")
                       : readiness.blockingReasons.length > 0
-                        ? `还有 ${readiness.blockingReasons.length} 项阻塞条件需要处理。`
-                        : "当前可以继续推进本阶段。"}
+                        ? t("novel:outline.readiness.blockingCount", { count: readiness.blockingReasons.length })
+                        : t("novel:outline.readiness.canContinue")}
                   </div>
                 </div>
 
@@ -298,7 +316,9 @@ export default function OutlineTab(props: OutlineTabViewProps) {
                       <div className="flex items-center justify-between gap-2">
                         <div className="font-medium text-foreground">{item.label}</div>
                         <Badge variant={readiness[item.key] ? "default" : "outline"}>
-                          {readiness[item.key] ? "已就绪" : "未就绪"}
+                          {readiness[item.key]
+                            ? t("novel:outline.readiness.stepReady")
+                            : t("novel:outline.readiness.stepNotReady")}
                         </Badge>
                       </div>
                       <div className="mt-1 text-xs leading-5 text-muted-foreground">{item.description}</div>
@@ -312,7 +332,7 @@ export default function OutlineTab(props: OutlineTabViewProps) {
                   </div>
                 ) : (
                   <div className="rounded-md border border-emerald-200 bg-emerald-50 p-3 text-xs text-emerald-800">
-                    当前工作区已经具备继续推进的基础条件。
+                    {t("novel:outline.readiness.workspaceReadyHint")}
                   </div>
                 )}
                 {volumeMessage ? <div className="text-xs text-muted-foreground">{volumeMessage}</div> : null}
@@ -322,8 +342,8 @@ export default function OutlineTab(props: OutlineTabViewProps) {
             <details className="group rounded-2xl border border-border/70 bg-background/95 p-4">
               <summary className="cursor-pointer list-none">
                 <CollapsibleSummary
-                  title="卷数建议与策略审查"
-                  description="这些属于辅助决策信息。首屏先看推荐下一步和当前卷，确实需要时再展开审查与卷数控制。"
+                  title={t("novel:outline.volumeCount.panelTitle")}
+                  description={t("novel:outline.volumeCount.panelDescription")}
                   meta={<Badge variant="outline">{volumeCountModeLabel}</Badge>}
                 />
               </summary>
@@ -332,37 +352,50 @@ export default function OutlineTab(props: OutlineTabViewProps) {
                 <Card className="self-start">
                   <CardHeader className="pb-3">
                     <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-                      <CardTitle className="text-base">卷数建议</CardTitle>
+                      <CardTitle className="text-base">{t("novel:outline.volumeCount.title")}</CardTitle>
                       <Badge variant="outline">{volumeCountModeLabel}</Badge>
                     </div>
                   </CardHeader>
                   <CardContent className="space-y-3 text-sm">
                     <div className="grid gap-3 sm:grid-cols-2">
                       <div className="rounded-xl border border-border/70 bg-muted/20 p-3">
-                        <div className="text-xs text-muted-foreground">总章节预算</div>
-                        <div className="mt-1 text-lg font-semibold text-foreground">{volumeCountGuidance.chapterBudget} 章</div>
-                      </div>
-                      <div className="rounded-xl border border-border/70 bg-muted/20 p-3">
-                        <div className="text-xs text-muted-foreground">推荐卷数区间</div>
+                        <div className="text-xs text-muted-foreground">{t("novel:outline.volumeCount.chapterBudget")}</div>
                         <div className="mt-1 text-lg font-semibold text-foreground">
-                          {volumeCountGuidance.allowedVolumeCountRange.min}-{volumeCountGuidance.allowedVolumeCountRange.max} 卷
+                          {t("novel:outline.volumeCount.chapterBudgetValue", { count: volumeCountGuidance.chapterBudget })}
                         </div>
                       </div>
                       <div className="rounded-xl border border-border/70 bg-muted/20 p-3">
-                        <div className="text-xs text-muted-foreground">系统建议卷数</div>
-                        <div className="mt-1 text-lg font-semibold text-foreground">{volumeCountGuidance.systemRecommendedVolumeCount} 卷</div>
+                        <div className="text-xs text-muted-foreground">{t("novel:outline.volumeCount.recommendedRange")}</div>
+                        <div className="mt-1 text-lg font-semibold text-foreground">
+                          {t("novel:outline.volumeCount.recommendedRangeValue", {
+                            min: volumeCountGuidance.allowedVolumeCountRange.min,
+                            max: volumeCountGuidance.allowedVolumeCountRange.max,
+                          })}
+                        </div>
                       </div>
                       <div className="rounded-xl border border-border/70 bg-muted/20 p-3">
-                        <div className="text-xs text-muted-foreground">默认硬规划范围</div>
+                        <div className="text-xs text-muted-foreground">{t("novel:outline.volumeCount.systemRecommended")}</div>
                         <div className="mt-1 text-lg font-semibold text-foreground">
-                          {volumeCountGuidance.hardPlannedVolumeRange.min}-{volumeCountGuidance.hardPlannedVolumeRange.max} 卷
+                          {t("novel:outline.volumeCount.systemRecommendedValue", { count: volumeCountGuidance.systemRecommendedVolumeCount })}
+                        </div>
+                      </div>
+                      <div className="rounded-xl border border-border/70 bg-muted/20 p-3">
+                        <div className="text-xs text-muted-foreground">{t("novel:outline.volumeCount.hardPlannedRange")}</div>
+                        <div className="mt-1 text-lg font-semibold text-foreground">
+                          {t("novel:outline.volumeCount.hardPlannedRangeValue", {
+                            min: volumeCountGuidance.hardPlannedVolumeRange.min,
+                            max: volumeCountGuidance.hardPlannedVolumeRange.max,
+                          })}
                         </div>
                       </div>
                     </div>
 
                     <div className="rounded-xl border border-border/70 bg-muted/20 p-3 text-xs leading-6 text-muted-foreground">
-                      标准卷尺度按 {volumeCountGuidance.targetChapterRange.min}-{volumeCountGuidance.targetChapterRange.max} 章 / 卷设计，
-                      理想值约 {volumeCountGuidance.targetChapterRange.ideal} 章 / 卷。超长篇默认通过增加卷数来保持每卷的阶段感、升级节点和卷级回报，不再压成少数巨卷。
+                      {t("novel:outline.volumeCount.scaleHint", {
+                        min: volumeCountGuidance.targetChapterRange.min,
+                        max: volumeCountGuidance.targetChapterRange.max,
+                        ideal: volumeCountGuidance.targetChapterRange.ideal,
+                      })}
                     </div>
 
                     <div className="flex flex-wrap gap-2">
@@ -371,10 +404,12 @@ export default function OutlineTab(props: OutlineTabViewProps) {
                         variant={customVolumeCountEnabled ? "default" : "outline"}
                         onClick={() => onCustomVolumeCountEnabledChange(!customVolumeCountEnabled)}
                       >
-                        {customVolumeCountEnabled ? "收起自定义卷数" : "自定义卷数"}
+                        {customVolumeCountEnabled
+                          ? t("novel:outline.volumeCount.collapseCustom")
+                          : t("novel:outline.volumeCount.expandCustom")}
                       </Button>
                       <Button size="sm" variant="outline" onClick={onRestoreSystemRecommendedVolumeCount}>
-                        恢复系统建议
+                        {t("novel:outline.volumeCount.restoreSystem")}
                       </Button>
                     </div>
 
@@ -382,7 +417,7 @@ export default function OutlineTab(props: OutlineTabViewProps) {
                       <div className="rounded-xl border border-border/70 p-3">
                         <div className="grid gap-3 sm:grid-cols-[minmax(0,180px)_auto_auto] sm:items-end">
                           <label className="space-y-1 text-sm">
-                            <span className="text-xs text-muted-foreground">固定卷数</span>
+                            <span className="text-xs text-muted-foreground">{t("novel:outline.volumeCount.fixedCountLabel")}</span>
                             <input
                               type="number"
                               min={volumeCountGuidance.allowedVolumeCountRange.min}
@@ -392,9 +427,14 @@ export default function OutlineTab(props: OutlineTabViewProps) {
                               onChange={(event) => onCustomVolumeCountInputChange(event.target.value)}
                             />
                           </label>
-                          <Button size="sm" onClick={onApplyCustomVolumeCount}>应用固定卷数</Button>
+                          <Button size="sm" onClick={onApplyCustomVolumeCount}>
+                            {t("novel:outline.volumeCount.applyFixed")}
+                          </Button>
                           <div className="text-xs text-muted-foreground">
-                            允许范围：{volumeCountGuidance.allowedVolumeCountRange.min}-{volumeCountGuidance.allowedVolumeCountRange.max} 卷
+                            {t("novel:outline.volumeCount.allowedRangeHint", {
+                              min: volumeCountGuidance.allowedVolumeCountRange.min,
+                              max: volumeCountGuidance.allowedVolumeCountRange.max,
+                            })}
                           </div>
                         </div>
                       </div>
@@ -406,9 +446,9 @@ export default function OutlineTab(props: OutlineTabViewProps) {
                   <Card className="self-start">
                     <CardHeader className="pb-3">
                       <div className="flex items-center justify-between gap-2">
-                        <CardTitle className="text-base">卷战略审稿</CardTitle>
+                        <CardTitle className="text-base">{t("novel:outline.critique.title")}</CardTitle>
                         <Badge variant={critiqueReport.overallRisk === "high" ? "secondary" : critiqueReport.overallRisk === "medium" ? "outline" : "default"}>
-                          风险 {critiqueReport.overallRisk}
+                          {t("novel:outline.critique.riskBadge", { level: critiqueReport.overallRisk })}
                         </Badge>
                       </div>
                     </CardHeader>
@@ -440,15 +480,15 @@ export default function OutlineTab(props: OutlineTabViewProps) {
           <details className="group rounded-2xl border border-border/70 bg-background/95 p-4">
             <summary className="cursor-pointer list-none">
               <CollapsibleSummary
-                title="派生文本、版本控制与影响分析"
-                description="这部分偏向收尾和对比，不是当前卷骨架编辑时必须一直盯着看的内容。"
+                title={t("novel:outline.derivedTexts.panelTitle")}
+                description={t("novel:outline.derivedTexts.panelDescription")}
               />
             </summary>
 
             <div className="mt-4 space-y-3">
               <Card className="self-start">
                 <CardHeader>
-                  <CardTitle className="text-base">派生文本预览</CardTitle>
+                  <CardTitle className="text-base">{t("novel:outline.derivedTexts.previewTitle")}</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <textarea className="min-h-[220px] w-full rounded-md border bg-muted/20 p-3 text-sm" readOnly value={draftText} />
@@ -457,7 +497,7 @@ export default function OutlineTab(props: OutlineTabViewProps) {
 
               <Card className="self-start">
                 <CardHeader>
-                  <CardTitle className="text-base">版本控制</CardTitle>
+                  <CardTitle className="text-base">{t("novel:outline.versionControl.title")}</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-2 text-sm">
                   {volumeVersions.length > 0 ? (
@@ -465,7 +505,7 @@ export default function OutlineTab(props: OutlineTabViewProps) {
                       <select className="w-full rounded-md border bg-background p-2 text-sm" value={selectedVersionId} onChange={(event) => onSelectedVersionChange(event.target.value)}>
                         {volumeVersions.map((version) => (
                           <option key={version.id} value={version.id}>
-                            V{version.version} · {versionStatusLabel(version.status)}
+                            V{version.version} · {versionStatusLabel(version.status, t)}
                           </option>
                         ))}
                       </select>
@@ -474,36 +514,58 @@ export default function OutlineTab(props: OutlineTabViewProps) {
                           <div className="flex items-center gap-2">
                             <span className="font-medium">V{selectedVersion.version}</span>
                             <Badge variant={versionStatusVariant(selectedVersion.status)}>
-                              {versionStatusLabel(selectedVersion.status)}
+                              {versionStatusLabel(selectedVersion.status, t)}
                             </Badge>
                           </div>
-                          <div className="text-xs text-muted-foreground">创建时间：{new Date(selectedVersion.createdAt).toLocaleString()}</div>
-                          <div className="mt-1 line-clamp-4 text-xs text-muted-foreground">{selectedVersion.diffSummary || "暂无差异摘要"}</div>
+                          <div className="text-xs text-muted-foreground">
+                            {t("novel:outline.versionControl.createdAt", { value: new Date(selectedVersion.createdAt).toLocaleString() })}
+                          </div>
+                          <div className="mt-1 line-clamp-4 text-xs text-muted-foreground">
+                            {selectedVersion.diffSummary || t("novel:outline.versionControl.noDiffSummary")}
+                          </div>
                         </div>
                       ) : null}
                     </>
                   ) : (
-                    <div className="text-xs text-muted-foreground">还没有卷版本，请先保存草稿版本。</div>
+                    <div className="text-xs text-muted-foreground">{t("novel:outline.versionControl.emptyHint")}</div>
                   )}
                   <div className="flex flex-wrap gap-2">
                     <Button onClick={onCreateDraftVersion} disabled={isCreatingDraftVersion || volumes.length === 0}>
-                      {isCreatingDraftVersion ? "保存中..." : "保存为草稿版本"}
+                      {isCreatingDraftVersion
+                        ? t("novel:outline.versionControl.saving")
+                        : t("novel:outline.versionControl.saveDraft")}
                     </Button>
-                    <Button variant="outline" onClick={onLoadSelectedVersionToDraft} disabled={!selectedVersionId}>覆盖当前草稿</Button>
+                    <Button variant="outline" onClick={onLoadSelectedVersionToDraft} disabled={!selectedVersionId}>
+                      {t("novel:outline.versionControl.overrideDraft")}
+                    </Button>
                     <Button variant="secondary" onClick={onActivateVersion} disabled={isActivatingVersion || !selectedVersionId}>
-                      {isActivatingVersion ? "生效中..." : "设为生效版"}
+                      {isActivatingVersion
+                        ? t("novel:outline.versionControl.activating")
+                        : t("novel:outline.versionControl.setActive")}
                     </Button>
                     <Button variant="outline" onClick={onFreezeVersion} disabled={isFreezingVersion || !selectedVersionId}>
-                      {isFreezingVersion ? "冻结中..." : "冻结当前版本"}
+                      {isFreezingVersion
+                        ? t("novel:outline.versionControl.freezing")
+                        : t("novel:outline.versionControl.freezeCurrent")}
                     </Button>
                     <Button variant="outline" onClick={onLoadVersionDiff} disabled={isLoadingVersionDiff || !selectedVersionId}>
-                      {isLoadingVersionDiff ? "加载中..." : "查看版本差异"}
+                      {isLoadingVersionDiff
+                        ? t("novel:outline.versionControl.loadingDiff")
+                        : t("novel:outline.versionControl.viewDiff")}
                     </Button>
                   </div>
                   {diffResult ? (
                     <div className="rounded-md border p-2 text-xs">
-                      <div className="font-medium">差异预览 V{diffResult.version}</div>
-                      <div className="text-muted-foreground">变更卷 {diffResult.changedVolumeCount} | 波及章节 {diffResult.changedChapterCount} | 变更行数 {diffResult.changedLines}</div>
+                      <div className="font-medium">
+                        {t("novel:outline.versionControl.diffPreview", { version: diffResult.version })}
+                      </div>
+                      <div className="text-muted-foreground">
+                        {t("novel:outline.versionControl.diffStats", {
+                          volumes: diffResult.changedVolumeCount,
+                          chapters: diffResult.changedChapterCount,
+                          lines: diffResult.changedLines,
+                        })}
+                      </div>
                     </div>
                   ) : null}
                 </CardContent>
@@ -511,24 +573,34 @@ export default function OutlineTab(props: OutlineTabViewProps) {
 
               <Card className="self-start">
                 <CardHeader>
-                  <CardTitle className="text-base">影响分析</CardTitle>
+                  <CardTitle className="text-base">{t("novel:outline.impact.title")}</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-2 text-sm">
                   <div className="flex flex-wrap gap-2">
                     <AiButton variant="outline" onClick={onAnalyzeDraftImpact} disabled={isAnalyzingDraftImpact || volumes.length === 0}>
-                      {isAnalyzingDraftImpact ? "分析中..." : "分析当前草稿"}
+                      {isAnalyzingDraftImpact
+                        ? t("novel:outline.impact.analyzing")
+                        : t("novel:outline.impact.analyzeDraft")}
                     </AiButton>
                     <AiButton variant="outline" onClick={onAnalyzeVersionImpact} disabled={isAnalyzingVersionImpact || !selectedVersionId}>
-                      {isAnalyzingVersionImpact ? "分析中..." : "分析当前版本"}
+                      {isAnalyzingVersionImpact
+                        ? t("novel:outline.impact.analyzing")
+                        : t("novel:outline.impact.analyzeVersion")}
                     </AiButton>
                   </div>
                   {impactResult ? (
                     <div className="rounded-md border p-2 text-xs">
-                      <div className="font-medium">卷级影响预览</div>
-                      <div className="text-muted-foreground">影响卷 {impactResult.affectedVolumeCount} | 波及章节 {impactResult.affectedChapterCount} | 变更行数 {impactResult.changedLines}</div>
+                      <div className="font-medium">{t("novel:outline.impact.previewTitle")}</div>
+                      <div className="text-muted-foreground">
+                        {t("novel:outline.impact.previewStats", {
+                          volumes: impactResult.affectedVolumeCount,
+                          chapters: impactResult.affectedChapterCount,
+                          lines: impactResult.changedLines,
+                        })}
+                      </div>
                     </div>
                   ) : (
-                    <div className="text-xs text-muted-foreground">建议在生效前先做卷级影响分析。</div>
+                    <div className="text-xs text-muted-foreground">{t("novel:outline.impact.preActivateHint")}</div>
                   )}
                 </CardContent>
               </Card>
@@ -540,14 +612,18 @@ export default function OutlineTab(props: OutlineTabViewProps) {
           <CardHeader className="pb-3">
             <div className="flex flex-col gap-2 lg:flex-row lg:items-start lg:justify-between">
               <div>
-                <CardTitle className="text-base">卷战略摘要</CardTitle>
-                <div className="text-sm text-muted-foreground">先看整本书的卷级回报和升级路线，再在下面选择某一卷进入详细编辑。</div>
+                <CardTitle className="text-base">{t("novel:outline.summaryCard.title")}</CardTitle>
+                <div className="text-sm text-muted-foreground">{t("novel:outline.summaryCard.description")}</div>
               </div>
               <div className="flex flex-wrap gap-2">
                 {strategyPlan ? (
                   <>
-                    <Badge variant="outline">推荐 {strategyPlan.recommendedVolumeCount} 卷</Badge>
-                    <Badge variant="secondary">硬规划 {strategyPlan.hardPlannedVolumeCount} 卷</Badge>
+                    <Badge variant="outline">
+                      {t("novel:outline.summaryCard.recommendedBadge", { count: strategyPlan.recommendedVolumeCount })}
+                    </Badge>
+                    <Badge variant="secondary">
+                      {t("novel:outline.summaryCard.hardPlannedBadge", { count: strategyPlan.hardPlannedVolumeCount })}
+                    </Badge>
                   </>
                 ) : null}
               </div>
@@ -558,30 +634,34 @@ export default function OutlineTab(props: OutlineTabViewProps) {
               <>
                 <div className="grid gap-3 xl:grid-cols-3">
                   <div className="rounded-xl border border-border/70 bg-muted/20 p-4">
-                    <div className="text-xs text-muted-foreground">读者回报梯度</div>
+                    <div className="text-xs text-muted-foreground">{t("novel:outline.summaryCard.rewardLadder")}</div>
                     <div className="mt-2 text-sm leading-6 text-foreground">{strategyPlan.readerRewardLadder}</div>
                   </div>
                   <div className="rounded-xl border border-border/70 bg-muted/20 p-4">
-                    <div className="text-xs text-muted-foreground">升级梯度</div>
+                    <div className="text-xs text-muted-foreground">{t("novel:outline.summaryCard.escalationLadder")}</div>
                     <div className="mt-2 text-sm leading-6 text-foreground">{strategyPlan.escalationLadder}</div>
                   </div>
                   <div className="rounded-xl border border-border/70 bg-muted/20 p-4">
-                    <div className="text-xs text-muted-foreground">中盘转向</div>
+                    <div className="text-xs text-muted-foreground">{t("novel:outline.summaryCard.midpointShift")}</div>
                     <div className="mt-2 text-sm leading-6 text-foreground">{strategyPlan.midpointShift}</div>
                   </div>
                 </div>
                 <div className="rounded-xl border border-border/70 p-4 text-sm text-muted-foreground">
-                  <div className="text-xs">卷级节奏总览</div>
+                  <div className="text-xs">{t("novel:outline.summaryCard.rhythmOverview")}</div>
                   <div className="mt-2 leading-6">
                     {strategyPlan.volumes
-                      .map((volume) => `第${volume.sortOrder}卷：${volume.roleLabel}，${volume.coreReward}`)
-                      .join("；")}
+                      .map((volume) => t("novel:outline.summaryCard.volumeRhythmEntry", {
+                        order: volume.sortOrder,
+                        role: volume.roleLabel,
+                        reward: volume.coreReward,
+                      }))
+                      .join(t("novel:outline.summaryCard.rhythmJoinSeparator"))}
                   </div>
                 </div>
               </>
             ) : (
               <div className="rounded-md border border-dashed p-4 text-xs text-muted-foreground">
-                当前还没有卷战略建议。先点击“生成卷战略建议”。
+                {t("novel:outline.tab.noPlanCta")}
               </div>
             )}
           </CardContent>
@@ -602,10 +682,10 @@ export default function OutlineTab(props: OutlineTabViewProps) {
             <CardHeader className="pb-3">
               <div className="flex items-start justify-between gap-2">
                 <div>
-                  <CardTitle className="text-base">卷导航</CardTitle>
-                  <div className="text-sm text-muted-foreground">左侧用卷标题和卷描述定位当前要编辑的卷。</div>
+                  <CardTitle className="text-base">{t("novel:outline.navigationCard.title")}</CardTitle>
+                  <div className="text-sm text-muted-foreground">{t("novel:outline.navigationCard.description")}</div>
                 </div>
-                <Button size="sm" variant="outline" onClick={onAddVolume}>新增卷</Button>
+                <Button size="sm" variant="outline" onClick={onAddVolume}>{t("novel:outline.navigationCard.addVolume")}</Button>
               </div>
             </CardHeader>
             <CardContent className="space-y-3">
@@ -626,18 +706,22 @@ export default function OutlineTab(props: OutlineTabViewProps) {
                         }`}
                       >
                         <div className="flex items-center justify-between gap-2">
-                          <Badge variant={isSelected ? "default" : "outline"}>第{volume.sortOrder}卷</Badge>
+                          <Badge variant={isSelected ? "default" : "outline"}>
+                            {t("novel:outline.navigationCard.volumeOrder", { order: volume.sortOrder })}
+                          </Badge>
                           {strategyVolume ? (
                             <Badge variant={strategyVolume.planningMode === "hard" ? "secondary" : "outline"}>
-                              {strategyVolume.planningMode === "hard" ? "硬规划" : "软规划"}
+                              {strategyVolume.planningMode === "hard"
+                                ? t("novel:outline.navigationCard.planningModeHard")
+                                : t("novel:outline.navigationCard.planningModeSoft")}
                             </Badge>
                           ) : null}
                         </div>
                         <div className="mt-2 text-sm font-medium">
-                          {volume.title || strategyVolume?.roleLabel || `第${volume.sortOrder}卷`}
+                          {volume.title || strategyVolume?.roleLabel || t("novel:outline.navigationCard.fallbackVolumeTitle", { order: volume.sortOrder })}
                         </div>
                         <div className="mt-1 line-clamp-3 text-xs leading-5 text-muted-foreground">
-                          {volume.summary || volume.mainPromise || strategyVolume?.coreReward || "先补这卷的标题和描述，便于后续导航。"}
+                          {volume.summary || volume.mainPromise || strategyVolume?.coreReward || t("novel:outline.navigationCard.fallbackSummary")}
                         </div>
                       </button>
                     );
@@ -645,7 +729,7 @@ export default function OutlineTab(props: OutlineTabViewProps) {
                 </div>
               ) : (
                 <div className="rounded-md border border-dashed p-4 text-xs text-muted-foreground">
-                  当前还没有卷骨架。先生成卷战略建议，再点击“生成全书卷骨架”。
+                  {t("novel:outline.navigationCard.emptyHint")}
                 </div>
               )}
             </CardContent>
@@ -661,89 +745,107 @@ export default function OutlineTab(props: OutlineTabViewProps) {
                   <CardHeader className="pb-3">
                     <div className="flex items-center justify-between gap-2">
                       <div className="flex items-center gap-2">
-                        <Badge variant="outline">第{selectedVolume.sortOrder}卷</Badge>
+                        <Badge variant="outline">
+                          {t("novel:outline.volumeEditor.volumeOrder", { order: selectedVolume.sortOrder })}
+                        </Badge>
                         {selectedStrategyVolume ? (
                           <Badge variant={selectedStrategyVolume.planningMode === "hard" ? "secondary" : "outline"}>
-                            {selectedStrategyVolume.planningMode === "hard" ? "硬规划" : "软规划"}
+                            {selectedStrategyVolume.planningMode === "hard"
+                              ? t("novel:outline.navigationCard.planningModeHard")
+                              : t("novel:outline.navigationCard.planningModeSoft")}
                           </Badge>
                         ) : null}
                         {selectedStrategyVolume?.roleLabel ? <span className="text-sm text-muted-foreground">{selectedStrategyVolume.roleLabel}</span> : null}
                         <span className="text-sm text-muted-foreground">
                           {selectedVolume.chapters.length > 0
-                            ? `章节 ${selectedVolume.chapters[0]?.chapterOrder}-${selectedVolume.chapters[selectedVolume.chapters.length - 1]?.chapterOrder}`
-                            : "未拆章"}
+                            ? t("novel:outline.volumeEditor.chapterRange", {
+                              start: selectedVolume.chapters[0]?.chapterOrder,
+                              end: selectedVolume.chapters[selectedVolume.chapters.length - 1]?.chapterOrder,
+                            })
+                            : t("novel:outline.volumeEditor.noChapters")}
                         </span>
                       </div>
                       <div className="flex gap-2">
-                        <Button size="sm" variant="outline" onClick={() => onMoveVolume(selectedVolume.id, -1)} disabled={selectedVolume.sortOrder === 1}>上移</Button>
-                        <Button size="sm" variant="outline" onClick={() => onMoveVolume(selectedVolume.id, 1)} disabled={selectedVolume.sortOrder === volumes.length}>下移</Button>
-                        <Button size="sm" variant="outline" onClick={() => onRemoveVolume(selectedVolume.id)} disabled={volumes.length <= 1}>删除</Button>
+                        <Button size="sm" variant="outline" onClick={() => onMoveVolume(selectedVolume.id, -1)} disabled={selectedVolume.sortOrder === 1}>
+                          {t("novel:outline.volumeEditor.moveUp")}
+                        </Button>
+                        <Button size="sm" variant="outline" onClick={() => onMoveVolume(selectedVolume.id, 1)} disabled={selectedVolume.sortOrder === volumes.length}>
+                          {t("novel:outline.volumeEditor.moveDown")}
+                        </Button>
+                        <Button size="sm" variant="outline" onClick={() => onRemoveVolume(selectedVolume.id)} disabled={volumes.length <= 1}>
+                          {t("novel:outline.volumeEditor.remove")}
+                        </Button>
                       </div>
                     </div>
                   </CardHeader>
                   <CardContent className="grid gap-3 md:grid-cols-2">
                     <label className="space-y-1 text-sm md:col-span-2">
-                      <span className="text-xs text-muted-foreground">卷标题</span>
+                      <span className="text-xs text-muted-foreground">{t("novel:outline.volumeEditor.fields.title")}</span>
                       <input className="w-full rounded-md border bg-background p-2" value={selectedVolume.title} onChange={(event) => onVolumeFieldChange(selectedVolume.id, "title", event.target.value)} />
                     </label>
                     <label className="space-y-1 text-sm">
-                      <span className="text-xs text-muted-foreground">卷摘要</span>
+                      <span className="text-xs text-muted-foreground">{t("novel:outline.volumeEditor.fields.summary")}</span>
                       <textarea className="min-h-[84px] w-full rounded-md border bg-background p-2" value={selectedVolume.summary ?? ""} onChange={(event) => onVolumeFieldChange(selectedVolume.id, "summary", event.target.value)} />
                     </label>
                     <label className="space-y-1 text-sm">
-                      <span className="text-xs text-muted-foreground">开卷抓手</span>
+                      <span className="text-xs text-muted-foreground">{t("novel:outline.volumeEditor.fields.openingHook")}</span>
                       <textarea className="min-h-[84px] w-full rounded-md border bg-background p-2" value={selectedVolume.openingHook ?? ""} onChange={(event) => onVolumeFieldChange(selectedVolume.id, "openingHook", event.target.value)} />
                     </label>
                     <label className="space-y-1 text-sm">
-                      <span className="text-xs text-muted-foreground">主承诺</span>
+                      <span className="text-xs text-muted-foreground">{t("novel:outline.volumeEditor.fields.mainPromise")}</span>
                       <textarea className="min-h-[84px] w-full rounded-md border bg-background p-2" value={selectedVolume.mainPromise ?? ""} onChange={(event) => onVolumeFieldChange(selectedVolume.id, "mainPromise", event.target.value)} />
                     </label>
                     <label className="space-y-1 text-sm">
-                      <span className="text-xs text-muted-foreground">主压迫源</span>
+                      <span className="text-xs text-muted-foreground">{t("novel:outline.volumeEditor.fields.primaryPressureSource")}</span>
                       <textarea className="min-h-[84px] w-full rounded-md border bg-background p-2" value={selectedVolume.primaryPressureSource ?? ""} onChange={(event) => onVolumeFieldChange(selectedVolume.id, "primaryPressureSource", event.target.value)} />
                     </label>
                     <label className="space-y-1 text-sm">
-                      <span className="text-xs text-muted-foreground">核心卖点</span>
+                      <span className="text-xs text-muted-foreground">{t("novel:outline.volumeEditor.fields.coreSellingPoint")}</span>
                       <textarea className="min-h-[84px] w-full rounded-md border bg-background p-2" value={selectedVolume.coreSellingPoint ?? ""} onChange={(event) => onVolumeFieldChange(selectedVolume.id, "coreSellingPoint", event.target.value)} />
                     </label>
                     <label className="space-y-1 text-sm">
-                      <span className="text-xs text-muted-foreground">升级方式</span>
+                      <span className="text-xs text-muted-foreground">{t("novel:outline.volumeEditor.fields.escalationMode")}</span>
                       <textarea className="min-h-[84px] w-full rounded-md border bg-background p-2" value={selectedVolume.escalationMode ?? ""} onChange={(event) => onVolumeFieldChange(selectedVolume.id, "escalationMode", event.target.value)} />
                     </label>
                     <label className="space-y-1 text-sm">
-                      <span className="text-xs text-muted-foreground">主角变化</span>
+                      <span className="text-xs text-muted-foreground">{t("novel:outline.volumeEditor.fields.protagonistChange")}</span>
                       <textarea className="min-h-[84px] w-full rounded-md border bg-background p-2" value={selectedVolume.protagonistChange ?? ""} onChange={(event) => onVolumeFieldChange(selectedVolume.id, "protagonistChange", event.target.value)} />
                     </label>
                     <label className="space-y-1 text-sm">
-                      <span className="text-xs text-muted-foreground">中段风险</span>
+                      <span className="text-xs text-muted-foreground">{t("novel:outline.volumeEditor.fields.midVolumeRisk")}</span>
                       <textarea className="min-h-[84px] w-full rounded-md border bg-background p-2" value={selectedVolume.midVolumeRisk ?? ""} onChange={(event) => onVolumeFieldChange(selectedVolume.id, "midVolumeRisk", event.target.value)} />
                     </label>
                     <label className="space-y-1 text-sm">
-                      <span className="text-xs text-muted-foreground">卷末高潮</span>
+                      <span className="text-xs text-muted-foreground">{t("novel:outline.volumeEditor.fields.climax")}</span>
                       <textarea className="min-h-[84px] w-full rounded-md border bg-background p-2" value={selectedVolume.climax ?? ""} onChange={(event) => onVolumeFieldChange(selectedVolume.id, "climax", event.target.value)} />
                     </label>
                     <label className="space-y-1 text-sm">
-                      <span className="text-xs text-muted-foreground">兑现类型</span>
+                      <span className="text-xs text-muted-foreground">{t("novel:outline.volumeEditor.fields.payoffType")}</span>
                       <textarea className="min-h-[84px] w-full rounded-md border bg-background p-2" value={selectedVolume.payoffType ?? ""} onChange={(event) => onVolumeFieldChange(selectedVolume.id, "payoffType", event.target.value)} />
                     </label>
                     <label className="space-y-1 text-sm">
-                      <span className="text-xs text-muted-foreground">下卷钩子</span>
+                      <span className="text-xs text-muted-foreground">{t("novel:outline.volumeEditor.fields.nextVolumeHook")}</span>
                       <textarea className="min-h-[84px] w-full rounded-md border bg-background p-2" value={selectedVolume.nextVolumeHook ?? ""} onChange={(event) => onVolumeFieldChange(selectedVolume.id, "nextVolumeHook", event.target.value)} />
                     </label>
                     <label className="space-y-1 text-sm">
-                      <span className="text-xs text-muted-foreground">卷间重置点</span>
+                      <span className="text-xs text-muted-foreground">{t("novel:outline.volumeEditor.fields.resetPoint")}</span>
                       <textarea className="min-h-[84px] w-full rounded-md border bg-background p-2" value={selectedVolume.resetPoint ?? ""} onChange={(event) => onVolumeFieldChange(selectedVolume.id, "resetPoint", event.target.value)} />
                     </label>
                     <label className="space-y-1 text-sm md:col-span-2">
-                      <span className="text-xs text-muted-foreground">本卷未兑现事项</span>
-                      <textarea className="min-h-[84px] w-full rounded-md border bg-background p-2" placeholder="每行一个，或用中文逗号分隔。" value={selectedVolume.openPayoffs.join("\n")} onChange={(event) => onOpenPayoffsChange(selectedVolume.id, event.target.value)} />
+                      <span className="text-xs text-muted-foreground">{t("novel:outline.volumeEditor.fields.openPayoffs")}</span>
+                      <textarea
+                        className="min-h-[84px] w-full rounded-md border bg-background p-2"
+                        placeholder={t("novel:outline.volumeEditor.fields.openPayoffsPlaceholder")}
+                        value={selectedVolume.openPayoffs.join("\n")}
+                        onChange={(event) => onOpenPayoffsChange(selectedVolume.id, event.target.value)}
+                      />
                     </label>
                   </CardContent>
                 </Card>
               </>
             ) : (
               <div className="rounded-md border border-dashed p-6 text-sm text-muted-foreground">
-                左侧先选择一卷，或先生成全书卷骨架，再在这里编辑当前卷详情。
+                {t("novel:outline.volumeEditor.noSelection")}
               </div>
             )}
           </div>

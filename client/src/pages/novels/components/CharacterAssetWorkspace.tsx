@@ -1,4 +1,6 @@
 import { useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
+import type { TFunction } from "i18next";
 import type {
   Character,
   CharacterGender,
@@ -70,38 +72,32 @@ interface CharacterAssetWorkspaceProps {
   isBackfillingCharacterResources?: boolean;
 }
 
-const VISIBLE_PROFILE_FIELDS: Array<{ key: CharacterVisibleProfileField; label: string; placeholder: string }> = [
-  { key: "appearance", label: "样貌记忆点", placeholder: "眉眼、发型、表情习惯等能被读者记住的样貌特征" },
-  { key: "physique", label: "体态基底", placeholder: "年龄感、身形、行动姿态、身体状态基底" },
-  { key: "attireStyle", label: "常见穿着", placeholder: "日常穿着、身份外观、阶层或职业痕迹" },
-  { key: "signatureDetail", label: "标志细节", placeholder: "标志物、动作、微习惯、气味或反复可用的细节" },
-  { key: "voiceTexture", label: "声音口吻", placeholder: "声线、说话节奏、句式习惯、口吻" },
-  { key: "presenceImpression", label: "登场印象", placeholder: "首次或常规登场时给读者的直观感受" },
+const VISIBLE_PROFILE_FIELDS = (t: TFunction): Array<{ key: CharacterVisibleProfileField; label: string; placeholder: string }> => [
+  { key: "appearance", label: t("novel:character.workspace.visibleProfile.fields.appearance.label"), placeholder: t("novel:character.workspace.visibleProfile.fields.appearance.placeholder") },
+  { key: "physique", label: t("novel:character.workspace.visibleProfile.fields.physique.label"), placeholder: t("novel:character.workspace.visibleProfile.fields.physique.placeholder") },
+  { key: "attireStyle", label: t("novel:character.workspace.visibleProfile.fields.attireStyle.label"), placeholder: t("novel:character.workspace.visibleProfile.fields.attireStyle.placeholder") },
+  { key: "signatureDetail", label: t("novel:character.workspace.visibleProfile.fields.signatureDetail.label"), placeholder: t("novel:character.workspace.visibleProfile.fields.signatureDetail.placeholder") },
+  { key: "voiceTexture", label: t("novel:character.workspace.visibleProfile.fields.voiceTexture.label"), placeholder: t("novel:character.workspace.visibleProfile.fields.voiceTexture.placeholder") },
+  { key: "presenceImpression", label: t("novel:character.workspace.visibleProfile.fields.presenceImpression.label"), placeholder: t("novel:character.workspace.visibleProfile.fields.presenceImpression.placeholder") },
 ];
 
-function getSecretStatus(selectedCharacter?: Character): string {
-  if (!selectedCharacter) {
-    return "暂无";
-  }
-  if (selectedCharacter.secret?.trim()) {
-    return "存在明确秘密";
-  }
+function getSecretStatus(selectedCharacter: Character | undefined, t: TFunction): string {
+  if (!selectedCharacter) return t("novel:character.workspace.status.none");
+  if (selectedCharacter.secret?.trim()) return t("novel:character.workspace.status.hasSecret");
   const runtimeSignal = `${selectedCharacter.currentState ?? ""} ${selectedCharacter.currentGoal ?? ""}`;
-  return /秘密|隐瞒|卧底|伪装/.test(runtimeSignal) ? "已隐藏关键信息" : "暂无显性秘密";
+  // i18n-ignore: regex matches against AI-generated content in Chinese
+  return /秘密|隐瞒|卧底|伪装/.test(runtimeSignal) ? t("novel:character.workspace.status.hiddenInfo") : t("novel:character.workspace.status.noSecret");
 }
 
-function getEmotionSignal(selectedCharacter?: Character): string {
+function getEmotionSignal(selectedCharacter: Character | undefined, t: TFunction): string {
   const runtimeSignal = `${selectedCharacter?.currentState ?? ""} ${selectedCharacter?.currentGoal ?? ""}`;
-  if (/愤|怒|焦虑|崩溃|绝望/.test(runtimeSignal)) {
-    return "高压";
-  }
-  if (/平静|稳|冷静|从容/.test(runtimeSignal)) {
-    return "平稳";
-  }
-  return "待观察";
+  // i18n-ignore: regex matches against AI-generated content in Chinese
+  if (/愤|怒|焦虑|崩溃|绝望/.test(runtimeSignal)) return t("novel:character.workspace.emotion.highStress");
+  if (/平静|稳|冷静|从容/.test(runtimeSignal)) return t("novel:character.workspace.emotion.stable");
+  return t("novel:character.workspace.emotion.observe");
 }
 
-function getResourceDisplayMode(character?: Character): {
+function getResourceDisplayMode(character: Character | undefined, t: TFunction): {
   label: string;
   helper: string;
   limit: number;
@@ -110,16 +106,17 @@ function getResourceDisplayMode(character?: Character): {
   const roleText = `${character?.role ?? ""} ${character?.castRole ?? ""}`;
   if (isProtagonistCharacter(character)) {
     return {
-      label: "主角完整资源",
-      helper: "主角会完整展示道具、线索、身份凭证、底牌和消耗状态，后续章节会优先参考这些行动边界。",
+      label: t("novel:character.workspace.resource.protagonistLabel"),
+      helper: t("novel:character.workspace.resource.protagonistHelper"),
       limit: 10,
       shouldShowResource: () => true,
     };
   }
+  // i18n-ignore: regex matches against DB role values in Chinese
   if (/临时|路人|客串|一次性/.test(roleText)) {
     return {
-      label: "临时角色资源",
-      helper: "临时角色只展示会跨章复用、牵动冲突、绑定伏笔或被主角带走的资源。",
+      label: t("novel:character.workspace.resource.temporaryLabel"),
+      helper: t("novel:character.workspace.resource.temporaryHelper"),
       limit: 5,
       shouldShowResource: (item) => (
         item.narrativeFunction === "promise"
@@ -130,44 +127,23 @@ function getResourceDisplayMode(character?: Character): {
     };
   }
   return {
-    label: "长期角色关键资源",
-    helper: "长期角色优先展示会改变行动选择、关系筹码、读者知情或伏笔兑现的资源。",
+    label: t("novel:character.workspace.resource.longTermLabel"),
+    helper: t("novel:character.workspace.resource.longTermHelper"),
     limit: 6,
     shouldShowResource: (item) => item.status !== "stale",
   };
 }
 
-function getResourceStatusLabel(status: CharacterResourceLedgerItem["status"]): string {
-  const labels: Record<CharacterResourceLedgerItem["status"], string> = {
-    available: "可用",
-    hidden: "隐藏",
-    borrowed: "借用",
-    transferred: "转交",
-    lost: "丢失",
-    consumed: "已消耗",
-    damaged: "受损",
-    destroyed: "毁坏",
-    stale: "淡出",
-  };
-  return labels[status] ?? status;
+function getResourceStatusLabel(status: CharacterResourceLedgerItem["status"], t: TFunction): string {
+  return t(`novel:character.workspace.resource.status.${status}`, { defaultValue: status });
 }
 
-function getResourceFunctionLabel(value: CharacterResourceLedgerItem["narrativeFunction"]): string {
-  const labels: Record<CharacterResourceLedgerItem["narrativeFunction"], string> = {
-    tool: "工具",
-    clue: "线索",
-    weapon: "武器",
-    proof: "证据",
-    key: "钥匙",
-    cost: "代价",
-    promise: "伏笔",
-    hidden_card: "底牌",
-    constraint: "限制",
-  };
-  return labels[value] ?? value;
+function getResourceFunctionLabel(value: CharacterResourceLedgerItem["narrativeFunction"], t: TFunction): string {
+  return t(`novel:character.workspace.resource.function.${value}`, { defaultValue: value });
 }
 
 export default function CharacterAssetWorkspace(props: CharacterAssetWorkspaceProps) {
+  const { t } = useTranslation();
   const {
     characters,
     selectedCharacterId,
@@ -208,8 +184,9 @@ export default function CharacterAssetWorkspace(props: CharacterAssetWorkspacePr
     () => getLastAppearanceChapter(timelineEvents),
     [timelineEvents],
   );
-  const emotionSignal = getEmotionSignal(selectedCharacter);
-  const secretStatus = getSecretStatus(selectedCharacter);
+  const emotionSignal = getEmotionSignal(selectedCharacter, t);
+  const secretStatus = getSecretStatus(selectedCharacter, t);
+  const visibleProfileFields = VISIBLE_PROFILE_FIELDS(t);
   const selectedCharacterResources = useMemo(
     () => selectedCharacter
       ? characterResources.filter((item) => (
@@ -219,7 +196,7 @@ export default function CharacterAssetWorkspace(props: CharacterAssetWorkspacePr
       : [],
     [characterResources, selectedCharacter],
   );
-  const resourceDisplayMode = getResourceDisplayMode(selectedCharacter);
+  const resourceDisplayMode = getResourceDisplayMode(selectedCharacter, t);
   const displayedResources = selectedCharacterResources
     .filter(resourceDisplayMode.shouldShowResource)
     .slice(0, resourceDisplayMode.limit);
@@ -237,15 +214,15 @@ export default function CharacterAssetWorkspace(props: CharacterAssetWorkspacePr
       <CardHeader className="gap-3">
         <div className="flex flex-col gap-2 lg:flex-row lg:items-end lg:justify-between">
           <div className="space-y-1">
-            <CardTitle>角色资产工作台</CardTitle>
+            <CardTitle>{t("novel:character.workspace.title")}</CardTitle>
             <div className="text-sm text-muted-foreground">
-              左侧负责切换角色，右侧集中处理当前角色的状态、动机、成长弧和时间线。
+              {t("novel:character.workspace.description")}
             </div>
           </div>
           <div className="flex flex-wrap gap-2">
-            <Badge variant="outline">{characters.length} 个已建角色</Badge>
-            {selectedCharacter ? <Badge variant="secondary">当前编辑：{selectedCharacter.name}</Badge> : null}
-            {isSelectedProtagonist ? <Badge variant="outline">主角</Badge> : null}
+            <Badge variant="outline">{t("novel:character.workspace.characterCount", { count: characters.length })}</Badge>
+            {selectedCharacter ? <Badge variant="secondary">{t("novel:character.workspace.editing", { name: selectedCharacter.name })}</Badge> : null}
+            {isSelectedProtagonist ? <Badge variant="outline">{t("novel:character.workspace.protagonist")}</Badge> : null}
           </div>
         </div>
       </CardHeader>
@@ -261,7 +238,7 @@ export default function CharacterAssetWorkspace(props: CharacterAssetWorkspacePr
 
         {!selectedCharacter ? (
           <div className="flex min-h-[260px] items-center justify-center rounded-xl border border-dashed px-6 text-center text-sm text-muted-foreground">
-            先从左侧选择一个角色，再进入详细资产编辑。
+            {t("novel:character.workspace.selectHint")}
           </div>
         ) : (
           <div className="space-y-4">
@@ -271,40 +248,40 @@ export default function CharacterAssetWorkspace(props: CharacterAssetWorkspacePr
             />
             <div className="grid gap-3 lg:grid-cols-2">
               <div className="rounded-xl border p-3">
-                <div className="text-xs text-muted-foreground">运行状态</div>
-                <div className="mt-2 text-xs text-muted-foreground">当前状态：{selectedCharacter.currentState || "待补全"}</div>
-                <div className="text-xs text-muted-foreground">当前目标：{selectedCharacter.currentGoal || "待补全"}</div>
-                <div className="text-xs text-muted-foreground">情绪基调：{emotionSignal}</div>
-                <div className="text-xs text-muted-foreground">秘密状态：{secretStatus}</div>
+                <div className="text-xs text-muted-foreground">{t("novel:character.workspace.runtimeStatus.title")}</div>
+                <div className="mt-2 text-xs text-muted-foreground">{t("novel:character.workspace.runtimeStatus.currentState", { value: selectedCharacter.currentState || t("novel:character.workspace.pending") })}</div>
+                <div className="text-xs text-muted-foreground">{t("novel:character.workspace.runtimeStatus.currentGoal", { value: selectedCharacter.currentGoal || t("novel:character.workspace.pending") })}</div>
+                <div className="text-xs text-muted-foreground">{t("novel:character.workspace.runtimeStatus.emotionTone", { value: emotionSignal })}</div>
+                <div className="text-xs text-muted-foreground">{t("novel:character.workspace.runtimeStatus.secretStatus", { value: secretStatus })}</div>
               </div>
               <div className="rounded-xl border p-3">
-                <div className="text-xs text-muted-foreground">戏剧蓝图</div>
-                <div className="mt-2 text-xs text-muted-foreground">故事作用：{selectedCharacter.storyFunction || "待补全"}</div>
+                <div className="text-xs text-muted-foreground">{t("novel:character.workspace.dramaticBlueprint.title")}</div>
+                <div className="mt-2 text-xs text-muted-foreground">{t("novel:character.workspace.dramaticBlueprint.storyFunction", { value: selectedCharacter.storyFunction || t("novel:character.workspace.pending") })}</div>
                 <div className="text-xs text-muted-foreground">
-                  与主角关系：{selectedCharacter.relationToProtagonist || "待补全"}
+                  {t("novel:character.workspace.dramaticBlueprint.relationToProtagonist", { value: selectedCharacter.relationToProtagonist || t("novel:character.workspace.pending") })}
                 </div>
-                <div className="text-xs text-muted-foreground">外在目标：{selectedCharacter.outerGoal || "待补全"}</div>
-                <div className="text-xs text-muted-foreground">内在需求：{selectedCharacter.innerNeed || "待补全"}</div>
+                <div className="text-xs text-muted-foreground">{t("novel:character.workspace.dramaticBlueprint.outerGoal", { value: selectedCharacter.outerGoal || t("novel:character.workspace.pending") })}</div>
+                <div className="text-xs text-muted-foreground">{t("novel:character.workspace.dramaticBlueprint.innerNeed", { value: selectedCharacter.innerNeed || t("novel:character.workspace.pending") })}</div>
                 <div className="text-xs text-muted-foreground">
-                  恐惧 / 伤口：{selectedCharacter.fear || selectedCharacter.wound || "待补全"}
+                  {t("novel:character.workspace.dramaticBlueprint.fearWound", { value: selectedCharacter.fear || selectedCharacter.wound || t("novel:character.workspace.pending") })}
                 </div>
               </div>
               <div className="rounded-xl border p-3">
-                <div className="text-xs text-muted-foreground">性格与成长弧</div>
-                <div className="mt-2 text-xs text-muted-foreground">核心性格：{selectedCharacter.personality || "待补全"}</div>
-                <div className="text-xs text-muted-foreground">背景：{selectedCharacter.background || "待补全"}</div>
-                <div className="text-xs text-muted-foreground">成长弧：{selectedCharacter.development || "待补全"}</div>
-                <div className="text-xs text-muted-foreground">错误信念：{selectedCharacter.misbelief || "待补全"}</div>
-                <div className="text-xs text-muted-foreground">道德底线：{selectedCharacter.moralLine || "待补全"}</div>
+                <div className="text-xs text-muted-foreground">{t("novel:character.workspace.personality.title")}</div>
+                <div className="mt-2 text-xs text-muted-foreground">{t("novel:character.workspace.personality.core", { value: selectedCharacter.personality || t("novel:character.workspace.pending") })}</div>
+                <div className="text-xs text-muted-foreground">{t("novel:character.workspace.personality.background", { value: selectedCharacter.background || t("novel:character.workspace.pending") })}</div>
+                <div className="text-xs text-muted-foreground">{t("novel:character.workspace.personality.development", { value: selectedCharacter.development || t("novel:character.workspace.pending") })}</div>
+                <div className="text-xs text-muted-foreground">{t("novel:character.workspace.personality.misbelief", { value: selectedCharacter.misbelief || t("novel:character.workspace.pending") })}</div>
+                <div className="text-xs text-muted-foreground">{t("novel:character.workspace.personality.moralLine", { value: selectedCharacter.moralLine || t("novel:character.workspace.pending") })}</div>
               </div>
             </div>
 
             <div className="rounded-xl border p-3">
               <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
                 <div>
-                  <div className="text-sm font-medium">外显资料</div>
+                  <div className="text-sm font-medium">{t("novel:character.workspace.visibleProfile.title")}</div>
                   <div className="mt-1 text-xs leading-5 text-muted-foreground">
-                    补齐角色的外貌、体态、声音和登场记忆点，后续章节会优先带入高辨识信息。
+                    {t("novel:character.workspace.visibleProfile.description")}
                   </div>
                 </div>
                 <div className="flex flex-wrap gap-2">
@@ -314,7 +291,7 @@ export default function CharacterAssetWorkspace(props: CharacterAssetWorkspacePr
                     onClick={() => onGenerateVisibleProfile(visibleProfileGuidance)}
                     disabled={isGeneratingVisibleProfile || !selectedCharacterId}
                   >
-                    {isGeneratingVisibleProfile ? "生成中..." : "AI 补全外显资料"}
+                    {isGeneratingVisibleProfile ? t("novel:character.workspace.visibleProfile.generating") : t("novel:character.workspace.visibleProfile.generate")}
                   </AiButton>
                   <AiButton
                     size="sm"
@@ -322,24 +299,24 @@ export default function CharacterAssetWorkspace(props: CharacterAssetWorkspacePr
                     onClick={() => onGenerateBatchVisibleProfiles(visibleProfileGuidance)}
                     disabled={isGeneratingBatchVisibleProfiles || characters.length === 0}
                   >
-                    {isGeneratingBatchVisibleProfiles ? "生成中..." : "批量补全角色外显资料"}
+                    {isGeneratingBatchVisibleProfiles ? t("novel:character.workspace.visibleProfile.generating") : t("novel:character.workspace.visibleProfile.generateBatch")}
                   </AiButton>
                 </div>
               </div>
               <div className="mt-3">
                 <textarea
                   className="min-h-[72px] w-full rounded-md border bg-background p-2 text-sm"
-                  placeholder="补全倾向（可选）：例如更有压迫感、带一点病弱感、声音更温和、不要写成传统美人"
+                  placeholder={t("novel:character.workspace.visibleProfile.guidancePlaceholder")}
                   value={visibleProfileGuidance}
                   onChange={(event) => setVisibleProfileGuidance(event.target.value)}
                 />
                 <div className="mt-1 text-xs text-muted-foreground">
-                  留空时按小说设定自动补齐；填写后，AI 会优先按你的倾向生成可写入建议。
+                  {t("novel:character.workspace.visibleProfile.guidanceHint")}
                 </div>
               </div>
               {isGeneratingVisibleProfile ? (
                 <div className="mt-3 rounded-lg border border-primary/30 bg-primary/5 p-3 text-sm text-muted-foreground">
-                  正在为“{selectedCharacter.name}”整理外貌、体态、声音和登场记忆点。
+                  {t("novel:character.workspace.visibleProfile.generatingFor", { name: selectedCharacter.name })}
                 </div>
               ) : null}
               {hasVisibleProfileSuggestionForSelected && visibleProfileSuggestion ? (
@@ -349,10 +326,10 @@ export default function CharacterAssetWorkspace(props: CharacterAssetWorkspacePr
                       <div className="text-sm font-medium">
                         {applicableVisibleProfileCount > 0
                           ? `已为“${visibleProfileSuggestion.characterName}”生成 ${applicableVisibleProfileCount} 项可写入外显资料`
-                          : `“${visibleProfileSuggestion.characterName}”当前没有可写入的外显资料`}
+                          : `“{t("novel:character.workspace.visibleProfile.noApplicableFor", { name: visibleProfileSuggestion.characterName })}`}
                       </div>
                       <div className="mt-1 text-xs text-muted-foreground">
-                        请先看下面差异，确认后点击保存到角色卡。
+                        {t("novel:character.workspace.visibleProfile.confirmHint")}
                       </div>
                     </div>
                     <Button
@@ -360,25 +337,25 @@ export default function CharacterAssetWorkspace(props: CharacterAssetWorkspacePr
                       onClick={onApplyVisibleProfile}
                       disabled={isApplyingVisibleProfile || applicableVisibleProfileCount === 0}
                     >
-                      {isApplyingVisibleProfile ? "保存中..." : "保存到角色卡"}
+                      {isApplyingVisibleProfile ? t("novel:character.workspace.visibleProfile.saving") : t("novel:character.workspace.visibleProfile.save")}
                     </Button>
                   </div>
                   {visibleProfileSuggestion.warnings.length > 0 ? (
                     <div className="mt-3 rounded-md border border-amber-200 bg-amber-50 p-2 text-xs leading-5 text-amber-900">
                       {visibleProfileSuggestion.warnings.map((warning) => (
-                        <div key={warning}>提醒：{warning}</div>
+                        <div key={warning}>{t("novel:character.workspace.visibleProfile.warning", { text: warning })}</div>
                       ))}
                     </div>
                   ) : null}
                   <div className="mt-2 grid gap-2 lg:grid-cols-2">
-                    {VISIBLE_PROFILE_FIELDS.map((field) => {
+                    {visibleProfileFields.map((field) => {
                       const nextValue = visibleProfileSuggestion.fields[field.key];
                       const skippedReason = visibleProfileSuggestion.skippedFields[field.key];
                       return (
                         <div key={field.key} className="rounded-md border bg-background/80 p-2 text-xs leading-5">
                           <div className="font-medium">{field.label}</div>
-                          <div className="text-muted-foreground">当前：{selectedCharacter[field.key] || "待补全"}</div>
-                          <div>建议：{nextValue || skippedReason || "暂不写入"}</div>
+                          <div className="text-muted-foreground">{t("novel:character.workspace.visibleProfile.current", { value: selectedCharacter[field.key] || t("novel:character.workspace.pending") })}</div>
+                          <div>{t("novel:character.workspace.visibleProfile.suggestion", { value: nextValue || skippedReason || t("novel:character.workspace.visibleProfile.skip") })}</div>
                         </div>
                       );
                     })}
@@ -387,21 +364,21 @@ export default function CharacterAssetWorkspace(props: CharacterAssetWorkspacePr
               ) : null}
               {!isGeneratingVisibleProfile && !hasVisibleProfileSuggestionForSelected ? (
                 <div className="mt-3 rounded-lg border border-dashed p-3 text-xs text-muted-foreground">
-                  点击“AI 补全外显资料”后，会先在这里显示即将保存的差异；确认后再保存到角色卡。
+                  {t("novel:character.workspace.visibleProfile.emptyHint")}
                 </div>
               ) : null}
               {batchVisibleProfileResult ? (
                 <div className="mt-3 rounded-lg border border-border/70 p-3">
                   <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
                     <div className="text-sm font-medium">
-                      批量建议：{batchApplicableCount} 个角色可写入
+                      {t("novel:character.workspace.visibleProfile.batchSuggestion", { count: batchApplicableCount })}
                     </div>
                     <Button
                       size="sm"
                       onClick={onApplyBatchVisibleProfiles}
                       disabled={isApplyingBatchVisibleProfiles || batchApplicableCount === 0}
                     >
-                      {isApplyingBatchVisibleProfiles ? "写入中..." : "写入批量结果"}
+                      {isApplyingBatchVisibleProfiles ? t("novel:character.workspace.visibleProfile.applying") : t("novel:character.workspace.visibleProfile.applyBatch")}
                     </Button>
                   </div>
                   <div className="mt-2 max-h-64 space-y-2 overflow-auto pr-1">
@@ -410,10 +387,10 @@ export default function CharacterAssetWorkspace(props: CharacterAssetWorkspacePr
                         <div className="font-medium">{result.characterName}</div>
                         <div className="text-muted-foreground">
                           {result.hasApplicableChanges
-                            ? `可写入 ${Object.keys(result.fields).length} 项`
-                            : "没有可写入项"}
+                            ? `{t("novel:character.workspace.visibleProfile.applicableCount", { count: Object.keys(result.fields).length })}`
+                            : t("novel:character.workspace.visibleProfile.noApplicable")}
                         </div>
-                        <div>{VISIBLE_PROFILE_FIELDS.map((field) => result.fields[field.key]).filter(Boolean).join(" / ")}</div>
+                        <div>{visibleProfileFields.map((field) => result.fields[field.key]).filter(Boolean).join(" / ")}</div>
                       </div>
                     ))}
                     {batchVisibleProfileResult.skippedCharacters.map((item) => (
@@ -425,10 +402,10 @@ export default function CharacterAssetWorkspace(props: CharacterAssetWorkspacePr
                 </div>
               ) : null}
               <div className="mt-3 grid gap-2 lg:grid-cols-2">
-                {VISIBLE_PROFILE_FIELDS.map((field) => (
+                {visibleProfileFields.map((field) => (
                   <div key={field.key} className="rounded-lg border border-border/70 bg-muted/15 p-3">
                     <div className="text-xs font-medium text-muted-foreground">{field.label}</div>
-                    <div className="mt-1 text-sm leading-6">{selectedCharacter[field.key] || "待补全"}</div>
+                    <div className="mt-1 text-sm leading-6">{selectedCharacter[field.key] || t("novel:character.workspace.pending")}</div>
                   </div>
                 ))}
               </div>
@@ -437,7 +414,7 @@ export default function CharacterAssetWorkspace(props: CharacterAssetWorkspacePr
             <div className="rounded-xl border p-3">
               <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
                 <div>
-                  <div className="text-sm font-medium">关键资源</div>
+                  <div className="text-sm font-medium">{t("novel:character.workspace.resource.title")}</div>
                   <div className="mt-1 text-xs leading-5 text-muted-foreground">{resourceDisplayMode.helper}</div>
                 </div>
                 <div className="flex flex-wrap gap-2">
@@ -448,11 +425,11 @@ export default function CharacterAssetWorkspace(props: CharacterAssetWorkspacePr
                     onClick={() => onBackfillCharacterResources?.()}
                     disabled={isBackfillingCharacterResources || !onBackfillCharacterResources}
                   >
-                    {isBackfillingCharacterResources ? "回填中..." : "回填最近章节"}
+                    {isBackfillingCharacterResources ? t("novel:character.workspace.resource.backfilling") : t("novel:character.workspace.resource.backfill")}
                   </Button>
                   <Badge variant="outline">{resourceDisplayMode.label}</Badge>
                   {pendingCharacterResourceCount > 0 ? (
-                    <Badge variant="secondary">{pendingCharacterResourceCount} 条资源变更待确认</Badge>
+                    <Badge variant="secondary">{t("novel:character.workspace.resource.pendingCount", { count: pendingCharacterResourceCount })}</Badge>
                   ) : null}
                 </div>
               </div>
@@ -464,19 +441,19 @@ export default function CharacterAssetWorkspace(props: CharacterAssetWorkspacePr
                       <div className="flex flex-wrap items-center gap-2">
                         <div className="font-medium">{resource.name}</div>
                         <Badge variant={resource.status === "available" || resource.status === "borrowed" ? "default" : "outline"}>
-                          {getResourceStatusLabel(resource.status)}
+                          {getResourceStatusLabel(resource.status, t)}
                         </Badge>
-                        <Badge variant="secondary">{getResourceFunctionLabel(resource.narrativeFunction)}</Badge>
+                        <Badge variant="secondary">{getResourceFunctionLabel(resource.narrativeFunction, t)}</Badge>
                       </div>
                       <div className="mt-1 text-xs leading-5 text-muted-foreground">{resource.summary}</div>
                       <div className="mt-2 grid gap-1 text-xs text-muted-foreground sm:grid-cols-2">
-                        <div>持有者：{resource.holderCharacterName || selectedCharacter.name}</div>
-                        <div>读者知情：{resource.readerKnows ? "知情" : "未公开"}</div>
+                        <div>{t("novel:character.workspace.resource.holder", { name: resource.holderCharacterName || selectedCharacter.name })}</div>
+                        <div>{t("novel:character.workspace.resource.readerKnows", { value: resource.readerKnows ? t("novel:character.workspace.resource.known") : t("novel:character.workspace.resource.unknown") })}</div>
                         {resource.expectedUseEndChapterOrder ? (
-                          <div>使用窗口：第{resource.expectedUseStartChapterOrder ?? "?"}章至第{resource.expectedUseEndChapterOrder}章</div>
+                          <div>{t("novel:character.workspace.resource.useWindow", { start: resource.expectedUseStartChapterOrder ?? "?", end: resource.expectedUseEndChapterOrder })}</div>
                         ) : null}
                         {resource.constraints.length > 0 ? (
-                          <div>限制：{resource.constraints.slice(0, 2).join(" / ")}</div>
+                          <div>{t("novel:character.workspace.resource.constraints", { value: resource.constraints.slice(0, 2).join(" / ") })}</div>
                         ) : null}
                       </div>
                     </div>
@@ -484,22 +461,22 @@ export default function CharacterAssetWorkspace(props: CharacterAssetWorkspacePr
                 </div>
               ) : (
                 <div className="mt-3 rounded-lg border border-dashed p-4 text-sm text-muted-foreground">
-                  关键道具、线索、身份凭证或底牌会在章节写作后沉淀到这里；临时角色只保留会影响后续章节的资源。
+                  {t("novel:character.workspace.resource.emptyHint")}
                 </div>
               )}
             </div>
 
             <details className="rounded-xl border p-3" open>
-              <summary className="cursor-pointer font-medium">完整设定与编辑</summary>
+              <summary className="cursor-pointer font-medium">{t("novel:character.workspace.editForm.title")}</summary>
               <div className="mt-3 space-y-2">
                 <div className="grid gap-2 md:grid-cols-2">
                   <Input
-                    placeholder="角色名称"
+                    placeholder={t("novel:character.workspace.editForm.namePlaceholder")}
                     value={characterForm.name}
                     onChange={(event) => onCharacterFormChange("name", event.target.value)}
                   />
                   <Input
-                    placeholder="角色定位"
+                    placeholder={t("novel:character.workspace.editForm.rolePlaceholder")}
                     value={characterForm.role}
                     onChange={(event) => onCharacterFormChange("role", event.target.value)}
                   />
@@ -510,44 +487,44 @@ export default function CharacterAssetWorkspace(props: CharacterAssetWorkspacePr
                     value={characterForm.gender}
                     onChange={(event) => onCharacterFormChange("gender", event.target.value)}
                   >
-                    <option value="unknown">性别：未知</option>
-                    <option value="male">性别：男</option>
-                    <option value="female">性别：女</option>
-                    <option value="other">性别：其他</option>
+                    <option value="unknown">{t("novel:character.workspace.editForm.gender.unknown")}</option>
+                    <option value="male">{t("novel:character.workspace.editForm.gender.male")}</option>
+                    <option value="female">{t("novel:character.workspace.editForm.gender.female")}</option>
+                    <option value="other">{t("novel:character.workspace.editForm.gender.other")}</option>
                   </select>
                 </div>
                 <div className="grid gap-2 md:grid-cols-2">
                   <Input
-                    placeholder="当前状态（例如：重伤闭关）"
+                    placeholder={t("novel:character.workspace.editForm.currentStatePlaceholder")}
                     value={characterForm.currentState}
                     onChange={(event) => onCharacterFormChange("currentState", event.target.value)}
                   />
                   <Input
-                    placeholder="当前目标（例如：三个月内突破）"
+                    placeholder={t("novel:character.workspace.editForm.currentGoalPlaceholder")}
                     value={characterForm.currentGoal}
                     onChange={(event) => onCharacterFormChange("currentGoal", event.target.value)}
                   />
                 </div>
                 <textarea
                   className="min-h-[80px] w-full rounded-md border bg-background p-2 text-sm"
-                  placeholder="性格补充"
+                  placeholder={t("novel:character.workspace.editForm.personalityPlaceholder")}
                   value={characterForm.personality}
                   onChange={(event) => onCharacterFormChange("personality", event.target.value)}
                 />
                 <textarea
                   className="min-h-[80px] w-full rounded-md border bg-background p-2 text-sm"
-                  placeholder="背景补充"
+                  placeholder={t("novel:character.workspace.editForm.backgroundPlaceholder")}
                   value={characterForm.background}
                   onChange={(event) => onCharacterFormChange("background", event.target.value)}
                 />
                 <textarea
                   className="min-h-[80px] w-full rounded-md border bg-background p-2 text-sm"
-                  placeholder="成长弧补充"
+                  placeholder={t("novel:character.workspace.editForm.developmentPlaceholder")}
                   value={characterForm.development}
                   onChange={(event) => onCharacterFormChange("development", event.target.value)}
                 />
                 <div className="grid gap-2 md:grid-cols-2">
-                  {VISIBLE_PROFILE_FIELDS.map((field) => (
+                  {visibleProfileFields.map((field) => (
                     <textarea
                       key={field.key}
                       className="min-h-[72px] w-full rounded-md border bg-background p-2 text-sm"
@@ -559,10 +536,10 @@ export default function CharacterAssetWorkspace(props: CharacterAssetWorkspacePr
                 </div>
                 <div className="flex flex-wrap gap-2">
                   <Button size="sm" onClick={onSaveCharacter} disabled={isSavingCharacter}>
-                    {isSavingCharacter ? "保存中..." : "保存角色资产"}
+                    {isSavingCharacter ? t("novel:character.workspace.visibleProfile.saving") : t("novel:character.workspace.editForm.save")}
                   </Button>
                   <AiButton size="sm" variant="outline" onClick={onSyncTimeline} disabled={isSyncingTimeline}>
-                    {isSyncingTimeline ? "同步中..." : "同步角色时间线"}
+                    {isSyncingTimeline ? t("novel:character.workspace.editForm.syncing") : t("novel:character.workspace.editForm.syncTimeline")}
                   </AiButton>
                   <AiButton
                     size="sm"
@@ -570,29 +547,29 @@ export default function CharacterAssetWorkspace(props: CharacterAssetWorkspacePr
                     onClick={onSyncAllTimeline}
                     disabled={isSyncingAllTimeline}
                   >
-                    {isSyncingAllTimeline ? "同步中..." : "同步全部角色时间线"}
+                    {isSyncingAllTimeline ? t("novel:character.workspace.editForm.syncing") : t("novel:character.workspace.editForm.syncAllTimeline")}
                   </AiButton>
                   <AiButton size="sm" variant="outline" onClick={onWorldCheck} disabled={isCheckingWorld}>
-                    {isCheckingWorld ? "检查中..." : "检查世界一致性"}
+                    {isCheckingWorld ? t("novel:character.workspace.editForm.checking") : t("novel:character.workspace.editForm.worldCheck")}
                   </AiButton>
                 </div>
               </div>
             </details>
 
             <details className="rounded-xl border p-3">
-              <summary className="cursor-pointer font-medium">成长弧节点</summary>
+              <summary className="cursor-pointer font-medium">{t("novel:character.workspace.arcNodes.title")}</summary>
               <div className="mt-3 space-y-1 text-xs text-muted-foreground">
-                <div>起点：{selectedCharacter.arcStart || "待补全"}</div>
-                <div>中段转折：{selectedCharacter.arcMidpoint || "待补全"}</div>
-                <div>高潮选择：{selectedCharacter.arcClimax || "待补全"}</div>
-                <div>终点状态：{selectedCharacter.arcEnd || "待补全"}</div>
-                <div>首次印象：{selectedCharacter.firstImpression || "待补全"}</div>
-                <div>隐藏秘密：{selectedCharacter.secret || "待补全"}</div>
+                <div>{t("novel:character.workspace.arcNodes.arcStart", { value: selectedCharacter.arcStart || t("novel:character.workspace.pending") })}</div>
+                <div>{t("novel:character.workspace.arcNodes.arcMidpoint", { value: selectedCharacter.arcMidpoint || t("novel:character.workspace.pending") })}</div>
+                <div>{t("novel:character.workspace.arcNodes.arcClimax", { value: selectedCharacter.arcClimax || t("novel:character.workspace.pending") })}</div>
+                <div>{t("novel:character.workspace.arcNodes.arcEnd", { value: selectedCharacter.arcEnd || t("novel:character.workspace.pending") })}</div>
+                <div>{t("novel:character.workspace.arcNodes.firstImpression", { value: selectedCharacter.firstImpression || t("novel:character.workspace.pending") })}</div>
+                <div>{t("novel:character.workspace.arcNodes.secret", { value: selectedCharacter.secret || t("novel:character.workspace.pending") })}</div>
               </div>
             </details>
 
             <div className="space-y-2">
-              <div className="text-sm font-medium">角色事件流（最近 12 条）</div>
+              <div className="text-sm font-medium">{t("novel:character.workspace.timeline.title")}</div>
               {timelineEvents.length > 0 ? (
                 timelineEvents.slice(-12).reverse().map((event) => (
                   <div key={event.id} className="rounded-xl border p-3">
@@ -601,7 +578,7 @@ export default function CharacterAssetWorkspace(props: CharacterAssetWorkspacePr
                       <Badge variant="outline">{event.source}</Badge>
                     </div>
                     <div className="text-xs text-muted-foreground">
-                      {event.chapterOrder ? `章节 ${event.chapterOrder}` : "无章节归属"} ·{" "}
+                      {event.chapterOrder ? t("novel:character.workspace.timeline.chapter", { order: event.chapterOrder }) : t("novel:character.workspace.timeline.noChapter")} ·{" "}
                       {new Date(event.createdAt).toLocaleString()}
                     </div>
                     <div className="mt-1 text-xs text-muted-foreground">{event.content}</div>
@@ -609,7 +586,7 @@ export default function CharacterAssetWorkspace(props: CharacterAssetWorkspacePr
                 ))
               ) : (
                 <div className="rounded-xl border border-dashed p-4 text-sm text-muted-foreground">
-                  暂无事件，先点击“同步角色时间线”。
+                  {t("novel:character.workspace.timeline.emptyHint")}
                 </div>
               )}
             </div>

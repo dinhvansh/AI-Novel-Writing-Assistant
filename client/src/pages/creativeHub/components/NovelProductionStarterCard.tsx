@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import type { CreativeHubProductionStatus } from "@ai-novel/shared/types/creativeHub";
 import { getNovelDetail, updateNovel } from "@/api/novel";
 import { Button } from "@/components/ui/button";
@@ -12,62 +13,67 @@ interface NovelProductionStarterCardProps {
   onQuickAction?: (prompt: string) => void;
 }
 
+// Internal enum values — kept in Chinese to match DB/API contracts
+// i18n-ignore: these are internal enum keys, not UI display text
+const POV_VALUES = {
+  first_person: "第一人称",
+  third_person: "第三人称",
+  mixed: "混合视角",
+} as const;
+
+const PACE_VALUES = {
+  slow: "慢节奏",
+  balanced: "均衡节奏",
+  fast: "快节奏",
+} as const;
+
+const PROJECT_MODE_VALUES = {
+  ai_led: "AI 主导",
+  co_pilot: "人机协作",
+  draft_mode: "草稿优先",
+  auto_pipeline: "自动流水线",
+} as const;
+
+const LEVEL_VALUES = {
+  low: "低",
+  medium: "中",
+  high: "高",
+} as const;
+
 function fromNarrativePov(value: "first_person" | "third_person" | "mixed" | null | undefined): string {
-  if (value === "first_person") return "第一人称";
-  if (value === "third_person") return "第三人称";
-  if (value === "mixed") return "混合视角";
-  return "";
+  return POV_VALUES[value as keyof typeof POV_VALUES] ?? "";
 }
 
 function toNarrativePov(value: string): "first_person" | "third_person" | "mixed" | null {
-  if (value === "第一人称") return "first_person";
-  if (value === "第三人称") return "third_person";
-  if (value === "混合视角") return "mixed";
-  return null;
+  const entry = Object.entries(POV_VALUES).find(([, v]) => v === value);
+  return entry ? entry[0] as "first_person" | "third_person" | "mixed" : null;
 }
 
 function fromPacePreference(value: "slow" | "balanced" | "fast" | null | undefined): string {
-  if (value === "slow") return "慢节奏";
-  if (value === "balanced") return "均衡节奏";
-  if (value === "fast") return "快节奏";
-  return "";
+  return PACE_VALUES[value as keyof typeof PACE_VALUES] ?? "";
 }
 
 function toPacePreference(value: string): "slow" | "balanced" | "fast" | null {
-  if (value === "慢节奏") return "slow";
-  if (value === "均衡节奏") return "balanced";
-  if (value === "快节奏") return "fast";
-  return null;
+  const entry = Object.entries(PACE_VALUES).find(([, v]) => v === value);
+  return entry ? entry[0] as "slow" | "balanced" | "fast" : null;
 }
 
 function fromProjectMode(value: "ai_led" | "co_pilot" | "draft_mode" | "auto_pipeline" | null | undefined): string {
-  if (value === "ai_led") return "AI 主导";
-  if (value === "co_pilot") return "人机协作";
-  if (value === "draft_mode") return "草稿优先";
-  if (value === "auto_pipeline") return "自动流水线";
-  return "";
+  return PROJECT_MODE_VALUES[value as keyof typeof PROJECT_MODE_VALUES] ?? "";
 }
 
 function toProjectMode(value: string): "ai_led" | "co_pilot" | "draft_mode" | "auto_pipeline" | null {
-  if (value === "AI 主导") return "ai_led";
-  if (value === "人机协作") return "co_pilot";
-  if (value === "草稿优先") return "draft_mode";
-  if (value === "自动流水线") return "auto_pipeline";
-  return null;
+  const entry = Object.entries(PROJECT_MODE_VALUES).find(([, v]) => v === value);
+  return entry ? entry[0] as "ai_led" | "co_pilot" | "draft_mode" | "auto_pipeline" : null;
 }
 
 function fromLevel(value: "low" | "medium" | "high" | null | undefined): string {
-  if (value === "low") return "低";
-  if (value === "medium") return "中";
-  if (value === "high") return "高";
-  return "";
+  return LEVEL_VALUES[value as keyof typeof LEVEL_VALUES] ?? "";
 }
 
 function toLevel(value: string): "low" | "medium" | "high" | null {
-  if (value === "低") return "low";
-  if (value === "中") return "medium";
-  if (value === "高") return "high";
-  return null;
+  const entry = Object.entries(LEVEL_VALUES).find(([, v]) => v === value);
+  return entry ? entry[0] as "low" | "medium" | "high" : null;
 }
 
 function buildProductionPrompt(input: {
@@ -85,6 +91,7 @@ function buildProductionPrompt(input: {
   defaultChapterLength: number;
   worldType: string;
 }) {
+  // Prompts are sent to AI in Chinese — i18n-ignore: AI prompt content
   const description = input.description.trim();
   const genre = input.genre.trim();
   const styleTone = input.styleTone.trim();
@@ -98,70 +105,30 @@ function buildProductionPrompt(input: {
   const targetChapterCount = Math.max(1, Math.min(200, Math.floor(input.targetChapterCount || 20)));
   if (input.currentNovelId) {
     const segments = [`继续生成当前小说。目标章节数：${targetChapterCount}。`];
-    if (description) {
-      segments.push(`补充设定：${description}。`);
-    }
-    if (genre) {
-      segments.push(`题材偏好：${genre}。`);
-    }
-    if (styleTone) {
-      segments.push(`风格基调：${styleTone}。`);
-    }
-    if (narrativePov) {
-      segments.push(`叙事视角：${narrativePov}。`);
-    }
-    if (pacePreference) {
-      segments.push(`推进节奏：${pacePreference}。`);
-    }
-    if (projectMode) {
-      segments.push(`协作模式：${projectMode}。`);
-    }
-    if (emotionIntensity) {
-      segments.push(`情绪强度：${emotionIntensity}。`);
-    }
-    if (aiFreedom) {
-      segments.push(`AI 自由度：${aiFreedom}。`);
-    }
-    if (defaultChapterLength) {
-      segments.push(`默认章长：约 ${defaultChapterLength} 字。`);
-    }
-    if (worldType) {
-      segments.push(`世界观类型偏好：${worldType}。`);
-    }
+    if (description) segments.push(`补充设定：${description}。`);
+    if (genre) segments.push(`题材偏好：${genre}。`);
+    if (styleTone) segments.push(`风格基调：${styleTone}。`);
+    if (narrativePov) segments.push(`叙事视角：${narrativePov}。`);
+    if (pacePreference) segments.push(`推进节奏：${pacePreference}。`);
+    if (projectMode) segments.push(`协作模式：${projectMode}。`);
+    if (emotionIntensity) segments.push(`情绪强度：${emotionIntensity}。`);
+    if (aiFreedom) segments.push(`AI 自由度：${aiFreedom}。`);
+    if (defaultChapterLength) segments.push(`默认章长：约 ${defaultChapterLength} 字。`);
+    if (worldType) segments.push(`世界观类型偏好：${worldType}。`);
     return segments.join("");
   }
   const title = input.title.trim();
   const segments = [`创建一本${targetChapterCount}章小说《${title}》，并开始整本生成。`];
-  if (description) {
-    segments.push(`简介：${description}。`);
-  }
-  if (genre) {
-    segments.push(`题材：${genre}。`);
-  }
-  if (styleTone) {
-    segments.push(`风格基调：${styleTone}。`);
-  }
-  if (narrativePov) {
-    segments.push(`叙事视角：${narrativePov}。`);
-  }
-  if (pacePreference) {
-    segments.push(`推进节奏：${pacePreference}。`);
-  }
-  if (projectMode) {
-    segments.push(`协作模式：${projectMode}。`);
-  }
-  if (emotionIntensity) {
-    segments.push(`情绪强度：${emotionIntensity}。`);
-  }
-  if (aiFreedom) {
-    segments.push(`AI 自由度：${aiFreedom}。`);
-  }
-  if (defaultChapterLength) {
-    segments.push(`默认章长：约 ${defaultChapterLength} 字。`);
-  }
-  if (worldType) {
-    segments.push(`世界观类型：${worldType}。`);
-  }
+  if (description) segments.push(`简介：${description}。`);
+  if (genre) segments.push(`题材：${genre}。`);
+  if (styleTone) segments.push(`风格基调：${styleTone}。`);
+  if (narrativePov) segments.push(`叙事视角：${narrativePov}。`);
+  if (pacePreference) segments.push(`推进节奏：${pacePreference}。`);
+  if (projectMode) segments.push(`协作模式：${projectMode}。`);
+  if (emotionIntensity) segments.push(`情绪强度：${emotionIntensity}。`);
+  if (aiFreedom) segments.push(`AI 自由度：${aiFreedom}。`);
+  if (defaultChapterLength) segments.push(`默认章长：约 ${defaultChapterLength} 字。`);
+  if (worldType) segments.push(`世界观类型：${worldType}。`);
   return segments.join("");
 }
 
@@ -172,6 +139,7 @@ export default function NovelProductionStarterCard({
   onSubmit,
   onQuickAction,
 }: NovelProductionStarterCardProps) {
+  const { t } = useTranslation();
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [targetChapterCount, setTargetChapterCount] = useState(20);
@@ -195,19 +163,13 @@ export default function NovelProductionStarterCard({
   useEffect(() => {
     let cancelled = false;
     if (!currentNovelId) {
-      return () => {
-        cancelled = true;
-      };
+      return () => { cancelled = true; };
     }
     void getNovelDetail(currentNovelId)
       .then((response) => {
-        if (cancelled) {
-          return;
-        }
+        if (cancelled) return;
         const novel = response.data;
-        if (!novel) {
-          return;
-        }
+        if (!novel) return;
         setDescription(novel.description ?? "");
         setGenre(novel.genre?.name ?? "");
         setStyleTone(novel.styleTone ?? "");
@@ -219,9 +181,7 @@ export default function NovelProductionStarterCard({
         setDefaultChapterLength(novel.defaultChapterLength ?? 2500);
       })
       .catch(() => undefined);
-    return () => {
-      cancelled = true;
-    };
+    return () => { cancelled = true; };
   }, [currentNovelId]);
 
   const resolvedTitle = currentNovelTitle?.trim() || "";
@@ -229,40 +189,40 @@ export default function NovelProductionStarterCard({
 
   return (
     <div className="rounded-xl border border-slate-200 bg-white p-3">
-      <div className="mb-2 text-xs font-medium text-slate-500">整本生产</div>
+      <div className="mb-2 text-xs font-medium text-slate-500">{t("creativeHub:starter.title")}</div>
       <div className="space-y-3">
         <div className="rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-xs text-slate-600">
           {isContinueMode
-            ? `当前将继续生产《${resolvedTitle || "当前小说"}》。`
-            : "当前处于全局模式，可直接创建新书并启动整本生产。"}
+            ? t("creativeHub:starter.continueMode", { title: resolvedTitle || t("creativeHub:starter.currentNovel") })
+            : t("creativeHub:starter.createMode")}
         </div>
         <div className="rounded-lg border border-dashed border-slate-200 bg-white px-3 py-2 text-xs leading-5 text-slate-600">
-          建议先确认：题材、风格、视角、节奏、章长、AI 自由度。条件越完整，整本生产偏差越小。
+          {t("creativeHub:starter.hint")}
         </div>
         {!isContinueMode ? (
           <input
             className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-700 outline-none focus:border-slate-400"
-            placeholder="小说标题"
+            placeholder={t("creativeHub:starter.titlePlaceholder")}
             value={title}
             onChange={(event) => setTitle(event.target.value)}
           />
         ) : null}
         <textarea
           className="min-h-[88px] w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-700 outline-none focus:border-slate-400"
-          placeholder="简介 / 核心设定"
+          placeholder={t("creativeHub:starter.descriptionPlaceholder")}
           value={description}
           onChange={(event) => setDescription(event.target.value)}
         />
         <div className="grid gap-2 sm:grid-cols-2">
           <input
             className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-700 outline-none focus:border-slate-400"
-            placeholder="题材类型，例如：东方玄幻 / 都市悬疑"
+            placeholder={t("creativeHub:starter.genrePlaceholder")}
             value={genre}
             onChange={(event) => setGenre(event.target.value)}
           />
           <input
             className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-700 outline-none focus:border-slate-400"
-            placeholder="风格基调，例如：冷峻压抑 / 轻快热血"
+            placeholder={t("creativeHub:starter.styleTonePlaceholder")}
             value={styleTone}
             onChange={(event) => setStyleTone(event.target.value)}
           />
@@ -273,20 +233,20 @@ export default function NovelProductionStarterCard({
             value={narrativePov}
             onChange={(event) => setNarrativePov(event.target.value)}
           >
-            <option value="">叙事视角</option>
-            <option value="第一人称">第一人称</option>
-            <option value="第三人称">第三人称</option>
-            <option value="混合视角">混合视角</option>
+            <option value="">{t("creativeHub:starter.narrativePov")}</option>
+            <option value={POV_VALUES.first_person}>{t("creativeHub:starter.pov.firstPerson")}</option>
+            <option value={POV_VALUES.third_person}>{t("creativeHub:starter.pov.thirdPerson")}</option>
+            <option value={POV_VALUES.mixed}>{t("creativeHub:starter.pov.mixed")}</option>
           </select>
           <select
             className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-700 outline-none focus:border-slate-400"
             value={pacePreference}
             onChange={(event) => setPacePreference(event.target.value)}
           >
-            <option value="">推进节奏</option>
-            <option value="慢节奏">慢节奏</option>
-            <option value="均衡节奏">均衡节奏</option>
-            <option value="快节奏">快节奏</option>
+            <option value="">{t("creativeHub:starter.pacePreference")}</option>
+            <option value={PACE_VALUES.slow}>{t("creativeHub:starter.pace.slow")}</option>
+            <option value={PACE_VALUES.balanced}>{t("creativeHub:starter.pace.balanced")}</option>
+            <option value={PACE_VALUES.fast}>{t("creativeHub:starter.pace.fast")}</option>
           </select>
         </div>
         <div className="grid gap-2 sm:grid-cols-3">
@@ -295,37 +255,37 @@ export default function NovelProductionStarterCard({
             value={projectMode}
             onChange={(event) => setProjectMode(event.target.value)}
           >
-            <option value="">协作模式</option>
-            <option value="AI 主导">AI 主导</option>
-            <option value="人机协作">人机协作</option>
-            <option value="草稿优先">草稿优先</option>
-            <option value="自动流水线">自动流水线</option>
+            <option value="">{t("creativeHub:starter.projectMode")}</option>
+            <option value={PROJECT_MODE_VALUES.ai_led}>{t("creativeHub:starter.mode.aiLed")}</option>
+            <option value={PROJECT_MODE_VALUES.co_pilot}>{t("creativeHub:starter.mode.coPilot")}</option>
+            <option value={PROJECT_MODE_VALUES.draft_mode}>{t("creativeHub:starter.mode.draftMode")}</option>
+            <option value={PROJECT_MODE_VALUES.auto_pipeline}>{t("creativeHub:starter.mode.autoPipeline")}</option>
           </select>
           <select
             className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-700 outline-none focus:border-slate-400"
             value={emotionIntensity}
             onChange={(event) => setEmotionIntensity(event.target.value)}
           >
-            <option value="">情绪强度</option>
-            <option value="低">低</option>
-            <option value="中">中</option>
-            <option value="高">高</option>
+            <option value="">{t("creativeHub:starter.emotionIntensity")}</option>
+            <option value={LEVEL_VALUES.low}>{t("creativeHub:starter.level.low")}</option>
+            <option value={LEVEL_VALUES.medium}>{t("creativeHub:starter.level.medium")}</option>
+            <option value={LEVEL_VALUES.high}>{t("creativeHub:starter.level.high")}</option>
           </select>
           <select
             className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-700 outline-none focus:border-slate-400"
             value={aiFreedom}
             onChange={(event) => setAiFreedom(event.target.value)}
           >
-            <option value="">AI 自由度</option>
-            <option value="低">低</option>
-            <option value="中">中</option>
-            <option value="高">高</option>
+            <option value="">{t("creativeHub:starter.aiFreedom")}</option>
+            <option value={LEVEL_VALUES.low}>{t("creativeHub:starter.level.low")}</option>
+            <option value={LEVEL_VALUES.medium}>{t("creativeHub:starter.level.medium")}</option>
+            <option value={LEVEL_VALUES.high}>{t("creativeHub:starter.level.high")}</option>
           </select>
         </div>
         <div className="grid gap-2 sm:grid-cols-3">
           <input
             className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-700 outline-none focus:border-slate-400"
-            placeholder="目标章节数"
+            placeholder={t("creativeHub:starter.targetChapterCount")}
             type="number"
             min={1}
             max={200}
@@ -334,7 +294,7 @@ export default function NovelProductionStarterCard({
           />
           <input
             className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-700 outline-none focus:border-slate-400"
-            placeholder="默认章长（字）"
+            placeholder={t("creativeHub:starter.defaultChapterLength")}
             type="number"
             min={500}
             max={10000}
@@ -343,7 +303,7 @@ export default function NovelProductionStarterCard({
           />
           <input
             className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-700 outline-none focus:border-slate-400"
-            placeholder="可选世界观类型"
+            placeholder={t("creativeHub:starter.worldTypePlaceholder")}
             value={worldType}
             onChange={(event) => setWorldType(event.target.value)}
           />
@@ -353,9 +313,7 @@ export default function NovelProductionStarterCard({
             type="button"
             disabled={isSubmitting}
             onClick={async () => {
-              if (!isContinueMode && !title.trim()) {
-                return;
-              }
+              if (!isContinueMode && !title.trim()) return;
               setIsSubmitting(true);
               try {
                 if (currentNovelId) {
@@ -386,34 +344,34 @@ export default function NovelProductionStarterCard({
                   worldType,
                 }));
               } catch (error) {
-                toast.error(error instanceof Error ? error.message : "生产前条件保存失败。");
+                toast.error(error instanceof Error ? error.message : t("creativeHub:starter.saveError"));
               } finally {
                 setIsSubmitting(false);
               }
             }}
           >
-            {isSubmitting ? "处理中..." : isContinueMode ? "继续整本生产" : "启动整本生产"}
+            {isSubmitting ? t("creativeHub:starter.processing") : isContinueMode ? t("creativeHub:starter.continueButton") : t("creativeHub:starter.startButton")}
           </Button>
           <Button
             type="button"
             variant="outline"
-            onClick={() => onQuickAction?.("整本生成到哪一步了")}
+            onClick={() => onQuickAction?.(t("creativeHub:starter.viewProgressPrompt"))}
           >
-            查看进度
+            {t("creativeHub:starter.viewProgress")}
           </Button>
           <Button
             type="button"
             variant="outline"
-            onClick={() => onQuickAction?.("为什么整本生成没有启动")}
-            >
-              查看阻塞
-            </Button>
+            onClick={() => onQuickAction?.(t("creativeHub:starter.viewBlockerPrompt"))}
+          >
+            {t("creativeHub:starter.viewBlocker")}
+          </Button>
           <Button
             type="button"
             variant="outline"
-            onClick={() => onQuickAction?.("基于当前小说信息，为生产前的题材、风格、视角、节奏、章长和 AI 自由度各给出 3 个备选答案。")}
+            onClick={() => onQuickAction?.(t("creativeHub:starter.generateAlternativesPrompt"))}
           >
-            生成备选
+            {t("creativeHub:starter.generateAlternatives")}
           </Button>
         </div>
       </div>

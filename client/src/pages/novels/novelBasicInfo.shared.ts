@@ -1,3 +1,4 @@
+import type { TFunction } from "i18next";
 import type { BookAnalysisSectionKey } from "@ai-novel/shared/types/bookAnalysis";
 import { formatCommercialTagsInput, normalizeCommercialTags } from "@ai-novel/shared/types/novelFraming";
 
@@ -45,6 +46,23 @@ export interface BasicInfoOption<T extends string> {
 
 export const DEFAULT_ESTIMATED_CHAPTER_COUNT = 80;
 
+export function useWritingModeOptions(t: TFunction): BasicInfoOption<NovelBasicFormState["writingMode"]>[] {
+  return [
+    {
+      value: "original",
+      label: t("novel:basicInfo.writingMode.original.label"),
+      summary: t("novel:basicInfo.writingMode.original.summary"),
+      recommended: true,
+    },
+    {
+      value: "continuation",
+      label: t("novel:basicInfo.writingMode.continuation.label"),
+      summary: t("novel:basicInfo.writingMode.continuation.summary"),
+    },
+  ];
+}
+
+/** @deprecated Use useWritingModeOptions(t) instead */ // i18n-ignore: deprecated fallback constants
 export const WRITING_MODE_OPTIONS: BasicInfoOption<NovelBasicFormState["writingMode"]>[] = [
   {
     value: "original",
@@ -59,6 +77,33 @@ export const WRITING_MODE_OPTIONS: BasicInfoOption<NovelBasicFormState["writingM
   },
 ];
 
+export function useProjectModeOptions(t: TFunction): BasicInfoOption<NovelBasicFormState["projectMode"]>[] {
+  return [
+    {
+      value: "co_pilot",
+      label: t("novel:basicInfo.projectMode.coPilot.label"),
+      summary: t("novel:basicInfo.projectMode.coPilot.summary"),
+      recommended: true,
+    },
+    {
+      value: "ai_led",
+      label: t("novel:basicInfo.projectMode.aiLed.label"),
+      summary: t("novel:basicInfo.projectMode.aiLed.summary"),
+    },
+    {
+      value: "draft_mode",
+      label: t("novel:basicInfo.projectMode.draftMode.label"),
+      summary: t("novel:basicInfo.projectMode.draftMode.summary"),
+    },
+    {
+      value: "auto_pipeline",
+      label: t("novel:basicInfo.projectMode.autoPipeline.label"),
+      summary: t("novel:basicInfo.projectMode.autoPipeline.summary"),
+    },
+  ];
+}
+
+/** @deprecated Use useProjectModeOptions(t) instead */ // i18n-ignore: deprecated fallback constants
 export const PROJECT_MODE_OPTIONS: BasicInfoOption<NovelBasicFormState["projectMode"]>[] = [
   {
     value: "co_pilot",
@@ -107,6 +152,28 @@ export const READER_CHANNEL_OPTIONS: BasicInfoOption<NovelBasicFormState["reader
   },
 ];
 
+export function usePovOptions(t: TFunction): BasicInfoOption<NovelBasicFormState["narrativePov"]>[] {
+  return [
+    {
+      value: "third_person",
+      label: t("novel:basicInfo.pov.thirdPerson.label"),
+      summary: t("novel:basicInfo.pov.thirdPerson.summary"),
+      recommended: true,
+    },
+    {
+      value: "first_person",
+      label: t("novel:basicInfo.pov.firstPerson.label"),
+      summary: t("novel:basicInfo.pov.firstPerson.summary"),
+    },
+    {
+      value: "mixed",
+      label: t("novel:basicInfo.pov.mixed.label"),
+      summary: t("novel:basicInfo.pov.mixed.summary"),
+    },
+  ];
+}
+
+/** @deprecated Use usePovOptions(t) instead */ // i18n-ignore: deprecated fallback constants
 export const POV_OPTIONS: BasicInfoOption<NovelBasicFormState["narrativePov"]>[] = [
   {
     value: "third_person",
@@ -126,6 +193,28 @@ export const POV_OPTIONS: BasicInfoOption<NovelBasicFormState["narrativePov"]>[]
   },
 ];
 
+export function usePaceOptions(t: TFunction): BasicInfoOption<NovelBasicFormState["pacePreference"]>[] {
+  return [
+    {
+      value: "balanced",
+      label: t("novel:basicInfo.pace.balanced.label"),
+      summary: t("novel:basicInfo.pace.balanced.summary"),
+      recommended: true,
+    },
+    {
+      value: "slow",
+      label: t("novel:basicInfo.pace.slow.label"),
+      summary: t("novel:basicInfo.pace.slow.summary"),
+    },
+    {
+      value: "fast",
+      label: t("novel:basicInfo.pace.fast.label"),
+      summary: t("novel:basicInfo.pace.fast.summary"),
+    },
+  ];
+}
+
+/** @deprecated Use usePaceOptions(t) instead */ // i18n-ignore: deprecated fallback constants
 export const PACE_OPTIONS: BasicInfoOption<NovelBasicFormState["pacePreference"]>[] = [
   {
     value: "balanced",
@@ -145,6 +234,28 @@ export const PACE_OPTIONS: BasicInfoOption<NovelBasicFormState["pacePreference"]
   },
 ];
 
+export function useEmotionOptions(t: TFunction): BasicInfoOption<NovelBasicFormState["emotionIntensity"]>[] {
+  return [
+    {
+      value: "medium",
+      label: t("novel:basicInfo.emotion.medium.label"),
+      summary: t("novel:basicInfo.emotion.medium.summary"),
+      recommended: true,
+    },
+    {
+      value: "low",
+      label: t("novel:basicInfo.emotion.low.label"),
+      summary: t("novel:basicInfo.emotion.low.summary"),
+    },
+    {
+      value: "high",
+      label: t("novel:basicInfo.emotion.high.label"),
+      summary: t("novel:basicInfo.emotion.high.summary"),
+    },
+  ];
+}
+
+/** @deprecated Use useEmotionOptions(t) instead */ // i18n-ignore: deprecated fallback constants
 export const EMOTION_OPTIONS: BasicInfoOption<NovelBasicFormState["emotionIntensity"]>[] = [
   {
     value: "medium",
@@ -164,6 +275,28 @@ export const EMOTION_OPTIONS: BasicInfoOption<NovelBasicFormState["emotionIntens
   },
 ];
 
+export function useAiFreedomOptions(t: TFunction): BasicInfoOption<NovelBasicFormState["aiFreedom"]>[] {
+  return [
+    {
+      value: "medium",
+      label: t("novel:basicInfo.aiFreedom.medium.label"),
+      summary: t("novel:basicInfo.aiFreedom.medium.summary"),
+      recommended: true,
+    },
+    {
+      value: "low",
+      label: t("novel:basicInfo.aiFreedom.low.label"),
+      summary: t("novel:basicInfo.aiFreedom.low.summary"),
+    },
+    {
+      value: "high",
+      label: t("novel:basicInfo.aiFreedom.high.label"),
+      summary: t("novel:basicInfo.aiFreedom.high.summary"),
+    },
+  ];
+}
+
+/** @deprecated Use useAiFreedomOptions(t) instead */ // i18n-ignore: deprecated fallback constants
 export const AI_FREEDOM_OPTIONS: BasicInfoOption<NovelBasicFormState["aiFreedom"]>[] = [
   {
     value: "medium",
@@ -183,6 +316,23 @@ export const AI_FREEDOM_OPTIONS: BasicInfoOption<NovelBasicFormState["aiFreedom"
   },
 ];
 
+export function usePublicationStatusOptions(t: TFunction): BasicInfoOption<NovelBasicFormState["status"]>[] {
+  return [
+    {
+      value: "draft",
+      label: t("novel:basicInfo.publicationStatus.draft.label"),
+      summary: t("novel:basicInfo.publicationStatus.draft.summary"),
+      recommended: true,
+    },
+    {
+      value: "published",
+      label: t("novel:basicInfo.publicationStatus.published.label"),
+      summary: t("novel:basicInfo.publicationStatus.published.summary"),
+    },
+  ];
+}
+
+/** @deprecated Use usePublicationStatusOptions(t) instead */ // i18n-ignore: deprecated fallback constants
 export const PUBLICATION_STATUS_OPTIONS: BasicInfoOption<NovelBasicFormState["status"]>[] = [
   {
     value: "draft",
@@ -197,6 +347,17 @@ export const PUBLICATION_STATUS_OPTIONS: BasicInfoOption<NovelBasicFormState["st
   },
 ];
 
+export function useProjectStatusOptions(t: TFunction): Array<{ value: NovelBasicFormState["projectStatus"]; label: string }> {
+  return [
+    { value: "not_started", label: t("novel:basicInfo.projectStatus.notStarted") },
+    { value: "in_progress", label: t("novel:basicInfo.projectStatus.inProgress") },
+    { value: "completed", label: t("novel:basicInfo.projectStatus.completed") },
+    { value: "rework", label: t("novel:basicInfo.projectStatus.rework") },
+    { value: "blocked", label: t("novel:basicInfo.projectStatus.blocked") },
+  ];
+}
+
+/** @deprecated Use useProjectStatusOptions(t) instead */ // i18n-ignore: deprecated fallback constants
 export const PROJECT_STATUS_OPTIONS: Array<{ value: NovelBasicFormState["projectStatus"]; label: string }> = [
   { value: "not_started", label: "未开始" },
   { value: "in_progress", label: "进行中" },
@@ -205,6 +366,35 @@ export const PROJECT_STATUS_OPTIONS: Array<{ value: NovelBasicFormState["project
   { value: "blocked", label: "阻塞" },
 ];
 
+export function useBasicInfoFieldHints(t: TFunction): Record<string, string> {
+  return {
+    writingMode: t("novel:basicInfo.fieldHints.writingMode"),
+    targetAudience: t("novel:basicInfo.fieldHints.targetAudience"),
+    bookSellingPoint: t("novel:basicInfo.fieldHints.bookSellingPoint"),
+    competingFeel: t("novel:basicInfo.fieldHints.competingFeel"),
+    first30ChapterPromise: t("novel:basicInfo.fieldHints.first30ChapterPromise"),
+    commercialTagsText: t("novel:basicInfo.fieldHints.commercialTagsText"),
+    projectMode: t("novel:basicInfo.fieldHints.projectMode"),
+    narrativePov: t("novel:basicInfo.fieldHints.narrativePov"),
+    pacePreference: t("novel:basicInfo.fieldHints.pacePreference"),
+    emotionIntensity: t("novel:basicInfo.fieldHints.emotionIntensity"),
+    aiFreedom: t("novel:basicInfo.fieldHints.aiFreedom"),
+    postGenerationStyleReviewEnabled: t("novel:basicInfo.fieldHints.postGenerationStyleReviewEnabled"),
+    defaultChapterLength: t("novel:basicInfo.fieldHints.defaultChapterLength"),
+    estimatedChapterCount: t("novel:basicInfo.fieldHints.estimatedChapterCount"),
+    resourceReadyScore: t("novel:basicInfo.fieldHints.resourceReadyScore"),
+    styleTone: t("novel:basicInfo.fieldHints.styleTone"),
+    genreId: t("novel:basicInfo.fieldHints.genreId"),
+    primaryStoryModeId: t("novel:basicInfo.fieldHints.primaryStoryModeId"),
+    secondaryStoryModeId: t("novel:basicInfo.fieldHints.secondaryStoryModeId"),
+    worldId: t("novel:basicInfo.fieldHints.worldId"),
+    status: t("novel:basicInfo.fieldHints.status"),
+    continuationSourceType: t("novel:basicInfo.fieldHints.continuationSourceType"),
+    continuationBookAnalysis: t("novel:basicInfo.fieldHints.continuationBookAnalysis"),
+  };
+}
+
+/** @deprecated Use useBasicInfoFieldHints(t) instead */ // i18n-ignore: deprecated fallback constants
 export const BASIC_INFO_FIELD_HINTS = {
   writingMode: "决定项目是从零开始，还是基于已有作品继续创作。它会直接影响后续优先使用哪些上下文来源。",
   targetAudience: "说明这本书最主要写给谁看。不会写专业人群画像也没关系，按直觉描述即可。",

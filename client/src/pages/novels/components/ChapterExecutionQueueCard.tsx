@@ -1,4 +1,5 @@
 import type { Chapter } from "@ai-novel/shared/types/novel";
+import { useTranslation } from "react-i18next";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -26,6 +27,7 @@ interface ChapterExecutionQueueCardProps {
 }
 
 export default function ChapterExecutionQueueCard(props: ChapterExecutionQueueCardProps) {
+  const { t } = useTranslation();
   const {
     chapters,
     selectedChapterId,
@@ -75,7 +77,7 @@ export default function ChapterExecutionQueueCard(props: ChapterExecutionQueueCa
             </div>
           ) : (
             chapters.map((chapter) => {
-              const chapterRisks = parseRiskFlags(chapter.riskFlags);
+              const chapterRisks = parseRiskFlags(chapter.riskFlags, t);
               const isSelected = selectedChapterId === chapter.id;
               const isStreamingTarget = streamingChapterId === chapter.id;
               const isRepairTarget = repairStreamingChapterId === chapter.id;
@@ -98,16 +100,16 @@ export default function ChapterExecutionQueueCard(props: ChapterExecutionQueueCa
                         第{chapter.order}章 {chapter.title || "未命名章节"}
                       </div>
                       <div className="line-clamp-2 text-xs leading-6 text-muted-foreground">
-                        {resolveChapterQueuePreview(chapter)}
+                        {resolveChapterQueuePreview(chapter, t)}
                       </div>
                     </div>
                     <Badge
                       variant={isSelected ? "default" : "outline"}
                       className="min-w-[60px] shrink-0 justify-center rounded-full px-2 py-1 text-[11px]"
-                      title={chapterStatusDescription(displayedStatus)}
-                      aria-label={chapterStatusDescription(displayedStatus)}
+                      title={chapterStatusDescription(displayedStatus, t)}
+                      aria-label={chapterStatusDescription(displayedStatus, t)}
                     >
-                      {chapterStatusLabel(displayedStatus)}
+                      {chapterStatusLabel(displayedStatus, t)}
                     </Badge>
                   </div>
 
@@ -132,7 +134,7 @@ export default function ChapterExecutionQueueCard(props: ChapterExecutionQueueCa
                   <div className="mt-3 grid grid-cols-2 gap-2 rounded-xl bg-muted/25 p-3 text-[11px] text-muted-foreground">
                     <div>
                       <div>下一步</div>
-                      <div className="mt-1 font-medium text-foreground">{chapterSuggestedActionLabel(chapter)}</div>
+                      <div className="mt-1 font-medium text-foreground">{chapterSuggestedActionLabel(chapter, t)}</div>
                     </div>
                     <div>
                       <div>当前字数</div>

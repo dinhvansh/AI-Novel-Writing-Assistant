@@ -20,7 +20,7 @@ interface NavbarProps {
 
 export default function Navbar(props: NavbarProps) {
   const { workspaceNavMode, onWorkspaceNavModeChange } = props;
-  const { i18n } = useTranslation();
+  const { i18n, t } = useTranslation("desktop");
   const location = useLocation();
   const [currentLocale, setCurrentLocale] = useState<LocaleCode>(() => readPersistedLocale());
   const isHome = location.pathname === "/";
@@ -42,7 +42,7 @@ export default function Navbar(props: NavbarProps) {
       <div className="flex min-w-0 items-center gap-2">
         <DesktopBrandMark className="h-8 w-8 shrink-0 drop-shadow-none" />
         <div className="flex min-w-0 flex-col leading-tight">
-          <span className="truncate text-sm font-semibold">AI 小说创作工作台</span>
+          <span className="truncate text-sm font-semibold">{t("desktop:navbar.appTitle")}</span>
           <span className="hidden truncate text-[11px] text-muted-foreground sm:block">AI Novel Production Engine</span>
         </div>
       </div>
@@ -55,7 +55,7 @@ export default function Navbar(props: NavbarProps) {
             className={useMobileAutoDirectorShell ? AUTO_DIRECTOR_MOBILE_CLASSES.navbarWorkspaceToggle : undefined}
             onClick={() => onWorkspaceNavModeChange?.(workspaceNavMode === "workspace" ? "project" : "workspace")}
           >
-            {workspaceNavMode === "workspace" ? "项目导航" : "创作导航"}
+            {workspaceNavMode === "workspace" ? t("desktop:navbar.projectNav") : t("desktop:navbar.creationNav")}
           </Button>
         ) : null}
         <LocaleSwitcherCompact currentLocale={currentLocale} onLocaleChange={handleLocaleChange} />
