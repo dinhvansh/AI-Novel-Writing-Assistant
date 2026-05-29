@@ -3222,9 +3222,11 @@
       "currentFactStep": "当前判断会先处理这里",
       "activeRuntimeStep": "后台此刻正在碰这一步",
       "completeness": "这一段的完整度",
+      "canContinue": "现在能不能继续做",
       "canContinueLabel": "现在能不能继续做",
       "canStart": "可以开始或继续",
       "needsPrerequisite": "还要先补前置事实",
+      "nextStep": "系统判断的下一步",
       "nextStepLabel": "系统判断的下一步",
       "resumeFromLabel": "如果中断，建议从哪继续",
       "latestFactDesc": "这一步最近的事实描述",
@@ -3601,6 +3603,9 @@
     "setup": {
       "ideaTitle": "你的起始想法",
       "ideaPlaceholder": "例如：普通女大学生误入异能组织，一边上学打工，一边调查父亲失踪真相。",
+      "ideaOverwriteConfirm": "当前已有起始想法，使用灵感会覆盖现有内容，是否继续？",
+      "ideaGenerating": "生成灵感中...",
+      "ideaNoIdea": "没有想法？帮我想一个",
       "starterTitle": "导演起始设置",
       "starterDescription": "这里只保留自动导演真正需要你快速确认的参数。先保持默认也可以，只有你明确想要某种手感时再调整。",
       "runModes": {
@@ -3662,6 +3667,7 @@
         }
       },
       "fields": {
+        "readerChannelPreference": "目标读者渠道",
         "narrativePov": "叙事视角",
         "pacePreference": "节奏偏好",
         "emotionIntensity": "情绪浓度",
@@ -4301,6 +4307,188 @@
       "viewBlockerPrompt": "为什么整本生成没有启动",
       "generateAlternatives": "生成备选",
       "generateAlternativesPrompt": "基于当前小说信息，为生产前的题材、风格、视角、节奏、章长和 AI 自由度各给出 3 个备选答案。"
+    },
+    "page": {
+      "badge": "创作中枢",
+      "newThreadTitle": "新对话",
+      "bindings": {
+        "novel": "小说：",
+        "world": "世界观：",
+        "task": "任务：",
+        "bookAnalysis": "拆书：",
+        "formula": "写作公式：",
+        "baseCharacter": "基础角色：",
+        "styleProfile": "写法：",
+        "knowledgeDocs": "知识文档：{count} 份"
+      },
+      "wip": {
+        "title": "功能预览",
+        "description": "创作中枢目前处于早期预览阶段，部分功能仍在完善中。"
+      }
+    },
+    "threadList": {
+      "title": "对话列表",
+      "newThread": "新建对话",
+      "archive": "归档",
+      "unarchive": "取消归档",
+      "delete": "删除",
+      "empty": "暂无对话，点击上方新建一个。",
+      "status": {
+        "busy": "执行中",
+        "interrupted": "待处理",
+        "error": "异常",
+        "idle": "空闲"
+      }
+    },
+    "conversation": {
+      "title": "对话",
+      "emptyTitle": "开始创作",
+      "emptySubtitle": "输入你的创作目标，AI 会帮你推进。",
+      "inputPlaceholder": "输入创作目标或问题...",
+      "send": "发送",
+      "stop": "停止",
+      "quickActions": {
+        "direction": {
+          "label": "确认方向",
+          "prompt": "帮我梳理当前小说的创作方向和下一步建议。"
+        },
+        "diagnose": {
+          "label": "诊断问题",
+          "prompt": "诊断当前小说存在的问题，并给出修复建议。"
+        },
+        "promise": {
+          "label": "查看承诺",
+          "prompt": "列出当前小说对读者的核心承诺和待兑现事项。"
+        },
+        "converge": {
+          "label": "收束推进",
+          "prompt": "帮我把当前创作状态收束到下一个可执行步骤。"
+        }
+      }
+    },
+    "activity": {
+      "status": {
+        "running": "执行中",
+        "queued": "排队中",
+        "waiting_approval": "等待审批",
+        "succeeded": "已完成",
+        "failed": "失败",
+        "cancelled": "已取消"
+      },
+      "runStatus": {
+        "title": "运行状态",
+        "summary": "状态：{status}"
+      },
+      "toolCall": {
+        "title": "工具调用：{toolName}",
+        "defaultSummary": "正在调用工具..."
+      },
+      "toolResult": {
+        "title": "工具结果：{toolName} {result}",
+        "success": "成功",
+        "failed": "失败",
+        "defaultSummary": "工具已返回结果。"
+      },
+      "interrupt": {
+        "defaultTitle": "等待确认"
+      },
+      "approval": {
+        "approved": "已批准",
+        "rejected": "已拒绝",
+        "defaultSummary": "审批已处理。"
+      },
+      "error": {
+        "title": "执行错误"
+      },
+      "metadata": {
+        "reasoning": "推理过程",
+        "intentTitle": "意图分析",
+        "intentSummary": "意图：{intent}，来源：{source}",
+        "confidence": "置信度：{value}",
+        "confidenceLabel": "置信度",
+        "intent": "意图",
+        "source": "来源",
+        "checkpointTitle": "检查点",
+        "checkpointSaved": "已保存"
+      },
+      "system": {
+        "title": "系统消息"
+      }
+    },
+    "inlineToolCall": {
+      "approvalGate": {
+        "defaultTitle": "等待审批",
+        "defaultSummary": "请确认是否继续执行当前操作。",
+        "unknownTarget": "未知目标",
+        "notePlaceholder": "可选：输入审批备注...",
+        "approve": "批准",
+        "reject": "拒绝"
+      },
+      "toolCall": {
+        "title": "工具调用：{toolName}",
+        "expandArgs": "查看参数",
+        "collapseArgs": "收起参数",
+        "defaultResult": "工具已返回结果。"
+      }
+    },
+    "messagePrimitives": {
+      "prevBranch": "←",
+      "nextBranch": "→",
+      "edit": "编辑",
+      "regenerate": "重新生成",
+      "reasoning": "推理过程",
+      "editPlaceholder": "编辑消息内容...",
+      "cancel": "取消",
+      "sendBranch": "发送"
+    },
+    "debugTrace": {
+      "title": "调试追踪",
+      "currentTurn": "当前回合",
+      "entryCount": "{count} 条记录",
+      "collapse": "收起",
+      "expand": "展开",
+      "collapsedHint": "点击展开查看详细调试记录。",
+      "empty": "当前回合暂无调试记录。"
+    },
+    "turnSummary": {
+      "title": "回合摘要",
+      "currentStage": "当前阶段：{stage}",
+      "intentSummary": "本轮意图",
+      "actionSummary": "执行动作",
+      "impactSummary": "影响与变化",
+      "nextSuggestion": "建议下一步",
+      "followDirection": "按建议继续",
+      "status": {
+        "succeeded": "已完成",
+        "interrupted": "待确认",
+        "failed": "失败",
+        "cancelled": "已取消",
+        "running": "执行中"
+      }
+    },
+    "novelSetup": {
+      "title": "小说初始化",
+      "readyCount": "已完成 {completed}/{total}",
+      "requiredForProduction": "生产必需",
+      "currentValue": "当前值：{value}",
+      "fillItem": "填写此项",
+      "giveOptions": "给我选项",
+      "pendingTitle": "待完成项",
+      "listSeparator": "、",
+      "andMore": "等",
+      "generateChecklist": "生成完整清单",
+      "generateChecklistPrompt": "列出当前小说初始化清单，并给出每项的填写建议。",
+      "batchOptions": "批量给选项",
+      "batchOptionsPrompt": "为当前所有待填写项分别给出 2-3 个选项建议。",
+      "followGuide": "按建议继续",
+      "viewSummary": "查看当前摘要",
+      "viewSummaryPrompt": "总结当前小说已完成的初始化信息。",
+      "nextQuestion": "下一个问题",
+      "stage": {
+        "readyForProduction": "可开始生产",
+        "readyForPlanning": "可开始规划",
+        "initializing": "初始化中"
+      }
     }
   },
   "promptWorkbench": {
@@ -4313,6 +4501,8 @@
       "loading": "正在读取提示词目录...",
       "empty": "没有匹配的提示词。",
       "noSelection": "请选择一个提示词。",
+      "debug": "调试查看",
+      "addendumBadge": "可补充",
       "entrypoints": {
         "creative_hub": "创作中枢",
         "auto_director": "自动导演",
@@ -4330,7 +4520,6 @@
         "medium": "辅助",
         "low": "参考"
       },
-      "addendumBadge": "可补充",
       "sections": {
         "purpose": "提示词用途",
         "basicInfo": "基础信息",
@@ -4374,8 +4563,171 @@
         "missingInputsHint": "需要补充输入：{inputs}",
         "missingGroupsHint": "未拿到资料：{groups}",
         "empty": "输入小说 ID 后读取资料，检查当前提示词开工前的资料是否齐全。"
+      }
+    },
+    "threadList": {
+      "title": "对话列表",
+      "newThread": "新建对话",
+      "archive": "归档",
+      "unarchive": "取消归档",
+      "delete": "删除",
+      "empty": "暂无对话，点击上方新建一个。",
+      "status": {
+        "busy": "执行中",
+        "interrupted": "待处理",
+        "error": "异常",
+        "idle": "空闲"
+      }
+    },
+    "conversation": {
+      "title": "对话",
+      "emptyTitle": "开始创作",
+      "emptySubtitle": "输入你的创作目标，AI 会帮你推进。",
+      "inputPlaceholder": "输入创作目标或问题...",
+      "send": "发送",
+      "stop": "停止",
+      "quickActions": {
+        "direction": {
+          "label": "确认方向",
+          "prompt": "帮我梳理当前小说的创作方向和下一步建议。"
+        },
+        "diagnose": {
+          "label": "诊断问题",
+          "prompt": "诊断当前小说存在的问题，并给出修复建议。"
+        },
+        "promise": {
+          "label": "查看承诺",
+          "prompt": "列出当前小说对读者的核心承诺和待兑现事项。"
+        },
+        "converge": {
+          "label": "收束推进",
+          "prompt": "帮我把当前创作状态收束到下一个可执行步骤。"
+        }
+      }
+    },
+    "activity": {
+      "status": {
+        "running": "执行中",
+        "queued": "排队中",
+        "waiting_approval": "等待审批",
+        "succeeded": "已完成",
+        "failed": "失败",
+        "cancelled": "已取消"
       },
-      "debug": "调试查看"
+      "runStatus": {
+        "title": "运行状态",
+        "summary": "状态：{status}"
+      },
+      "toolCall": {
+        "title": "工具调用：{toolName}",
+        "defaultSummary": "正在调用工具..."
+      },
+      "toolResult": {
+        "title": "工具结果：{toolName} {result}",
+        "success": "成功",
+        "failed": "失败",
+        "defaultSummary": "工具已返回结果。"
+      },
+      "interrupt": {
+        "defaultTitle": "等待确认"
+      },
+      "approval": {
+        "approved": "已批准",
+        "rejected": "已拒绝",
+        "defaultSummary": "审批已处理。"
+      },
+      "error": {
+        "title": "执行错误"
+      },
+      "metadata": {
+        "reasoning": "推理过程",
+        "intentTitle": "意图分析",
+        "intentSummary": "意图：{intent}，来源：{source}",
+        "confidence": "置信度：{value}",
+        "confidenceLabel": "置信度",
+        "intent": "意图",
+        "source": "来源",
+        "checkpointTitle": "检查点",
+        "checkpointSaved": "已保存"
+      },
+      "system": {
+        "title": "系统消息"
+      }
+    },
+    "inlineToolCall": {
+      "approvalGate": {
+        "defaultTitle": "等待审批",
+        "defaultSummary": "请确认是否继续执行当前操作。",
+        "unknownTarget": "未知目标",
+        "notePlaceholder": "可选：输入审批备注...",
+        "approve": "批准",
+        "reject": "拒绝"
+      },
+      "toolCall": {
+        "title": "工具调用：{toolName}",
+        "expandArgs": "查看参数",
+        "collapseArgs": "收起参数",
+        "defaultResult": "工具已返回结果。"
+      }
+    },
+    "messagePrimitives": {
+      "prevBranch": "←",
+      "nextBranch": "→",
+      "edit": "编辑",
+      "regenerate": "重新生成",
+      "reasoning": "推理过程",
+      "editPlaceholder": "编辑消息内容...",
+      "cancel": "取消",
+      "sendBranch": "发送"
+    },
+    "debugTrace": {
+      "title": "调试追踪",
+      "currentTurn": "当前回合",
+      "entryCount": "{count} 条记录",
+      "collapse": "收起",
+      "expand": "展开",
+      "collapsedHint": "点击展开查看详细调试记录。",
+      "empty": "当前回合暂无调试记录。"
+    },
+    "turnSummary": {
+      "title": "回合摘要",
+      "currentStage": "当前阶段：{stage}",
+      "intentSummary": "本轮意图",
+      "actionSummary": "执行动作",
+      "impactSummary": "影响与变化",
+      "nextSuggestion": "建议下一步",
+      "followDirection": "按建议继续",
+      "status": {
+        "succeeded": "已完成",
+        "interrupted": "待确认",
+        "failed": "失败",
+        "cancelled": "已取消",
+        "running": "执行中"
+      }
+    },
+    "novelSetup": {
+      "title": "小说初始化",
+      "readyCount": "已完成 {completed}/{total}",
+      "requiredForProduction": "生产必需",
+      "currentValue": "当前值：{value}",
+      "fillItem": "填写此项",
+      "giveOptions": "给我选项",
+      "pendingTitle": "待完成项",
+      "listSeparator": "、",
+      "andMore": "等",
+      "generateChecklist": "生成完整清单",
+      "generateChecklistPrompt": "列出当前小说初始化清单，并给出每项的填写建议。",
+      "batchOptions": "批量给选项",
+      "batchOptionsPrompt": "为当前所有待填写项分别给出 2-3 个选项建议。",
+      "followGuide": "按建议继续",
+      "viewSummary": "查看当前摘要",
+      "viewSummaryPrompt": "总结当前小说已完成的初始化信息。",
+      "nextQuestion": "下一个问题",
+      "stage": {
+        "readyForProduction": "可开始生产",
+        "readyForPlanning": "可开始规划",
+        "initializing": "初始化中"
+      }
     }
   },
   "tasks": {
@@ -4716,6 +5068,7 @@
       "publishTitle": "发布到小说知识库",
       "selectNovel": "选择目标小说",
       "publishButton": "发布并绑定",
+      "publishedAt": "发布时间：{date}",
       "summaryTitle": "概要",
       "summaryEmpty": "生成总览后会在此显示概要内容。",
       "metaTitle": "运行元信息",

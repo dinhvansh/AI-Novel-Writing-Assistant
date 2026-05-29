@@ -1,7 +1,6 @@
 import { useMemo, useState } from "react";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
-import type { TFunction } from "i18next";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   BookOpenText,
   ChevronLeft,
@@ -82,13 +81,13 @@ function hasChapterPlanContent(chapter: VolumePlan["chapters"][number]): boolean
     || chapter.payoffRefs.length > 0;
 }
 
-function formatTaskStatus(t: TFunction, status: string | null | undefined): string {
-  if (status === "running") return t("novel:workspace.rail.taskStatus.running");
-  if (status === "queued") return t("novel:workspace.rail.taskStatus.queued");
-  if (status === "waiting_approval") return t("novel:workspace.rail.taskStatus.waitingApproval");
-  if (status === "failed") return t("novel:workspace.rail.taskStatus.failed");
-  if (status === "succeeded") return t("novel:workspace.rail.taskStatus.succeeded");
-  return t("novel:workspace.rail.taskStatus.idle");
+function formatTaskStatus(status: string | null | undefined): string {
+  if (status === "running") return "进行中";
+  if (status === "queued") return "排队中";
+  if (status === "waiting_approval") return "待审核";
+  if (status === "failed") return "异常";
+  if (status === "succeeded") return "已完成";
+  return "空闲";
 }
 
 function shouldShowBookAutomationProjectionWithoutActiveTask(input: {
@@ -130,8 +129,7 @@ function resolveDirectorContinueMode(task: Pick<
   if (
     task?.checkpointType === "replan_required"
     || task?.currentItemKey === "quality_repair"
-    // i18n-ignore: server returns the stage name in Chinese; this is an internal match against backend data.
-    || task?.currentStage?.includes("\u8d28\u91cf")
+    || task?.currentStage?.includes("质量")
   ) {
     return "skip_quality_repair";
   }
@@ -318,12 +316,12 @@ export default function NovelWorkspaceRail(props: NovelWorkspaceRailProps) {
           : stepReadiness[step.key]
       );
       const statusLabel = isWorkflowCurrent
-        ? isSelected ? t("novel:workspace.rail.stepStatus.currentStep") : t("novel:workspace.rail.stepStatus.inFlow")
+        ? isSelected ? "当前步骤" : "流程中"
         : isSelected
-          ? t("novel:workspace.rail.stepStatus.viewing")
+          ? "查看中"
           : isDone
-            ? t("novel:workspace.rail.stepStatus.done")
-            : t("novel:workspace.rail.stepStatus.todo");
+            ? "已完成"
+            : "待推进";
 
       return {
         ...step,
@@ -346,360 +344,7 @@ export default function NovelWorkspaceRail(props: NovelWorkspaceRailProps) {
     || (dashboardView?.requiresUserAction
       ? t("novel:workspace.rail.needsHandle", { summary: dashboardView.userActionReason ?? t("novel:workspace.rail.fallbackBlocked") })
       : null)
-    || runtimeSnapshotquery";
-import { useTranslation } from "react-i18next";
-import type { TFunction } from "i18next";
-import {
-  BookOpenText,
-  ChevronLeft,
-  ChevronRight,
-  History,
-  LayoutDashboard,
-  ListTodo,
-} from "lucide-react";
-import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
-import type { DirectorContinuationMode, DirectorLockScope } from "@ai-novel/shared/types/novelDirector";
-import type { VolumePlan } from "@ai-novel/shared/types/novel";
-import type { UnifiedTaskDetail } from "@ai-novel/shared/types/task";
-import { getNovelDetail, getNovelQualityReport, getNovelVolumeWorkspace } from "@/api/novel";
-import { getDirectorBookAutomationProjection, getDirectorRuntimeProjection, getDirectorTaskSnapshot } from "@/api/novelDirector";
-import { continueNovelWorkflow, getActiveAutoDirectorTask } from "@/api/novelWorkflow";
-import { queryKeys } from "@/api/queryKeys";
-import { Button } from "@/components/ui/button";
-import { toast } from "@/components/ui/toast";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
-import DirectorBookAutomationCard from "@/components/autoDirector/DirectorBookAutomationCard";
-import NovelAutoDirectorProgressPanel from "@/pages/novels/components/NovelAutoDirectorProgressPanel";
-import { shouldShowPinnedBookAutomationProjection } from "@/pages/novels/novelEditAutomationStatus";
-import { cn } from "@/lib/utils";
-import { resolveWorkflowContinuationFeedback } from "@/lib/novelWorkflowContinuation";
-import {
-  applyAutoDirectorResetStepReadiness,
-  extractAutoDirectorResetStepsFromMeta,
-  resolveAutoDirectorResetStepsForWorkflowProgress,
-} from "./novelWorkspaceRailState";
-import {
-  getNovelWorkspaceTabLabel,
-  NOVEL_WORKSPACE_FLOW_STEPS,
-  normalizeNovelWorkspaceTab,
-  tabFromDirectorProgress,
-  type NovelWorkspaceFlowTab,
-  type NovelWorkspaceTab,
-} from "@/pages/novels/novelWorkspaceNavigation";
-
-interface NovelWorkspaceRailProps {
-  novelId: string;
-  chapterId?: string;
-  collapsed: boolean;
-  onToggle: () => void;
-  onSwitchToProjectNav?: () => void;
-}
-
-function hasVolumePlanContent(volume: VolumePlan): boolean {
-  return [
-    volume.summary,
-    volume.openingHook,
-    volume.mainPromise,
-    volume.primaryPressureSource,
-    volume.coreSellingPoint,
-    volume.escalationMode,
-    volume.protagonistChange,
-    volume.midVolumeRisk,
-    volume.climax,
-    volume.payoffType,
-    volume.nextVolumeHook,
-    volume.resetPoint,
-  ].some((value) => Boolean(value?.trim())) || volume.openPayoffs.length > 0;
-}
-
-function hasChapterPlanContent(chapter: VolumePlan["chapters"][number]): boolean {
-  return Boolean(chapter.summary?.trim())
-    || Boolean(chapter.purpose?.trim())
-    || Boolean(chapter.mustAvoid?.trim())
-    || Boolean(chapter.taskSheet?.trim())
-    || typeof chapter.conflictLevel === "number"
-    || typeof chapter.revealLevel === "number"
-    || typeof chapter.targetWordCount === "number"
-    || chapter.payoffRefs.length > 0;
-}
-
-function formatTaskStatus(t: TFunction, status: string | null | undefined): string {
-  if (status === "running") return t("novel:workspace.rail.taskStatus.running");
-  if (status === "queued") return t("novel:workspace.rail.taskStatus.queued");
-  if (status === "waiting_approval") return t("novel:workspace.rail.taskStatus.waitingApproval");
-  if (status === "failed") return t("novel:workspace.rail.taskStatus.failed");
-  if (status === "succeeded") return t("novel:workspace.rail.taskStatus.succeeded");
-  return t("novel:workspace.rail.taskStatus.idle");
-}
-
-function shouldShowBookAutomationProjectionWithoutActiveTask(input: {
-  status: string | null | undefined;
-  latestTaskId?: string | null;
-  requestedDirectorTaskId?: string | null;
-}): boolean {
-  if (
-    input.status === "queued"
-    || input.status === "running"
-    || input.status === "waiting_approval"
-    || input.status === "waiting_recovery"
-    || input.status === "blocked"
-  ) {
-    return true;
-  }
-  return shouldShowPinnedBookAutomationProjection({
-    projection: input.latestTaskId
-      ? {
-        status: input.status === "completed"
-          || input.status === "cancelled"
-          || input.status === "failed"
-          ? input.status
-          : "failed",
-        latestTask: { id: input.latestTaskId },
-      }
-      : null,
-    directorTaskId: input.requestedDirectorTaskId,
-  });
-}
-
-function resolveDirectorContinueMode(task: Pick<
-  UnifiedTaskDetail,
-  "checkpointType" | "currentItemKey" | "currentStage" | "pendingManualRecovery"
-> | null | undefined): DirectorContinuationMode {
-  if (task?.pendingManualRecovery) {
-    return "resume";
-  }
-  if (
-    task?.checkpointType === "replan_required"
-    || task?.currentItemKey === "quality_repair"
-    // i18n-ignore: server returns the stage name in Chinese; this is an internal match against backend data.
-    || task?.currentStage?.includes("\u8d28\u91cf")
-  ) {
-    return "skip_quality_repair";
-  }
-  if (task?.checkpointType === "chapter_batch_ready") {
-    return "auto_execute_range";
-  }
-  return "resume";
-}
-
-export default function NovelWorkspaceRail(props: NovelWorkspaceRailProps) {
-  const { novelId, chapterId = "", collapsed, onToggle, onSwitchToProjectNav } = props;
-  const navigate = useNavigate();
-  const queryClient = useQueryClient();
-  const { t } = useTranslation();
-  const location = useLocation();
-  const [searchParams] = useSearchParams();
-  const [progressDialogOpen, setProgressDialogOpen] = useState(false);
-  const requestedDirectorTaskId = searchParams.get("directorTaskId")?.trim() || "";
-  const activeTab = useMemo<NovelWorkspaceTab>(() => {
-    if (location.pathname.includes("/chapters/")) {
-      return "chapter";
-    }
-    return normalizeNovelWorkspaceTab(searchParams.get("stage"));
-  }, [location.pathname, searchParams]);
-  const novelDetailQuery = useQuery({
-    queryKey: queryKeys.novels.detail(novelId),
-    queryFn: () => getNovelDetail(novelId),
-    enabled: Boolean(novelId),
-  });
-  const volumeWorkspaceQuery = useQuery({
-    queryKey: queryKeys.novels.volumeWorkspace(novelId),
-    queryFn: () => getNovelVolumeWorkspace(novelId),
-    enabled: Boolean(novelId),
-  });
-  const qualityReportQuery = useQuery({
-    queryKey: queryKeys.novels.qualityReport(novelId),
-    queryFn: () => getNovelQualityReport(novelId),
-    enabled: Boolean(novelId),
-  });
-  const activeTaskQuery = useQuery({
-    queryKey: queryKeys.novels.autoDirectorTask(novelId),
-    queryFn: () => getActiveAutoDirectorTask(novelId),
-    enabled: Boolean(novelId),
-    refetchInterval: (query) => {
-      const task = query.state.data?.data;
-      return task && (task.status === "queued" || task.status === "running" || task.status === "waiting_approval")
-        ? 4000
-        : false;
-    },
-  });
-  const bookAutomationQuery = useQuery({
-    queryKey: queryKeys.novels.directorBookAutomation(novelId),
-    queryFn: () => getDirectorBookAutomationProjection(novelId),
-    enabled: Boolean(novelId),
-    retry: false,
-    refetchInterval: (query) => {
-      const status = query.state.data?.data?.projection.status;
-      return status === "queued" || status === "running" || status === "waiting_approval" ? 4000 : false;
-    },
-  });
-
-  const novelDetail = novelDetailQuery.data?.data;
-  const workspace = volumeWorkspaceQuery.data?.data;
-  const qualitySummary = qualityReportQuery.data?.data?.summary;
-  const latestActiveTask = activeTaskQuery.isFetchedAfterMount
-    ? activeTaskQuery.data?.data ?? null
-    : null;
-  const activeTask = latestActiveTask?.status === "cancelled" ? null : latestActiveTask;
-  const latestBookAutomationProjection = bookAutomationQuery.data?.data?.projection ?? null;
-  const bookAutomationProjection = latestBookAutomationProjection?.status === "cancelled"
-    ? null
-    : latestBookAutomationProjection;
-  const visibleBookAutomationProjection = useMemo(() => {
-    if (!bookAutomationProjection) {
-      return null;
-    }
-    if (activeTask) {
-      return bookAutomationProjection;
-    }
-    return shouldShowBookAutomationProjectionWithoutActiveTask({
-      status: bookAutomationProjection.status,
-      latestTaskId: bookAutomationProjection.latestTask?.id ?? null,
-      requestedDirectorTaskId,
-    })
-      ? bookAutomationProjection
-      : null;
-  }, [activeTask, bookAutomationProjection, requestedDirectorTaskId]);
-  const runtimeProjectionQuery = useQuery({
-    queryKey: queryKeys.tasks.directorRuntime(activeTask?.id ?? "none"),
-    queryFn: () => getDirectorRuntimeProjection(activeTask?.id as string),
-    enabled: Boolean(activeTask?.id),
-    retry: false,
-    refetchInterval: () => (
-      activeTask && (activeTask.status === "queued" || activeTask.status === "running" || activeTask.status === "waiting_approval")
-        ? 4000
-        : false
-    ),
-  });
-  const runtimeSnapshotQuery = useQuery({
-    queryKey: queryKeys.tasks.directorTaskSnapshot(activeTask?.id ?? "none"),
-    queryFn: () => getDirectorTaskSnapshot(activeTask?.id as string),
-    enabled: Boolean(activeTask?.id),
-    retry: false,
-    refetchInterval: () => (
-      activeTask && (activeTask.status === "queued" || activeTask.status === "running" || activeTask.status === "waiting_approval")
-        ? 4000
-        : false
-    ),
-  });
-  const runtimeProjectionFromQuery = runtimeProjectionQuery.data?.data?.projection ?? null;
-  const runtimeSnapshot = runtimeSnapshotQuery.data?.data?.snapshot ?? null;
-  const dashboardView = runtimeSnapshot?.dashboardView ?? null;
-  const runtimeProjection = runtimeSnapshot?.projection ?? runtimeProjectionFromQuery;
-  const resetSteps = useMemo(
-    () => extractAutoDirectorResetStepsFromMeta(activeTask?.meta),
-    [activeTask?.meta],
-  );
-  const reviewScope = useMemo(() => {
-    const rawMeta = activeTask?.meta;
-    if (!rawMeta || typeof rawMeta !== "object") {
-      return null;
-    }
-    const directorSession = (rawMeta as { directorSession?: { reviewScope?: DirectorLockScope | null } }).directorSession;
-    return directorSession?.reviewScope ?? null;
-  }, [activeTask?.meta]);
-  const workflowCurrentTab = useMemo(
-    () => tabFromDirectorProgress({
-      currentStage: activeTask?.currentStage,
-      currentItemKey: activeTask?.currentItemKey,
-      checkpointType: activeTask?.checkpointType,
-      reviewScope,
-      status: activeTask?.status,
-    }),
-    [
-      activeTask?.checkpointType,
-      activeTask?.currentItemKey,
-      activeTask?.currentStage,
-      reviewScope,
-    ],
-  );
-  const effectiveResetSteps = useMemo(
-    () => resolveAutoDirectorResetStepsForWorkflowProgress(resetSteps, workflowCurrentTab),
-    [resetSteps, workflowCurrentTab],
-  );
-
-  const stepReadiness = useMemo(() => {
-    const basicReady = Boolean(novelDetail?.title?.trim());
-    const outlineReady = Boolean(workspace?.strategyPlan) || (workspace?.volumes ?? []).some((volume) => hasVolumePlanContent(volume));
-    const structuredReady = (workspace?.beatSheets ?? []).some((sheet) => sheet.beats.length > 0)
-      || (workspace?.volumes ?? []).some((volume) => volume.chapters.some((chapter) => hasChapterPlanContent(chapter)));
-    const chapterReady = (novelDetail?.chapters ?? []).some((chapter) => Boolean(chapter.content?.trim()));
-    const characterReady = (novelDetail?.characters ?? []).length > 0;
-    const storyMacroReady = characterReady
-      || outlineReady
-      || structuredReady
-      || chapterReady
-      || Boolean(novelDetail?.bible)
-      || Boolean((novelDetail?.plotBeats ?? []).length);
-    const pipelineReady = Boolean(qualitySummary && qualitySummary.overall >= 75);
-
-    return applyAutoDirectorResetStepReadiness({
-      basic: basicReady,
-      story_macro: storyMacroReady,
-      character: characterReady,
-      outline: outlineReady,
-      structured: structuredReady,
-      chapter: chapterReady,
-      pipeline: pipelineReady,
-    } satisfies Record<NovelWorkspaceFlowTab, boolean>, effectiveResetSteps);
-  }, [effectiveResetSteps, novelDetail?.bible, novelDetail?.chapters, novelDetail?.characters, novelDetail?.plotBeats, qualitySummary, workspace]);
-
-  const workflowIndex = workflowCurrentTab
-    ? NOVEL_WORKSPACE_FLOW_STEPS.findIndex((item) => item.key === workflowCurrentTab)
-    : -1;
-
-  const stepStates = useMemo(() => (
-    NOVEL_WORKSPACE_FLOW_STEPS.map((step, index) => {
-      const isSelected = activeTab === step.key;
-      const isWorkflowCurrent = workflowCurrentTab === step.key;
-      const isReset = effectiveResetSteps.has(step.key);
-      const isDone = !isReset && (
-        workflowIndex >= 0
-          ? index < workflowIndex
-          : stepReadiness[step.key]
-      );
-      const statusLabel = isWorkflowCurrent
-        ? isSelected ? t("novel:workspace.rail.stepStatus.currentStep") : t("novel:workspace.rail.stepStatus.inFlow")
-        : isSelected
-          ? t("novel:workspace.rail.stepStatus.viewing")
-          : isDone
-            ? t("novel:workspace.rail.stepStatus.done")
-            : t("novel:workspace.rail.stepStatus.todo");
-
-      return {
-        ...step,
-        label: getNovelWorkspaceTabLabel(t, step.key),
-        isSelected,
-        isWorkflowCurrent,
-        isDone,
-        statusLabel,
-      };
-    })
-  ), [activeTab, effectiveResetSteps, stepReadiness, t, workflowCurrentTab, workflowIndex]);
-
-  const completedStepCount = stepStates.filter((item) => item.isDone).length;
-  const workflowProgressCount = workflowIndex >= 0 ? workflowIndex + 1 : completedStepCount;
-  const novelTitle = novelDetail?.title?.trim() || t("novel:workspace.rail.fallbackTitle");
-  const runtimeActionSummary = runtimeProjection?.nextActionLabel
-    ? t("novel:workspace.rail.nextStep", { label: runtimeProjection.nextActionLabel })
-    : null;
-<<<<<<< HEAD
-  const runtimeSummary = dashboardView?.currentAction?.trim()
-    || (dashboardView?.requiresUserAction
-      ? `需要处理：${dashboardView.userActionReason ?? "请先查看当前停留点"}`
-      : null)
     || runtimeSnapshot?.displayState.currentAction?.trim()
-=======
-  const runtimeSummary = runtimeProjection?.requiresUserAction
-    ? t("novel:workspace.rail.needsHandle", { summary: runtimeProjection.blockedReason ?? runtimeProjection.lastEventSummary ?? runtimeProjection.currentLabel ?? t("novel:workspace.rail.fallbackBlocked") })
-    : runtimeSnapshot?.displayState.currentAction?.trim()
->>>>>>> f457abe (feat(i18n): phase 3 - novel workspace main + Story Macro page translated)
       || runtimeProjection?.headline
       || runtimeActionSummary
       || runtimeProjection?.currentLabel
@@ -709,11 +354,11 @@ export default function NovelWorkspaceRail(props: NovelWorkspaceRailProps) {
   const cockpitSummary = activeTask
     ? runtimeSummary
       || (activeTask.status === "failed"
-      ? activeTask.lastError || t("novel:workspace.rail.taskInterrupted")
+      ? activeTask.lastError || "后台任务已中断，可打开执行详情查看原因。"
       : activeTask.status === "waiting_approval"
-        ? t("novel:workspace.rail.waitingFor", { label: getNovelWorkspaceTabLabel(t, workflowCurrentTab ?? activeTab) })
-      : activeTask.currentItemLabel || t("novel:workspace.rail.aiAdvancing", { label: getNovelWorkspaceTabLabel(t, workflowCurrentTab ?? activeTab) }))
-    : t("novel:workspace.rail.noTask");
+        ? `等待处理：${getNovelWorkspaceTabLabel(t, workflowCurrentTab ?? activeTab)}`
+      : activeTask.currentItemLabel || `AI 正在推进 ${getNovelWorkspaceTabLabel(t, workflowCurrentTab ?? activeTab)}`)
+    : "当前没有后台导演任务，可以直接继续手动创作。";
   const cockpitProjection = useMemo(() => {
     if (!visibleBookAutomationProjection || !runtimeSummary?.trim()) {
       return visibleBookAutomationProjection;
@@ -767,7 +412,7 @@ export default function NovelWorkspaceRail(props: NovelWorkspaceRailProps) {
   const continueDirectorMutation = useMutation({
     mutationFn: async () => {
       if (!activeTask?.id) {
-        throw new Error(t("novel:workspace.rail.noContinuableTask"));
+        throw new Error("当前没有可继续的自动导演任务。");
       }
       return continueNovelWorkflow(activeTask.id, {
         continuationMode: resolveDirectorContinueMode(activeTask),
@@ -799,7 +444,7 @@ export default function NovelWorkspaceRail(props: NovelWorkspaceRailProps) {
       toast.success(feedback.message);
     },
     onError: (error) => {
-      toast.error(error instanceof Error ? error.message : t("novel:workspace.rail.continueFailed"));
+      toast.error(error instanceof Error ? error.message : "继续自动导演失败。");
     },
   });
 
@@ -820,7 +465,7 @@ export default function NovelWorkspaceRail(props: NovelWorkspaceRailProps) {
                 </div>
                 <div className="min-w-0">
                   <div className="text-[11px] font-medium uppercase tracking-[0.18em] text-muted-foreground">
-                    {t("novel:workspace.rail.header")}
+                    创作工作台
                   </div>
                   <div className="truncate text-sm font-semibold text-foreground">{novelTitle}</div>
                 </div>
@@ -832,8 +477,8 @@ export default function NovelWorkspaceRail(props: NovelWorkspaceRailProps) {
               size="icon"
               className="h-8 w-8 shrink-0 text-muted-foreground"
               onClick={onToggle}
-              aria-label={collapsed ? t("novel:workspace.rail.expandNav") : t("novel:workspace.rail.collapseNav")}
-              title={collapsed ? t("novel:workspace.rail.expandNav") : t("novel:workspace.rail.collapseNav")}
+              aria-label={collapsed ? "展开创作导航" : "收起创作导航"}
+              title={collapsed ? "展开创作导航" : "收起创作导航"}
             >
               {collapsed ? <ChevronRight className="h-4 w-4" /> : <ChevronLeft className="h-4 w-4" />}
             </Button>
@@ -846,7 +491,7 @@ export default function NovelWorkspaceRail(props: NovelWorkspaceRailProps) {
             className="justify-start"
             onClick={() => navigate("/novels")}
           >
-            {t("novel:workspace.rail.backToList")}
+            返回小说列表
           </Button>
         ) : (
           <Button
@@ -855,8 +500,8 @@ export default function NovelWorkspaceRail(props: NovelWorkspaceRailProps) {
             size="icon"
             className="mx-auto h-9 w-9"
             onClick={() => navigate("/novels")}
-            title={t("novel:workspace.rail.backToList")}
-            aria-label={t("novel:workspace.rail.backToList")}
+            title="返回小说列表"
+            aria-label="返回小说列表"
           >
             <BookOpenText className="h-4 w-4" />
           </Button>
@@ -865,7 +510,7 @@ export default function NovelWorkspaceRail(props: NovelWorkspaceRailProps) {
         {!collapsed ? (
           <div className="rounded-2xl border border-border/70 bg-muted/20 px-3 py-2 text-xs text-muted-foreground">
             <div className="flex items-center justify-between gap-2">
-              <span>{t("novel:workspace.rail.flowLabel", { label: getNovelWorkspaceTabLabel(t, workflowCurrentTab ?? activeTab) })}</span>
+              <span>流程：{getNovelWorkspaceTabLabel(t, workflowCurrentTab ?? activeTab)}</span>
               <span>{workflowProgressCount}/{NOVEL_WORKSPACE_FLOW_STEPS.length}</span>
             </div>
           </div>
@@ -937,7 +582,7 @@ export default function NovelWorkspaceRail(props: NovelWorkspaceRailProps) {
           <button
             type="button"
             onClick={() => goToTab("history")}
-            title={t("novel:workspace.rail.history")}
+            title="版本历史"
             className={cn(
               "flex w-full items-center rounded-2xl border border-border/70 transition-colors hover:bg-muted/40",
               collapsed ? "justify-center px-2 py-3" : "gap-3 px-3 py-3 text-left",
@@ -945,13 +590,13 @@ export default function NovelWorkspaceRail(props: NovelWorkspaceRailProps) {
             )}
           >
             <History className="h-4 w-4 shrink-0" />
-            {!collapsed ? <span className="text-sm font-medium">{t("novel:workspace.rail.history")}</span> : null}
+            {!collapsed ? <span className="text-sm font-medium">版本历史</span> : null}
           </button>
 
           {!collapsed ? (
             <DirectorBookAutomationCard
               projection={cockpitProjection}
-              fallbackStatusLabel={formatTaskStatus(t, activeTask?.status)}
+              fallbackStatusLabel={formatTaskStatus(activeTask?.status)}
               fallbackSummary={cockpitSummary}
               compact
               onOpenProgress={openProgressDialog}
@@ -966,8 +611,8 @@ export default function NovelWorkspaceRail(props: NovelWorkspaceRailProps) {
                 variant="outline"
                 className="h-9 w-9"
                 onClick={openProgressDialog}
-                title={t("novel:workspace.rail.viewProgress", { status: formatTaskStatus(t, activeTask?.status) })}
-                aria-label={t("novel:workspace.rail.viewProgressShort")}
+                title={`查看导演进度：${formatTaskStatus(activeTask?.status)}`}
+                aria-label="查看导演进度"
               >
                 <ListTodo className="h-4 w-4" />
               </Button>
@@ -978,8 +623,8 @@ export default function NovelWorkspaceRail(props: NovelWorkspaceRailProps) {
                   variant="outline"
                   className="h-9 w-9"
                   onClick={onSwitchToProjectNav}
-                  title={t("novel:workspace.rail.switchToProjectNav")}
-                  aria-label={t("novel:workspace.rail.switchToProjectNav")}
+                  title="切换到项目导航"
+                  aria-label="切换到项目导航"
                 >
                   <LayoutDashboard className="h-4 w-4" />
                 </Button>
@@ -993,9 +638,9 @@ export default function NovelWorkspaceRail(props: NovelWorkspaceRailProps) {
       <Dialog open={progressDialogOpen} onOpenChange={setProgressDialogOpen}>
         <DialogContent className="max-h-[88vh] overflow-hidden p-0 sm:max-w-5xl">
           <DialogHeader className="border-b px-5 py-4 text-left">
-            <DialogTitle>{t("novel:workspace.rail.progressDialogTitle")}</DialogTitle>
+            <DialogTitle>AI 自动导演进度</DialogTitle>
             <DialogDescription>
-              {t("novel:workspace.rail.progressDialogDescription")}
+              查看这本书的推进步骤、最近进展和 AI 用量。
             </DialogDescription>
           </DialogHeader>
           <div className="max-h-[calc(88vh-6.5rem)] overflow-y-auto p-4 sm:p-6">

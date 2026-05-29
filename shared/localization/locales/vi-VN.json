@@ -1507,6 +1507,80 @@
         "continue": "Tiếp tục thực thi tự động {scope}",
         "skipRepair": "Bỏ qua đề xuất này, tiếp tục {scope}",
         "continueToast": "Đạo diễn tự động đã tiếp tục thực thi {scope} và sẽ tự động xét duyệt, khắc phục trong nền."
+      },
+      "triggerButton": "AI Đạo diễn tự động tiếp quản",
+      "dialogTitle": "Để AI tiếp tục Đạo diễn tự động từ dự án hiện tại",
+      "dialogDescription": "Đọc trước tiến độ thực tế của dự án hiện tại, sau đó thông báo rõ ràng cho bạn bước nào sẽ bỏ qua, tiếp tục hay chạy lại.",
+      "contextTitle": "Thông tin dự án hiện tại sẽ được dùng làm đầu vào cho Đạo diễn tự động",
+      "contextEmpty": "Thông tin hiện tại còn ít, khuyên bạn nên bổ sung ít nhất một câu tóm tắt cốt truyện hoặc điểm bán hàng cấp sách trước khi tiếp quản.",
+      "contextLabel": {
+        "description": "Tổng quan: {value}",
+        "targetAudience": "Độc giả mục tiêu: {value}",
+        "bookSellingPoint": "Điểm bán hàng cấp sách: {value}",
+        "genre": "Thể loại: {value}",
+        "primaryStoryMode": "Mô thức đẩy chính: {value}",
+        "world": "Thế giới quan: {value}",
+        "commercialTags": "Thẻ thương mại: {value}"
+      },
+      "modelSettings": "Cài đặt mô hình",
+      "runModeTitle": "Cách thức chạy Đạo diễn tự động",
+      "postGenStyleReview": "Kiểm tra và sửa lỗi AI sau khi tạo văn bản",
+      "postGenStyleReviewHint": "Khi bật, sau khi tạo xong chương, hệ thống sẽ phát hiện rủi ro AI và tạo bản sửa nếu có thể sửa được.",
+      "runMode": {
+        "fullBookAutopilot": "Tiếp quản tự động toàn sách",
+        "autoToReady": "Đẩy đến sẵn sàng viết",
+        "autoToExecution": "Thực thi theo phạm vi"
+      },
+      "runModeDesc": {
+        "fullBookAutopilot": "AI sẽ bổ sung kế hoạch, tiếp tục viết, hiệu đính và sửa chữa theo mục tiêu toàn bộ sách.",
+        "autoToReady": "AI sẽ tiếp tục đẩy đến khi tài nguyên thực thi chương sẵn sàng rồi bàn giao.",
+        "autoToExecution": "Tiếp quản theo phạm vi toàn sách, chương hoặc tập, và tiếp tục chuẩn bị thực thi chương trong phạm vi mục tiêu."
+      },
+      "fullBookAutopilotTitle": "Tiếp quản tự động toàn sách",
+      "fullBookAutopilotDesc": "Hệ thống sẽ tiếp quản dự án hiện tại với mục tiêu toàn bộ sách, tiếp tục bổ sung kế hoạch, thực thi chương, hiệu đính và sửa chữa. Chỉ dừng khi mô hình không khả dụng, dịch vụ bất thường, bảo vệ văn bản hoặc rủi ro không thể khắc phục.",
+      "styleTitle": "Phong cách viết sử dụng trong lần tiếp quản này",
+      "styleHint": "Sau khi gắn phong cách mặc định cấp sách, khuyên bạn nên sử dụng nó khi tiếp quản. Nửa đầu đạo diễn chỉ đọc tóm tắt nhẹ, tránh gây nhiễu cho việc lập kế hoạch cấu trúc.",
+      "styleOnlyKeywords": "Chỉ sử dụng từ khóa văn phong",
+      "currentStyleBinding": "Phong cách mặc định cấp sách hiện tại",
+      "stageSummary": "Tóm tắt phong cách chỉ có hiệu lực trong giai đoạn này",
+      "entryStepTitle": "Bắt đầu tiếp quản từ bước nào",
+      "loading": "Đang tải",
+      "loadReadinessFailed": "Đọc trạng thái sẵn sàng tiếp quản thất bại.",
+      "hasAsset": "Đã có",
+      "noAsset": "Chưa có",
+      "characterCount": "Số lượng nhân vật",
+      "volumeChapterCount": "Tập / Số chương hiện tại",
+      "hasActiveTask": "Hiện đã có tác vụ Đạo diễn tự động",
+      "hasActiveTaskHint": "Để tránh tiếp quản trùng lặp, vui lòng xử lý tác vụ Đạo diễn tự động hiện tại trước.",
+      "handleCurrentTask": "Xử lý tác vụ hiện tại",
+      "recommended": "Khuyến nghị",
+      "scopeRestrictionHint": "Phạm vi hiện tại không thể bắt đầu từ bước này. Phạm vi chương bắt đầu từ bước chia chương theo nhịp độ, phạm vi tập bắt đầu từ chiến lược tập.",
+      "previewTitle": "Xem trước lần tiếp quản này",
+      "currentPage": "Trang hiện tại",
+      "effectiveStep": "Tiếp quản thực tế",
+      "effectiveStage": "Giai đoạn thực thi",
+      "restoreCurrentBatch": "Khôi phục lô hiện tại",
+      "activeBatch": "Lô đang hoạt động",
+      "batchRange": "Phạm vi {start}-{end}",
+      "latestCheckpoint": "Điểm kiểm tra gần nhất",
+      "checkpointChapter": " · Chương thứ {order}",
+      "executableRange": "Phạm vi có thể thực thi hiện tại: Chương {start}-{end}",
+      "nextChapter": " · Chương tiếp theo thứ {order}",
+      "skipSteps": "Sẽ bỏ qua",
+      "starting": "Đang khởi động...",
+      "startTakeover": "Bắt đầu tiếp quản từ giai đoạn này",
+      "startFailed": "Khởi động Đạo diễn tự động thất bại, không trả về thông tin tác vụ.",
+      "submittedFullBook": "Tác vụ tiếp quản Đạo diễn tự động đã được gửi, có thể xem tiến độ thực thi toàn bộ sách trong buồng lái AI.",
+      "submittedRange": "Tác vụ tiếp quản Đạo diễn tự động đã được gửi, có thể xem tiến độ thực thi của {label} trong buồng lái AI.",
+      "submittedDefault": "Tác vụ tiếp quản Đạo diễn tự động đã được gửi, có thể xem hàng đợi và tiến độ thực thi trong buồng lái AI.",
+      "startTakeoverFailed": "Khởi động tiếp quản Đạo diễn tự động thất bại.",
+      "strategy": {
+        "continueExisting": "Tiếp tục tiến độ hiện có",
+        "restartCurrentStep": "Tạo lại bước hiện tại"
+      },
+      "strategyDesc": {
+        "continueExisting": "Ưu tiên bỏ qua tài sản đã hoàn thành, chỉ bổ sung phần thiếu hoặc khôi phục lô hiện tại.",
+        "restartCurrentStep": "Xóa sạch đầu ra của bước hiện tại, sau đó tạo lại theo bước đó."
       }
     },
     "taskDrawer": {
@@ -2928,6 +3002,450 @@
           "fallback": "Vui lòng kiểm tra xem thiết định liên quan đến {field} có nhất quán với logic tổng thể của thế giới hay không."
         }
       }
+    },
+    "pipeline": {
+      "takeoverTitle": "Tiếp quản từ sửa chữa chất lượng",
+      "takeoverDescription": "AI sẽ ưu tiên kiểm tra xem hiện có lô chương đang hoạt động hoặc điểm kiểm tra cần sửa không, sau đó quyết định tiếp tục sửa hiện tại hay mở lô mới.",
+      "batchTitle": "Tạo hàng loạt và kiểm tra chất lượng",
+      "noCharactersWarning": "Vui lòng thêm ít nhất 1 nhân vật trước khi chạy pipeline.",
+      "goToCharacters": "Đến quản lý nhân vật",
+      "currentFocus": "Trọng tâm hiện tại",
+      "pendingRepairCount": "Xử lý {count} chương điểm thấp trước",
+      "noLowScoreChapters": "Hiện không có chương điểm thấp rõ rệt",
+      "qualityThreshold": "Ngưỡng chất lượng",
+      "currentRunMode": "Chế độ chạy hiện tại",
+      "runModeFast": "Nhanh",
+      "runModePolish": "Trau chuốt",
+      "repairCenterTitle": "Trung tâm sửa chữa chất lượng",
+      "chapterOption": "Chương {order} - {title}",
+      "reviewAction": "Thực hiện đánh giá",
+      "repairAction": "Thực hiện sửa chữa",
+      "hookAction": "Tạo móc câu",
+      "reviewScoreTitle": "Điểm đánh giá",
+      "scoreCoherence": "Mạch lạc",
+      "scoreRepetition": "Tỷ lệ lặp",
+      "scorePacing": "Nhịp độ",
+      "scoreVoice": "Giọng văn",
+      "scoreEngagement": "Cảm giác muốn đọc tiếp",
+      "scoreOverall": "Tổng hợp",
+      "noContent": "Chưa có",
+      "repairResultPlaceholder": "Hiển thị sau khi thực hiện sửa chữa",
+      "lowScoreFilter": "Lọc chương điểm thấp (ngưỡng {threshold})",
+      "configSectionTitle": "Cấu hình, chạy và thiết lập mô hình pipeline",
+      "configSectionDescription": "Tác vụ hàng loạt, mô hình và tham số nâng cao đều được thu gọn ở đây. Mặc định xử lý chương hiện tại trước, chỉ mở rộng khi cần chạy hàng loạt.",
+      "modelConfigTitle": "Mô hình và cấu hình",
+      "startChapter": "Chương bắt đầu",
+      "endChapter": "Chương kết thúc",
+      "maxRetries": "Thử lại khi thất bại",
+      "runModeLabel": "Chế độ chạy",
+      "repairModeLabel": "Chế độ sửa chữa",
+      "repairMode": {
+        "detectOnly": "Chỉ phát hiện không sửa",
+        "lightRepair": "Tự động sửa nhẹ",
+        "heavyRepair": "Tự động sửa nặng",
+        "continuityOnly": "Chỉ sửa tính liên tục",
+        "characterOnly": "Chỉ sửa thiết lập nhân vật",
+        "endingOnly": "Chỉ sửa lực kết thúc"
+      },
+      "autoReview": "Tự động duyệt",
+      "autoRepair": "Tự động sửa chữa",
+      "skipCompleted": "Bỏ qua chương đã hoàn thành",
+      "currentSettings": "Cài đặt hiện tại: {runMode} | Ngưỡng {threshold} | {repairMode}",
+      "stageVisualizationTitle": "Trực quan hóa giai đoạn",
+      "stageStatus": {
+        "pending": "Chờ thực thi",
+        "active": "Đang tiến hành",
+        "completed": "Đã hoàn thành",
+        "failed": "Bất thường"
+      },
+      "runPanelTitle": "Bảng điều khiển chạy",
+      "startBatch": "Khởi động tạo hàng loạt",
+      "rerunLowScore": "Chỉ chạy lại chương điểm thấp",
+      "exportReport": "Xuất báo cáo tác vụ",
+      "generateBible": "Tạo kinh thánh",
+      "stopBible": "Dừng kinh thánh",
+      "generateBeats": "Tạo nhịp",
+      "stopBeats": "Dừng nhịp",
+      "lowScoreRangeInfo": "Có {count} chương điểm thấp, phạm vi chạy lại: chương {start} - chương {end}.",
+      "taskStatusTitle": "Trạng thái tác vụ",
+      "taskId": "ID tác vụ",
+      "taskStatusLabel": "Trạng thái",
+      "currentStage": "Giai đoạn hiện tại",
+      "currentItem": "Chương hiện tại",
+      "progress": "Tiến độ",
+      "completed": "Hoàn thành",
+      "retries": "Thử lại",
+      "errorType": "Phân loại lỗi",
+      "error": "Lỗi",
+      "noRunningTask": "Hiện không có tác vụ pipeline nào đang chạy.",
+      "reportSectionTitle": "Báo cáo chất lượng và sản phẩm phái sinh",
+      "reportSectionDescription": "Báo cáo chất lượng toàn bộ, kinh thánh đã lưu và nhịp đều là thông tin dạng xem, mặc định thu gọn.",
+      "qualityReportTitle": "Tổng quan báo cáo chất lượng",
+      "noQualityReport": "Chưa có báo cáo chất lượng.",
+      "chapterLabel": "Chương",
+      "fullBook": "Toàn bộ sách",
+      "savedBibleTitle": "Kinh thánh đã lưu",
+      "bibleMainPromise": "Cam kết mạch chính",
+      "bibleCoreSetting": "Thiết định cốt lõi",
+      "bibleWorldRules": "Quy tắc thế giới",
+      "noBible": "Chưa có kinh thánh tác phẩm.",
+      "savedBeatsTitle": "Nhịp đã lưu",
+      "beatChapterLabel": "Chương {order} · {title}",
+      "beatType": "Thể loại",
+      "noBeats": "Chưa có nhịp tình tiết."
+    },
+    "basicInfoForm": {
+      "fillSuggestionTitle": "Gợi ý điền",
+      "fillSuggestionDescription": "Gợi ý: trước tiên hãy nghĩ rõ cuốn sách này viết cho ai, dựa vào điều gì để thu hút, 30 chương đầu sẽ thực hiện điều gì, sau đó bổ sung chế độ sáng tác, ranh giới thế giới và xác nhận cách viết. Các thiết lập ở đây sẽ ảnh hưởng trực tiếp đến việc lập kế hoạch mạch chính, tiến triển tập chương và sinh nội dung sau này.",
+      "positioningTitle": "Định vị tác phẩm",
+      "positioningDescription": "Đầu tiên hãy xác định đây là tác phẩm gì, và nó được sáng tác từ đầu hay dựa trên nội dung có sẵn để tiếp tục sáng tác.",
+      "titleLabel": "Tiêu đề tiểu thuyết",
+      "titlePlaceholder": "Ví dụ: Cục xét xử cảng sương mù",
+      "descriptionLabel": "Tóm tắt một câu",
+      "descriptionPlaceholder": "Dùng 2-4 câu để giải thích nhân vật chính, xung đột cốt lõi và điểm hấp dẫn của câu chuyện.",
+      "writingModeLabel": "Chế độ sáng tác",
+      "genreVsModeTitle": "Sự khác biệt giữa thể loại nền tảng và chế độ đẩy tiến",
+      "genreVsModeDescription": "Thể loại nền tảng trả lời 'Đây là cuốn sách gì?', ví dụ tu tiên, đô thị, lịch sử hư cấu; chế độ đẩy tiến trả lời 'Cuốn sách này dựa vào điều gì để liên tục đẩy tiến và thực hiện?', ví dụ dòng hệ thống, dòng vô địch, dòng trồng trọt.",
+      "genreLabel": "Thể loại nền tảng",
+      "genrePlaceholder": "Tạm thời không đặt thể loại nền tảng",
+      "worldLabel": "Gắn kết thế giới quan",
+      "worldPlaceholder": "Không gắn kết thế giới quan",
+      "defaultChapterLengthLabel": "Số chữ mặc định mỗi chương",
+      "defaultChapterLengthHint": "Khuyến nghị đặt 2500-3500 trước, sau đó vẫn có thể điều chỉnh riêng theo từng chương.",
+      "estimatedChaptersLabel": "Số chương dự kiến",
+      "estimatedChaptersHint": "Sẽ được dùng làm tham chiếu phạm vi mặc định cho đại cương, điểm cao trào và dây chuyền, sau đó vẫn có thể điều chỉnh.",
+      "primaryStoryModeLabel": "Chế độ đẩy tiến chính",
+      "primaryStoryModePlaceholder": "Tạm thời không đặt chế độ đẩy tiến chính",
+      "secondaryStoryModeLabel": "Chế độ đẩy tiến phụ",
+      "secondaryStoryModePlaceholder": "Không chồng chế độ đẩy tiến phụ",
+      "primaryStoryModeSummary": "Tóm tắt chế độ đẩy tiến chính",
+      "secondaryStoryModeSummary": "Tóm tắt chế độ đẩy tiến phụ",
+      "coreDrive": "Động lực cốt lõi",
+      "readerReward": "Phần thưởng bổ sung cho độc giả",
+      "narrativeAdvancedTitle": "Cài đặt nâng cao về trải nghiệm kể chuyện và cộng tác AI",
+      "narrativeAdvancedDescription": "Phần này sẽ ảnh hưởng đến phong cách sinh nội dung và mức độ tự động hóa AI sau này, nhưng không phải nội dung người mới phải quyết định ngay trên màn hình đầu tiên.",
+      "narrativeExperienceTitle": "Trải nghiệm kể chuyện",
+      "narrativeExperienceDescription": "Các trường này xác định cách độc giả cảm nhận tác phẩm này, cũng sẽ ảnh hưởng trực tiếp đến giọng điệu, mật độ và cách đẩy tiến của việc lập kế hoạch chương.",
+      "povLabel": "Ngôi kể",
+      "paceLabel": "Nhịp độ ưa thích",
+      "emotionLabel": "Mức độ cảm xúc",
+      "styleToneLabel": "Từ khóa giọng văn",
+      "styleTonePlaceholder": "Ví dụ: lạnh lùng, kiềm chế, hài hước đen",
+      "aiCollabTitle": "Cách thức cộng tác AI",
+      "aiCollabDescription": "Phần này xác định cách bạn và AI phân công công việc, cũng như mức độ hệ thống có thể tự động tiến triển sau đó.",
+      "projectModeLabel": "Chế độ dự án",
+      "aiFreedomLabel": "Mức độ tự do của AI",
+      "resourceReadyScoreLabel": "Mức độ hoàn thiện tài nguyên",
+      "resourceReadyScoreHint": "0 nghĩa là mới bắt đầu, 100 nghĩa là thiết định, nhân vật và kế hoạch khá hoàn chỉnh.",
+      "postGenStyleReviewLabel": "Phát hiện và sửa lỗi AI sau khi tạo văn bản",
+      "postGenStyleReviewHint": "Khi bật, sau khi tạo xong chương, hệ thống sẽ phát hiện rủi ro giọng AI và tạo bản sửa nếu có thể sửa được.",
+      "continuationSourceTitle": "Cài đặt nguồn viết tiếp",
+      "continuationSourceDescription": "Hiện tại là chế độ viết tiếp, phần này là bắt buộc nên được mở rộng mặc định.",
+      "expandSettings": "Mở rộng cài đặt",
+      "collapseSettings": "Thu gọn cài đặt",
+      "projectStatusTitle": "Trạng thái và tiến độ dự án",
+      "projectStatusDescription": "Các trường này chủ yếu phục vụ quản lý dự án và đánh giá quy trình, không phải nội dung cần xử lý ngay trên màn hình đầu tiên.",
+      "expandFields": "Mở rộng trường",
+      "collapseFields": "Thu gọn trường",
+      "productionStatusTitle": "Tiến độ và trạng thái sản xuất",
+      "productionStatusDescription": "Các trạng thái này chủ yếu phục vụ quản lý dự án và đánh giá quy trình sau đó, không phải điền một lần là xong, có thể điều chỉnh theo từng giai đoạn.",
+      "projectStatusLabel": "Trạng thái dự án",
+      "storylineStatusLabel": "Trạng thái mạch chính",
+      "outlineStatusLabel": "Trạng thái đại cương",
+      "publicationStatusLabel": "Trạng thái xuất bản",
+      "continuationSourceMissingWarning": "Ở chế độ viết tiếp, cần chọn nguồn gốc rõ ràng trước khi lưu thông tin cơ bản.",
+      "continuationAnalysisSectionMissingWarning": "Bạn đã chọn kết quả phân tích sách, nhưng chưa chọn chương phân tích để đưa vào."
+    },
+    "chapterRuntime": {
+      "lengthCardTitle": "Kiểm soát độ dài và phát lại thực thi",
+      "controlMode": "Chế độ điều khiển",
+      "wordControlMode": {
+        "promptOnly": "Ưu tiên tự nhiên",
+        "balanced": "Kiểm soát từ chuẩn",
+        "hybrid": "Kiểm soát từ hỗn hợp"
+      },
+      "closingPhaseActive": "Đã vào vùng kết thúc",
+      "normalProgress": "Vẫn tiến triển bình thường",
+      "targetAndResult": "Mục tiêu và kết quả",
+      "chars": "ký tự",
+      "variance": "Độ lệch",
+      "budgetRange": "Khoảng ngân sách",
+      "hardMax": "Giới hạn cứng",
+      "executionSignal": "Tín hiệu thực thi",
+      "hardStop": "Dừng cứng",
+      "times": "lần",
+      "lengthRepairPath": "Đường sửa độ dài",
+      "noLengthRepair": "Lần này không kích hoạt sửa độ dài thêm.",
+      "overlengthRepairApplied": "Lần này đã kích hoạt sửa quá dài.",
+      "noOverlengthRepair": "Lần này không kích hoạt sửa quá dài.",
+      "roundCount": "Số vòng",
+      "closingPhaseControl": "Bao gồm điều khiển vùng kết thúc",
+      "roundLabel": "Vòng {index}",
+      "suggested": "Đề xuất",
+      "actual": "Thực tế",
+      "finalRound": "Vòng cuối",
+      "midRound": "Vòng giữa",
+      "hardStopTriggered": "Đã kích hoạt dừng cứng",
+      "naturalEnd": "Kết thúc tự nhiên",
+      "trimmedAtSentence": "Cắt theo ranh giới câu",
+      "noLengthReplay": "Hiện chưa có phát lại kiểm soát độ dài. Sau khi sinh chương này, kết quả thực thi ngân sách sẽ hiển thị ở đây.",
+      "contextCardTitle": "Mục tiêu và ngữ cảnh chương này",
+      "chapterPlan": "Kế hoạch chương",
+      "planRole": "Vai trò",
+      "phaseLabel": "Giai đoạn",
+      "participants": "Nhân vật tham gia",
+      "mustAdvance": "Chương này phải đẩy mạch",
+      "mustPreserve": "Chương này phải giữ lại",
+      "replannedNote": "Chương này đến từ một lần điều chỉnh lại kế hoạch.",
+      "sourceIssues": "Chương này tham khảo {count} vấn đề kiểm toán đang chờ xử lý.",
+      "noSupplement": "Không có bổ sung",
+      "noPlan": "Chưa có kế hoạch chương.",
+      "stateSnapshot": "Ảnh chụp trạng thái",
+      "noSummary": "Chưa có tóm tắt",
+      "knowledgeState": "Trạng thái tri thức",
+      "noStateSnapshot": "Chưa có ảnh chụp trạng thái.",
+      "activeConflicts": "Xung đột đang hoạt động",
+      "lastSeen": "Xuất hiện gần đây",
+      "chapterOrder": "Chương thứ {order}",
+      "suggestion": "Gợi ý",
+      "noActiveConflicts": "Chưa có xung đột đang hoạt động.",
+      "auditCardTitle": "Vấn đề hiện tại và gợi ý sửa chữa",
+      "totalScore": "Tổng điểm",
+      "needsHandle": "Cần xử lý",
+      "canContinue": "Có thể tiếp tục",
+      "auditReportCount": "{count} báo cáo kiểm toán, {openCount} vấn đề chưa giải quyết.",
+      "replanPlan": "Kế hoạch chương tiếp theo",
+      "replanRecommended": "Đề xuất điều chỉnh",
+      "replanNotNeeded": "Tạm thời không điều chỉnh",
+      "replanning": "Đang điều chỉnh...",
+      "executeReplan": "Thực hiện điều chỉnh lại",
+      "viewReplan": "Xem điều chỉnh lại",
+      "highRiskIssues": "Vấn đề rủi ro cao",
+      "lastReplanTitle": "Điều chỉnh kế hoạch gần nhất",
+      "affectedChapters": "Chương bị ảnh hưởng",
+      "none": "Chưa có",
+      "adjustWindow": "Cửa sổ điều chỉnh",
+      "triggerType": "Cách kích hoạt",
+      "sourceIssueCount": "Vấn đề nguồn",
+      "evidence": "Bằng chứng",
+      "fixSuggestion": "Gợi ý",
+      "noOpenIssues": "Hiện không có vấn đề cần xử lý."
+    },
+    "directorDebug": {
+      "debugButton": "Kiểm tra gỡ lỗi",
+      "dialogTitle": "Kiểm tra mức độ hoàn chỉnh của bước Đạo diễn",
+      "dialogDescription": "Đây là kết quả kiểm tra từng bước dựa trên đầu ra thực tế. Bạn có thể thấy trực tiếp bước nào đã có kết quả, bước nào thiếu điều kiện tiên quyết, và hệ thống đang chuẩn bị bổ sung chỗ nào.",
+      "completedCount": "Đã xác nhận hoàn thành {count}/{total}",
+      "blockedCount": "Còn cần bổ sung điều kiện tiên quyết {count}",
+      "currentStepLabel": "Hiện đang xem {label}",
+      "recheck": "Kiểm tra lại",
+      "loading": "Đang đọc kết quả kiểm tra mức độ hoàn chỉnh của chuỗi Đạo diễn hiện tại...",
+      "loadError": "Không thể hoàn thành kiểm tra này.",
+      "noTask": "Hiện chưa có tác vụ Đạo diễn nào để kiểm tra. Hãy khởi động hoặc tiếp nhận một luồng AI Đạo diễn, sau đó kết quả kiểm tra từng bước sẽ xuất hiện ở đây.",
+      "currentFactStepTitle": "Hệ thống sẽ bổ sung đoạn này trước",
+      "reJudging": "Hệ thống đang đánh giá lại bước tiếp theo",
+      "partialInspectWarning": "Một số bước kiểm tra không có kết quả đầy đủ. Thường là do bối cảnh tác vụ hiện tại không hoàn chỉnh, hoặc đoạn này cần bổ sung thêm nguồn thực tế.",
+      "currentFactStep": "Đánh giá hiện tại sẽ xử lý chỗ này trước",
+      "activeRuntimeStep": "Hệ thống nền đang xử lý bước này",
+      "completeness": "Mức độ hoàn chỉnh của đoạn này",
+      "canContinue": "Có thể tiếp tục ngay bây giờ không",
+      "canContinueLabel": "Có thể tiếp tục ngay bây giờ không",
+      "canStart": "Có thể bắt đầu hoặc tiếp tục",
+      "needsPrerequisite": "Cần bổ sung thực tế tiên quyết trước",
+      "nextStep": "Bước tiếp theo do hệ thống xác định",
+      "nextStepLabel": "Bước tiếp theo do hệ thống xác định",
+      "resumeFromLabel": "Nếu bị gián đoạn, đề xuất tiếp tục từ đâu",
+      "latestFactDesc": "Mô tả thực tế gần nhất của bước này",
+      "noExtraDesc": "Tạm thời không có mô tả bổ sung",
+      "blockedReason": "Lý do hiện tại bị kẹt",
+      "evidence": "Căn cứ phán đoán",
+      "noActionSuggestion": "Hiện tại không có đề xuất hành động bổ sung",
+      "stages": {
+        "candidateSelection": "Hướng mở sách",
+        "candidateConfirm": "Tạo dự án",
+        "storyMacro": "Hoạch định vĩ mô câu chuyện",
+        "bookContract": "Thỏa thuận sáng tác cấp sách",
+        "characterSetup": "Chuẩn bị nhân vật",
+        "volumeStrategy": "Chiến lược tập",
+        "structuredOutline": "Nhịp độ và tách chương",
+        "chapterExecution": "Sinh văn bản chính",
+        "qualityRepair": "Vòng khép kín chất lượng",
+        "takeover": "Tiếp nhận dự án có sẵn"
+      },
+      "actions": {
+        "runChapterDetailGeneration": "Tiếp tục chi tiết hóa danh sách tác vụ chương còn lại",
+        "runChapterListGeneration": "Tiếp tục bổ sung danh sách tách chương của tập",
+        "syncExecutionContracts": "Đồng bộ hợp đồng thực thi chương"
+      },
+      "resumeFrom": {
+        "label": "Nếu bị gián đoạn, đề xuất tiếp tục từ đâu",
+        "reJudge": "Phán đoán lại theo hiện trường hiện tại",
+        "chapterDetailBundle": "Tiếp tục từ các chương chưa được chi tiết hóa còn lại",
+        "chapterList": "Tiếp tục từ danh sách tách chương của tập",
+        "beatSheet": "Tiếp tục từ bảng nhịp độ tập",
+        "chapterOrder": "Chương thứ {order}"
+      },
+      "stepTone": {
+        "error": "Kiểm tra chưa hoàn thành",
+        "done": "Đã xác nhận hoàn thành",
+        "blocked": "Chưa thể thực thi",
+        "current": "Hiện tại ưu tiên bổ sung đoạn này",
+        "working": "Chưa khép kín"
+      },
+      "stepDetail": {
+        "done": "Hệ thống đã tìm thấy đầu ra thực tế tương ứng với bước này, có thể tái sử dụng trực tiếp.",
+        "blocked": "Dữ liệu thực tế đầu vào chưa được bổ sung đầy đủ, vì vậy bước này tạm thời chưa thể bắt đầu.",
+        "current": "Đây là bước xử lý chính tiếp theo được hệ thống xác định dựa trên dữ liệu thực tế hiện có.",
+        "working": "Bước này đã có điều kiện thực thi, nhưng dữ liệu thực tế chưa hoàn toàn khép kín."
+      }
+    },
+    "cover": {
+      "dialogTitle": "Tạo hình ảnh chính cho bìa tiểu thuyết",
+      "cannotGenerate": "Chưa thể bắt đầu tạo",
+      "noImageModelDesc1": "Hiện chưa có mô hình hình ảnh nào được cấu hình. Vui lòng vào",
+      "settingsLink": "Cài đặt hệ thống",
+      "noImageModelDesc2": "bổ sung nhà cung cấp và mô hình hỗ trợ tạo hình ảnh, sau đó quay lại đây tiếp tục.",
+      "sourcePromptTitle": "Bản tổng hợp thông tin tiểu thuyết / Đầu vào tối ưu AI",
+      "sourcePromptHint": "Hệ thống đã tổng hợp một bản nháp đầu vào cho bìa dựa trên thông tin cơ bản hiện tại của tiểu thuyết. Bạn có thể chỉnh sửa trực tiếp, hoặc nhấn 'Tối ưu Prompt bằng AI' trước rồi tiếp tục điều chỉnh thủ công.",
+      "sourcePromptPlaceholder": "Mô tả hình ảnh chính mà cuốn sách này muốn làm nổi bật trên bìa.",
+      "optimizeLanguageLabel": "Ngôn ngữ đầu ra tối ưu",
+      "languageZh": "Tiếng Trung",
+      "optimizing": "Đang tối ưu...",
+      "optimizePromptButton": "Tối ưu Prompt bằng AI",
+      "restoreOriginal": "Khôi phục đường dẫn gốc",
+      "currentSendMode": "Chế độ gửi hiện tại",
+      "sendMode": {
+        "optimized": "Prompt tối ưu AI",
+        "manual": "Prompt chỉnh sửa thủ công",
+        "original": "Prompt đường dẫn gốc"
+      },
+      "finalPromptTitle": "Xem trước Prompt gửi cuối cùng",
+      "finalPromptHint": "Đây là prompt cuối cùng sẽ được gửi đến mô hình hình ảnh. Bạn có thể chỉnh sửa trực tiếp, hoặc tiếp tục tinh chỉnh sau khi tối ưu AI.",
+      "stylePresetPlaceholder": "Cài đặt trước phong cách, ví dụ: minh họa điện ảnh, độ nhận diện cao",
+      "negativePromptPlaceholder": "Từ khóa phủ định, ví dụ: chữ, hình mờ, độ phân giải thấp, biến dạng",
+      "providerLabel": "Nhà cung cấp mô hình",
+      "noProviderOption": "Vui lòng điền mô hình hình ảnh trong Cài đặt hệ thống trước",
+      "noProviderError": "Vui lòng cấu hình nhà cung cấp và mô hình hỗ trợ tạo hình ảnh trong Cài đặt hệ thống trước.",
+      "sizeLabel": "Kích thước",
+      "sizePortrait": "1024x1536 (khuyến nghị dọc)",
+      "countLabel": "Số lượng tạo",
+      "count1": "1 ảnh",
+      "count2": "2 ảnh",
+      "count3": "3 ảnh",
+      "count4": "4 ảnh",
+      "submitting": "Đang gửi tác vụ...",
+      "startGenerate": "Bắt đầu tạo",
+      "optimizeError": "AI tối ưu thất bại, vui lòng thử lại sau.",
+      "submitError": "Gửi tác vụ ảnh thất bại, vui lòng thử lại sau.",
+      "taskStatus": "Trạng thái tác vụ hiện tại",
+      "galleryTitle": "Thư viện ảnh bìa",
+      "galleryHint": "Sau khi tạo thành công sẽ tự động quay lại đây. Ảnh thành công đầu tiên sẽ tự động được đặt làm ảnh chính nếu hiện tại chưa có ảnh bìa chính.",
+      "loadingGallery": "Đang đọc thư viện ảnh bìa...",
+      "emptyGallery": "Chưa có ảnh bìa. Hãy gửi một tác vụ tạo, sau khi thành công sẽ xuất hiện ở đây.",
+      "primaryCover": "Ảnh bìa chính hiện tại",
+      "candidateCover": "Ảnh ứng viên",
+      "sizeUnknown": "Kích thước chưa xác định",
+      "localPath": "Đường dẫn cục bộ",
+      "setPrimary": "Đặt làm ảnh bìa hiện tại",
+      "deleting": "Đang xóa...",
+      "delete": "Xóa",
+      "deleteConfirm": "Xác nhận xóa ảnh bìa này? Nếu đây là ảnh bìa chính hiện tại, hệ thống sẽ tự động thêm một ảnh chính mới.",
+      "deleteError": "Xóa ảnh bìa thất bại, vui lòng thử lại sau.",
+      "novelFallback": "Tiểu thuyết",
+      "coverAlt": "Ảnh bìa ứng viên",
+      "status": {
+        "queued": "Đang xếp hàng",
+        "running": "Đang tạo",
+        "succeeded": "Tạo thành công",
+        "failed": "Tạo thất bại",
+        "cancelled": "Đã hủy"
+      }
+    },
+    "worldUsage": {
+      "title": "Ranh giới thế giới quan của cuốn sách này",
+      "description": "Hệ thống sẽ kết hợp độc giả mục tiêu, điểm bán hàng và cam kết ban đầu của cuốn sách này, từ thế giới quan đã liên kết cắt ra các tổ chức, địa điểm và quy tắc thực sự sẽ được sử dụng. Bạn thường chỉ cần xác nhận sân khấu chính, các mục bắt buộc phải giữ lại ở giai đoạn đầu và giải thích ranh giới không được vượt qua.",
+      "needsRefresh": "Cần làm mới",
+      "generated": "Đã tạo",
+      "refreshing": "Đang làm mới...",
+      "refreshButton": "Sắp xếp lại thiết định thế giới",
+      "saving": "Đang lưu...",
+      "saveButton": "Lưu các mục giữ lại của cuốn sách này",
+      "noWorldHint": "Cuốn tiểu thuyết này chưa liên kết thế giới quan. Trước tiên hãy chọn một thế giới trong 'Thông tin cơ bản' ở trên, hệ thống mới giúp bạn sắp xếp các thiết định khả dụng.",
+      "boundWorld": "Thế giới đã liên kết",
+      "unnamedWorld": "Thế giới chưa đặt tên",
+      "storyInputSourceLabel": "Nguồn ý tưởng câu chuyện hiện tại",
+      "storyInputSource": {
+        "explicit": "Từ ý tưởng câu chuyện bạn nhập thủ công lần này",
+        "storyMacro": "Từ ý tưởng câu chuyện trong hoạch định vĩ mô câu chuyện",
+        "novelDescription": "Từ giới thiệu tiểu thuyết",
+        "none": "Không có"
+      },
+      "currentContent": "Nội dung cuốn sách này sẽ sử dụng hiện tại",
+      "coreWorldFrame": "Màu nền thế giới",
+      "activeForces": "Các tổ chức sẽ sử dụng hiện tại",
+      "activeLocations": "Các địa điểm sẽ sử dụng hiện tại",
+      "appliedRules": "Quy tắc cốt lõi",
+      "pressureSources": "Nguồn áp lực chính",
+      "storyScopeBoundary": "Ranh giới cuốn sách này không nên vượt qua",
+      "manualOverrideTitle": "Nếu bạn muốn chỉ định thủ công, chỉ cần sửa vài mục này là đủ",
+      "manualOverrideHint": "Sân khấu chính = địa điểm câu chuyện thường xảy ra nhất. Bắt buộc giữ lại giai đoạn đầu = các tổ chức, địa điểm hoặc quy tắc phải mang vào bắt buộc dù hệ thống cắt bỏ thế nào.",
+      "primaryLocation": "Sân khấu chính",
+      "primaryLocationPlaceholder": "Vui lòng chọn sân khấu chính",
+      "noExtraSpec": "Không chỉ định thêm",
+      "requiredForces": "Tổ chức phải giữ lại trong giai đoạn đầu",
+      "noForces": "Thế giới hiện tại chưa có tổ chức nào để chọn.",
+      "requiredLocations": "Địa điểm phải giữ lại trong giai đoạn đầu",
+      "noLocations": "Thế giới hiện tại chưa có địa điểm nào để chọn.",
+      "requiredRules": "Quy tắc phải giữ lại trong giai đoạn đầu",
+      "noRules": "Thế giới hiện tại chưa có quy tắc nào để chọn.",
+      "scopeNoteLabel": "Ghi chú ranh giới không được vượt trong giai đoạn đầu",
+      "scopeNoteHint": "Nếu bạn muốn thêm một câu ghi chú ranh giới, ví dụ \"Giữ nguyên nền tảng đô thị hiện thực, đừng chuyển thành văn tu tiên thăng cấp\", hãy viết ở đây.",
+      "scopeNotePlaceholder": "Ví dụ: Giữ nguyên môi trường kinh doanh hiện thực và áp lực nhân vật của tác phẩm gốc, đừng đưa vào hệ thống siêu nhiên.",
+      "noSliceHint": "Hệ thống chưa tổng hợp được thiết định thế giới quan sẽ dùng cho cuốn sách này. Nhấp \"Sắp xếp lại thiết định thế giới quan\" để tự động tạo ra một phiên bản kết quả khả dụng dựa trên thế giới hiện tại và ý tưởng câu chuyện."
+    },
+    "autoExecution": {
+      "scope": {
+        "book": "Toàn bộ sách",
+        "chapterRange": "Chương 1-N",
+        "volume": "Tập 1",
+        "chapterRangeTakeover": "Phạm vi chương",
+        "volumeTakeover": "Phạm vi tập"
+      },
+      "scopeDesc": {
+        "bookNew": "Phù hợp để AI thực hiện toàn bộ cuốn sách từ lập kế hoạch đến nội dung chính.",
+        "chapterRangeNew": "Phù hợp để chạy thử các chương mở đầu, mặc định chương 1-10, có thể điều chỉnh theo số chương của toàn bộ sách.",
+        "volumeNew": "Phù hợp để AI hoàn thành việc chia chương, viết, đánh giá và sửa chữa tập đầu tiên.",
+        "bookTakeover": "Phù hợp để AI kiểm tra lại toàn bộ kế hoạch và tiếp tục thực hiện theo phạm vi toàn bộ sách.",
+        "chapterRangeTakeover": "Phù hợp để AI chỉ tiếp quản một đoạn, ví dụ chương 11-20.",
+        "volumeTakeover": "Phù hợp để AI tiếp quản tập được chỉ định và các chương trong tập đó."
+      },
+      "chapterLabel": "Chương {order}",
+      "chapterRangeLabel": "Chương {start}-{end}",
+      "volumeLabel": "Tập {order}",
+      "scopeTitle": "Phạm vi thực thi tự động",
+      "willExecute": "Sẽ thực thi",
+      "chapterCount": "Số lượng chương",
+      "chapterCountPlaceholder": "Ví dụ 10",
+      "maxChapterHint": "Không vượt quá {count} chương theo kế hoạch của toàn bộ sách.",
+      "startChapter": "Chương bắt đầu",
+      "startChapterPlaceholder": "ví dụ 11",
+      "endChapter": "Kết thúc chương",
+      "endChapterPlaceholder": "ví dụ 20",
+      "volumeOrder": "Số thứ tự tập",
+      "volumeOrderPlaceholder": "ví dụ 2",
+      "autoReviewLabel": "Tự động kiểm duyệt sau khi sinh văn bản",
+      "autoReviewHint": "Khi tắt, sau khi sinh văn bản xong sẽ kết thúc chương hiện tại, việc kiểm tra chất lượng sẽ do bạn xử lý thủ công.",
+      "autoReviewAriaLabel": "Chuyển đổi tự động kiểm duyệt sau khi sinh văn bản",
+      "autoRepairLabel": "Tự động sửa khi không qua kiểm duyệt",
+      "autoRepairHint": "Chỉ có hiệu lực khi bật tự động kiểm duyệt; khi tắt sẽ giữ lại vấn đề, chờ bạn xử lý thủ công hoặc chạy lại.",
+      "autoRepairAriaLabel": "Chuyển đổi tự động sửa sau khi kiểm duyệt",
+      "systemNote": "Hệ thống sẽ tự động chuẩn bị bảng nhịp độ, tách chương và tài nguyên thực thi chương theo phạm vi bạn chọn, sau đó tiếp tục viết.",
+      "currentQualityPolicy": "Chính sách chất lượng hiện tại",
+      "reviewLabel": {
+        "autoReviewAndRepair": "Tự động kiểm duyệt + tự động sửa sau văn bản",
+        "autoReviewOnly": "Tự động kiểm duyệt sau văn bản, không tự động sửa",
+        "noAutoReview": "Không tự động kiểm duyệt và sửa sau văn bản"
+      }
     }
   },
   "autoDirector": {
@@ -3117,7 +3635,8 @@
         "styleProfileHintLabel": "Tùy chọn. Sau khi chọn, nửa đầu Đạo diễn tự động chỉ đọc tóm tắt cách viết rút gọn; đến giai đoạn viết nội dung chính mới dùng đầy đủ quy tắc viết.",
         "styleProfileNone": "Trước tiên chỉ dùng từ khóa giọng văn",
         "styleProfileEmptyHint": "Nếu đã có bộ quy tắc viết được đúc kết sẵn, bạn nên chọn trực tiếp một bộ để dễ hình dung Đạo diễn tự động sẽ viết như thế nào.",
-        "styleProfileSummary": "Tóm tắt cách viết chỉ có hiệu lực ở giai đoạn này: {summary}"
+        "styleProfileSummary": "Tóm tắt cách viết chỉ có hiệu lực ở giai đoạn này: {summary}",
+        "readerChannelPreference": "Kênh độc giả mục tiêu"
       },
       "modelSettings": "Cài đặt mô hình",
       "runMode": {
@@ -3191,7 +3710,10 @@
             "summary": "Nhấn mạnh hơn vào bùng nổ, xung đột và những cảnh tác động mạnh."
           }
         }
-      }
+      },
+      "ideaOverwriteConfirm": "Hiện đã có ý tưởng khởi đầu, sử dụng cảm hứng sẽ ghi đè nội dung hiện có, bạn có muốn tiếp tục không?",
+      "ideaGenerating": "Đang sinh cảm hứng...",
+      "ideaNoIdea": "Không có ý tưởng? Hãy giúp tôi nghĩ một cái"
     },
     "dialog": {
       "title": {
@@ -3810,6 +4332,188 @@
         "turnStatus": "Trạng thái lượt",
         "turnStage": "Giai đoạn lượt",
         "summaryCheckpoint": "Checkpoint tóm tắt"
+      }
+    },
+    "page": {
+      "badge": "Trung tâm sáng tạo",
+      "newThreadTitle": "Hội thoại mới",
+      "bindings": {
+        "novel": "Tiểu thuyết:",
+        "world": "Thế giới quan:",
+        "task": "Tác vụ:",
+        "bookAnalysis": "Phân tích sách:",
+        "formula": "Công thức viết:",
+        "baseCharacter": "Nhân vật cơ bản:",
+        "styleProfile": "Cách viết:",
+        "knowledgeDocs": "Tài liệu tri thức: {count} bản"
+      },
+      "wip": {
+        "title": "Xem trước tính năng",
+        "description": "Trung tâm sáng tạo hiện đang ở giai đoạn xem trước sớm, một số tính năng vẫn đang được hoàn thiện."
+      }
+    },
+    "threadList": {
+      "title": "Danh sách hội thoại",
+      "newThread": "Hội thoại mới",
+      "archive": "Lưu trữ",
+      "unarchive": "Hủy lưu trữ",
+      "delete": "Xóa",
+      "empty": "Chưa có hội thoại, nhấn vào trên để tạo mới.",
+      "status": {
+        "busy": "Đang thực thi",
+        "interrupted": "Chờ xử lý",
+        "error": "Bất thường",
+        "idle": "Rảnh"
+      }
+    },
+    "conversation": {
+      "title": "Hội thoại",
+      "emptyTitle": "Bắt đầu sáng tác",
+      "emptySubtitle": "Nhập mục tiêu sáng tác của bạn, AI sẽ giúp bạn tiến triển.",
+      "inputPlaceholder": "Nhập mục tiêu sáng tác hoặc câu hỏi...",
+      "send": "Gửi",
+      "stop": "Dừng",
+      "quickActions": {
+        "direction": {
+          "label": "Xác nhận hướng",
+          "prompt": "Giúp tôi tổng hợp hướng sáng tác hiện tại của tiểu thuyết và đề xuất bước tiếp theo."
+        },
+        "diagnose": {
+          "label": "Chẩn đoán vấn đề",
+          "prompt": "Chẩn đoán vấn đề hiện tại của tiểu thuyết và đưa ra đề xuất sửa chữa."
+        },
+        "promise": {
+          "label": "Xem cam kết",
+          "prompt": "Liệt kê các cam kết cốt lõi của tiểu thuyết đối với độc giả và các mục cần thực hiện."
+        },
+        "converge": {
+          "label": "Thu hẹp tiến triển",
+          "prompt": "Giúp tôi thu hẹp trạng thái sáng tác hiện tại thành bước có thể thực thi tiếp theo."
+        }
+      }
+    },
+    "activity": {
+      "status": {
+        "running": "Đang thực thi",
+        "queued": "Đang xếp hàng",
+        "waiting_approval": "Chờ phê duyệt",
+        "succeeded": "Đã hoàn thành",
+        "failed": "Thất bại",
+        "cancelled": "Đã hủy"
+      },
+      "runStatus": {
+        "title": "Trạng thái chạy",
+        "summary": "Trạng thái: {status}"
+      },
+      "toolCall": {
+        "title": "Gọi công cụ: {toolName}",
+        "defaultSummary": "Đang gọi công cụ..."
+      },
+      "toolResult": {
+        "title": "Kết quả công cụ: {toolName} {result}",
+        "success": "Thành công",
+        "failed": "Thất bại",
+        "defaultSummary": "Công cụ đã trả về kết quả."
+      },
+      "interrupt": {
+        "defaultTitle": "Chờ xác nhận"
+      },
+      "approval": {
+        "approved": "Đã phê duyệt",
+        "rejected": "Đã từ chối",
+        "defaultSummary": "Phê duyệt đã được xử lý."
+      },
+      "error": {
+        "title": "Lỗi thực thi"
+      },
+      "metadata": {
+        "reasoning": "Quá trình suy luận",
+        "intentTitle": "Phân tích ý định",
+        "intentSummary": "Ý định: {intent}, Nguồn: {source}",
+        "confidence": "Độ tin cậy: {value}",
+        "confidenceLabel": "Độ tin cậy",
+        "intent": "Ý định",
+        "source": "Nguồn",
+        "checkpointTitle": "Điểm kiểm tra",
+        "checkpointSaved": "Đã lưu"
+      },
+      "system": {
+        "title": "Tin nhắn hệ thống"
+      }
+    },
+    "inlineToolCall": {
+      "approvalGate": {
+        "defaultTitle": "Chờ phê duyệt",
+        "defaultSummary": "Vui lòng xác nhận có tiếp tục thực hiện thao tác hiện tại không.",
+        "unknownTarget": "Mục tiêu không xác định",
+        "notePlaceholder": "Tùy chọn: Nhập ghi chú phê duyệt...",
+        "approve": "Phê duyệt",
+        "reject": "Từ chối"
+      },
+      "toolCall": {
+        "title": "Gọi công cụ: {toolName}",
+        "expandArgs": "Xem tham số",
+        "collapseArgs": "Thu gọn tham số",
+        "defaultResult": "Công cụ đã trả về kết quả."
+      }
+    },
+    "messagePrimitives": {
+      "prevBranch": "←",
+      "nextBranch": "→",
+      "edit": "Chỉnh sửa",
+      "regenerate": "Tạo lại",
+      "reasoning": "Quá trình suy luận",
+      "editPlaceholder": "Chỉnh sửa nội dung tin nhắn...",
+      "cancel": "Hủy",
+      "sendBranch": "Gửi"
+    },
+    "debugTrace": {
+      "title": "Theo dõi gỡ lỗi",
+      "currentTurn": "Lượt hiện tại",
+      "entryCount": "{count} bản ghi",
+      "collapse": "Thu gọn",
+      "expand": "Mở rộng",
+      "collapsedHint": "Nhấp để mở rộng xem chi tiết theo dõi gỡ lỗi.",
+      "empty": "Lượt hiện tại chưa có bản ghi gỡ lỗi."
+    },
+    "turnSummary": {
+      "title": "Tóm tắt lượt",
+      "currentStage": "Giai đoạn hiện tại: {stage}",
+      "intentSummary": "Ý định lượt này",
+      "actionSummary": "Hành động thực hiện",
+      "impactSummary": "Tác động và thay đổi",
+      "nextSuggestion": "Đề xuất bước tiếp theo",
+      "followDirection": "Tiếp tục theo đề xuất",
+      "status": {
+        "succeeded": "Hoàn thành",
+        "interrupted": "Chờ xác nhận",
+        "failed": "Thất bại",
+        "cancelled": "Đã hủy",
+        "running": "Đang thực thi"
+      }
+    },
+    "novelSetup": {
+      "title": "Khởi tạo tiểu thuyết",
+      "readyCount": "Đã hoàn thành {completed}/{total}",
+      "requiredForProduction": "Cần thiết cho sản xuất",
+      "currentValue": "Giá trị hiện tại: {value}",
+      "fillItem": "Điền mục này",
+      "giveOptions": "Đưa ra lựa chọn cho tôi",
+      "pendingTitle": "Mục chưa hoàn thành",
+      "listSeparator": "、",
+      "andMore": "v.v.",
+      "generateChecklist": "Tạo danh sách đầy đủ",
+      "generateChecklistPrompt": "Liệt kê danh sách khởi tạo tiểu thuyết hiện tại và đưa ra gợi ý điền cho từng mục.",
+      "batchOptions": "Đưa lựa chọn hàng loạt",
+      "batchOptionsPrompt": "Đưa ra 2-3 gợi ý lựa chọn cho tất cả các mục chưa điền hiện tại.",
+      "followGuide": "Tiếp tục theo gợi ý",
+      "viewSummary": "Xem tóm tắt hiện tại",
+      "viewSummaryPrompt": "Tổng kết thông tin khởi tạo đã hoàn thành của tiểu thuyết hiện tại.",
+      "nextQuestion": "Câu hỏi tiếp theo",
+      "stage": {
+        "readyForProduction": "Sẵn sàng sản xuất",
+        "readyForPlanning": "Sẵn sàng lập kế hoạch",
+        "initializing": "Đang khởi tạo"
       }
     }
   },
@@ -4923,6 +5627,170 @@
         "empty": "Nhập ID truyện rồi đọc tài liệu, kiểm tra tài liệu đã đủ chưa trước khi bắt đầu với prompt hiện tại."
       },
       "debug": "Xem gỡ lỗi"
+    },
+    "threadList": {
+      "title": "Danh sách hội thoại",
+      "newThread": "Hội thoại mới",
+      "archive": "Lưu trữ",
+      "unarchive": "Hủy lưu trữ",
+      "delete": "Xóa",
+      "empty": "Chưa có hội thoại, nhấn vào phía trên để tạo mới.",
+      "status": {
+        "busy": "Đang thực thi",
+        "interrupted": "Chờ xử lý",
+        "error": "Lỗi",
+        "idle": "Rảnh"
+      }
+    },
+    "conversation": {
+      "title": "Đối thoại",
+      "emptyTitle": "Bắt đầu sáng tác",
+      "emptySubtitle": "Nhập mục tiêu sáng tác của bạn, AI sẽ giúp bạn tiến triển.",
+      "inputPlaceholder": "Nhập mục tiêu sáng tác hoặc câu hỏi...",
+      "send": "Gửi",
+      "stop": "Dừng",
+      "quickActions": {
+        "direction": {
+          "label": "Xác nhận hướng",
+          "prompt": "Giúp tôi sắp xếp hướng sáng tác hiện tại của tiểu thuyết và đề xuất bước tiếp theo."
+        },
+        "diagnose": {
+          "label": "Chẩn đoán vấn đề",
+          "prompt": "Chẩn đoán vấn đề hiện tại của tiểu thuyết và đưa ra đề xuất sửa chữa."
+        },
+        "promise": {
+          "label": "Xem cam kết",
+          "prompt": "Liệt kê các cam kết cốt lõi của tiểu thuyết hiện tại đối với độc giả và các mục cần thực hiện."
+        },
+        "converge": {
+          "label": "Thu hẹp tiến triển",
+          "prompt": "Giúp tôi thu hẹp trạng thái sáng tác hiện tại thành bước có thể thực thi tiếp theo."
+        }
+      }
+    },
+    "activity": {
+      "status": {
+        "running": "Đang thực thi",
+        "queued": "Đang xếp hàng",
+        "waiting_approval": "Chờ phê duyệt",
+        "succeeded": "Đã hoàn thành",
+        "failed": "Thất bại",
+        "cancelled": "Đã hủy"
+      },
+      "runStatus": {
+        "title": "Trạng thái chạy",
+        "summary": "Trạng thái: {status}"
+      },
+      "toolCall": {
+        "title": "Gọi công cụ: {toolName}",
+        "defaultSummary": "Đang gọi công cụ..."
+      },
+      "toolResult": {
+        "title": "Kết quả công cụ: {toolName} {result}",
+        "success": "Thành công",
+        "failed": "Thất bại",
+        "defaultSummary": "Công cụ đã trả về kết quả."
+      },
+      "interrupt": {
+        "defaultTitle": "Chờ xác nhận"
+      },
+      "approval": {
+        "approved": "Đã phê duyệt",
+        "rejected": "Đã từ chối",
+        "defaultSummary": "Đã xử lý phê duyệt."
+      },
+      "error": {
+        "title": "Lỗi thực thi"
+      },
+      "metadata": {
+        "reasoning": "Quá trình suy luận",
+        "intentTitle": "Phân tích ý định",
+        "intentSummary": "Ý định: {intent}, Nguồn: {source}",
+        "confidence": "Độ tin cậy: {value}",
+        "confidenceLabel": "Độ tin cậy",
+        "intent": "Ý định",
+        "source": "Nguồn",
+        "checkpointTitle": "Điểm kiểm tra",
+        "checkpointSaved": "Đã lưu"
+      },
+      "system": {
+        "title": "Tin nhắn hệ thống"
+      }
+    },
+    "inlineToolCall": {
+      "approvalGate": {
+        "defaultTitle": "Chờ phê duyệt",
+        "defaultSummary": "Vui lòng xác nhận có tiếp tục thực hiện thao tác hiện tại không.",
+        "unknownTarget": "Mục tiêu không xác định",
+        "notePlaceholder": "Tùy chọn: Nhập ghi chú phê duyệt...",
+        "approve": "Phê duyệt",
+        "reject": "Từ chối"
+      },
+      "toolCall": {
+        "title": "Gọi công cụ: {toolName}",
+        "expandArgs": "Xem tham số",
+        "collapseArgs": "Thu gọn tham số",
+        "defaultResult": "Công cụ đã trả về kết quả."
+      }
+    },
+    "messagePrimitives": {
+      "prevBranch": "←",
+      "nextBranch": "→",
+      "edit": "Chỉnh sửa",
+      "regenerate": "Tạo lại",
+      "reasoning": "Quá trình suy luận",
+      "editPlaceholder": "Chỉnh sửa nội dung tin nhắn...",
+      "cancel": "Hủy",
+      "sendBranch": "Gửi"
+    },
+    "debugTrace": {
+      "title": "Theo dõi gỡ lỗi",
+      "currentTurn": "Lượt hiện tại",
+      "entryCount": "{count} bản ghi",
+      "collapse": "Thu gọn",
+      "expand": "Mở rộng",
+      "collapsedHint": "Nhấp để mở rộng xem chi tiết theo dõi gỡ lỗi.",
+      "empty": "Lượt hiện tại chưa có bản ghi gỡ lỗi."
+    },
+    "turnSummary": {
+      "title": "Tóm tắt lượt",
+      "currentStage": "Giai đoạn hiện tại: {stage}",
+      "intentSummary": "Ý định lượt này",
+      "actionSummary": "Hành động thực thi",
+      "impactSummary": "Ảnh hưởng và thay đổi",
+      "nextSuggestion": "Đề xuất bước tiếp theo",
+      "followDirection": "Tiếp tục theo đề xuất",
+      "status": {
+        "succeeded": "Đã hoàn thành",
+        "interrupted": "Chờ xác nhận",
+        "failed": "Thất bại",
+        "cancelled": "Đã hủy",
+        "running": "Đang thực thi"
+      }
+    },
+    "novelSetup": {
+      "title": "Khởi tạo tiểu thuyết",
+      "readyCount": "Đã hoàn thành {completed}/{total}",
+      "requiredForProduction": "Cần thiết cho sản xuất",
+      "currentValue": "Giá trị hiện tại: {value}",
+      "fillItem": "Điền mục này",
+      "giveOptions": "Cho tôi tùy chọn",
+      "pendingTitle": "Mục chưa hoàn thành",
+      "listSeparator": "、",
+      "andMore": "v.v.",
+      "generateChecklist": "Tạo danh sách đầy đủ",
+      "generateChecklistPrompt": "Liệt kê danh sách khởi tạo tiểu thuyết hiện tại và đưa ra gợi ý điền cho từng mục.",
+      "batchOptions": "Gợi ý hàng loạt",
+      "batchOptionsPrompt": "Đưa ra 2-3 gợi ý lựa chọn cho từng mục cần điền hiện tại.",
+      "followGuide": "Tiếp tục theo gợi ý",
+      "viewSummary": "Xem tóm tắt hiện tại",
+      "viewSummaryPrompt": "Tổng kết thông tin khởi tạo đã hoàn thành của tiểu thuyết hiện tại.",
+      "nextQuestion": "Câu hỏi tiếp theo",
+      "stage": {
+        "readyForProduction": "Sẵn sàng sản xuất",
+        "readyForPlanning": "Sẵn sàng lập kế hoạch",
+        "initializing": "Đang khởi tạo"
+      }
     }
   },
   "tasks": {
@@ -5162,7 +6030,8 @@
       "none": "Chưa có",
       "evidenceTitle": "Bảng bằng chứng",
       "noEvidence": "Phân tích hiện tại chưa có nội dung bằng chứng.",
-      "evidenceLabel": "[{source}] {label}"
+      "evidenceLabel": "[{source}] {label}",
+      "publishedAt": "Thời gian xuất bản: {date}"
     },
     "section": {
       "frozen": "Đã đóng băng",

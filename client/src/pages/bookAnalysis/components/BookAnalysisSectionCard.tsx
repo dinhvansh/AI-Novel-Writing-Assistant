@@ -1,4 +1,4 @@
-﻿import { useState } from "react";
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import type { BookAnalysisSection } from "@ai-novel/shared/types/bookAnalysis";
 import MarkdownViewer from "@/components/common/MarkdownViewer";
@@ -25,7 +25,6 @@ interface BookAnalysisSectionCardProps {
 }
 
 export default function BookAnalysisSectionCard(props: BookAnalysisSectionCardProps) {
-  const { t } = useTranslation();
   const {
     section,
     draft,
@@ -40,6 +39,7 @@ export default function BookAnalysisSectionCard(props: BookAnalysisSectionCardPr
     onCancelOptimizePreview,
     onSave,
   } = props;
+  const { t } = useTranslation();
   const [draftMode, setDraftMode] = useState<"view" | "edit">("view");
 
   const canRegenerate = canOperate && !draft.frozen && !isRegenerating;
@@ -52,7 +52,7 @@ export default function BookAnalysisSectionCard(props: BookAnalysisSectionCardPr
           <div className="flex items-center gap-2">
             <CardTitle>{section.title}</CardTitle>
             <Badge variant="outline">{formatStatus(section.status, t)}</Badge>
-            {draft.frozen ? <Badge variant="secondary">{t("bookAnalysis:section.frozen")}</Badge> : null}
+            {draft.frozen ? <Badge variant="secondary">已冻结</Badge> : null}
           </div>
           <div className="flex flex-wrap gap-2">
             <Button
@@ -61,10 +61,10 @@ export default function BookAnalysisSectionCard(props: BookAnalysisSectionCardPr
               disabled={!canRegenerate}
               onClick={() => onRegenerate(section)}
             >
-              {t("bookAnalysis:section.regenerate")}
+              重新生成
             </Button>
             <Button size="sm" disabled={!canOperate || isSaving} onClick={() => onSave(section)}>
-              {t("bookAnalysis:section.save")}
+              保存
             </Button>
           </div>
         </div>
@@ -75,7 +75,9 @@ export default function BookAnalysisSectionCard(props: BookAnalysisSectionCardPr
             type="checkbox"
             checked={draft.frozen}
             onChange={(event) => onDraftChange(section, { frozen: event.target.checked })}
-          />{t("bookAnalysis:section.freezeLabel")}</label>
+          />
+          冻结此小节，自动重跑时不覆盖其内容。
+        </label>
 
         {draft.frozen ? (
           <div className="rounded-md border border-amber-300 bg-amber-50 p-2 text-xs text-amber-900">
@@ -86,10 +88,10 @@ export default function BookAnalysisSectionCard(props: BookAnalysisSectionCardPr
         <div className="space-y-2">
           <Tabs value={draftMode} onValueChange={(value) => setDraftMode(value as "view" | "edit")} className="space-y-2">
             <div className="flex flex-wrap items-center justify-between gap-2">
-              <div className="text-sm font-medium">{t("bookAnalysis:section.draftTitle")}</div>
+              <div className="text-sm font-medium">当前草稿</div>
               <TabsList className="h-9">
-                <TabsTrigger value="view">{t("bookAnalysis:section.viewMode")}</TabsTrigger>
-                <TabsTrigger value="edit">{t("bookAnalysis:section.editMode")}</TabsTrigger>
+                <TabsTrigger value="view">查看模式</TabsTrigger>
+                <TabsTrigger value="edit">编辑模式</TabsTrigger>
               </TabsList>
             </div>
             <TabsContent value="view" className="mt-0">
@@ -97,7 +99,7 @@ export default function BookAnalysisSectionCard(props: BookAnalysisSectionCardPr
                 {draft.editedContent.trim() ? (
                   <MarkdownViewer content={draft.editedContent} />
                 ) : (
-                  <div className="text-sm text-muted-foreground">{t("bookAnalysis:section.draftEmpty")}</div>
+                  <div className="text-sm text-muted-foreground">当前小节还没有可展示的内容。</div>
                 )}
               </div>
             </TabsContent>
@@ -106,19 +108,19 @@ export default function BookAnalysisSectionCard(props: BookAnalysisSectionCardPr
                 className="min-h-[220px] w-full rounded-md border bg-background p-3 text-sm"
                 value={draft.editedContent}
                 onChange={(event) => onDraftChange(section, { editedContent: event.target.value })}
-                placeholder={t("bookAnalysis:section.editPlaceholder")}
+                placeholder="在此直接编辑当前小节草稿。"
               />
             </TabsContent>
           </Tabs>
         </div>
 
         <div className="space-y-2 rounded-md border p-3">
-          <div className="text-sm font-medium">{t("bookAnalysis:section.optimizeTitle")}</div>
+          <div className="text-sm font-medium">AI 优化 / 修正</div>
           <textarea
             className="min-h-[90px] w-full rounded-md border bg-background p-2 text-sm"
             value={draft.optimizeInstruction}
             onChange={(event) => onDraftChange(section, { optimizeInstruction: event.target.value })}
-            placeholder={t("bookAnalysis:section.optimizePlaceholder")}
+            placeholder="输入优化或修正提示词，例如：压缩冗余、突出冲突、保持同样事实。"
           />
           <div className="flex flex-wrap gap-2">
             <Button
@@ -127,40 +129,44 @@ export default function BookAnalysisSectionCard(props: BookAnalysisSectionCardPr
               disabled={!canOptimize}
               onClick={() => onOptimize(section)}
             >
-              {isOptimizing ? "{t("bookAnalysis:section.generating")}" : "生成优化预览"}
+              {isOptimizing ? "生成预览中..." : "生成优化预览"}
             </Button>
           </div>
 
           {draft.optimizePreview.trim() ? (
             <div className="space-y-2">
-              <div className="text-xs font-medium text-muted-foreground">{t("bookAnalysis:section.previewTitle")}</div>
+              <div className="text-xs font-medium text-muted-foreground">优化预览</div>
               <div className="max-h-[320px] overflow-auto rounded-md border bg-muted/20 p-4">
                 <MarkdownViewer content={draft.optimizePreview} />
               </div>
               <div className="flex flex-wrap gap-2">
-                <Button size="sm" onClick={() => onApplyOptimizePreview(section)}>{t("bookAnalysis:section.applyPreview")}</Button>
-                <Button size="sm" variant="outline" onClick={() => onCancelOptimizePreview(section)}>{t("bookAnalysis:section.cancelPreview")}</Button>
+                <Button size="sm" onClick={() => onApplyOptimizePreview(section)}>
+                  应用到当前草稿
+                </Button>
+                <Button size="sm" variant="outline" onClick={() => onCancelOptimizePreview(section)}>
+                  取消预览
+                </Button>
               </div>
             </div>
           ) : null}
         </div>
 
         <details className="rounded-md border p-3">
-          <summary className="cursor-pointer text-sm font-medium">{t("bookAnalysis:section.notesTitle")}</summary>
+          <summary className="cursor-pointer text-sm font-medium">高级选项：备注</summary>
           <div className="mt-3 space-y-2">
-            <div className="text-sm font-medium">{t("bookAnalysis:section.notesLabel")}</div>
+            <div className="text-sm font-medium">备注</div>
             <textarea
               className="min-h-[120px] w-full rounded-md border bg-background p-3 text-sm"
               value={draft.notes}
               onChange={(event) => onDraftChange(section, { notes: event.target.value })}
-              placeholder={t("bookAnalysis:section.notesPlaceholder")}
+              placeholder="添加备注、假设或后续行动。"
             />
           </div>
         </details>
 
         {section.evidence.length > 0 ? (
           <div className="space-y-2">
-            <div className="text-sm font-medium">{t("bookAnalysis:section.evidenceTitle")}</div>
+            <div className="text-sm font-medium">证据</div>
             <div className="space-y-2">
               {section.evidence.map((item, index) => (
                 <div key={`${section.id}-${index}`} className="rounded-md border p-3 text-sm">
