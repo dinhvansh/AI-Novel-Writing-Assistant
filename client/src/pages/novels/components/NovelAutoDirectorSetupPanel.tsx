@@ -18,7 +18,7 @@ import {
   EMOTION_OPTIONS,
   PACE_OPTIONS,
   POV_OPTIONS,
-  READER_CHANNEL_OPTIONS,
+  useReaderChannelOptions,
 } from "../novelBasicInfo.shared";
 
 const POV_KEY_MAP: Record<NovelBasicFormState["narrativePov"], string> = {
@@ -135,6 +135,7 @@ export default function NovelAutoDirectorSetupPanel(props: NovelAutoDirectorSetu
 
   const hasEditableBasicForm = typeof onBasicFormChange === "function";
   const { t } = useTranslation();
+  const readerChannelOptions = useReaderChannelOptions(t);
   const useIdeaInspiration = (text: string) => {
     if (idea.trim()) {
       const confirmed = window.confirm(t("autoDirector:setup.ideaOverwriteConfirm"));
@@ -210,11 +211,11 @@ export default function NovelAutoDirectorSetupPanel(props: NovelAutoDirectorSetu
                       readerChannelPreference: event.target.value as NovelBasicFormState["readerChannelPreference"],
                     })}
                   >
-                    {READER_CHANNEL_OPTIONS.map((option) => (
+                    {readerChannelOptions.map((option) => (
                       <option key={option.value} value={option.value}>{option.label}</option>
                     ))}
                   </select>
-                  <div className={"text-xs text-muted-foreground ${AUTO_DIRECTOR_MOBILE_CLASSES.wrapText}"}>{findOptionSummary(READER_CHANNEL_OPTIONS, basicForm.readerChannelPreference)}</div>
+                  <div className={`text-xs text-muted-foreground ${AUTO_DIRECTOR_MOBILE_CLASSES.wrapText}`}>{findOptionSummary(readerChannelOptions, basicForm.readerChannelPreference)}</div>
                 </div>
 
                 <div className="space-y-2">

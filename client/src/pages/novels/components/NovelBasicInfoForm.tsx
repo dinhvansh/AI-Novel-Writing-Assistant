@@ -5,16 +5,16 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
 import {
-  AI_FREEDOM_OPTIONS,
+  useAiFreedomOptions,
+  useEmotionOptions,
+  usePaceOptions,
+  usePovOptions,
+  useProjectModeOptions,
+  usePublicationStatusOptions,
+  useProjectStatusOptions,
+  useWritingModeOptions,
   BASIC_INFO_FIELD_HINTS,
   DEFAULT_ESTIMATED_CHAPTER_COUNT,
-  EMOTION_OPTIONS,
-  PACE_OPTIONS,
-  POV_OPTIONS,
-  PROJECT_MODE_OPTIONS,
-  PROJECT_STATUS_OPTIONS,
-  PUBLICATION_STATUS_OPTIONS,
-  WRITING_MODE_OPTIONS,
   type NovelBasicFormState,
 } from "../novelBasicInfo.shared";
 import {
@@ -79,6 +79,14 @@ interface NovelBasicInfoFormProps {
 
 export default function NovelBasicInfoForm(props: NovelBasicInfoFormProps) {
   const { t } = useTranslation("novel");
+  const writingModeOptions = useWritingModeOptions(t as Parameters<typeof useWritingModeOptions>[0]);
+  const projectModeOptions = useProjectModeOptions(t as Parameters<typeof useProjectModeOptions>[0]);
+  const povOptions = usePovOptions(t as Parameters<typeof usePovOptions>[0]);
+  const paceOptions = usePaceOptions(t as Parameters<typeof usePaceOptions>[0]);
+  const emotionOptions = useEmotionOptions(t as Parameters<typeof useEmotionOptions>[0]);
+  const aiFreedomOptions = useAiFreedomOptions(t as Parameters<typeof useAiFreedomOptions>[0]);
+  const publicationStatusOptions = usePublicationStatusOptions(t as Parameters<typeof usePublicationStatusOptions>[0]);
+  const projectStatusOptions = useProjectStatusOptions(t as Parameters<typeof useProjectStatusOptions>[0]);
   const {
     basicForm,
     genreOptions,
@@ -165,7 +173,7 @@ export default function NovelBasicInfoForm(props: NovelBasicInfoFormProps) {
         <div className="space-y-2">
           <FieldLabel hint={BASIC_INFO_FIELD_HINTS.writingMode}>{t("basicInfoForm.writingModeLabel")}</FieldLabel>
           <div className="grid gap-3 md:grid-cols-2">
-            {WRITING_MODE_OPTIONS.map((option) => (
+            {writingModeOptions.map((option) => (
               <SelectionCard
                 key={option.value}
                 option={option}
@@ -348,11 +356,11 @@ export default function NovelBasicInfoForm(props: NovelBasicInfoFormProps) {
                   value={basicForm.narrativePov}
                   onChange={(event) => onFormChange({ narrativePov: event.target.value as NovelBasicFormState["narrativePov"] })}
                 >
-                  {POV_OPTIONS.map((option) => (
+                  {povOptions.map((option) => (
                     <option key={option.value} value={option.value}>{option.label}</option>
                   ))}
                 </select>
-                <div className="text-xs text-muted-foreground">{findOptionSummary(POV_OPTIONS, basicForm.narrativePov)}</div>
+                <div className="text-xs text-muted-foreground">{findOptionSummary(povOptions, basicForm.narrativePov)}</div>
               </div>
 
               <div className="space-y-2">
@@ -363,11 +371,11 @@ export default function NovelBasicInfoForm(props: NovelBasicInfoFormProps) {
                   value={basicForm.pacePreference}
                   onChange={(event) => onFormChange({ pacePreference: event.target.value as NovelBasicFormState["pacePreference"] })}
                 >
-                  {PACE_OPTIONS.map((option) => (
+                  {paceOptions.map((option) => (
                     <option key={option.value} value={option.value}>{option.label}</option>
                   ))}
                 </select>
-                <div className="text-xs text-muted-foreground">{findOptionSummary(PACE_OPTIONS, basicForm.pacePreference)}</div>
+                <div className="text-xs text-muted-foreground">{findOptionSummary(paceOptions, basicForm.pacePreference)}</div>
               </div>
 
               <div className="space-y-2">
@@ -378,11 +386,11 @@ export default function NovelBasicInfoForm(props: NovelBasicInfoFormProps) {
                   value={basicForm.emotionIntensity}
                   onChange={(event) => onFormChange({ emotionIntensity: event.target.value as NovelBasicFormState["emotionIntensity"] })}
                 >
-                  {EMOTION_OPTIONS.map((option) => (
+                  {emotionOptions.map((option) => (
                     <option key={option.value} value={option.value}>{option.label}</option>
                   ))}
                 </select>
-                <div className="text-xs text-muted-foreground">{findOptionSummary(EMOTION_OPTIONS, basicForm.emotionIntensity)}</div>
+                <div className="text-xs text-muted-foreground">{findOptionSummary(emotionOptions, basicForm.emotionIntensity)}</div>
               </div>
 
               <div className="space-y-2">
@@ -404,7 +412,7 @@ export default function NovelBasicInfoForm(props: NovelBasicInfoFormProps) {
             <div className="space-y-2">
               <FieldLabel hint={BASIC_INFO_FIELD_HINTS.projectMode}>{t("basicInfoForm.projectModeLabel")}</FieldLabel>
               <div className="grid gap-3 md:grid-cols-2">
-                {PROJECT_MODE_OPTIONS.map((option) => (
+                {projectModeOptions.map((option) => (
                   <SelectionCard
                     key={option.value}
                     option={option}
@@ -424,11 +432,11 @@ export default function NovelBasicInfoForm(props: NovelBasicInfoFormProps) {
                   value={basicForm.aiFreedom}
                   onChange={(event) => onFormChange({ aiFreedom: event.target.value as NovelBasicFormState["aiFreedom"] })}
                 >
-                  {AI_FREEDOM_OPTIONS.map((option) => (
+                  {aiFreedomOptions.map((option) => (
                     <option key={option.value} value={option.value}>{option.label}</option>
                   ))}
                 </select>
-                <div className="text-xs text-muted-foreground">{findOptionSummary(AI_FREEDOM_OPTIONS, basicForm.aiFreedom)}</div>
+                <div className="text-xs text-muted-foreground">{findOptionSummary(aiFreedomOptions, basicForm.aiFreedom)}</div>
               </div>
 
               <div className="space-y-2">
@@ -519,7 +527,7 @@ export default function NovelBasicInfoForm(props: NovelBasicInfoFormProps) {
                   value={basicForm.projectStatus}
                   onChange={(event) => onFormChange({ projectStatus: event.target.value as NovelBasicFormState["projectStatus"] })}
                 >
-                  {PROJECT_STATUS_OPTIONS.map((option) => (
+                  {projectStatusOptions.map((option) => (
                     <option key={option.value} value={option.value}>{option.label}</option>
                   ))}
                 </select>
@@ -533,7 +541,7 @@ export default function NovelBasicInfoForm(props: NovelBasicInfoFormProps) {
                   value={basicForm.storylineStatus}
                   onChange={(event) => onFormChange({ storylineStatus: event.target.value as NovelBasicFormState["storylineStatus"] })}
                 >
-                  {PROJECT_STATUS_OPTIONS.map((option) => (
+                  {projectStatusOptions.map((option) => (
                     <option key={option.value} value={option.value}>{option.label}</option>
                   ))}
                 </select>
@@ -547,7 +555,7 @@ export default function NovelBasicInfoForm(props: NovelBasicInfoFormProps) {
                   value={basicForm.outlineStatus}
                   onChange={(event) => onFormChange({ outlineStatus: event.target.value as NovelBasicFormState["outlineStatus"] })}
                 >
-                  {PROJECT_STATUS_OPTIONS.map((option) => (
+                  {projectStatusOptions.map((option) => (
                     <option key={option.value} value={option.value}>{option.label}</option>
                   ))}
                 </select>
@@ -557,7 +565,7 @@ export default function NovelBasicInfoForm(props: NovelBasicInfoFormProps) {
                 <div className="space-y-2">
                   <FieldLabel hint={BASIC_INFO_FIELD_HINTS.status}>{t("basicInfoForm.publicationStatusLabel")}</FieldLabel>
                   <div className="grid gap-3 sm:grid-cols-2">
-                    {PUBLICATION_STATUS_OPTIONS.map((option) => (
+                    {publicationStatusOptions.map((option) => (
                       <SelectionCard
                         key={option.value}
                         option={option}

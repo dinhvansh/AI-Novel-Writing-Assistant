@@ -19,8 +19,8 @@ const RUN_MODE_KEY_MAP: Array<{ value: DirectorRunMode; key: string }> = [
 export function buildRunModeOptions(t: TFunction): RunModeOption[] {
   return RUN_MODE_KEY_MAP.map(({ value, key }) => ({
     value,
-    label: t("autoDirector:setup.runModes.${key}.label"),
-    description: t("autoDirector:setup.runModes.${key}.description"),
+    label: t(`autoDirector:setup.runModes.${key}.label`),
+    description: t(`autoDirector:setup.runModes.${key}.description`),
   }));
 }
 
