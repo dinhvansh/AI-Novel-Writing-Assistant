@@ -39,6 +39,18 @@
       "noProviderHelp": "Hiện chưa có nhà cung cấp mô hình nào đã cấu hình và bật. Vui lòng vào cài đặt hệ thống để hoàn tất cấu hình API Key và mô hình.",
       "temperatureLabel": "Nhiệt độ (0~2)",
       "maxTokensLabel": "Tokens tối đa (để trống = không giới hạn)"
+    },
+    "aiRevision": {
+      "defaultRightLabel": "Hướng dẫn chỉnh sửa AI",
+      "instructionPlaceholder": "Nhập yêu cầu chỉnh sửa, ví dụ: nén dư thừa, tăng cường xung đột, giữ nguyên thiết định hiện có.",
+      "selectionLabel": "Nội dung đã chọn hiện tại (sẽ được dùng để tối ưu chính xác)",
+      "noSelectionHint": "Khi không chọn nội dung, chỉ hỗ trợ tối ưu toàn văn.",
+      "optimizing": "Đang tối ưu...",
+      "optimizeFull": "Xem trước tối ưu toàn văn",
+      "optimizeSelection": "Chỉ tối ưu nội dung đã chọn",
+      "previewLabel": "Xem trước tối ưu",
+      "applyPreview": "Áp dụng xem trước",
+      "cancelPreview": "Hủy xem trước"
     }
   },
   "novel": {
@@ -377,7 +389,15 @@
         "exportCurrentStep": "Xuất bước hiện tại",
         "exporting": "Đang xuất...",
         "exportFullBook": "Xuất toàn bộ sách",
-        "directorTakeover": "Đạo diễn tự động AI tiếp quản"
+        "directorTakeover": "Đạo diễn tự động AI tiếp quản",
+        "statusCurrentStep": "Bước hiện tại: {label}",
+        "statusCurrentStepWithFlow": "Bước hiện tại: {activeLabel} · Đề xuất quy trình: {workflowLabel}",
+        "saving": "Đang lưu...",
+        "saveBasic": "Lưu thông tin cơ bản",
+        "saveStoryMacro": "Lưu kế hoạch câu chuyện",
+        "saveCharacter": "Lưu nhân vật",
+        "saveOutline": "Lưu không gian làm việc tập",
+        "saveStructured": "Lưu phân chương"
       }
     },
     "storyMacro": {
@@ -983,7 +1003,26 @@
         "aiFix": "Sửa AI",
         "advancedCollapsedHint": "Cấp độ xung đột, cấp độ tiết lộ, số từ, điều cấm và liên kết hoàn thành đã được thu gọn vào cài đặt nâng cao để tránh làm đầy biểu mẫu ngay từ đầu.",
         "noSelectionHint": "Chọn một chương ở bên trái trước, sau đó bắt đầu tinh chỉnh.",
-        "delete": "Xóa"
+        "delete": "Xóa",
+        "target": {
+          "fallback": "Phạm vi chương hiện tại",
+          "fallbackRange": "Chương {start}-{end} (tổng {count} chương)",
+          "descriptor": "Chương {order}《{title}》",
+          "unnamed": "Chương chưa đặt tên"
+        },
+        "confirm": {
+          "singleIntro": "Sẽ dựa trên nội dung hiện tại để AI bổ sung mục tiêu chương, ranh giới thực thi và danh sách tác vụ cho {label}.",
+          "batchIntro": "Sẽ dựa trên nội dung hiện tại để AI bổ sung liên tục mục tiêu chương, ranh giới thực thi và danh sách tác vụ cho {label}.",
+          "existingDrafts": "Sẽ ưu tiên sử dụng kết quả đã điền của từng chương, chỉ sửa các phần trống, mơ hồ và không đủ khả thi.",
+          "emptyDrafts": "Các chương này hiện vẫn trống, AI sẽ bổ sung bản đầu tiên, sau đó thu gọn từng chương theo tiêu đề và tóm tắt hiện có.",
+          "keepTitleSummary": "Sẽ không thay đổi tiêu đề và tóm tắt chương.",
+          "skipMissing": "Có {count} chương không còn trong bản nháp tập hiện tại, sẽ tự động bỏ qua."
+        },
+        "batch": {
+          "startMessage": "Đang bổ sung mục tiêu chương, ranh giới thực thi và danh sách tác vụ còn thiếu cho {label}...",
+          "finishMessage": "Mục tiêu chương, ranh giới thực thi và danh sách tác vụ của {label} đã được bổ sung và tự động lưu.",
+          "alreadyComplete": "{label} hiện đã hoàn chỉnh, không cần tạo chi tiết chương lặp lại."
+        }
       },
       "syncFallback": {
         "unmatchedVolumeTitle": "Chưa khớp",
@@ -3591,6 +3630,19 @@
         "goToNovelButton": "Đến trang tiểu thuyết để đặt cách viết mặc định",
         "editCurrentButton": "Chỉnh sửa cách viết hiện tại",
         "createNewButton": "Tạo một bộ cách viết mới"
+      },
+      "createFlow": {
+        "taskNotFound": "Tác vụ trích xuất công thức viết không tồn tại hoặc đã bị dọn dẹp, vui lòng gửi lại.",
+        "taskCompletedNoResult": "Tác vụ trích xuất công thức viết đã hoàn thành nhưng không có kết quả tự động lưu.",
+        "profileAutoSaved": "Công thức viết \"{name}\" đã được tự động lưu, hiện đã mở chỉnh sửa công thức viết này cho bạn.",
+        "taskCancelled": "Tác vụ trích xuất công thức viết đã bị hủy.",
+        "taskFailed": "Tác vụ trích xuất công thức viết thất bại, vui lòng thử lại sau.",
+        "profileCreated": "Công thức viết \"{name}\" đã được tạo, bạn có thể tiếp tục bổ sung quy tắc, viết thử hoặc gắn vào mục tiêu.",
+        "profileGenerated": "Công thức viết \"{name}\" đã được sinh ra, bạn có thể tiếp tục bổ sung quy tắc, viết thử hoặc gắn vào mục tiêu.",
+        "templateProfileCreated": "Công thức viết mẫu \"{name}\" đã được tạo, bạn có thể tiếp tục bổ sung quy tắc, viết thử hoặc gắn vào mục tiêu.",
+        "taskQueuedNoDetail": "Tác vụ trích xuất công thức viết đã gửi thành công nhưng không lấy được chi tiết tác vụ.",
+        "profileFromBookAnalysis": "Công thức viết \"{name}\" đến từ kết quả phân tích sách, bạn có thể tiếp tục kiểm tra quy tắc, viết thử hoặc gắn vào mục tiêu.",
+        "defaultProfileName": "Công thức viết mới"
       }
     },
     "world": {
@@ -4075,6 +4127,20 @@
         "confirmBtn": "Xác nhận",
         "rejectingBtn": "Đang xử lý...",
         "rejectBtn": "Bỏ qua"
+      },
+      "operations": {
+        "chapterPlanGenerated": "Kế hoạch thực thi chương đã được tạo, có thể bắt đầu viết chương này ngay.",
+        "replanCompleted": "Đã lập lại kế hoạch cho chương thứ {orders}.",
+        "replanCompletedGeneric": "Chương đã được lập lại kế hoạch.",
+        "auditCompleted": "Kiểm tra toàn bộ đã hoàn thành.",
+        "generatingContent": "Đang sinh nội dung chương này...",
+        "abortGeneration": "Đã dừng sinh chương hiện tại, bạn có thể giữ lại đầu ra hiện tại để xem tiếp hoặc bắt đầu viết chương này lại.",
+        "abortRepair": "Đã dừng sửa chương hiện tại, bạn có thể xem kết quả sửa hiện tại trước khi quyết định có tiếp tục hay không.",
+        "selectChapterFirst": "Vui lòng chọn chương trước.",
+        "generatingRepair": "Đang sinh bản sửa...",
+        "chapterLabel": "Chương {order} {title}",
+        "unnamedChapter": "Chương chưa đặt tên",
+        "currentChapterFallback": "Chương hiện tại"
       }
     },
     "directorDebug": {
@@ -4205,7 +4271,19 @@
         "succeeded": "Tạo thành công",
         "failed": "Tạo thất bại",
         "cancelled": "Đã hủy"
-      }
+      },
+      "cardTitle": "Màn hình chính bìa tiểu thuyết",
+      "cardDescription": "Trước tiên hãy tạo màn hình chính cho bìa cuốn sách này. Ở giai đoạn hiện tại, không trực tiếp tạo phông chữ tên sách có thể sử dụng, sau đó vẫn có thể tiếp tục dàn trang thành bìa chính thức.",
+      "manageGallery": "Quản lý thư viện bìa",
+      "generateCover": "Tạo màn hình chính bìa",
+      "loadingGalleryCard": "Đang đọc thư viện bìa hiện tại...",
+      "emptyGalleryCard": "Chưa có màn hình chính bìa. Nhấn nút phía trên, hệ thống sẽ trước tiên dựa trên thông tin tiểu thuyết hiện tại để tổng hợp một bản nháp đầu vào bìa.",
+      "primaryCoverBadge": "Bìa chính hiện tại",
+      "candidateCount": "Tổng cộng {count} ảnh ứng viên",
+      "primarySwitchNote": "Bìa chính sẽ chuyển đổi theo `isPrimary` trong trường ảnh, không ghi cứng trạng thái bìa vào bảng chính của tiểu thuyết.",
+      "openGalleryTitle": "Mở thư viện bìa",
+      "coverAltCurrent": "{title}Bìa hiện tại",
+      "coverAltCandidate": "{title}Ảnh ứng viên bìa"
     },
     "worldUsage": {
       "title": "Ranh giới thế giới quan của cuốn sách này",
@@ -4340,7 +4418,18 @@
         "currentlySelected": "Đang chọn",
         "keywordsPrefix": "Từ khóa: {keywords}",
         "defaultDescription": "Chưa có mô tả"
-      }
+      },
+      "inProjectTitle": "Xưởng tiêu đề trong dự án",
+      "inProjectDescription": "Tạo ứng viên dựa trên phần giới thiệu và thể loại tiểu thuyết đã lưu hiện tại. Nếu vừa sửa phần giới thiệu hoặc thể loại, nên lưu thông tin cơ bản trước rồi mới tạo.",
+      "saveCurrentTitle": "Lưu tiêu đề hiện tại",
+      "saving": "Đang lưu...",
+      "generating": "Đang tạo...",
+      "generateCandidates": "Tạo ứng viên tiêu đề",
+      "generatedCount": "Đã tạo {count} ứng viên tiêu đề.",
+      "savedToLibrary": "Tiêu đề đã được thêm vào thư viện tiêu đề.",
+      "currentSavedToLibrary": "Tiêu đề hiện tại đã được thêm vào thư viện tiêu đề.",
+      "copiedToClipboard": "Tiêu đề đã được sao chép vào clipboard.",
+      "appliedToForm": "Tiêu đề đã được ghi vào biểu mẫu thông tin cơ bản, nhớ lưu lại."
     },
     "preview": {
       "title": "Xem trước tiểu thuyết",
@@ -4535,6 +4624,42 @@
         "manualSelection": "Đoạn nội dung bạn chọn thủ công",
         "paragraphFragment": "Đoạn tương ứng với {label}",
         "noSelection": "Chưa chọn đoạn nào"
+      },
+      "operations": {
+        "polish": "Trau chuốt diễn đạt",
+        "expand": "Mở rộng",
+        "compress": "Tinh gọn",
+        "emotion": "Tăng cường cảm xúc",
+        "conflict": "Tăng cường xung đột",
+        "custom": "Chỉ thị tùy chỉnh"
+      },
+      "saveStatus": {
+        "saving": "Đang lưu",
+        "saved": "Đã lưu",
+        "error": "Lưu thất bại",
+        "pending": "Chờ lưu",
+        "synced": "Đã đồng bộ"
+      },
+      "bodyTitle": "Nội dung chính",
+      "helperText": {
+        "inlineDiff": "Hiện đang hiển thị diff chi tiết, phù hợp để xác nhận các thay đổi cụ thể.",
+        "loading": "AI đang tạo phiên bản ứng viên dựa trên nội dung đã chọn, vị trí gốc sẽ được giữ nguyên.",
+        "blockDiff": "Hiện đang hiển thị so sánh patch đoạn văn, bản gốc và bản viết lại sẽ được hiển thị song song tại vị trí gốc dưới dạng khối xanh đỏ.",
+        "readOnly": "Hiện có ứng viên chờ xác nhận, nội dung chính tạm thời bị khóa, có thể chuyển đổi ứng viên hoặc chấp nhận/từ chối ở bên phải.",
+        "editable": "Có thể chỉnh sửa trực tiếp nội dung chính, sau khi chọn nội dung có thể yêu cầu AI viết lại."
+      },
+      "preview": {
+        "originalLabel": "Bản gốc cần viết lại",
+        "generatingLabel": "AI đang tạo phiên bản ứng viên",
+        "originalText": "Bản gốc",
+        "rewriteText": "Viết lại"
+      },
+      "toolbar": {
+        "polishAction": "AI tối ưu đoạn này",
+        "customAction": "Bảo AI sửa thế nào",
+        "customPlaceholder": "Ví dụ: Làm đoạn này u ám hơn, giữ nguyên thông tin, nhưng siết chặt nhịp độ hơn.",
+        "cancelCustom": "Hủy",
+        "submitCustom": "Gửi lệnh"
       }
     },
     "characterDynamics": {
@@ -4642,6 +4767,72 @@
       },
       "hook": {
         "itemLabel": "Móc chương đã được tạo"
+      }
+    },
+    "outlineSync": {
+      "fields": {
+        "title": "Tiêu đề",
+        "summary": "Tóm tắt",
+        "targetWordCount": "Số từ mục tiêu",
+        "conflictLevel": "Mức độ xung đột",
+        "revealLevel": "Mức độ tiết lộ",
+        "mustAvoid": "Điều cấm kỵ",
+        "taskSheet": "Phiếu tác vụ"
+      },
+      "changedFields": {
+        "newChapter": "Chương mới",
+        "removedFromOutline": "Đã xóa khỏi đại cương",
+        "pendingDelete": "Chờ xác nhận xóa"
+      }
+    },
+    "chapterQueue": {
+      "title": "Hàng đợi chương",
+      "description": "Bên trái chỉ phụ trách cắt chương và xem trạng thái tiến triển, để trọn vùng đọc chính cho bảng viết chính ở giữa.",
+      "visibleCount": "Hiện thấy {count} chương",
+      "filterLabel": "Lọc:",
+      "filterAll": "Tất cả",
+      "emptyHint": "Chưa có chương nào trong bộ lọc hiện tại.",
+      "chapterLabel": "Chương {order} {title}",
+      "unnamedChapter": "Chương chưa đặt tên",
+      "streamingFinalizing": "Đang kết thúc",
+      "streamingWriting": "Đang viết",
+      "repairing": "Đang sửa",
+      "nextStep": "Bước tiếp theo",
+      "wordCount": "Số từ hiện tại"
+    },
+    "characterFocus": {
+      "editingProtagonist": "Đang sửa nhân vật chính: {name}",
+      "editingCharacter": "Đang sửa nhân vật: {name}",
+      "pendingProtagonistGoal": "Chờ bổ sung mục tiêu nhân vật chính",
+      "pendingRelation": "Chờ bổ sung quan hệ với nhân vật chính",
+      "protagonistBadge": "Nhân vật chính",
+      "currentGoalLine": "Mục tiêu hiện tại: {line}",
+      "relationLine": "Quan hệ với nhân vật chính: {line}",
+      "roleLabel": "Vai trò: {role}",
+      "undefinedRole": "Chưa xác định",
+      "lastAppearanceLabel": "Xuất hiện gần nhất: {chapter}",
+      "chapterNumber": "Chương {order}",
+      "noAppearance": "Chưa có",
+      "storyFunctionLabel": "Vai trò trong truyện: {fn}",
+      "currentStateLabel": "Trạng thái hiện tại: {state}",
+      "pending": "Chờ bổ sung"
+    },
+    "coverDraft": {
+      "defaultTitle": "Cuốn tiểu thuyết này",
+      "narrativePov": {
+        "firstPerson": "Ngôi thứ nhất",
+        "thirdPerson": "Ngôi thứ ba",
+        "mixed": "Ngôi kể hỗn hợp"
+      },
+      "pacePreference": {
+        "slow": "Nhịp độ chậm",
+        "balanced": "Cân bằng",
+        "fast": "Nhịp độ nhanh"
+      },
+      "emotionIntensity": {
+        "low": "Cường độ cảm xúc thấp",
+        "medium": "Cường độ cảm xúc trung bình",
+        "high": "Cường độ cảm xúc cao"
       }
     }
   },
@@ -5938,6 +6129,19 @@
         "meta": "Số ký tự {charCount} | {date}",
         "activate": "Chuyển thành phiên bản đang hoạt động"
       }
+    },
+    "ragUi": {
+      "statusEnabled": "Đã bật",
+      "statusDisabled": "Đã tắt",
+      "statusArchived": "Đã lưu trữ",
+      "statusIdle": "Rảnh",
+      "statusQueued": "Đang xếp hàng",
+      "statusRunning": "Đang chạy",
+      "statusSucceeded": "Thành công",
+      "statusFailed": "Thất bại",
+      "attempts": "Lần thử {current}/{max}",
+      "chunks": "{count} khối",
+      "documents": "{count} tài liệu"
     }
   },
   "settings": {
@@ -6869,6 +7073,46 @@
         "ignoreButton": "Bỏ qua",
         "noIssues": "Chưa có bản ghi vấn đề nhất quán nào, kết quả sẽ được hiển thị ở đây sau khi chạy kiểm tra."
       }
+    },
+    "propertySelector": {
+      "emptyHint": "Hiện chưa có hướng chính khả dụng. Thường là do bước phân tích trước thất bại, có thể quay lại bước 1 để tạo lại.",
+      "sourceLibrary": "Kho tư liệu",
+      "sourceSystem": "Gợi ý hệ thống",
+      "reasonPrefix": "Tại sao nên chọn trước:",
+      "choicePrompt": "Chọn một hướng trước",
+      "detailPlaceholder": "Tùy chọn: bổ sung sở thích của bạn, ví dụ muốn giữ lại gì, phóng đại gì, hạn chế gì."
+    },
+    "stepTwo": {
+      "referenceBlueprintTitle": "Bản thiết kế cải tạo tác phẩm tham khảo",
+      "currentMode": "Phương thức hiện tại: {mode}",
+      "originalAnchorsTitle": "Mỏ neo thế giới gốc",
+      "mustPreserve": "Phải giữ lại: {items}",
+      "allowedChanges": "Cho phép cải tạo: {items}",
+      "forbiddenElements": "Cấm sai lệch: {items}",
+      "currentType": "Loại hiện tại: {label}",
+      "pitfallsLabel": "Nhắc nhở điểm hố: {pitfalls}",
+      "classicElementsTitle": "Yếu tố cổ điển",
+      "propertyOptionsTitle": "Thuộc tính thế giới quan tiền đề",
+      "propertyOptionsHint": "Hệ thống đã tự động chọn các gợi ý cho bạn. Thông thường bạn chỉ cần bỏ chọn những hướng không muốn, hoặc thêm một câu sở thích của mình.",
+      "creatingDraft": "Đang tạo...",
+      "createDraftBtn": "Tạo bản nháp và sinh gợi ý tiên đề"
+    },
+    "list": {
+      "deleteSuccess": "Thế giới quan đã được xóa.",
+      "deleteError": "Xóa thế giới quan thất bại.",
+      "deleteConfirm": "Xác nhận xóa thế giới quan「{name}」? Thao tác này không thể khôi phục.",
+      "creativeHubOverview": "Xem trong Xưởng sáng tạo",
+      "generateNew": "Tạo thế giới quan mới",
+      "emptyTitle": "Chưa có thế giới quan",
+      "emptyHint": "Nhấp vào «Tạo thế giới quan mới» để bắt đầu tạo.",
+      "noDescription": "Chưa có mô tả",
+      "noDetail": "Chưa có thông tin chi tiết",
+      "structuredSettingFallback": "Bao gồm thiết định có cấu trúc, vào bàn làm việc để xem chi tiết.",
+      "statusLabel": "Trạng thái: {status}",
+      "continueInHub": "Tiếp tục trong Xưởng sáng tạo",
+      "enterWorkspace": "Vào bàn làm việc",
+      "deleting": "Đang xóa...",
+      "delete": "Xóa"
     }
   },
   "mobile": {
@@ -7152,6 +7396,19 @@
       "sendButton": "Gửi",
       "stopButton": "Dừng",
       "reasoningLabel": "Quá trình suy luận"
+    },
+    "creativeHub": {
+      "title": "Trung khu sáng tạo",
+      "description": "Đây không phải trang chat đơn thuần, mà là cổng vào lệnh, trạng thái, chẩn đoán và phê duyệt của không gian làm việc tiểu thuyết hiện tại.",
+      "novelBadge": "Tiểu thuyết {id}",
+      "runBadge": "Chạy {id}",
+      "loadingCatalog": "Đang tải danh mục năng lực...",
+      "categoryLabel": {
+        "read": "Đọc",
+        "inspect": "Chẩn đoán",
+        "mutate": "Sửa đổi",
+        "run": "Thực thi"
+      }
     }
   },
   "workflow": {
@@ -8004,6 +8261,19 @@
       "emptyTitle": "Chưa có mô thức truyện nào",
       "emptyHint": "Bạn có thể tạo thủ công một mô thức truyện gốc, hoặc để AI tạo một bản nháp có cấu trúc.",
       "startCreate": "Bắt đầu tạo"
+    },
+    "profile": {
+      "coreDrive": "Động lực cốt lõi",
+      "readerReward": "Phần thưởng cho độc giả",
+      "progressionUnits": "Đơn vị tiến triển chương",
+      "allowedConflictForms": "Hình thức xung đột được phép",
+      "forbiddenConflictForms": "Hình thức xung đột bị cấm",
+      "conflictCeiling": "Trần xung đột",
+      "resolutionStyle": "Cách giải quyết",
+      "chapterUnit": "Hạt chương",
+      "volumeReward": "Phần thưởng cuối tập",
+      "mandatorySignals": "Tín hiệu bắt buộc xuất hiện",
+      "antiSignals": "Tín hiệu lệch hướng phải tránh"
     }
   },
   "characters": {
@@ -8186,6 +8456,21 @@
       "detectError": "Phát hiện thất bại.",
       "rewriteError": "Sửa lỗi thất bại.",
       "validationError": "Vui lòng điền mã quy tắc, tên và mô tả."
+    },
+    "effectivePreview": {
+      "title": "Xem trước hiệu lực",
+      "description": "Xem các quy tắc toàn cục mà nội dung chính sẽ nhận được, cùng với các quy tắc riêng được chồng lên sau khi chọn cách viết.",
+      "selectPlaceholder": "Chọn ngữ cảnh xem trước",
+      "globalOnly": "Chỉ xem mặc định toàn cục",
+      "calculating": "Đang tính toán quy tắc hiệu lực...",
+      "globalBaselineLabel": "Đường cơ sở toàn cục",
+      "effectiveRulesLabel": "Quy tắc hiệu lực",
+      "applied": "Áp dụng",
+      "notApplied": "Không áp dụng",
+      "globalDefaultRulesTitle": "Quy tắc mặc định toàn cục",
+      "noGlobalRules": "Không có quy tắc mặc định toàn cục.",
+      "styleSpecificRulesTitle": "Quy tắc riêng theo cách viết",
+      "noStyleRules": "Ngữ cảnh xem trước không có quy tắc riêng theo cách viết nào được chồng lên."
     }
   },
   "genre": {
@@ -8207,6 +8492,49 @@
       "saving": "Đang lưu...",
       "createSuccess": "Cây nền tảng thể loại đã được tạo.",
       "generateSuccess": "Cây nền tảng thể loại AI đã được tạo."
+    },
+    "editDialog": {
+      "title": "Chỉnh sửa thể loại cơ bản",
+      "description": "Có thể sửa tên, mô tả và vị trí gắn kết. Các nút con và tiểu thuyết đã liên kết sẽ được giữ lại.",
+      "nameLabel": "Tên",
+      "descriptionLabel": "Mô tả",
+      "parentLabel": "Thể loại cơ bản cha",
+      "noParent": "Không có cha, làm thể loại cơ bản gốc",
+      "cancel": "Hủy",
+      "save": "Lưu thay đổi",
+      "saving": "Đang lưu...",
+      "genreNotFound": "Thể loại cơ bản không tồn tại.",
+      "updateSuccess": "Thể loại cơ bản đã được cập nhật."
+    },
+    "treeEditor": {
+      "levelMain": "Thể loại chính",
+      "levelSub": "Thể loại phụ",
+      "levelNested": "Thể loại cấp dưới",
+      "rootHint": "Đây là nút gốc cuối cùng sẽ được tạo vào hệ thống.",
+      "childHint": "Ở đây sẽ được lưu dưới dạng nút con của loại cấp trên.",
+      "addSubType": "Thêm loại con",
+      "addNestedType": "Thêm loại cấp dưới",
+      "nameLabel": "Tên",
+      "namePlaceholderRoot": "Ví dụ: Đô thị dị năng",
+      "namePlaceholderChild": "Ví dụ: Siêu phàm công sở",
+      "descriptionLabel": "Mô tả",
+      "descriptionPlaceholder": "Mô tả cốt lõi thể loại, điểm sướng, mạch chính thường gặp hoặc kỳ vọng của độc giả.",
+      "deleteNode": "Xóa nút hiện tại"
+    }
+  },
+  "genres": {
+    "page": {
+      "cardTitle": "Kho cơ sở thể loại",
+      "cardDescription": "Duy trì cơ sở thể loại của tác phẩm theo cấu trúc cây, ví dụ tu tiên, huyền huyễn, đô thị, lịch sử hư cấu. Nó trả lời câu hỏi 'Đây là cuốn sách gì', và sẽ là tài sản thể loại chính thức của dự án tiểu thuyết, không phải trường nhập tạm thời.",
+      "totalCount": "Số lượng cơ sở thể loại hiện tại: {count}",
+      "createTreeBtn": "Tạo cây cơ sở thể loại mới",
+      "loading": "Đang tải cây cơ sở thể loại...",
+      "emptyTitle": "Chưa có cơ sở thể loại nào",
+      "emptyHint": "Bạn có thể tự tạo một cơ sở thể loại gốc, hoặc dùng AI để sinh một cấp bậc hoàn chỉnh.",
+      "startCreate": "Bắt đầu tạo",
+      "deleteSuccess": "Đã xóa cơ sở thể loại.",
+      "deleteConfirm": "Xác nhận xóa cơ sở thể loại「{name}」? Thao tác này không thể khôi phục.",
+      "deleteConfirmWithChildren": "Xác nhận xóa cơ sở thể loại「{name}」? Điều này cũng sẽ xóa {count} danh mục con bên dưới, thao tác này không thể khôi phục."
     }
   }
 }

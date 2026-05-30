@@ -23,7 +23,7 @@ import type {
   SelectionToolbarPosition,
 } from "./chapterEditorTypes";
 import {
-  CHAPTER_EDITOR_OPERATION_LABELS,
+  getChapterEditorOperationLabels,
   applyCandidateToContent,
   buildAiRevisionRequest,
   countEditorWords,
@@ -182,7 +182,7 @@ export default function ChapterEditorShell(props: ChapterEditorShellProps) {
       const label = request.source === "freeform"
         ? (request.scope === "chapter" ? t("novel:chapterEditor.revision.generatingChapterFreeform") : t("novel:chapterEditor.revision.generatingSelectionFreeform"))
         : request.presetOperation
-          ? t("novel:chapterEditor.revision.generatingPreset", { operation: CHAPTER_EDITOR_OPERATION_LABELS[request.presetOperation] })
+          ? t("novel:chapterEditor.revision.generatingPreset", { operation: getChapterEditorOperationLabels(t)[request.presetOperation] })
           : t("novel:chapterEditor.revision.generating");
       setSession((current) => ({
         ...current,
@@ -402,7 +402,7 @@ export default function ChapterEditorShell(props: ChapterEditorShellProps) {
           ? t("novel:chapterEditor.target.paragraphFragment", { label: workspace.recommendedTask.paragraphLabel })
           : t("novel:chapterEditor.target.noSelection");
   const canRunSelectionRevision = Boolean(getSelectionTarget());
-  const headerSaveLabel = getSaveStatusLabel(saveStatus, isDirty);
+  const headerSaveLabel = getSaveStatusLabel(saveStatus, isDirty, t);
   const gridClassName = "xl:grid-cols-[320px_minmax(0,1fr)_400px]";
 
   return (

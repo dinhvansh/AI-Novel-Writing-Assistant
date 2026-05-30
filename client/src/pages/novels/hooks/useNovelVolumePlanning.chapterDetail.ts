@@ -1,3 +1,4 @@
+import type { TFunction } from "i18next";
 import type { VolumePlan, VolumePlanDocument } from "@ai-novel/shared/types/novel";
 import {
   CHAPTER_DETAIL_MODES,
@@ -37,6 +38,7 @@ interface RunChapterDetailBatchGenerationArgs {
   label: string;
   targetVolumeId: string;
   targets: ChapterDetailTarget[];
+  t: TFunction;
   setIsGenerating: (value: boolean) => void;
   setCurrentChapterId: (value: string) => void;
   setCurrentMode: (value: ChapterDetailMode | "") => void;
@@ -46,20 +48,20 @@ interface RunChapterDetailBatchGenerationArgs {
   ) => Promise<ChapterDetailMutationResult>;
 }
 
-function describeChapterTarget(target: ChapterDetailTarget): string {
-  return `第${target.chapterOrder}章《${target.title || "未命名章节"}》`;
+function describeChapterTarget(target: ChapterDetailTarget, t: TFunction): string {
+  return t("novel:structured.chapterDetail.target.descriptor", { order: target.chapterOrder, title: target.title || t("novel:structured.chapterDetail.target.unnamed") });
 }
 
-function buildFallbackLabel(targets: ChapterDetailTarget[]): string {
+function buildFallbackLabel(targets: ChapterDetailTarget[], t: TFunction): string {
   if (targets.length === 1) {
-    return describeChapterTarget(targets[0]);
+    return describeChapterTarget(targets[0], t);
   }
   const first = targets[0];
   const last = targets[targets.length - 1];
   if (!first || !last) {
-    return "当前章节范围";
+    return t("novel:structured.chapterDetail.target.fallback");
   }
-  return `第${first.chapterOrder}-${last.chapterOrder}章（共 ${targets.length} 章）`;
+  return t("novel:structured.chapterDetail.target.fallbackRange", { start: first.chapterOrder, end: last.chapterOrder, count: targets.length });
 }
 
 function resolveMissingChapterDetailModes(
@@ -79,6 +81,7 @@ function resolveMissingChapterDetailModes(
 export function resolveChapterDetailBatch(
   volume: VolumePlan | undefined,
   request: ChapterDetailBundleRequest,
+  t: TFunction,
 ): ResolvedChapterDetailBatch {
   const requestedIds = typeof request === "string"
     ? [request]
@@ -93,12 +96,12 @@ export function resolveChapterDetailBatch(
         chapterId: chapter.id,
         chapterOrder: chapter.chapterOrder,
         title: chapter.title,
-      })))
+      })), t)
       : request.label?.trim() || buildFallbackLabel(matchedChapters.map((chapter) => ({
         chapterId: chapter.id,
         chapterOrder: chapter.chapterOrder,
         title: chapter.title,
-      }))),
+      })), t),
     missingCount: Math.max(requestedIds.length - matchedChapters.length, 0),
     targets: matchedChapters.map((chapter) => ({
       chapterId: chapter.id,
@@ -111,16 +114,17 @@ export function resolveChapterDetailBatch(
 
 export function buildChapterDetailBatchConfirmationMessage(
   batch: ResolvedChapterDetailBatch,
+  t: TFunction,
 ): string {
   return [
     batch.targets.length === 1
-      ? `将基于当前内容为${batch.label} AI 补齐章节目标、执行边界和任务单。`
-      : `将基于当前内容为${batch.label}连续补齐章节目标、执行边界和任务单。`,
+      ? t("novel:structured.chapterDetail.confirm.singleIntro", { label: batch.label })
+      : t("novel:structured.chapterDetail.confirm.batchIntro", { label: batch.label }),
     batch.hasExistingDrafts
-      ? "会优先沿用各章已填写结果，只修正空缺、模糊和不够可执行的部分。"
-      : "当前这些章节还是空白，AI 会先补出首版，再按现有标题和摘要逐章收束。",
-    "不会改动章节标题和摘要。",
-    batch.missingCount > 0 ? `有 ${batch.missingCount} 章已不在当前卷草稿中，会自动跳过。` : "",
+      ? t("novel:structured.chapterDetail.confirm.existingDrafts")
+      : t("novel:structured.chapterDetail.confirm.emptyDrafts"),
+    t("novel:structured.chapterDetail.confirm.keepTitleSummary"),
+    batch.missingCount > 0 ? t("novel:structured.chapterDetail.confirm.skipMissing", { count: batch.missingCount }) : "",
   ].filter(Boolean).join("\n\n");
 }
 
@@ -129,6 +133,7 @@ export async function runChapterDetailBatchGeneration({
   label,
   targetVolumeId,
   targets,
+  t,
   setIsGenerating,
   setCurrentChapterId,
   setCurrentMode,
@@ -140,7 +145,7 @@ export async function runChapterDetailBatchGeneration({
   setIsGenerating(true);
   setCurrentMode("");
   setCurrentChapterId(targets[0]?.chapterId ?? "");
-  setStructuredMessage(`正在为${label}补齐缺失的章节目标、执行边界和任务单...`);
+  setStructuredMessage(t("novel:structured.chapterDetail.batch.startMessage", { label }));
 
   try {
     for (const target of targets) {
@@ -164,8 +169,8 @@ export async function runChapterDetailBatchGeneration({
     }
     setStructuredMessage(
       processedModeCount > 0
-        ? `${label}的章节目标、执行边界和任务单已补齐并自动保存。`
-        : `${label}当前已经完整，无需重复生成章节细化。`,
+        ? t("novel:structured.chapterDetail.batch.finishMessage", { label })
+        : t("novel:structured.chapterDetail.batch.alreadyComplete", { label }),
     );
   } catch {
     // error message is handled by mutation onError

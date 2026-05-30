@@ -59,18 +59,18 @@ export function buildCharacterProfileFromWizard(payload: QuickCharacterCreatePay
     .split(/[，,\s]+/g)
     .map((item) => item.trim())
     .filter((item) => item.length > 0);
-  const keywordText = keywordList.length > 0 ? keywordList.join("、") : "待补充" // i18n-ignore: internal fallback for AI content;
+  const keywordText = keywordList.length > 0 ? keywordList.join("、") : "待补充"; // i18n-ignore: internal fallback for AI content
 
-  const personality = `核心特征：${keywordText}`;
+  const personality = `核心特征：${keywordText}`; // i18n-ignore: AI prompt
   const background = joinSegments([
-    payload.relationToProtagonist ? `与主角关系：${payload.relationToProtagonist}` : "",
-    payload.storyFunction ? `故事作用：${payload.storyFunction}` : "",
+    payload.relationToProtagonist ? `与主角关系：${payload.relationToProtagonist}` : "", // i18n-ignore: AI prompt
+    payload.storyFunction ? `故事作用：${payload.storyFunction}` : "", // i18n-ignore: AI prompt
   ]);
   const development = joinSegments([
-    payload.storyFunction ? `角色成长主轴：围绕“${payload.storyFunction}”推进。` : "",
-    keywordList.length > 0 ? `潜在冲突点：${keywordList.slice(0, 3).join("、")}` : "",
-    keywordList.length > 0 ? `可埋伏笔点：${keywordList.slice(-2).join("、")}` : "",
-    keywordList.length > 0 ? `说话风格建议：偏向${keywordList[0]}语气。` : "",
+    payload.storyFunction ? `角色成长主轴：围绕"${payload.storyFunction}"推进。` : "", // i18n-ignore: AI prompt
+    keywordList.length > 0 ? `潜在冲突点：${keywordList.slice(0, 3).join("、")}` : "", // i18n-ignore: AI prompt
+    keywordList.length > 0 ? `可埋伏笔点：${keywordList.slice(-2).join("、")}` : "", // i18n-ignore: AI prompt
+    keywordList.length > 0 ? `说话风格建议：偏向${keywordList[0]}语气。` : "", // i18n-ignore: AI prompt
   ]);
 
   return {
@@ -89,27 +89,27 @@ function inferCurrentRelation(source: string): string {
   const positiveHits = countHits(source, RELATION_POSITIVE_KEYWORDS);
   const negativeHits = countHits(source, RELATION_NEGATIVE_KEYWORDS);
   if (positiveHits > negativeHits) {
-    return "合作 / 亲近" // i18n-ignore: internal relation label;
+    return "合作 / 亲近"; // i18n-ignore: internal relation label
   }
   if (negativeHits > positiveHits) {
-    return "对立 / 紧张" // i18n-ignore: internal relation label;
+    return "对立 / 紧张"; // i18n-ignore: internal relation label
   }
-  return "复杂 / 待观察" // i18n-ignore: internal relation label;
+  return "复杂 / 待观察"; // i18n-ignore: internal relation label
 }
 
 function inferTrend(source: string): string {
   if (!source) {
-    return "待观察" // i18n-ignore: internal trend label;
+    return "待观察"; // i18n-ignore: internal trend label
   }
   const upHits = countHits(source, TREND_UP_KEYWORDS);
   const downHits = countHits(source, TREND_DOWN_KEYWORDS);
   if (upHits > downHits) {
-    return "升温" // i18n-ignore: internal trend label;
+    return "升温"; // i18n-ignore: internal trend label
   }
   if (downHits > upHits) {
-    return "恶化" // i18n-ignore: internal trend label;
+    return "恶化"; // i18n-ignore: internal trend label
   }
-  return "平稳" // i18n-ignore: internal trend label;
+  return "平稳"; // i18n-ignore: internal trend label
 }
 
 function includesCharacterName(source: string, characterName: string): boolean {

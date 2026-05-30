@@ -93,12 +93,14 @@ export function NovelCoverDialog(props: NovelCoverDialogProps) {
     storyModeOptions: props.storyModeOptions,
     worldOptions: props.worldOptions,
     worldSliceView: props.worldSliceView,
+    t,
   }), [
     props.basicForm,
     props.genreOptions,
     props.storyModeOptions,
     props.worldOptions,
     props.worldSliceView,
+    t,
   ]);
 
   const promptContext = useMemo(

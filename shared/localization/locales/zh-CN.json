@@ -39,6 +39,18 @@
       "noProviderHelp": "当前没有已配置且启用的模型厂商，请先到系统设置里完成 API Key 和模型配置。",
       "temperatureLabel": "温度 (0~2)",
       "maxTokensLabel": "最大 Tokens (留空 = 不限制)"
+    },
+    "aiRevision": {
+      "defaultRightLabel": "AI 修正指令",
+      "instructionPlaceholder": "输入修正要求，例如：压缩冗余、加强冲突、保持既有设定不变。",
+      "selectionLabel": "当前选中内容（将用于精准优化）",
+      "noSelectionHint": "未选中内容时仅支持全文优化。",
+      "optimizing": "优化中...",
+      "optimizeFull": "全文优化预览",
+      "optimizeSelection": "仅优化选中内容",
+      "previewLabel": "优化预览",
+      "applyPreview": "应用预览",
+      "cancelPreview": "取消预览"
     }
   },
   "novel": {
@@ -142,7 +154,15 @@
         "exportCurrentStep": "导出当前步骤",
         "exporting": "导出中...",
         "exportFullBook": "导出整本书",
-        "directorTakeover": "AI 自动导演接管"
+        "directorTakeover": "AI 自动导演接管",
+        "statusCurrentStep": "当前步骤：{label}",
+        "statusCurrentStepWithFlow": "当前步骤：{activeLabel} · 流程推荐：{workflowLabel}",
+        "saving": "保存中...",
+        "saveBasic": "保存基本信息",
+        "saveStoryMacro": "保存故事规划",
+        "saveCharacter": "保存角色",
+        "saveOutline": "保存卷工作区",
+        "saveStructured": "保存拆章"
       }
     },
     "storyMacro": {
@@ -957,7 +977,26 @@
         "aiFix": "AI修正",
         "advancedCollapsedHint": "冲突等级、揭露等级、字数、禁止事项和兑现关联已收进高级设置，避免一上来就把表单铺满。",
         "noSelectionHint": "先在左侧选择一个章节，再开始细化。",
-        "delete": "删除"
+        "delete": "删除",
+        "target": {
+          "fallback": "当前章节范围",
+          "fallbackRange": "第{start}-{end}章（共 {count} 章）",
+          "descriptor": "第{order}章《{title}》",
+          "unnamed": "未命名章节"
+        },
+        "confirm": {
+          "singleIntro": "将基于当前内容为{label} AI 补齐章节目标、执行边界和任务单。",
+          "batchIntro": "将基于当前内容为{label}连续补齐章节目标、执行边界和任务单。",
+          "existingDrafts": "会优先沿用各章已填写结果，只修正空缺、模糊和不够可执行的部分。",
+          "emptyDrafts": "当前这些章节还是空白，AI 会先补出首版，再按现有标题和摘要逐章收束。",
+          "keepTitleSummary": "不会改动章节标题和摘要。",
+          "skipMissing": "有 {count} 章已不在当前卷草稿中，会自动跳过。"
+        },
+        "batch": {
+          "startMessage": "正在为{label}补齐缺失的章节目标、执行边界和任务单...",
+          "finishMessage": "{label}的章节目标、执行边界和任务单已补齐并自动保存。",
+          "alreadyComplete": "{label}当前已经完整，无需重复生成章节细化。"
+        }
       },
       "syncFallback": {
         "unmatchedVolumeTitle": "未匹配",
@@ -974,6 +1013,22 @@
           "taskSheet": "任务单",
           "chapterOrder": "章节顺序"
         }
+      }
+    },
+    "outlineSync": {
+      "fields": {
+        "title": "标题",
+        "summary": "摘要",
+        "targetWordCount": "目标字数",
+        "conflictLevel": "冲突等级",
+        "revealLevel": "揭露等级",
+        "mustAvoid": "禁止事项",
+        "taskSheet": "任务单"
+      },
+      "changedFields": {
+        "newChapter": "新章节",
+        "removedFromOutline": "从大纲移除",
+        "pendingDelete": "待确认删除"
       }
     },
     "styleRecommendation": {
@@ -2963,6 +3018,19 @@
       }
     },
     "writingFormula": {
+      "createFlow": {
+        "taskNotFound": "写法提取任务不存在或已被清理，请重新提交。",
+        "taskCompletedNoResult": "写法提取任务已完成，但没有拿到自动保存结果。",
+        "profileAutoSaved": "写法\"{name}\"已自动保存，已经为你打开当前写法编辑。",
+        "taskCancelled": "写法提取任务已取消。",
+        "taskFailed": "写法提取任务失败，请稍后重试。",
+        "profileCreated": "写法\"{name}\"已经创建，可以继续补规则、试写或绑定到目标。",
+        "profileGenerated": "写法\"{name}\"已经生成，可以继续补规则、试写或绑定到目标。",
+        "templateProfileCreated": "模板写法\"{name}\"已经创建，可以继续补规则、试写或绑定到目标。",
+        "taskQueuedNoDetail": "写法提取任务提交成功，但没有拿到任务详情。",
+        "profileFromBookAnalysis": "写法\"{name}\"来自拆书结果，你可以继续检查规则、试写，或绑定到目标。",
+        "defaultProfileName": "新写法"
+      },
       "bookStyleFlow": {
         "title": "从小说基础信息设置书级默认写法",
         "description": "写法引擎负责创建、测试和整理写法资产。当前小说要使用哪套默认写法，请回到小说基础信息里确认，再带入后续导演和正文流程。",
@@ -3932,6 +4000,20 @@
     },
     "chapterRuntime": {
       "lengthCardTitle": "长度控制与执行回放",
+      "operations": {
+        "chapterPlanGenerated": "章节执行计划已生成，可直接开始写本章。",
+        "replanCompleted": "已重规划第 {orders} 章。",
+        "replanCompletedGeneric": "章节已完成重规划。",
+        "auditCompleted": "完整审校已完成。",
+        "generatingContent": "正在生成本章正文...",
+        "abortGeneration": "已停止当前章节生成，你可以保留当前输出继续查看，或重新发起本章写作。",
+        "abortRepair": "已停止当前章节修复，你可以先查看当前修复结果，再决定是否继续。",
+        "selectChapterFirst": "请先选择章节。",
+        "generatingRepair": "正在生成修复稿...",
+        "chapterLabel": "第{order}章 {title}",
+        "unnamedChapter": "未命名章节",
+        "currentChapterFallback": "当前章节"
+      },
       "controlMode": "控制模式",
       "wordControlMode": {
         "promptOnly": "自然优先",
@@ -4113,6 +4195,18 @@
       }
     },
     "cover": {
+      "cardTitle": "小说封面主画面",
+      "cardDescription": "先生成这本书的封面主画面。当前阶段不直接生成可用书名字体，后续仍可继续排版成正式封面。",
+      "manageGallery": "管理封面图库",
+      "generateCover": "生成封面主画面",
+      "loadingGalleryCard": "正在读取当前封面图库...",
+      "emptyGalleryCard": "还没有封面主画面。点击上方按钮，系统会先根据当前小说信息整理一版封面输入草稿。",
+      "primaryCoverBadge": "当前主封面",
+      "candidateCount": "共 {count} 张候选图",
+      "primarySwitchNote": "主封面会随图片域里的 `isPrimary` 切换，不会把封面状态写死到小说主表里。",
+      "openGalleryTitle": "打开封面图库",
+      "coverAltCurrent": "{title}当前封面",
+      "coverAltCandidate": "{title}封面候选图",
       "dialogTitle": "生成小说封面主画面",
       "cannotGenerate": "还不能开始生成",
       "noImageModelDesc1": "当前没有已配置的图像模型。请先到",
@@ -4264,6 +4358,17 @@
       "triggerButton": "标题工坊",
       "dialogTitle": "标题工坊",
       "dialogDescription": "生成标题创意或从标题库中选择，填入当前项目。",
+      "inProjectTitle": "项目内标题工坊",
+      "inProjectDescription": "基于当前已保存的小说简介和类型生成候选。如果刚修改过简介或类型，建议先保存基本信息再生成。",
+      "saveCurrentTitle": "保存当前标题",
+      "saving": "保存中...",
+      "generating": "生成中...",
+      "generateCandidates": "生成标题候选",
+      "generatedCount": "已生成 {count} 个标题候选。",
+      "savedToLibrary": "标题已加入标题库。",
+      "currentSavedToLibrary": "当前标题已加入标题库。",
+      "copiedToClipboard": "标题已复制到剪贴板。",
+      "appliedToForm": "标题已写入基本信息表单，记得保存。",
       "tabs": {
         "generate": "AI 生成",
         "library": "标题库"
@@ -4459,6 +4564,42 @@
         "manualSelection": "你手动选中的正文片段",
         "paragraphFragment": "{label} 对应片段",
         "noSelection": "尚未选中片段"
+      },
+      "operations": {
+        "polish": "优化表达",
+        "expand": "扩写",
+        "compress": "精简",
+        "emotion": "强化情绪",
+        "conflict": "强化冲突",
+        "custom": "自定义指令"
+      },
+      "saveStatus": {
+        "saving": "保存中",
+        "saved": "已保存",
+        "error": "保存失败",
+        "pending": "待保存",
+        "synced": "已同步"
+      },
+      "bodyTitle": "正文",
+      "helperText": {
+        "inlineDiff": "当前正在显示细节标记 diff，适合确认具体删改。",
+        "loading": "AI 正在基于选中内容生成候选版本，原文位置会持续保留。",
+        "blockDiff": "当前正在显示段落 patch 对比，原文和改写会在正文原位置并排落成红绿块。",
+        "readOnly": "当前有待确认候选，正文暂时锁定，可在右侧切换候选或接受、拒绝。",
+        "editable": "可直接编辑正文，选中内容后可发起 AI 改写。"
+      },
+      "preview": {
+        "originalLabel": "待改写原文",
+        "generatingLabel": "AI 正在生成候选版本",
+        "originalText": "原文",
+        "rewriteText": "改写"
+      },
+      "toolbar": {
+        "polishAction": "AI 优化这段",
+        "customAction": "告诉 AI 怎么改",
+        "customPlaceholder": "例如：让这段更压抑一点，保留原信息，但把节奏压得更紧。",
+        "cancelCustom": "取消",
+        "submitCustom": "提交指令"
       }
     },
     "chapterInsights": {
@@ -4541,6 +4682,56 @@
       },
       "undefinedRole": "未定义",
       "unknownGender": "未知"
+    },
+    "chapterQueue": {
+      "title": "章节队列",
+      "description": "左侧只负责切章和查看推进状态，把正文阅读区完整留给中间的主写作面板。",
+      "visibleCount": "当前可见 {count} 章",
+      "filterLabel": "筛选：",
+      "filterAll": "全部",
+      "emptyHint": "当前筛选下还没有章节。",
+      "chapterLabel": "第{order}章 {title}",
+      "unnamedChapter": "未命名章节",
+      "streamingFinalizing": "收尾中",
+      "streamingWriting": "写作中",
+      "repairing": "修复中",
+      "nextStep": "下一步",
+      "wordCount": "当前字数"
+    },
+    "characterFocus": {
+      "editingProtagonist": "当前编辑主角：{name}",
+      "editingCharacter": "当前编辑角色：{name}",
+      "pendingProtagonistGoal": "待补全主角目标",
+      "pendingRelation": "待补全与主角关系",
+      "protagonistBadge": "主角",
+      "currentGoalLine": "当前目标：{line}",
+      "relationLine": "与主角关系：{line}",
+      "roleLabel": "身份：{role}",
+      "undefinedRole": "未定义",
+      "lastAppearanceLabel": "最近出场：{chapter}",
+      "chapterNumber": "第{order}章",
+      "noAppearance": "暂无",
+      "storyFunctionLabel": "故事作用：{fn}",
+      "currentStateLabel": "当前状态：{state}",
+      "pending": "待补全"
+    },
+    "coverDraft": {
+      "defaultTitle": "这本小说",
+      "narrativePov": {
+        "firstPerson": "第一人称",
+        "thirdPerson": "第三人称",
+        "mixed": "混合视角"
+      },
+      "pacePreference": {
+        "slow": "慢节奏",
+        "balanced": "均衡",
+        "fast": "快节奏"
+      },
+      "emotionIntensity": {
+        "low": "低情绪浓度",
+        "medium": "中情绪浓度",
+        "high": "高情绪浓度"
+      }
     }
   },
   "autoDirector": {
@@ -6560,6 +6751,19 @@
         "meta": "字符数 {charCount} | {date}",
         "activate": "切换为激活版本"
       }
+    },
+    "ragUi": {
+      "statusEnabled": "已启用",
+      "statusDisabled": "已停用",
+      "statusArchived": "已归档",
+      "statusIdle": "空闲",
+      "statusQueued": "排队中",
+      "statusRunning": "执行中",
+      "statusSucceeded": "成功",
+      "statusFailed": "失败",
+      "attempts": "尝试 {current}/{max}",
+      "chunks": "{count} 分块",
+      "documents": "{count} 文档"
     }
   },
   "settings": {
@@ -6966,6 +7170,19 @@
     "newSession": "新建对话",
     "messages": "对话消息",
     "continueTask": "继续当前任务。",
+    "creativeHub": {
+      "title": "创作中枢",
+      "description": "这里不是单纯聊天页，而是当前小说工作区的命令、状态、诊断和审批入口。",
+      "novelBadge": "小说 {id}",
+      "runBadge": "运行 {id}",
+      "loadingCatalog": "正在加载能力目录...",
+      "categoryLabel": {
+        "read": "读取",
+        "inspect": "诊断",
+        "mutate": "修改",
+        "run": "执行"
+      }
+    },
     "assistantPanel": {
       "toolCallLabel": "[工具:{name}]",
       "dataLabel": "[数据]",
@@ -7365,9 +7582,39 @@
       "emptyTitle": "还没有任何推进模式",
       "emptyHint": "可以先手动建一个根推进模式，也可以直接让 AI 生成一份结构化草稿。",
       "startCreate": "开始创建"
+    },
+    "profile": {
+      "coreDrive": "核心驱动",
+      "readerReward": "读者奖励",
+      "progressionUnits": "章节推进单位",
+      "allowedConflictForms": "允许冲突形式",
+      "forbiddenConflictForms": "禁止冲突形式",
+      "conflictCeiling": "冲突上限",
+      "resolutionStyle": "化解方式",
+      "chapterUnit": "章节颗粒",
+      "volumeReward": "卷末奖励",
+      "mandatorySignals": "必须出现的信号",
+      "antiSignals": "必须避免的跑偏信号"
     }
   },
   "world": {
+    "list": {
+      "deleteSuccess": "世界观已删除。",
+      "deleteError": "删除世界观失败。",
+      "deleteConfirm": "确认删除世界观「{name}」？此操作不可恢复。",
+      "creativeHubOverview": "在创作中枢中查看",
+      "generateNew": "生成新世界观",
+      "emptyTitle": "暂无世界观",
+      "emptyHint": "点击「生成新世界观」开始创建。",
+      "noDescription": "暂无描述",
+      "noDetail": "暂无详细信息",
+      "structuredSettingFallback": "包含结构化设定，进入工作台查看详情。",
+      "statusLabel": "状态：{status}",
+      "continueInHub": "在创作中枢中继续",
+      "enterWorkspace": "进入工作台",
+      "deleting": "删除中...",
+      "delete": "删除"
+    },
     "workspace": {
       "title": "世界工作台：{name}",
       "titleLoading": "加载中...",
@@ -7597,6 +7844,29 @@
         "importing": "导入中...",
         "importButton": "导入为新世界"
       }
+    },
+    "propertySelector": {
+      "emptyHint": "当前还没有拿到可用的关键方向。通常说明上一步分析失败了，可以返回第 1 步重新生成。",
+      "sourceLibrary": "素材库",
+      "sourceSystem": "系统建议",
+      "reasonPrefix": "为什么建议先定它：",
+      "choicePrompt": "先选一个方向",
+      "detailPlaceholder": "可选：补充你的偏好，比如希望保留什么、放大什么、限制什么。"
+    },
+    "stepTwo": {
+      "referenceBlueprintTitle": "参考作品改造蓝图",
+      "currentMode": "当前方式：{mode}",
+      "originalAnchorsTitle": "原作世界锚点",
+      "mustPreserve": "必须保留：{items}",
+      "allowedChanges": "允许改造：{items}",
+      "forbiddenElements": "禁止偏离：{items}",
+      "currentType": "当前类型：{label}",
+      "pitfallsLabel": "坑点提醒：{pitfalls}",
+      "classicElementsTitle": "经典元素",
+      "propertyOptionsTitle": "前置世界属性",
+      "propertyOptionsHint": "系统已经先帮你勾选了建议项。通常只需要取消不想要的方向，或补一句自己的偏好。",
+      "creatingDraft": "创建中...",
+      "createDraftBtn": "创建草稿并生成公理建议"
     }
   },
   "characters": {
@@ -7692,6 +7962,21 @@
     }
   },
   "antiAiRules": {
+    "effectivePreview": {
+      "title": "生效预览",
+      "description": "查看正文生成会拿到的全局规则，以及选中写法后叠加的专属规则。",
+      "selectPlaceholder": "选择预览上下文",
+      "globalOnly": "只看全局默认",
+      "calculating": "正在计算生效规则...",
+      "globalBaselineLabel": "全局基线",
+      "effectiveRulesLabel": "生效规则",
+      "applied": "应用",
+      "notApplied": "未应用",
+      "globalDefaultRulesTitle": "全局默认规则",
+      "noGlobalRules": "没有全局默认规则。",
+      "styleSpecificRulesTitle": "写法专属规则",
+      "noStyleRules": "预览上下文没有叠加写法专属规则。"
+    },
     "page": {
       "title": "反 AI 规则",
       "description": "管理正文生成会参考的反 AI 规则，控制哪些规则进入全局默认，哪些只留给写法资产绑定使用。",
@@ -7800,6 +8085,49 @@
       "saving": "保存中...",
       "createSuccess": "题材基底树已创建。",
       "generateSuccess": "AI 题材基底树已生成。"
+    },
+    "editDialog": {
+      "title": "编辑题材基底",
+      "description": "可以修改名称、说明和挂载位置。子节点与已绑定小说会继续保留。",
+      "nameLabel": "名称",
+      "descriptionLabel": "描述",
+      "parentLabel": "父级题材基底",
+      "noParent": "无父级，作为根题材基底",
+      "cancel": "取消",
+      "save": "保存修改",
+      "saving": "保存中...",
+      "genreNotFound": "题材基底不存在。",
+      "updateSuccess": "题材基底已更新。"
+    },
+    "treeEditor": {
+      "levelMain": "主类型",
+      "levelSub": "子类型",
+      "levelNested": "下级类型",
+      "rootHint": "这是最终会创建进系统里的根节点。",
+      "childHint": "这里会作为上一级类型的子节点保存。",
+      "addSubType": "新增子类型",
+      "addNestedType": "新增下级类型",
+      "nameLabel": "名称",
+      "namePlaceholderRoot": "例如：都市异能",
+      "namePlaceholderChild": "例如：超凡职场",
+      "descriptionLabel": "描述",
+      "descriptionPlaceholder": "描述这个类型的题材核心、爽点、常见主线或读者期待。",
+      "deleteNode": "删除当前节点"
+    }
+  },
+  "genres": {
+    "page": {
+      "cardTitle": "题材基底库",
+      "cardDescription": "按树结构维护作品的题材基底，例如修仙、玄幻、都市、历史架空。它回答的是\u201c这是什么书\u201d，会作为小说项目的正式题材资产，而不是临时输入字段。",
+      "totalCount": "当前题材基底数：{count}",
+      "createTreeBtn": "新建题材基底树",
+      "loading": "正在加载题材基底树...",
+      "emptyTitle": "还没有任何题材基底",
+      "emptyHint": "可以先手动建一个根题材基底，也可以直接用 AI 生成一个完整层级。",
+      "startCreate": "开始创建",
+      "deleteSuccess": "题材基底已删除。",
+      "deleteConfirm": "确认删除题材基底「{name}」？此操作不可恢复。",
+      "deleteConfirmWithChildren": "确认删除题材基底「{name}」？这会同时删除其下 {count} 个子分类，此操作不可恢复。"
     }
   }
 }

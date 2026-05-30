@@ -9,7 +9,7 @@ import { queryKeys } from "@/api/queryKeys";
 import { featureFlags } from "@/config/featureFlags";
 import { toast } from "@/components/ui/toast";
 
-function extractStructuredPreview(raw: string): string | null {
+function extractStructuredPreview(raw: string, structuredFallback: string): string | null {
   const text = raw.trim();
   if (!text || (!text.startsWith("[") && !text.startsWith("{"))) {
     return null;
@@ -45,7 +45,7 @@ function extractStructuredPreview(raw: string): string | null {
       if (parts.length > 0) {
         return parts.join("；");
       }
-      return "包含结构化设定，进入工作台查看详情。";
+      return structuredFallback;
     }
     if (parsed && typeof parsed === "object") {
       const record = parsed as Record<string, unknown>;
@@ -53,7 +53,7 @@ function extractStructuredPreview(raw: string): string | null {
       if (typeof summary === "string" && summary.trim()) {
         return summary.trim();
       }
-      return "包含结构化设定，进入工作台查看详情。";
+      return structuredFallback;
     }
   } catch {
     return null;
@@ -62,13 +62,13 @@ function extractStructuredPreview(raw: string): string | null {
   return null;
 }
 
-function buildPreview(raw: string | null | undefined, fallback: string, limit: number): string {
+function buildPreview(raw: string | null | undefined, fallback: string, limit: number, structuredFallback: string): string {
   if (!raw?.trim()) {
     return fallback;
   }
 
   const normalized = raw.replace(/\s+/g, " ").trim();
-  const structured = extractStructuredPreview(normalized);
+  const structured = extractStructuredPreview(normalized, structuredFallback);
   const preview = (structured ?? normalized).slice(0, limit);
   return preview.length < (structured ?? normalized).length ? `${preview}...` : preview;
 }
@@ -133,6 +133,8 @@ export default function WorldList() {
     deleteWorldMutation.mutate(worldId);
   };
 
+  const structuredFallback = t("list.structuredSettingFallback");
+
   return (
     <div className="space-y-4">
       <div className="flex flex-wrap justify-end gap-2">
@@ -147,19 +149,20 @@ export default function WorldList() {
       {worlds.length === 0 ? (
         <Card>
           <CardHeader>
-            <CardTitle>暂无世界观</CardTitle>
-            <CardDescription>点击“生成新世界观”开始创建。</CardDescription>
+            <CardTitle>{t("list.emptyTitle")}</CardTitle>
+            <CardDescription>{t("list.emptyHint")}</CardDescription>
           </CardHeader>
         </Card>
       ) : (
         <div className="grid gap-3 md:grid-cols-2">
           {worlds.map((world) => {
             const structuredPreview = buildStructuredWorldPreview(world.structureJson);
-            const summary = buildPreview(structuredPreview.summary ?? world.description, "暂无描述", 120);
+            const summary = buildPreview(structuredPreview.summary ?? world.description, t("list.noDescription"), 120, structuredFallback);
             const detail = buildPreview(
               structuredPreview.detail ?? world.overviewSummary ?? world.conflicts ?? world.geography ?? world.background,
-              "暂无详细信息",
+              t("list.noDetail"),
               180,
+              structuredFallback,
             );
 
             return (
@@ -167,7 +170,7 @@ export default function WorldList() {
                 <CardHeader>
                   <CardTitle>{world.name}</CardTitle>
                   <CardDescription>
-                    {summary} | 状态：{world.status} | v{world.version}
+                    {summary} | {t("list.statusLabel", { status: world.status })} | v{world.version}
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="text-sm text-muted-foreground">
@@ -175,11 +178,11 @@ export default function WorldList() {
                   <div className="flex flex-wrap gap-2">
                     <OpenInCreativeHubButton
                       bindings={{ worldId: world.id }}
-                      label="在创作中枢中继续"
+                      label={t("list.continueInHub")}
                     />
                     {featureFlags.worldWizardEnabled ? (
                       <Button asChild size="sm">
-                        <Link to={`/worlds/${world.id}/workspace`}>进入工作台</Link>
+                        <Link to={`/worlds/${world.id}/workspace`}>{t("list.enterWorkspace")}</Link>
                       </Button>
                     ) : null}
                     <Button
@@ -188,7 +191,9 @@ export default function WorldList() {
                       onClick={() => handleDelete(world.id, world.name)}
                       disabled={deleteWorldMutation.isPending && deleteWorldMutation.variables === world.id}
                     >
-                      {deleteWorldMutation.isPending && deleteWorldMutation.variables === world.id ? "删除中..." : "删除"}
+                      {deleteWorldMutation.isPending && deleteWorldMutation.variables === world.id
+                        ? t("list.deleting")
+                        : t("list.delete")}
                     </Button>
                   </div>
                 </CardContent>

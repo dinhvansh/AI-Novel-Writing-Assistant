@@ -297,7 +297,7 @@ export function useNovelVolumePlanning({
     request: ChapterDetailBundleRequest,
   ) => {
     const targetVolume = normalizedVolumeDraft.find((volume) => volume.id === volumeId);
-    const batch = resolveChapterDetailBatch(targetVolume, request);
+    const batch = resolveChapterDetailBatch(targetVolume, request, t);
     if (!targetVolume) {
       setStructuredMessage(t("volumeMessages.missingVolumeForChapterRefine"));
       return;
@@ -313,7 +313,7 @@ export function useNovelVolumePlanning({
     if (!ensureCharacterGuard()) {
       return;
     }
-    const confirmed = window.confirm(buildChapterDetailBatchConfirmationMessage(batch));
+    const confirmed = window.confirm(buildChapterDetailBatchConfirmationMessage(batch, t));
     if (!confirmed) {
       return;
     }
@@ -323,6 +323,7 @@ export function useNovelVolumePlanning({
       label: batch.label,
       targetVolumeId: volumeId,
       targets: batch.targets,
+      t,
       setIsGenerating: setIsGeneratingChapterDetailBundle,
       setCurrentChapterId: setBundleGeneratingChapterId,
       setCurrentMode: setBundleGeneratingMode,

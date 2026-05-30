@@ -25,7 +25,7 @@ function parseSnapshotData(snapshot?: StoryStateSnapshot | null): ParsedSnapshot
   }
 }
 
-function buildSnapshotCharacters(snapshot?: StoryStateSnapshot | null, noSummaryText = "暂无摘要"): SnapshotCharacterItem[] {
+function buildSnapshotCharacters(snapshot?: StoryStateSnapshot | null, noSummaryText = ""): SnapshotCharacterItem[] {
   if (!snapshot) {
     return [];
   }
@@ -41,7 +41,7 @@ function buildSnapshotCharacters(snapshot?: StoryStateSnapshot | null, noSummary
   });
 }
 
-function buildSnapshotRelations(snapshot?: StoryStateSnapshot | null, noSummaryText = "暂无关系摘要"): SnapshotRelationItem[] {
+function buildSnapshotRelations(snapshot?: StoryStateSnapshot | null, noSummaryText = ""): SnapshotRelationItem[] {
   if (!snapshot) {
     return [];
   }
@@ -51,13 +51,13 @@ function buildSnapshotRelations(snapshot?: StoryStateSnapshot | null, noSummaryT
     const left = parsedItem?.sourceCharacterName?.trim() || item.sourceCharacterId;
     const right = parsedItem?.targetCharacterName?.trim() || item.targetCharacterId;
     return {
-      label: left && right ? `${left} → ${right}` : left || right || "关系",
+      label: left && right ? `${left} → ${right}` : left || right || "",
       summary: parsedItem?.summary?.trim() || item.summary?.trim() || noSummaryText,
     };
   });
 }
 
-function buildSnapshotForeshadows(snapshot?: StoryStateSnapshot | null, noSummaryText = "暂无说明"): SnapshotForeshadowItem[] {
+function buildSnapshotForeshadows(snapshot?: StoryStateSnapshot | null, noSummaryText = ""): SnapshotForeshadowItem[] {
   if (!snapshot) {
     return [];
   }
@@ -65,7 +65,7 @@ function buildSnapshotForeshadows(snapshot?: StoryStateSnapshot | null, noSummar
   return snapshot.foreshadowStates.slice(0, 3).map((item, index) => {
     const parsedItem = parsed?.foreshadowStates[index];
     return {
-      label: parsedItem?.title?.trim() || item.title || "伏笔",
+      label: parsedItem?.title?.trim() || item.title || "",
       summary: parsedItem?.summary?.trim() || item.summary?.trim() || noSummaryText,
       status: parsedItem?.status?.trim() || item.status || "unknown",
     };

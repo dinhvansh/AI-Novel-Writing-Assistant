@@ -51,7 +51,10 @@ export type NamespaceKey =
   | "world"
   | "characters"
   | "genre"
-  | "writingFormula";
+  | "genres"
+  | "storyModes"
+  | "writingFormula"
+  | "chat";
 
 /** All supported namespaces, in deterministic order. */
 export const NAMESPACE_KEYS: readonly NamespaceKey[] = [
@@ -69,7 +72,10 @@ export const NAMESPACE_KEYS: readonly NamespaceKey[] = [
   "world",
   "characters",
   "genre",
+  "genres",
+  "storyModes",
   "writingFormula",
+  "chat",
 ] as const;
 
 /**

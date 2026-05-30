@@ -60,7 +60,7 @@ export default function MobileNovelEditView(props: NovelEditViewProps) {
   const statusText = getMobileNovelWorkspaceStatusText({
     activeLabel: getNovelWorkspaceTabLabel(t, normalizedActiveTab),
     workflowLabel: getNovelWorkspaceTabLabel(t, normalizedWorkflowTab),
-  });
+  }, t);
   const isTakeoverLoading = takeover?.mode === "loading";
   const hideTakeoverEntry = takeover?.mode === "running" || takeover?.mode === "waiting";
   const pendingResourceProposalCount = taskDrawer?.resourceProposals?.length ?? 0;
@@ -241,7 +241,7 @@ export default function MobileNovelEditView(props: NovelEditViewProps) {
         </section>
       </main>
 
-      <MobileFloatingSaveButton {...getMobileNovelSaveState(normalizedActiveTab, props)} />
+      <MobileFloatingSaveButton {...getMobileNovelSaveState(normalizedActiveTab, props, t)} />
       {taskDrawer ? <NovelTaskDrawer {...taskDrawer} /> : null}
     </div>
   );

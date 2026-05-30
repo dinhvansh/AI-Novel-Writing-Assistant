@@ -368,7 +368,7 @@ export default function NovelCreateTitleQuickFill({
 
                           <div className="flex flex-wrap items-center gap-2">
                             <Button type="button" size="sm" onClick={() => handleApplyTitle(entry.title, "library")}>
-                              填入标题
+                              {t("novel:titleWorkshop.apply.fillTitle")}
                             </Button>
                           </div>
                         </div>
