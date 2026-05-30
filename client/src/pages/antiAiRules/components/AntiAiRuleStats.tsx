@@ -1,3 +1,5 @@
+import { useTranslation } from "react-i18next";
+
 interface StatTileProps {
   label: string;
   value: number;
@@ -22,12 +24,13 @@ interface AntiAiRuleStatsProps {
 }
 
 export default function AntiAiRuleStats(props: AntiAiRuleStatsProps) {
+  const { t } = useTranslation("antiAiRules");
   return (
     <div className="grid gap-3 md:grid-cols-4">
-      <StatTile label="规则总数" value={props.total} hint="规则库中可查看和编辑的全部规则。" />
-      <StatTile label="启用规则" value={props.enabled} hint="会参与全局或写法绑定解析的规则。" />
-      <StatTile label="全局默认" value={props.global} hint="不绑定写法时也会进入正文生成。" />
-      <StatTile label="自动改写" value={props.autoRewrite} hint="检测命中后可进入改写建议链路。" />
+      <StatTile label={t("stats.total.label")} value={props.total} hint={t("stats.total.hint")} />
+      <StatTile label={t("stats.enabled.label")} value={props.enabled} hint={t("stats.enabled.hint")} />
+      <StatTile label={t("stats.global.label")} value={props.global} hint={t("stats.global.hint")} />
+      <StatTile label={t("stats.autoRewrite.label")} value={props.autoRewrite} hint={t("stats.autoRewrite.hint")} />
     </div>
   );
 }

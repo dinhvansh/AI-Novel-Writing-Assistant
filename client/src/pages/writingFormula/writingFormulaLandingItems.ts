@@ -3,6 +3,7 @@ import {
   type StyleBinding,
   type StyleProfile,
 } from "@ai-novel/shared/types/styleEngine";
+import type { TFunction } from "i18next";
 import {
   buildReadableRuleEntries,
   buildReadableRuleSummary,
@@ -42,6 +43,7 @@ interface BuildLandingProfileItemsParams {
   profiles: StyleProfile[];
   allBindings: StyleBinding[];
   novelTitleMap: Record<string, string>;
+  t: TFunction;
 }
 
 function compactText(value: unknown): string {
@@ -63,20 +65,20 @@ function firstNonEmptyText(...values: unknown[]): string {
   return "";
 }
 
-function formatSourceTypeLabel(sourceType: StyleProfile["sourceType"]): string {
+function formatSourceTypeLabel(sourceType: StyleProfile["sourceType"], t: TFunction): string {
   switch (sourceType) {
     case "manual":
-      return "手动整理";
+      return t("writingFormula.landingItems.sourceType.manual");
     case "from_text":
-      return "从文本提取";
+      return t("writingFormula.landingItems.sourceType.fromText");
     case "from_book_analysis":
-      return "拆书生成";
+      return t("writingFormula.landingItems.sourceType.fromBookAnalysis");
     case "from_knowledge_document":
-      return "知识库原文";
+      return t("writingFormula.landingItems.sourceType.fromKnowledgeDocument");
     case "from_current_work":
-      return "当前工作提炼";
+      return t("writingFormula.landingItems.sourceType.fromCurrentWork");
     default:
-      return "其他来源";
+      return t("writingFormula.landingItems.sourceType.other");
   }
 }
 
@@ -95,20 +97,20 @@ function formatUpdatedAtLabel(value: string): string {
   }).format(date);
 }
 
-function buildNarrativeSummary(profile: StyleProfile): string {
-  return buildReadableRuleSummary("narrativeRules", profile.narrativeRules, "还没有明确剧情推进摘要。");
+function buildNarrativeSummary(profile: StyleProfile, t: TFunction): string {
+  return buildReadableRuleSummary("narrativeRules", profile.narrativeRules, t("writingFormula.landingItems.noNarrativeSummary"), t);
 }
 
-function buildCharacterSummary(profile: StyleProfile): string {
-  return buildReadableRuleSummary("characterRules", profile.characterRules, "还没有明确人物表达摘要。");
+function buildCharacterSummary(profile: StyleProfile, t: TFunction): string {
+  return buildReadableRuleSummary("characterRules", profile.characterRules, t("writingFormula.landingItems.noCharacterSummary"), t);
 }
 
-function buildLanguageSummary(profile: StyleProfile): string {
-  return buildReadableRuleSummary("languageRules", profile.languageRules, "还没有明确语言质感摘要。");
+function buildLanguageSummary(profile: StyleProfile, t: TFunction): string {
+  return buildReadableRuleSummary("languageRules", profile.languageRules, t("writingFormula.landingItems.noLanguageSummary"), t);
 }
 
-function buildRhythmSummary(profile: StyleProfile): string {
-  return buildReadableRuleSummary("rhythmRules", profile.rhythmRules, "还没有明确节奏控制摘要。");
+function buildRhythmSummary(profile: StyleProfile, t: TFunction): string {
+  return buildReadableRuleSummary("rhythmRules", profile.rhythmRules, t("writingFormula.landingItems.noRhythmSummary"), t);
 }
 
 function buildSourceContentPreview(sourceContent?: string | null): string | null {
@@ -121,7 +123,7 @@ function buildSourceContentPreview(sourceContent?: string | null): string | null
 }
 
 export function buildLandingProfileItems(params: BuildLandingProfileItemsParams): LandingProfileItem[] {
-  const { profiles, allBindings, novelTitleMap } = params;
+  const { profiles, allBindings, novelTitleMap, t } = params;
   const recentNovelBindingsByProfileId = allBindings
     .filter((binding) => binding.targetType === "novel")
     .reduce<Map<string, StyleBinding>>((result, binding) => {
@@ -150,18 +152,18 @@ export function buildLandingProfileItems(params: BuildLandingProfileItemsParams)
     })
     .map((profile) => {
       const profileSummary = buildStyleIntentSummary({ styleProfile: profile });
-      const characterEntries = buildReadableRuleEntries("characterRules", profile.characterRules);
+      const characterEntries = buildReadableRuleEntries("characterRules", profile.characterRules, t);
       const dialogueEntry = characterEntries.find((entry) => entry.key === "dialogueStyle");
       const emotionEntry = characterEntries.find((entry) => entry.key === "emotionExpression");
       const detailLines = [
         firstNonEmptyText(profile.description, profileSummary?.readingFeel)
-          ? `读感承诺：${firstNonEmptyText(profile.description, profileSummary?.readingFeel)}`
+          ? t("writingFormula.landingItems.readingFeelLine", { value: firstNonEmptyText(profile.description, profileSummary?.readingFeel) })
           : "",
-        `语言质感：${buildLanguageSummary(profile)}`,
-        dialogueEntry ? `对白风格：${dialogueEntry.value}` : "",
-        emotionEntry ? `情绪外显：${emotionEntry.value}` : "",
+        t("writingFormula.landingItems.languageLine", { value: buildLanguageSummary(profile, t) }),
+        dialogueEntry ? t("writingFormula.landingItems.dialogueLine", { value: dialogueEntry.value }) : "",
+        emotionEntry ? t("writingFormula.landingItems.emotionLine", { value: emotionEntry.value }) : "",
         profileSummary?.antiAiFocus.length
-          ? `反 AI 约束：${profileSummary.antiAiFocus.join("；")}`
+          ? t("writingFormula.landingItems.antiAiLine", { value: profileSummary.antiAiFocus.join("；") })
           : "",
       ].filter(Boolean);
       const recentNovelBinding = recentNovelBindingsByProfileId.get(profile.id);
@@ -175,23 +177,23 @@ export function buildLandingProfileItems(params: BuildLandingProfileItemsParams)
       return {
         id: profile.id,
         name: profile.name,
-        originLabel: getStyleProfileOriginLabel(profile),
-        summaryLine: detailLines[0] ?? profile.description ?? "暂无写法摘要。",
+        originLabel: getStyleProfileOriginLabel(t, profile),
+        summaryLine: detailLines[0] ?? profile.description ?? t("writingFormula.landingItems.noSummary"),
         detailLines,
-        description: firstNonEmptyText(profile.description, profileSummary?.readingFeel, "这套写法还没有写清楚读感定位。"),
+        description: firstNonEmptyText(profile.description, profileSummary?.readingFeel, t("writingFormula.landingItems.noDescription")),
         recentNovelTitle: recentNovelBinding
           ? (novelTitleMap[recentNovelBinding.targetId] ?? recentNovelBinding.targetId)
           : null,
         category: profile.category,
         tags: Array.from(new Set([...profile.tags, ...profile.applicableGenres].filter(Boolean))).slice(0, 6),
         applicableGenres: profile.applicableGenres.filter(Boolean),
-        narrativeSummary: buildNarrativeSummary(profile),
-        characterSummary: buildCharacterSummary(profile),
-        languageSummary: buildLanguageSummary(profile),
-        rhythmSummary: buildRhythmSummary(profile),
+        narrativeSummary: buildNarrativeSummary(profile, t),
+        characterSummary: buildCharacterSummary(profile, t),
+        languageSummary: buildLanguageSummary(profile, t),
+        rhythmSummary: buildRhythmSummary(profile, t),
         antiAiFocus: profileSummary?.antiAiFocus ?? [],
         antiAiRuleNames: profile.antiAiRules.map((rule) => rule.name).slice(0, 6),
-        sourceTypeLabel: formatSourceTypeLabel(profile.sourceType),
+        sourceTypeLabel: formatSourceTypeLabel(profile.sourceType, t),
         sourceContentPreview: buildSourceContentPreview(profile.sourceContent),
         extractedFeatureCount: profile.extractedFeatures.filter((feature) => feature.enabled).length,
         highRiskFeatureCount: profile.extractedFeatures.filter((feature) => feature.fingerprintRisk >= 0.7).length,

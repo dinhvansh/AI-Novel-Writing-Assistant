@@ -1,5 +1,6 @@
 import type { BaseMessage, BaseMessageChunk } from "@langchain/core/messages";
 import type { LLMProvider } from "@ai-novel/shared/types/llm";
+import type { LocaleCode } from "@ai-novel/shared/localization";
 import type { ZodType } from "zod";
 import type { TaskType } from "../../llm/modelRouter";
 
@@ -135,6 +136,12 @@ export interface PromptExecutionOptions {
   sceneIndex?: number;
   roundIndex?: number;
   triggerReason?: string;
+  /**
+   * Locale to produce reader-visible AI content in. The directive is
+   * appended at invocation time (NOT compiled into the prompt asset);
+   * `zh-CN` is a no-op and matches legacy behaviour.
+   */
+  outputLanguage?: LocaleCode;
 }
 
 export interface PromptExecutionMeta {

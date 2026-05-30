@@ -1,9 +1,10 @@
+import { useTranslation } from "react-i18next";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import {
-  NOVEL_WORKSPACE_FLOW_STEPS,
-  NOVEL_WORKSPACE_TOOL_TABS,
+  getNovelWorkspaceFlowSteps,
+  getNovelWorkspaceToolTabs,
   type NovelWorkspaceTab,
 } from "../novelWorkspaceNavigation";
 
@@ -18,10 +19,13 @@ export default function MobileNovelStepNav({
   workflowCurrentTab,
   onSelectTab,
 }: MobileNovelStepNavProps) {
-  const steps = [...NOVEL_WORKSPACE_FLOW_STEPS, ...NOVEL_WORKSPACE_TOOL_TABS];
+  const { t } = useTranslation();
+  const flowSteps = getNovelWorkspaceFlowSteps(t);
+  const toolTabs = getNovelWorkspaceToolTabs(t);
+  const steps = [...flowSteps, ...toolTabs];
 
   return (
-    <nav className="mobile-novel-step-nav -mx-4 flex gap-2 overflow-x-auto px-4 pb-1" aria-label="小说创作步骤">
+    <nav className="mobile-novel-step-nav -mx-4 flex gap-2 overflow-x-auto px-4 pb-1" aria-label={t("novel:workspace.tabs.fallbackBasic")}>
       {steps.map((step, index) => {
         const isActive = activeTab === step.key;
         const isRecommended = workflowCurrentTab === step.key && workflowCurrentTab !== activeTab;
@@ -40,13 +44,13 @@ export default function MobileNovelStepNav({
             onClick={() => onSelectTab(step.key)}
           >
             <span className="flex min-w-0 items-center gap-2">
-              {index < NOVEL_WORKSPACE_FLOW_STEPS.length ? (
+              {index < flowSteps.length ? (
                 <span className="text-[11px] opacity-75">{index + 1}</span>
               ) : null}
               <span className="max-w-32 truncate">{step.label}</span>
               {isRecommended ? (
                 <Badge variant="secondary" className="rounded-full px-1.5 py-0 text-[10px]">
-                  流程推荐
+                  {t("novel:workspace.recommended", { defaultValue: "Đề xuất" })}
                 </Badge>
               ) : null}
             </span>

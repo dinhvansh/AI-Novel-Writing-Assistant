@@ -146,7 +146,7 @@ router.get("/threads", async (_req, res, next) => {
     res.status(200).json({
       success: true,
       data,
-      message: "创作中枢线程列表加载成功。",
+      message: "创作中枢线程列表加载成功。" // i18n-ignore-internal-log: API success message, not user-facing
     } satisfies ApiResponse<typeof data>);
   } catch (error) {
     next(error);
@@ -163,7 +163,7 @@ router.post("/threads", validate({ body: createThreadSchema }), async (req, res,
     res.status(201).json({
       success: true,
       data,
-      message: "创作中枢线程已创建。",
+      message: "创作中枢线程已创建。" // i18n-ignore-internal-log: API success message, not user-facing
     } satisfies ApiResponse<typeof data>);
   } catch (error) {
     next(error);
@@ -181,7 +181,7 @@ router.patch("/threads/:threadId", validate({
     res.status(200).json({
       success: true,
       data,
-      message: "创作中枢线程已更新。",
+      message: "创作中枢线程已更新。" // i18n-ignore-internal-log: API success message, not user-facing
     } satisfies ApiResponse<typeof data>);
   } catch (error) {
     next(error);
@@ -197,7 +197,7 @@ router.delete("/threads/:threadId", validate({
     res.status(200).json({
       success: true,
       data: null,
-      message: "创作中枢线程已删除。",
+      message: "创作中枢线程已删除。" // i18n-ignore-internal-log: API success message, not user-facing
     } satisfies ApiResponse<null>);
   } catch (error) {
     next(error);
@@ -213,7 +213,7 @@ router.get("/threads/:threadId/state", validate({
     res.status(200).json({
       success: true,
       data,
-      message: "创作中枢线程状态加载成功。",
+      message: "创作中枢线程状态加载成功。" // i18n-ignore-internal-log: API success message, not user-facing
     } satisfies ApiResponse<typeof data>);
   } catch (error) {
     next(error);
@@ -229,7 +229,7 @@ router.get("/threads/:threadId/history", validate({
     res.status(200).json({
       success: true,
       data,
-      message: "创作中枢线程历史加载成功。",
+      message: "创作中枢线程历史加载成功。" // i18n-ignore-internal-log: API success message, not user-facing
     } satisfies ApiResponse<typeof data>);
   } catch (error) {
     next(error);
@@ -245,7 +245,7 @@ router.post("/threads/:threadId/generate-title", validate({
     res.status(200).json({
       success: true,
       data: { title },
-      message: "创作中枢线程标题已生成。",
+      message: "创作中枢线程标题已生成。" // i18n-ignore-internal-log: API success message, not user-facing
     } satisfies ApiResponse<{ title: string }>);
   } catch (error) {
     next(error);
@@ -283,7 +283,7 @@ router.post("/threads/:threadId/runs/stream", validate({
     } catch (error) {
       writeCreativeHubFrame(res, {
         event: "creative_hub/error",
-        data: { message: error instanceof Error ? error.message : "创作中枢运行失败。" },
+        data: { message: error instanceof Error ? error.message : "创作中枢运行失败。" }, // i18n-ignore: internal error 4
       });
     } finally {
       disposeHeartbeat();
@@ -316,7 +316,7 @@ router.post("/threads/:threadId/interrupts/:interruptId", validate({
     res.status(200).json({
       success: true,
       data,
-      message: body.action === "approve" ? "审批已通过，线程已更新。" : "审批已拒绝，线程已更新。",
+      message: body.action === "approve" ? "审批已通过，线程已更新。" : "审批已拒绝，线程已更新。" // i18n-ignore-internal-log: API success message, not user-facing
     } satisfies ApiResponse<typeof data>);
   } catch (error) {
     next(error);

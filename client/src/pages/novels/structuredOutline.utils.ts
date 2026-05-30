@@ -222,26 +222,34 @@ function compactList(items: string[] | undefined): string {
 
 export function buildTaskSheetFromStructuredChapter(chapter: StructuredChapter): string {
   const lines: string[] = [];
+  // i18n-ignore: AI prompt
   lines.push(`章节目标：${chapter.purpose || chapter.summary || "推动主线"}`);
   if (chapter.keyEvents && chapter.keyEvents.length > 0) {
+    // i18n-ignore: AI prompt
     lines.push(`关键事件：${compactList(chapter.keyEvents)}`);
   }
   if (chapter.involvedRoles && chapter.involvedRoles.length > 0) {
+    // i18n-ignore: AI prompt
     lines.push(`涉及角色：${compactList(chapter.involvedRoles)}`);
   }
   if (typeof chapter.conflictLevel === "number") {
+    // i18n-ignore: AI prompt
     lines.push(`冲突等级：${chapter.conflictLevel}`);
   }
   if (typeof chapter.revealLevel === "number") {
+    // i18n-ignore: AI prompt
     lines.push(`揭露等级：${chapter.revealLevel}`);
   }
   if (chapter.pacing?.trim()) {
+    // i18n-ignore: AI prompt
     lines.push(`节奏：${chapter.pacing.trim()}`);
   }
   if (chapter.foreshadow?.trim()) {
+    // i18n-ignore: AI prompt
     lines.push(`伏笔：${chapter.foreshadow.trim()}`);
   }
   if (chapter.mustAvoid?.trim()) {
+    // i18n-ignore: AI prompt
     lines.push(`禁止事项：${chapter.mustAvoid.trim()}`);
   }
   return lines.join("\n");

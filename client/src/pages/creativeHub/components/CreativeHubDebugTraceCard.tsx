@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Badge } from "@/components/ui/badge";
 
 export interface CreativeHubDebugTraceEntry {
@@ -31,6 +32,7 @@ export default function CreativeHubDebugTraceCard({
   entries,
   defaultCollapsed,
 }: CreativeHubDebugTraceCardProps) {
+  const { t } = useTranslation();
   const [expanded, setExpanded] = useState(!defaultCollapsed);
 
   useEffect(() => {
@@ -41,9 +43,9 @@ export default function CreativeHubDebugTraceCard({
     <div className="mt-3 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 shadow-sm">
       <div className="flex flex-wrap items-center justify-between gap-2">
         <div>
-          <div className="text-sm font-medium text-slate-900">运行细节</div>
+          <div className="text-sm font-medium text-slate-900">{t("creativeHub:debugTrace.title")}</div>
           <div className="mt-1 text-xs text-slate-500">
-            {runId ? `Run ${runId.slice(0, 8)}` : "当前回合调试信息"} · {entries.length} 条
+            {runId ? `Run ${runId.slice(0, 8)}` : t("creativeHub:debugTrace.currentTurn")} · {t("creativeHub:debugTrace.entryCount", { count: entries.length })}
           </div>
         </div>
         <button
@@ -51,14 +53,14 @@ export default function CreativeHubDebugTraceCard({
           className="rounded-full border border-slate-300 bg-white px-3 py-1 text-[11px] text-slate-600 transition hover:bg-slate-100"
           onClick={() => setExpanded((value) => !value)}
         >
-          {expanded ? "收起细节" : "展开细节"}
+          {expanded ? t("creativeHub:debugTrace.collapse") : t("creativeHub:debugTrace.expand")}
         </button>
       </div>
       {expanded ? (
         <div className="mt-3 space-y-3">
           {entries.length === 0 ? (
             <div className="rounded-xl border border-dashed border-slate-200 bg-white px-3 py-3 text-xs text-slate-500">
-              当前回合还没有可展示的调试信息。
+              {t("creativeHub:debugTrace.empty")}
             </div>
           ) : (
             entries.map((entry) => (
@@ -83,7 +85,7 @@ export default function CreativeHubDebugTraceCard({
         </div>
       ) : (
         <div className="mt-2 text-xs text-slate-500">
-          默认已折叠底层运行、工具与 checkpoint 细节；展开后可查看完整调试轨迹。
+          {t("creativeHub:debugTrace.collapsedHint")}
         </div>
       )}
     </div>

@@ -1,3 +1,4 @@
+import type { TFunction } from "i18next";
 import type { AntiAiRule } from "@ai-novel/shared/types/styleEngine";
 
 export type RuleFilter = "all" | "global" | "style" | "disabled";
@@ -30,17 +31,21 @@ export const emptyForm: RuleFormState = {
   autoRewrite: false,
 };
 
-export const typeLabels: Record<AntiAiRule["type"], string> = {
-  forbidden: "禁用",
-  risk: "风险",
-  encourage: "鼓励",
-};
+export function getTypeLabels(t: TFunction): Record<AntiAiRule["type"], string> {
+  return {
+    forbidden: t("antiAiRules:dialog.typeForbidden"),
+    risk: t("antiAiRules:dialog.typeRisk"),
+    encourage: t("antiAiRules:dialog.typeEncourage"),
+  };
+}
 
-export const severityLabels: Record<AntiAiRule["severity"], string> = {
-  low: "低",
-  medium: "中",
-  high: "高",
-};
+export function getSeverityLabels(t: TFunction): Record<AntiAiRule["severity"], string> {
+  return {
+    low: t("antiAiRules:dialog.severityLow"),
+    medium: t("antiAiRules:dialog.severityMedium"),
+    high: t("antiAiRules:dialog.severityHigh"),
+  };
+}
 
 export function ruleToForm(rule: AntiAiRule): RuleFormState {
   return {

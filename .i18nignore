@@ -1,0 +1,46 @@
+# Files / globs ignored by the i18n extraction pipeline.
+# Format: one glob per line; lines starting with # are comments.
+
+# Build / vendor output.
+**/node_modules/**
+**/dist/**
+**/.next/**
+
+# Tooling and scripts (these are developer-facing, not user-facing).
+scripts/**
+i18next-parser.config.cjs
+.i18nignore
+
+# Tests and fixtures.
+**/*.test.ts
+**/*.test.tsx
+**/*.test.mjs
+**/*.test.js
+**/__fixtures__/**
+
+# The localization module itself (it deliberately contains
+# CJK strings: glossary entries, locale bundles).
+shared/localization/**
+
+# The i18n configuration files themselves.
+client/src/i18n/**
+server/src/i18n/**
+
+# Prompt assets are kept in their authored language; their content is
+# user-facing only via AI generation, not directly rendered as UI copy.
+server/src/prompting/prompts/**
+
+# Database migrations are SQL/Prisma DDL — translation is meaningless.
+server/src/prisma/migrations/**
+server/src/prisma/migrations.sqlite/**
+
+# DB seed data file contains Chinese names that are migrated via the
+# slug strategy in Phase 6, not via i18next keys.
+server/src/db/seed.ts
+server/src/db/storyModeSeeds.ts
+
+# Documentation lives in Markdown, not source code.
+docs/**
+README.md
+AGENTS.md
+TASK.md

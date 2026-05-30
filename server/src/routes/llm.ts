@@ -18,7 +18,7 @@ const llmTestSchema = z.object({
   provider: llmProviderSchema,
   apiKey: z.string().trim().optional(),
   model: z.string().trim().optional(),
-  baseURL: z.string().trim().url("API URL 格式不正确。").optional(),
+  baseURL: z.string().trim().url("API URL 格式不正确。").optional(), // i18n-ignore: Zod validation message - TODO Phase 4
   probeMode: z.enum(["plain", "structured", "both"]).optional(),
 });
 
@@ -82,7 +82,7 @@ router.get("/providers", async (_req, res, next) => {
     const response: ApiResponse<typeof data> = {
       success: true,
       data,
-      message: "获取模型配置成功。",
+      message: "获取模型配置成功。" // i18n-ignore-internal-log: API success message, not user-facing
     };
     res.status(200).json(response);
   } catch (error) {
@@ -99,7 +99,7 @@ router.get("/model-routes", async (_req, res, next) => {
     res.status(200).json({
       success: true,
       data,
-      message: "模型路由配置已加载。",
+      message: "模型路由配置已加载。" // i18n-ignore-internal-log: API success message, not user-facing
     } satisfies ApiResponse<typeof data>);
   } catch (error) {
     next(error);
@@ -112,7 +112,7 @@ router.post("/model-routes/connectivity", async (_req, res, next) => {
     res.status(200).json({
       success: true,
       data,
-      message: "模型路由连通性检测完成。",
+      message: "模型路由连通性检测完成。" // i18n-ignore-internal-log: API success message, not user-facing
     } satisfies ApiResponse<typeof data>);
   } catch (error) {
     next(error);
@@ -125,7 +125,7 @@ router.get("/structured-fallback", async (_req, res, next) => {
     res.status(200).json({
       success: true,
       data,
-      message: "结构化备用模型配置已加载。",
+      message: "结构化备用模型配置已加载。" // i18n-ignore-internal-log: API success message, not user-facing
     } satisfies ApiResponse<typeof data>);
   } catch (error) {
     next(error);
@@ -139,13 +139,13 @@ router.put(
     try {
       const body = req.body as z.infer<typeof structuredFallbackSchema>;
       if ((body.enabled ?? false) && (!body.provider || !body.model)) {
-        throw new AppError("启用结构化备用模型时，provider 和 model 不能为空。", 400);
+        throw new AppError("启用结构化备用模型时，provider 和 model 不能为空。", 400, undefined, "llmFallbackProviderRequired"); // i18n-ignore: dynamic message with result.error fallback
       }
       const data = await saveStructuredFallbackSettings(body);
       res.status(200).json({
         success: true,
         data,
-        message: "结构化备用模型配置已更新。",
+        message: "结构化备用模型配置已更新。" // i18n-ignore-internal-log: API success message, not user-facing
       } satisfies ApiResponse<typeof data>);
     } catch (error) {
       next(error);
@@ -179,7 +179,7 @@ router.put(
       });
       res.status(200).json({
         success: true,
-        message: "模型路由已更新。",
+        message: "模型路由已更新。" // i18n-ignore-internal-log: API success message, not user-facing
       } satisfies ApiResponse<null>);
     } catch (error) {
       next(error);
@@ -201,11 +201,11 @@ router.post(
             ? result.plain?.ok === false
             : result.plain?.ok === false && result.structured?.ok === false;
       if (shouldFail) {
-        if (/API Key|未配置/.test(result.error ?? "")) {
-          next(new AppError(result.error ?? "未配置可用的模型连接。", 400));
+        if (/API Key|未配置/.test(result.error ?? "")) { // i18n-ignore: string matching
+          next(new AppError(result.error ?? "未配置可用的模型连接。", 400)); // i18n-ignore: dynamic message with result.error fallback
           return;
         }
-        next(new AppError(result.error ?? "模型连通性测试失败。", 400));
+        next(new AppError(result.error ?? "模型连通性测试失败。", 400)); // i18n-ignore: dynamic message with result.error fallback
         return;
       }
       const response: ApiResponse<{
@@ -223,7 +223,7 @@ router.post(
           plain: result.plain,
           structured: result.structured,
         },
-        message: "模型连通性与结构化兼容性测试已完成。",
+        message: "模型连通性与结构化兼容性测试已完成。" // i18n-ignore-internal-log: API success message, not user-facing
       };
       res.status(200).json(response);
     } catch (error) {

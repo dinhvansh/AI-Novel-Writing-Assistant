@@ -1,3 +1,4 @@
+import type { TFunction } from "i18next";
 import type { StructuredChapter, StructuredVolume } from "./structuredOutline.utils";
 
 export interface OutlineSyncChapter {
@@ -81,28 +82,28 @@ function compareNullableNumber(a: number | null | undefined, b: number | null | 
   return (a ?? null) === (b ?? null);
 }
 
-function getChangedFields(existing: OutlineSyncChapter, chapter: StructuredChapter): string[] {
+function getChangedFields(existing: OutlineSyncChapter, chapter: StructuredChapter, t: TFunction): string[] {
   const changed: string[] = [];
   if (!compareNullableString(existing.title, chapter.title)) {
-    changed.push("标题");
+    changed.push(t("novel:outlineSync.fields.title"));
   }
   if (!compareNullableString(existing.expectation, chapter.summary)) {
-    changed.push("摘要");
+    changed.push(t("novel:outlineSync.fields.summary"));
   }
   if (!compareNullableNumber(existing.targetWordCount, chapter.targetWordCount)) {
-    changed.push("目标字数");
+    changed.push(t("novel:outlineSync.fields.targetWordCount"));
   }
   if (!compareNullableNumber(existing.conflictLevel, chapter.conflictLevel)) {
-    changed.push("冲突等级");
+    changed.push(t("novel:outlineSync.fields.conflictLevel"));
   }
   if (!compareNullableNumber(existing.revealLevel, chapter.revealLevel)) {
-    changed.push("揭露等级");
+    changed.push(t("novel:outlineSync.fields.revealLevel"));
   }
   if (!compareNullableString(existing.mustAvoid, chapter.mustAvoid)) {
-    changed.push("禁止事项");
+    changed.push(t("novel:outlineSync.fields.mustAvoid"));
   }
   if (chapter.taskSheet?.trim() && !compareNullableString(existing.taskSheet, chapter.taskSheet)) {
-    changed.push("任务单");
+    changed.push(t("novel:outlineSync.fields.taskSheet"));
   }
   return changed;
 }
@@ -111,6 +112,7 @@ export function buildStructuredOutlineSyncPreview(
   volumes: StructuredVolume[],
   existingChapters: OutlineSyncChapter[],
   options: StructuredSyncOptions,
+  t: TFunction,
 ): StructuredSyncPreview {
   const targetChapters = flattenStructuredChapters(volumes);
   const existingByOrder = new Map(existingChapters.map((chapter) => [chapter.order, chapter]));
@@ -133,11 +135,11 @@ export function buildStructuredOutlineSyncPreview(
         order: chapter.order,
         nextTitle: chapter.title,
         hasContent: false,
-        changedFields: ["新章节"],
+        changedFields: [t("novel:outlineSync.changedFields.newChapter")],
       });
       continue;
     }
-    const changedFields = getChangedFields(existing, chapter);
+    const changedFields = getChangedFields(existing, chapter, t);
     const hasContent = hasGeneratedContent(existing.content);
     if (changedFields.length === 0) {
       keepCount += 1;
@@ -180,7 +182,7 @@ export function buildStructuredOutlineSyncPreview(
         order: chapter.order,
         nextTitle: chapter.title,
         hasContent,
-        changedFields: ["从大纲移除"],
+        changedFields: [t("novel:outlineSync.changedFields.removedFromOutline")],
       });
     } else {
       deleteCandidateCount += 1;
@@ -189,7 +191,7 @@ export function buildStructuredOutlineSyncPreview(
         order: chapter.order,
         nextTitle: chapter.title,
         hasContent,
-        changedFields: ["待确认删除"],
+        changedFields: [t("novel:outlineSync.changedFields.pendingDelete")],
       });
     }
   }
@@ -210,11 +212,12 @@ export function buildStructuredOutlineSyncPlan(
   volumes: StructuredVolume[],
   existingChapters: OutlineSyncChapter[],
   options: StructuredSyncOptions,
+  t: TFunction,
 ): StructuredSyncPlan {
   const targetChapters = flattenStructuredChapters(volumes);
   const existingByOrder = new Map(existingChapters.map((chapter) => [chapter.order, chapter]));
   const targetOrderSet = new Set(targetChapters.map((chapter) => chapter.order));
-  const preview = buildStructuredOutlineSyncPreview(volumes, existingChapters, options);
+  const preview = buildStructuredOutlineSyncPreview(volumes, existingChapters, options, t);
   const creates: StructuredChapter[] = [];
   const updates: Array<{
     chapterId: string;
@@ -234,7 +237,7 @@ export function buildStructuredOutlineSyncPlan(
       creates.push(chapter);
       continue;
     }
-    const changedFields = getChangedFields(existing, chapter);
+    const changedFields = getChangedFields(existing, chapter, t);
     if (changedFields.length === 0) {
       continue;
     }

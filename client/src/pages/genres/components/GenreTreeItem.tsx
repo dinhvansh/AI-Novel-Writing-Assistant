@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { ChevronDown, ChevronRight, Pencil, Plus, Trash2 } from "lucide-react";
 import type { GenreTreeNode } from "@/api/genre";
 import { Button } from "@/components/ui/button";
@@ -22,6 +23,7 @@ export default function GenreTreeItem({
   onDelete,
   deletingId,
 }: GenreTreeItemProps) {
+  const { t } = useTranslation();
   const [expanded, setExpanded] = useState(true);
   const hasChildren = node.children.length > 0;
   const boundNovelCount = countGenreNovelBindingsInSubtree(node);
@@ -39,7 +41,7 @@ export default function GenreTreeItem({
                 setExpanded((value) => !value);
               }
             }}
-            aria-label={expanded ? "折叠" : "展开"}
+            aria-label={expanded ? t("genre:treeItem.collapse") : t("genre:treeItem.expand")}
           >
             {hasChildren ? (
               expanded ? <ChevronDown className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />
@@ -52,25 +54,25 @@ export default function GenreTreeItem({
             <div className="flex flex-wrap items-center gap-2">
               <div className="text-sm font-semibold text-foreground">{node.name}</div>
               <span className="rounded-full bg-muted px-2 py-0.5 text-[11px] text-muted-foreground">
-                小说 {node.novelCount}
+                {t("genre:treeItem.novelCount", { count: node.novelCount })}
               </span>
               <span className="rounded-full bg-muted px-2 py-0.5 text-[11px] text-muted-foreground">
-                子类 {node.childCount}
+                {t("genre:treeItem.childCount", { count: node.childCount })}
               </span>
             </div>
             <div className="text-sm leading-6 text-muted-foreground">
-              {node.description?.trim() || "暂无描述。"}
+              {node.description?.trim() || t("genre:treeItem.noDescription")}
             </div>
           </div>
 
           <div className="flex shrink-0 flex-wrap justify-end gap-1">
             <Button type="button" variant="ghost" size="sm" onClick={() => onCreateChild(node.id)}>
               <Plus className="mr-1 h-4 w-4" />
-              新增子类
+              {t("genre:treeItem.addChild")}
             </Button>
             <Button type="button" variant="ghost" size="sm" onClick={() => onEdit(node.id)}>
               <Pencil className="mr-1 h-4 w-4" />
-              编辑
+              {t("genre:treeItem.edit")}
             </Button>
             <Button
               type="button"
@@ -78,11 +80,11 @@ export default function GenreTreeItem({
               size="sm"
               className="text-destructive hover:text-destructive"
               disabled={deleteDisabled || deletingId === node.id}
-              title={deleteDisabled ? "请先解绑当前分类或其子分类下的小说后再删除。" : undefined}
+              title={deleteDisabled ? t("genre:treeItem.deleteDisabledTitle") : undefined}
               onClick={() => onDelete(node)}
             >
               <Trash2 className="mr-1 h-4 w-4" />
-              {deletingId === node.id ? "删除中..." : "删除"}
+              {deletingId === node.id ? t("genre:treeItem.deleting") : t("genre:treeItem.delete")}
             </Button>
           </div>
         </div>

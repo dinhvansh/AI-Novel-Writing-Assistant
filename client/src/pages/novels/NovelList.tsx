@@ -1,5 +1,7 @@
 ﻿import type { KeyboardEvent, MouseEvent } from "react";
 import { useEffect, useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
+import type { TFunction } from "i18next";
 import type { ProjectProgressStatus } from "@ai-novel/shared/types/novel";
 import type { DirectorContinuationMode } from "@ai-novel/shared/types/novelDirector";
 import type {
@@ -59,20 +61,12 @@ function createDownload(blob: Blob, fileName: string): void {
   URL.revokeObjectURL(url);
 }
 
-function formatProgressStatus(status?: ProjectProgressStatus | null): string {
-  if (status === "completed") {
-    return "已完成";
-  }
-  if (status === "in_progress") {
-    return "进行中";
-  }
-  if (status === "rework") {
-    return "待返工";
-  }
-  if (status === "blocked") {
-    return "受阻";
-  }
-  return "未开始";
+function formatProgressStatus(status: ProjectProgressStatus | null | undefined, t: TFunction): string {
+  if (status === "completed") return t("novel:novelList.progressStatus.completed");
+  if (status === "in_progress") return t("novel:novelList.progressStatus.inProgress");
+  if (status === "rework") return t("novel:novelList.progressStatus.rework");
+  if (status === "blocked") return t("novel:novelList.progressStatus.blocked");
+  return t("novel:novelList.progressStatus.notStarted");
 }
 
 function formatTokenCount(value?: number | null): string {
@@ -85,6 +79,7 @@ function formatTokenCount(value?: number | null): string {
 export default function NovelList() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
+  const { t } = useTranslation();
   const [status, setStatus] = useState<StatusFilter>("all");
   const [writingMode, setWritingMode] = useState<WritingModeFilter>("all");
   const [cockpitNovelId, setCockpitNovelId] = useState<string | null>(null);
@@ -122,10 +117,10 @@ export default function NovelList() {
     mutationFn: (id: string) => deleteNovel(id),
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: queryKeys.novels.all });
-      toast.success("小说已删除。");
+      toast.success(t("novel:novelList.deleteSuccess"));
     },
     onError: (error) => {
-      toast.error(error instanceof Error ? error.message : "删除小说失败。");
+      toast.error(error instanceof Error ? error.message : t("novel:novelList.deleteError"));
     },
   });
 
@@ -138,10 +133,10 @@ export default function NovelList() {
     ),
     onSuccess: ({ blob, fileName }) => {
       createDownload(blob, fileName);
-      toast.success("导出已开始。");
+      toast.success(t("novel:novelList.exportSuccess"));
     },
     onError: (error) => {
-      toast.error(error instanceof Error ? error.message : "导出小说失败。");
+      toast.error(error instanceof Error ? error.message : t("novel:novelList.exportError"));
     },
   });
 
@@ -175,8 +170,8 @@ export default function NovelList() {
         error instanceof Error
           ? error.message
           : input.mode === "auto_execute_range"
-            ? "继续自动执行当前章节范围失败。"
-            : "继续自动导演失败。",
+            ? t("novel:novelList.continueAutoExecError")
+            : t("novel:novelList.continueDirectorError"),
       );
     },
   });
@@ -206,7 +201,7 @@ export default function NovelList() {
   }, [page, totalPages]);
 
   const handleDelete = (novelId: string, title: string) => {
-    const confirmed = window.confirm(`确认删除《${title}》吗？该操作会直接删除当前小说。`);
+    const confirmed = window.confirm(t("novel:novelList.deleteConfirm", { title }));
     if (!confirmed) {
       return;
     }
@@ -246,19 +241,19 @@ export default function NovelList() {
               variant={status === "all" ? "default" : "secondary"}
               onClick={() => setStatus("all")}
             >
-              全部
+              {t("novel:novelList.filter.all")}
             </Button>
             <Button
               variant={status === "draft" ? "default" : "secondary"}
               onClick={() => setStatus("draft")}
             >
-              草稿
+              {t("novel:novelList.filter.draft")}
             </Button>
             <Button
               variant={status === "published" ? "default" : "secondary"}
               onClick={() => setStatus("published")}
             >
-              已发布
+              {t("novel:novelList.filter.published")}
             </Button>
           </div>
           <div className="flex items-center gap-2">
@@ -267,41 +262,41 @@ export default function NovelList() {
               variant={writingMode === "all" ? "default" : "secondary"}
               onClick={() => setWritingMode("all")}
             >
-              创作类型: 全部
+              {t("novel:novelList.filter.writingModeAll")}
             </Button>
             <Button
               size="sm"
               variant={writingMode === "original" ? "default" : "secondary"}
               onClick={() => setWritingMode("original")}
             >
-              原创
+              {t("novel:novelList.filter.original")}
             </Button>
             <Button
               size="sm"
               variant={writingMode === "continuation" ? "default" : "secondary"}
               onClick={() => setWritingMode("continuation")}
             >
-              续写
+              {t("novel:novelList.filter.continuation")}
             </Button>
           </div>
         </div>
 
         <div className="flex flex-wrap items-center gap-2">
           <Badge variant="outline">
-            第 {page} / {totalPages} 页，共 {totalNovels} 本
+            {t("novel:novelList.pagination", { page, totalPages, totalNovels })}
           </Badge>
           {recoveryCandidateCount > 0 ? (
             <Button variant="outline" onClick={openRecoveryDialog}>
               <RotateCcw className="h-4 w-4" aria-hidden="true" />
-              待恢复任务
+              {t("novel:novelList.pendingRecovery")}
               <Badge variant="secondary">{recoveryCandidateCount}</Badge>
             </Button>
           ) : null}
           <Button asChild>
-            <Link to={DIRECTOR_CREATE_LINK}>AI 自动导演开书</Link>
+            <Link to={DIRECTOR_CREATE_LINK}>{t("novel:novelList.createWithDirector")}</Link>
           </Button>
           <Button asChild variant="outline">
-            <Link to={MANUAL_CREATE_LINK}>手动创建小说</Link>
+            <Link to={MANUAL_CREATE_LINK}>{t("novel:novelList.createManual")}</Link>
           </Button>
         </div>
       </div>
@@ -329,30 +324,30 @@ export default function NovelList() {
       ) : novelListQuery.isError ? (
         <Card>
           <CardHeader>
-            <CardTitle>加载小说列表失败</CardTitle>
-            <CardDescription>当前无法读取项目列表，可以重试一次。</CardDescription>
+            <CardTitle>{t("novel:novelList.loadError.title")}</CardTitle>
+            <CardDescription>{t("novel:novelList.loadError.description")}</CardDescription>
           </CardHeader>
           <CardContent>
-            <Button onClick={() => void novelListQuery.refetch()}>重新加载</Button>
+            <Button onClick={() => void novelListQuery.refetch()}>{t("novel:novelList.loadError.retry")}</Button>
           </CardContent>
         </Card>
       ) : novels.length === 0 ? (
         <Card>
           <CardHeader>
-            <CardTitle>{allNovels.length === 0 ? "暂无小说" : "暂无符合筛选条件的小说"}</CardTitle>
+            <CardTitle>{allNovels.length === 0 ? t("novel:novelList.empty.title") : t("novel:novelList.empty.filteredTitle")}</CardTitle>
             <CardDescription>
               {allNovels.length === 0
-                ? "第一次使用时，推荐直接点右上角“AI 自动导演开书”，让系统先帮你搭好方向与开写准备。"
-                : "可以调整上方筛选条件，或直接创建新的小说项目。"}
+                ? t("novel:novelList.empty.description")
+                : t("novel:novelList.empty.filteredDescription")}
             </CardDescription>
           </CardHeader>
           {allNovels.length === 0 ? (
             <CardContent className="flex flex-wrap gap-2">
               <Button asChild>
-                <Link to={DIRECTOR_CREATE_LINK}>AI 自动导演开书</Link>
+                <Link to={DIRECTOR_CREATE_LINK}>{t("novel:novelList.createWithDirector")}</Link>
               </Button>
               <Button asChild variant="outline">
-                <Link to={MANUAL_CREATE_LINK}>手动创建小说</Link>
+                <Link to={MANUAL_CREATE_LINK}>{t("novel:novelList.createManual")}</Link>
               </Button>
             </CardContent>
           ) : null}
@@ -394,24 +389,23 @@ export default function NovelList() {
                     </CardTitle>
                     <div className="flex flex-wrap items-center justify-end gap-2">
                       <Badge variant={novel.status === "published" ? "default" : "secondary"}>
-                        {novel.status === "published" ? "已发布" : "草稿"}
+                        {novel.status === "published" ? t("novel:novelList.card.published") : t("novel:novelList.card.draft")}
                       </Badge>
                       {novel.writingMode === "continuation" ? (
-                        <Badge variant="outline">续写</Badge>
+                        <Badge variant="outline">{t("novel:novelList.card.continuation")}</Badge>
                       ) : (
-                        <Badge variant="outline">原创</Badge>
+                        <Badge variant="outline">{t("novel:novelList.card.original")}</Badge>
                       )}
                     </div>
                   </div>
                   <CardDescription className="line-clamp-2">
-                    {novel.description || "暂无简介"}
+                    {novel.description || t("novel:novelList.card.noDescription")}
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-3">
                   <div className="text-xs text-muted-foreground">
-                    章节数：{novel._count.chapters}，角色数：{novel._count.characters}，累计 Token：{formatTokenCount(
-                      novel.tokenUsage?.totalTokens,
-                    )}
+                    {t("novel:novelList.card.stats", { chapters: novel._count.chapters, characters: novel._count.characters, tokens: formatTokenCount(
+                      novel.tokenUsage?.totalTokens) })}
                   </div>
 
                   {workflowTask ? (
@@ -427,9 +421,9 @@ export default function NovelList() {
                         {workflowBadge ? (
                           <Badge variant={workflowBadge.variant}>{workflowBadge.label}</Badge>
                         ) : null}
-                        <Badge variant="outline">进度 {Math.round(workflowTask.progress * 100)}%</Badge>
+                        <Badge variant="outline">{t("novel:novelList.card.progressPercent", { percent: Math.round(workflowTask.progress * 100) })}</Badge>
                         {isWorkflowRunning ? (
-                          <Badge variant="outline">后台运行中</Badge>
+                          <Badge variant="outline">{t("novel:novelList.card.runningInBackground")}</Badge>
                         ) : null}
                       </div>
                       {workflowDescription ? (
@@ -439,39 +433,39 @@ export default function NovelList() {
                         <NovelWorkflowRunningIndicator
                           className="mt-3"
                           progress={workflowTask.progress}
-                          label={workflowCurrentAction || "AI 正在后台持续推进"}
+                          label={workflowCurrentAction || t("novel:novelList.card.aiRunning")}
                         />
                       ) : null}
                       <div className="mt-2 text-xs text-muted-foreground">
-                        当前阶段：{workflowTask.currentStage ?? "自动导演"}{workflowCurrentAction ? ` · ${workflowCurrentAction}` : ""}
+                        {t("novel:novelList.card.currentStage", { stage: workflowTask.currentStage ?? t("novel:novelList.card.defaultStage") })}{workflowCurrentAction ? ` · ${workflowCurrentAction}` : ""}
                       </div>
                       {workflowTask.lastHealthyStage ? (
                         <div className="mt-1 text-xs text-muted-foreground">
-                          最近健康阶段：{workflowTask.lastHealthyStage}
+                          {t("novel:novelList.card.lastHealthyStage", { stage: workflowTask.lastHealthyStage })}
                         </div>
                       ) : null}
                       {workflowTask.resumeAction ? (
                         <div className="mt-1 text-xs text-muted-foreground">
-                          建议继续：{workflowTask.resumeAction}
+                          {t("novel:novelList.card.resumeAction", { action: workflowTask.resumeAction })}
                         </div>
                       ) : null}
                     </div>
                   ) : (
                     <div className="rounded-xl border border-dashed bg-muted/10 p-3 text-xs text-muted-foreground">
-                      当前未检测到自动导演任务，列表按小说基础资产展示。
+                      {t("novel:novelList.card.noDirectorTask")}
                     </div>
                   )}
 
                   <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-muted-foreground">
-                    <span>项目：{formatProgressStatus(novel.projectStatus)}</span>
-                    <span>主线：{formatProgressStatus(novel.storylineStatus)}</span>
-                    <span>大纲：{formatProgressStatus(novel.outlineStatus)}</span>
-                    <span>资源：{novel.resourceReadyScore ?? 0}/100</span>
+                    <span>{t("novel:novelList.card.projectStatus", { status: formatProgressStatus(novel.projectStatus, t) })}</span>
+                    <span>{t("novel:novelList.card.storylineStatus", { status: formatProgressStatus(novel.storylineStatus, t) })}</span>
+                    <span>{t("novel:novelList.card.outlineStatus", { status: formatProgressStatus(novel.outlineStatus, t) })}</span>
+                    <span>{t("novel:novelList.card.resourceScore", { score: novel.resourceReadyScore ?? 0 })}</span>
                   </div>
 
                   {novel.world ? (
                     <div className="text-xs text-muted-foreground">
-                      世界观：{novel.world.name}
+                      {t("novel:novelList.card.world", { name: novel.world.name })}
                     </div>
                   ) : null}
 
@@ -485,7 +479,7 @@ export default function NovelList() {
                       }}
                     >
                       <Gauge className="h-4 w-4" aria-hidden="true" />
-                      AI 驾驶舱
+                      {t("novel:novelList.card.cockpit")}
                     </Button>
 
                     {canContinueChapterBatchAutoExecution(workflowTask) ? (
@@ -503,7 +497,7 @@ export default function NovelList() {
                         }}
                         disabled={isWorkflowPending}
                       >
-                        {isWorkflowPending ? "继续执行中..." : (workflowTask?.resumeAction ?? `继续自动执行${workflowTask?.executionScopeLabel ?? "当前章节范围"}`)}
+                        {isWorkflowPending ? t("novel:novelList.card.continuingExec") : (workflowTask?.resumeAction ?? t("novel:novelList.card.continueAutoExec", { scope: workflowTask?.executionScopeLabel ?? t("novel:novelList.card.defaultScope") }))}
                       </Button>
                     ) : canContinueDirector(workflowTask) ? (
                       <Button
@@ -519,34 +513,34 @@ export default function NovelList() {
                         }}
                         disabled={isWorkflowPending}
                       >
-                        {isWorkflowPending ? "继续中..." : (workflowTask?.resumeAction ?? "继续导演")}
+                        {isWorkflowPending ? t("novel:novelList.card.continuing") : (workflowTask?.resumeAction ?? t("novel:novelList.card.continueDirector"))}
                       </Button>
                     ) : requiresCandidateSelection(workflowTask) ? (
                       <Button asChild size="sm">
                         <Link to={getCandidateSelectionLink(workflowTask!.id)} onClick={stopCardClick}>
-                          {workflowTask!.resumeAction ?? "继续确认书级方向"}
+                          {workflowTask!.resumeAction ?? t("novel:novelList.card.confirmDirection")}
                         </Link>
                       </Button>
                     ) : canEnterChapterExecution(workflowTask) ? (
                       <Button asChild size="sm">
-                        <Link to={`/novels/${novel.id}/edit`} onClick={stopCardClick}>进入章节执行</Link>
+                        <Link to={`/novels/${novel.id}/edit`} onClick={stopCardClick}>{t("novel:novelList.card.enterChapterExec")}</Link>
                       </Button>
                     ) : workflowTask ? (
                       <Button asChild size="sm">
-                        <Link to={`/novels/${novel.id}/edit?directorTaskId=${workflowTask.id}`} onClick={stopCardClick}>查看推进状态</Link>
+                        <Link to={`/novels/${novel.id}/edit?directorTaskId=${workflowTask.id}`} onClick={stopCardClick}>{t("novel:novelList.card.viewProgress")}</Link>
                       </Button>
                     ) : null}
 
                     {workflowTask ? (
                       <Button asChild size="sm" variant="outline">
-                        <Link to={`/novels/${novel.id}/edit?directorTaskId=${workflowTask.id}&taskPanel=1`} onClick={stopCardClick}>执行详情</Link>
+                        <Link to={`/novels/${novel.id}/edit?directorTaskId=${workflowTask.id}&taskPanel=1`} onClick={stopCardClick}>{t("novel:novelList.card.execDetails")}</Link>
                       </Button>
                     ) : null}
 
                     <Button asChild size="sm" variant="outline">
                       <Link to={`/novels/${novel.id}/preview`} onClick={stopCardClick}>
                         <BookOpen className="h-4 w-4" aria-hidden="true" />
-                        预览
+                        {t("novel:novelList.card.preview")}
                       </Link>
                     </Button>
 
@@ -562,7 +556,7 @@ export default function NovelList() {
                       }}
                       disabled={isDownloadPending}
                     >
-                      {isDownloadPending ? "导出中..." : "导出"}
+                      {isDownloadPending ? t("novel:novelList.card.exporting") : t("novel:novelList.card.export")}
                     </Button>
                     <Button
                       size="sm"
@@ -573,7 +567,7 @@ export default function NovelList() {
                       }}
                       disabled={isDeletePending}
                     >
-                      {isDeletePending ? "删除中..." : "删除"}
+                      {isDeletePending ? t("novel:novelList.card.deleting") : t("novel:novelList.card.delete")}
                     </Button>
                   </div>
                 </CardContent>
@@ -589,7 +583,7 @@ export default function NovelList() {
                 disabled={page <= 1 || novelListQuery.isFetching}
                 onClick={() => setPage((current) => Math.max(1, current - 1))}
               >
-                上一页
+                {t("novel:novelList.prevPage")}
               </Button>
               <Button
                 type="button"
@@ -597,7 +591,7 @@ export default function NovelList() {
                 disabled={page >= totalPages || novelListQuery.isFetching}
                 onClick={() => setPage((current) => Math.min(totalPages, current + 1))}
               >
-                下一页
+                {t("novel:novelList.nextPage")}
               </Button>
             </div>
           ) : null}
@@ -614,20 +608,20 @@ export default function NovelList() {
       >
         <AppDialogContent
           className="max-w-2xl"
-          title="AI 驾驶舱"
+          title={t("novel:novelList.cockpit.title")}
           description={
             selectedCockpitNovel?.title
-              ? `查看《${selectedCockpitNovel.title}》的 AI 推进状态和下一步动作。`
-              : "查看这本书的 AI 推进状态和下一步动作。"
+              ? t("novel:novelList.cockpit.descriptionWithTitle", { title: selectedCockpitNovel.title })
+              : t("novel:novelList.cockpit.description")
           }
         >
           {cockpitProjectionQuery.isPending ? (
             <div className="rounded-lg border p-3 text-sm text-muted-foreground">
-              读取这本书的 AI 状态...
+              {t("novel:novelList.cockpit.loading")}
             </div>
           ) : cockpitProjectionQuery.isError ? (
             <div className="rounded-lg border p-3">
-              <div className="text-sm text-muted-foreground">无法读取这本书的 AI 状态，请稍后重试。</div>
+              <div className="text-sm text-muted-foreground">{t("novel:novelList.cockpit.loadError")}</div>
               <Button
                 type="button"
                 size="sm"
@@ -635,7 +629,7 @@ export default function NovelList() {
                 className="mt-3"
                 onClick={() => void cockpitProjectionQuery.refetch()}
               >
-                重新读取
+                {t("novel:novelList.cockpit.reload")}
               </Button>
             </div>
           ) : cockpitProjection ? (
@@ -650,7 +644,7 @@ export default function NovelList() {
               }}
             />
           ) : (
-            <AICockpit fallbackSummary="这本书没有需要处理的 AI 自动推进任务。" />
+            <AICockpit fallbackSummary={t("novel:novelList.cockpit.noTask")} />
           )}
         </AppDialogContent>
       </Dialog>

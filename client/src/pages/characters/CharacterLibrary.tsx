@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
 import { useMutation, useQueries, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useTranslation } from "react-i18next";
 import type { ImageAsset } from "@ai-novel/shared/types/image";
 import type { BaseCharacter } from "@ai-novel/shared/types/novel";
 import { deleteBaseCharacter, getBaseCharacterList, updateBaseCharacter } from "@/api/character";
@@ -16,6 +17,7 @@ type EditableBaseCharacter = Omit<BaseCharacter, "id" | "createdAt" | "updatedAt
 
 export default function CharacterLibrary() {
   const queryClient = useQueryClient();
+  const { t } = useTranslation("characters");
   const [imageDialogOpen, setImageDialogOpen] = useState(false);
   const [selectedImageCharacter, setSelectedImageCharacter] = useState<BaseCharacter | null>(null);
   const [editDialogOpen, setEditDialogOpen] = useState(false);
@@ -127,7 +129,7 @@ export default function CharacterLibrary() {
   };
 
   const handleDeleteCharacter = (character: BaseCharacter) => {
-    const confirmed = window.confirm(`确认删除角色「${character.name}」？此操作不可恢复。`);
+    const confirmed = window.confirm(t("library.confirmDelete", { name: character.name }));
     if (!confirmed) {
       return;
     }
@@ -137,9 +139,9 @@ export default function CharacterLibrary() {
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between gap-2">
-        <div className="text-sm text-muted-foreground">已创建角色：{characters.length}</div>
+        <div className="text-sm text-muted-foreground">{t("library.createdCount", { count: characters.length })}</div>
         <div className="flex flex-wrap gap-2">
-          <OpenInCreativeHubButton bindings={{}} label="角色库发往创作中枢" />
+          <OpenInCreativeHubButton bindings={{}} label={t("library.sendToHub")} />
           <CharacterCreateDialog />
         </div>
       </div>
@@ -179,7 +181,7 @@ export default function CharacterLibrary() {
 
       <Card>
         <CardHeader>
-          <CardTitle>角色列表</CardTitle>
+        <CardTitle>{t("library.listTitle")}</CardTitle>
         </CardHeader>
         <CardContent className="space-y-3">
           {characters.map((character, index) => (
@@ -199,12 +201,12 @@ export default function CharacterLibrary() {
               extraActions={(
                 <OpenInCreativeHubButton
                   bindings={{ baseCharacterId: character.id }}
-                  label="带着角色继续"
+                  label={t("library.continueWithCharacter")}
                 />
               )}
             />
           ))}
-          {characters.length === 0 ? <div className="text-sm text-muted-foreground">暂无角色。</div> : null}
+          {characters.length === 0 ? <div className="text-sm text-muted-foreground">{t("library.empty")}</div> : null}
         </CardContent>
       </Card>
     </div>

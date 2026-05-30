@@ -1,4 +1,5 @@
 ﻿import { useEffect, useMemo, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { BOOK_ANALYSIS_SECTIONS } from "@ai-novel/shared/types/bookAnalysis";
@@ -251,6 +252,7 @@ function resolveActiveStructuredOutlineChapterId(snapshot: DirectorTaskSnapshot 
 export default function NovelEdit() {
   const { id = "" } = useParams();
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const llm = useLLMStore();
   const queryClient = useQueryClient();
   const {
@@ -320,7 +322,7 @@ export default function NovelEdit() {
   const [selectedBaseCharacterId, setSelectedBaseCharacterId] = useState("");
   const [quickCharacterForm, setQuickCharacterForm] = useState({
     name: "",
-    role: "主角",
+    role: "主角", // i18n-ignore: internal role key matching DB value
   });
   const [characterForm, setCharacterForm] = useState({
     name: "",
@@ -507,10 +509,10 @@ export default function NovelEdit() {
     },
     onSuccess: ({ blob, fileName, scope }) => {
       createDownload(blob, fileName);
-      toast.success(scope === "full" ? "整本书导出已开始。" : "当前步骤导出已开始。");
+      toast.success(scope === "full" ? t("novel:novelEdit.export.successFull") : t("novel:novelEdit.export.successPartial"));
     },
     onError: (error) => {
-      toast.error(error instanceof Error ? error.message : "导出失败。");
+      toast.error(error instanceof Error ? error.message : t("novel:novelEdit.export.error"));
     },
   });
 
@@ -625,7 +627,7 @@ export default function NovelEdit() {
     [normalizedVolumeDraft, outlineSyncChapters, volumeSyncOptions],
   );
   const coreCharacterCount = useMemo(
-    () => characters.filter((item) => /主角|反派/.test(item.role)).length,
+    () => characters.filter((item) => /主角|反派/.test(item.role)).length, // i18n-ignore: internal role key matching DB value
     [characters],
   );
   const bible = novelDetailQuery.data?.data?.bible;
@@ -899,7 +901,7 @@ export default function NovelEdit() {
       takeoverDismissStorageKey(id),
       activeAutoDirectorRefreshSignature,
     );
-    toast.success("已收起这条导演接管提醒。需要时仍可从执行详情继续处理。");
+    toast.success(t("novel:novelEdit.takeover.dismissedToast"));
   };
   const isTakeoverDismissed = Boolean(
     activeAutoDirectorRefreshSignature
@@ -1013,7 +1015,7 @@ export default function NovelEdit() {
       const targetTaskId = input?.directorTaskId || actionTargetDirectorTaskId;
       const targetTask = targetTaskId === visibleDirectorTask?.id ? visibleDirectorTask : activeAutoDirectorTask;
       if (!targetTaskId) {
-        throw new Error("当前没有可继续的自动导演任务。");
+        throw new Error(t("novel:novelEdit.director.noTaskError"));
       }
       return continueNovelWorkflow(
         targetTaskId,
@@ -1036,7 +1038,7 @@ export default function NovelEdit() {
       toast.success(feedback.message);
     },
     onError: (error) => {
-      const message = error instanceof Error ? error.message : "继续自动导演失败。";
+      const message = error instanceof Error ? error.message : t("novel:novelEdit.director.continueError");
       toast.error(message);
     },
   });
@@ -1044,7 +1046,7 @@ export default function NovelEdit() {
     mutationFn: async (input?: { directorTaskId?: string; continuationMode?: "auto_execute_range" | "skip_quality_repair" }) => {
       const targetTaskId = input?.directorTaskId || actionTargetDirectorTaskId;
       if (!targetTaskId) {
-        throw new Error("当前没有可继续自动执行的自动导演任务。");
+        throw new Error(t("novel:novelEdit.director.noAutoExecTaskError"));
       }
       return continueNovelWorkflow(targetTaskId, {
         continuationMode: input?.continuationMode ?? "auto_execute_range",
@@ -1067,7 +1069,7 @@ export default function NovelEdit() {
       toast.success(feedback.message);
     },
     onError: (error) => {
-      const message = error instanceof Error ? error.message : `继续自动执行${activeAutoExecutionScopeLabel}失败。`;
+      const message = error instanceof Error ? error.message : t("novel:novelEdit.director.continueAutoExecError", { scope: activeAutoExecutionScopeLabel });
       toast.error(message);
     },
   });
@@ -1097,8 +1099,8 @@ export default function NovelEdit() {
       const message = error instanceof Error
         ? error.message
         : input.mode === "auto_execute_range"
-          ? `继续自动执行${activeAutoExecutionScopeLabel}失败。`
-          : "继续自动导演失败。";
+          ? t("novel:novelEdit.director.continueAutoExecError", { scope: activeAutoExecutionScopeLabel })
+          : t("novel:novelEdit.director.continueError");
       toast.error(message);
     },
   });
@@ -1109,7 +1111,7 @@ export default function NovelEdit() {
     }) => {
       const targetTaskId = input.directorTaskId || actionTargetDirectorTaskId;
       if (!targetTaskId) {
-        throw new Error("当前没有可执行的动作。");
+        throw new Error(t("novel:novelEdit.director.noActionError"));
       }
       return executeAutoDirectorFollowUpAction(targetTaskId, {
         actionCode: input.actionCode,
@@ -1127,10 +1129,10 @@ export default function NovelEdit() {
         toast.error(result.message);
         return;
       }
-      toast.success(result?.message ?? "已执行动作。");
+      toast.success(result?.message ?? t("novel:novelEdit.director.actionExecuted"));
     },
     onError: (error) => {
-      toast.error(error instanceof Error ? error.message : "执行动作失败。");
+      toast.error(error instanceof Error ? error.message : t("novel:novelEdit.director.actionFailed"));
     },
   });
   const consistencyIssue = useMemo(
@@ -1184,7 +1186,7 @@ export default function NovelEdit() {
     if (!showToast) {
       return;
     }
-    toast.success(targetVolumeId ? "已定位到当前卷拆章，可直接修复标题。" : "已切到节奏 / 拆章，可直接修复标题。");
+    toast.success(targetVolumeId ? t("novel:novelEdit.chapterTitleRepair.navigatedToVolume") : t("novel:novelEdit.chapterTitleRepair.navigatedToStructured"));
   };
   const handleTaskDrawerProjectionAction = (action: DirectorBookAutomationAction) => {
     if (!bookAutomationProjection) {
@@ -1259,7 +1261,7 @@ export default function NovelEdit() {
   const retryAutoDirectorWithCurrentModelMutation = useMutation({
     mutationFn: async () => {
       if (!retryableAutoDirectorTask?.id) {
-        throw new Error("当前没有可重试的自动导演任务。");
+        throw new Error(t("novel:novelEdit.director.noRetryableTask"));
       }
       return retryTask("novel_workflow", retryableAutoDirectorTask.id, {
         llmOverride: {
@@ -1274,17 +1276,17 @@ export default function NovelEdit() {
       syncAutoDirectorTaskCache(queryClient, id, response.data);
       void invalidateAutoDirectorTaskState(response.data?.id ?? retryableAutoDirectorTask?.id);
       setIsTaskDrawerOpen(true);
-      toast.success(`已切换到 ${llm.provider} / ${llm.model} 并重新启动自动导演。`);
+      toast.success(t("novel:novelEdit.director.switchedModelAndRestarted", { provider: llm.provider, model: llm.model }));
     },
     onError: (error) => {
-      const message = error instanceof Error ? error.message : "切换当前模型重试失败。";
+      const message = error instanceof Error ? error.message : t("novel:novelEdit.director.switchModelRetryFailed");
       toast.error(message);
     },
   });
   const retryAutoDirectorWithTaskModelMutation = useMutation({
     mutationFn: async () => {
       if (!retryableAutoDirectorTask?.id) {
-        throw new Error("当前没有可重试的自动导演任务。");
+        throw new Error(t("novel:novelEdit.director.noRetryableTask"));
       }
       return retryTask("novel_workflow", retryableAutoDirectorTask.id, { resume: true });
     },
@@ -1292,10 +1294,10 @@ export default function NovelEdit() {
       syncAutoDirectorTaskCache(queryClient, id, response.data);
       void invalidateAutoDirectorTaskState(response.data?.id ?? retryableAutoDirectorTask?.id);
       setIsTaskDrawerOpen(true);
-      toast.success("自动导演已按任务原模型重新启动。");
+      toast.success(t("novel:novelEdit.director.restartedWithTaskModel"));
     },
     onError: (error) => {
-      const message = error instanceof Error ? error.message : "按原模型重试失败。";
+      const message = error instanceof Error ? error.message : t("novel:novelEdit.director.taskModelRetryFailed");
       toast.error(message);
     },
   });
@@ -1303,7 +1305,7 @@ export default function NovelEdit() {
     mutationFn: async (targetTaskId?: string) => {
       const taskId = targetTaskId || displayAutoDirectorTask?.id || activeAutoDirectorTask?.id;
       if (!taskId) {
-        throw new Error("当前没有可取消的自动导演任务。");
+        throw new Error(t("novel:novelEdit.director.noCancellableTask"));
       }
       return cancelTask("novel_workflow", taskId);
     },
@@ -1311,10 +1313,10 @@ export default function NovelEdit() {
       setIsDirectorExitActionExpanded(false);
       syncAutoDirectorTaskCache(queryClient, id, response.data);
       void invalidateAutoDirectorTaskState(response.data?.id ?? targetTaskId ?? displayAutoDirectorTask?.id ?? activeAutoDirectorTask?.id);
-      toast.success("已取消自动导演任务。");
+      toast.success(t("novel:novelEdit.director.taskCancelled"));
     },
     onError: (error) => {
-      const message = error instanceof Error ? error.message : "取消自动导演失败。";
+      const message = error instanceof Error ? error.message : t("novel:novelEdit.director.cancelFailed");
       toast.error(message);
     },
   });
@@ -1322,17 +1324,17 @@ export default function NovelEdit() {
     mutationFn: async (targetTaskId?: string) => {
       const taskId = targetTaskId || displayAutoDirectorTask?.id;
       if (!taskId) {
-        throw new Error("当前没有可收起的自动导演完成记录。");
+        throw new Error(t("novel:novelEdit.director.noArchivableTask"));
       }
       return archiveTask("novel_workflow", taskId);
     },
     onSuccess: async (_response, targetTaskId) => {
       setIsDirectorExitActionExpanded(false);
       await invalidateAutoDirectorTaskState(targetTaskId ?? displayAutoDirectorTask?.id);
-      toast.success("已收起这次自动导演完成提醒。");
+      toast.success(t("novel:novelEdit.director.taskArchived"));
     },
     onError: (error) => {
-      const message = error instanceof Error ? error.message : "收起自动导演完成提醒失败。";
+      const message = error instanceof Error ? error.message : t("novel:novelEdit.director.archiveFailed");
       toast.error(message);
     },
   });
@@ -1404,18 +1406,18 @@ export default function NovelEdit() {
       task,
       projection: bookAutomationProjection,
     });
-    const novelTitle = novelDetailQuery.data?.data?.title?.trim() || task.title?.trim() || "当前项目";
+    const novelTitle = novelDetailQuery.data?.data?.title?.trim() || task.title?.trim() || t("novel:novelEdit.takeover.currentProject");
     const reviewScope = activeDirectorSession?.reviewScope ?? null;
     const autoExecutionScopeLabel = resolveAutoExecutionScopeLabel(task);
     const actions: NonNullable<NovelEditTakeoverState["actions"]> = [];
     if (activeChapterTitleWarning) {
       actions.push({
         label: chapterTitleRepairMutation.isPending && chapterTitleRepairMutation.pendingTaskId === task.id
-          ? "AI 修复中..."
+          ? t("novel:novelEdit.chapterTitleRepair.aiRepairing")
           : activeChapterTitleWarning.label,
         onClick: () => {
           if (hasUnsavedVolumeDraft) {
-            toast.error("当前拆章工作区还有未保存修改，请先保存工作区，再发起 AI 修复标题。");
+            toast.error(t("novel:novelEdit.chapterTitleRepair.unsavedDraftError"));
             return;
           }
           chapterTitleRepairMutation.startRepair(task);
@@ -1430,7 +1432,7 @@ export default function NovelEdit() {
       && task.checkpointType === "candidate_selection_required"
     ) {
       actions.push({
-        label: "去确认书级方向",
+        label: t("novel:novelEdit.takeover.confirmDirection"),
         onClick: () => openCandidateSelection(task.id),
         variant: "default",
       });
@@ -1441,27 +1443,27 @@ export default function NovelEdit() {
       && task.checkpointType !== "chapter_batch_ready"
     ) {
       actions.push({
-        label: "去当前审核阶段",
+        label: t("novel:novelEdit.takeover.goToReviewStage"),
         onClick: () => setActiveTab(reviewTab),
         variant: "outline",
       });
     }
     if (task.pendingManualRecovery) {
       actions.push({
-        label: continueAutoDirectorMutation.isPending ? "继续中..." : "继续自动导演",
+        label: continueAutoDirectorMutation.isPending ? t("novel:novelEdit.actions.continuing") : t("novel:novelEdit.actions.continueDirector"),
         onClick: () => continueAutoDirectorMutation.mutate({ directorTaskId: task.id }),
         variant: "default",
         disabled: continueAutoDirectorMutation.isPending,
       });
     } else if (mode === "waiting" && task.checkpointType === "chapter_batch_ready") {
       actions.push({
-        label: buildContinueAutoExecutionActionLabel(autoExecutionScopeLabel, continueAutoExecutionMutation.isPending),
+        label: buildContinueAutoExecutionActionLabel(autoExecutionScopeLabel, continueAutoExecutionMutation.isPending, t),
         onClick: () => continueAutoExecutionMutation.mutate({ directorTaskId: task.id }),
         variant: "default",
         disabled: continueAutoExecutionMutation.isPending,
       });
       actions.push({
-        label: "进入章节执行",
+        label: t("novel:novelEdit.actions.enterChapterExec"),
         onClick: () => {
           if (task.resumeTarget?.chapterId) {
             setSelectedChapterId(task.resumeTarget.chapterId);
@@ -1472,13 +1474,13 @@ export default function NovelEdit() {
       });
     } else if (mode === "waiting" && task.checkpointType === "workflow_completed") {
       actions.push({
-        label: "进入章节执行",
+        label: t("novel:novelEdit.actions.enterChapterExec"),
         onClick: () => openChapterExecution(task),
         variant: "default",
       });
     } else if (mode === "action_required" && task.checkpointType === "replan_required") {
       actions.push({
-        label: buildSkipQualityRepairActionLabel(autoExecutionScopeLabel, continueAutoExecutionMutation.isPending),
+        label: buildSkipQualityRepairActionLabel(autoExecutionScopeLabel, continueAutoExecutionMutation.isPending, t),
         onClick: () => continueAutoExecutionMutation.mutate({
           directorTaskId: task.id,
           continuationMode: "skip_quality_repair",
@@ -1487,13 +1489,13 @@ export default function NovelEdit() {
         disabled: continueAutoExecutionMutation.isPending,
       });
       actions.push({
-        label: "打开质量修复",
+        label: t("novel:novelEdit.actions.openQualityRepair"),
         onClick: () => openQualityRepair(task),
         variant: "outline",
       });
     } else if (mode === "waiting") {
       actions.push({
-        label: continueAutoDirectorMutation.isPending ? "继续中..." : "继续自动导演",
+        label: continueAutoDirectorMutation.isPending ? t("novel:novelEdit.actions.continuing") : t("novel:novelEdit.actions.continueDirector"),
         onClick: () => continueAutoDirectorMutation.mutate({ directorTaskId: task.id }),
         variant: "default",
         disabled: continueAutoDirectorMutation.isPending,
@@ -1501,34 +1503,34 @@ export default function NovelEdit() {
     }
     if (mode === "failed" && task.checkpointType === "chapter_batch_ready") {
       actions.push({
-        label: buildContinueAutoExecutionActionLabel(autoExecutionScopeLabel, continueAutoExecutionMutation.isPending),
+        label: buildContinueAutoExecutionActionLabel(autoExecutionScopeLabel, continueAutoExecutionMutation.isPending, t),
         onClick: () => continueAutoExecutionMutation.mutate({ directorTaskId: task.id }),
         variant: "default",
         disabled: continueAutoExecutionMutation.isPending,
       });
       actions.push({
-        label: "打开质量修复",
+        label: t("novel:novelEdit.actions.openQualityRepair"),
         onClick: () => openQualityRepair(task),
         variant: "outline",
       });
     }
     if (consistencyIssue) {
       actions.push({
-        label: continueAutoDirectorMutation.isPending ? "修复中..." : "补齐导演产物",
+        label: continueAutoDirectorMutation.isPending ? t("novel:novelEdit.actions.fixing") : t("novel:novelEdit.actions.fixDirectorArtifacts"),
         onClick: () => continueAutoDirectorMutation.mutate({ directorTaskId: task.id }),
         variant: "default",
         disabled: continueAutoDirectorMutation.isPending,
       });
       if (consistencyIssue === "missing_characters") {
         actions.push({
-          label: "去角色准备",
+          label: t("novel:novelEdit.actions.goToCharacters"),
           onClick: () => setActiveTab("character"),
           variant: "outline",
         });
       }
     } else if (task.checkpointType === "chapter_batch_ready" && mode !== "waiting") {
       actions.push({
-        label: "进入章节执行",
+        label: t("novel:novelEdit.actions.enterChapterExec"),
         onClick: () => {
           if (task.resumeTarget?.chapterId) {
             setSelectedChapterId(task.resumeTarget.chapterId);
@@ -1542,27 +1544,27 @@ export default function NovelEdit() {
     if (canCancelTask) {
       if (task.status === "failed") {
         actions.push({
-          label: cancelAutoDirectorMutation.isPending ? "取消中..." : "取消任务",
+          label: cancelAutoDirectorMutation.isPending ? t("novel:novelEdit.actions.cancelling") : t("novel:novelEdit.actions.cancelTask"),
           onClick: () => cancelAutoDirectorMutation.mutate(task.id),
           variant: "destructive",
           disabled: cancelAutoDirectorMutation.isPending,
         });
       } else if (isDirectorExitActionExpanded) {
         actions.push({
-          label: "继续导演",
+          label: t("novel:novelEdit.actions.continueDirectorMode"),
           onClick: () => setIsDirectorExitActionExpanded(false),
           variant: "outline",
           disabled: cancelAutoDirectorMutation.isPending,
         });
         actions.push({
-          label: cancelAutoDirectorMutation.isPending ? "退出中..." : "退出导演模式",
+          label: cancelAutoDirectorMutation.isPending ? t("novel:novelEdit.actions.exiting") : t("novel:novelEdit.actions.exitDirectorMode"),
           onClick: () => cancelAutoDirectorMutation.mutate(task.id),
           variant: "destructive",
           disabled: cancelAutoDirectorMutation.isPending,
         });
       } else {
         actions.push({
-          label: "退出导演模式",
+          label: t("novel:novelEdit.actions.exitDirectorMode"),
           onClick: () => setIsDirectorExitActionExpanded(true),
           variant: "destructive",
           disabled: cancelAutoDirectorMutation.isPending,
@@ -1573,26 +1575,26 @@ export default function NovelEdit() {
       || task.status === "cancelled"
     ) {
       actions.push({
-        label: "收起此提醒",
+        label: t("novel:novelEdit.actions.dismissReminder"),
         onClick: dismissTakeover,
         variant: "secondary",
       });
     } else if (canArchiveCompletedAutoDirectorTask(task)) {
       actions.push({
-        label: archiveCompletedAutoDirectorMutation.isPending ? "收起中..." : "完成并收起",
+        label: archiveCompletedAutoDirectorMutation.isPending ? t("novel:novelEdit.actions.archiving") : t("novel:novelEdit.actions.completeAndArchive"),
         onClick: () => archiveCompletedAutoDirectorMutation.mutate(task.id),
         variant: "secondary",
         disabled: archiveCompletedAutoDirectorMutation.isPending,
       });
     } else if (task.status === "waiting_approval") {
       actions.push({
-        label: "收起此提醒",
+        label: t("novel:novelEdit.actions.completeAndArchive"),
         onClick: dismissTakeover,
         variant: "secondary",
       });
     }
     actions.push({
-      label: "执行详情",
+      label: t("novel:novelEdit.actions.execDetails"),
       onClick: () => setIsTaskDrawerOpen(true),
       variant: mode === "running" ? "outline" : "secondary",
     });
@@ -1600,42 +1602,44 @@ export default function NovelEdit() {
     return {
       mode,
       title: consistencyIssue === "missing_characters"
-        ? `《${novelTitle}》导演产物未补齐角色准备`
+        ? t("novel:novelEdit.consistency.missingCharactersTitle", { title: novelTitle })
         : consistencyIssue === "missing_chapters"
-          ? `《${novelTitle}》导演产物未连接到章节执行区`
+          ? t("novel:novelEdit.consistency.missingChaptersTitle", { title: novelTitle })
           : task.pendingManualRecovery
-            ? `《${novelTitle}》等待从检查点恢复`
+            ? t("novel:novelEdit.consistency.pendingRecoveryTitle", { title: novelTitle })
           : buildTakeoverTitle({
             mode,
             novelTitle,
             checkpointType: task.checkpointType,
             scopeLabel: autoExecutionScopeLabel,
+            t,
           }),
       description: consistencyIssue === "missing_characters"
-        ? "任务记录显示已完成开书交接，但当前项目里还没有角色资产，所以角色准备和章节执行都不完整。可以直接补齐导演产物，系统会继续修复。"
+        ? t("novel:novelEdit.consistency.missingCharactersDesc")
         : consistencyIssue === "missing_chapters"
-          ? "任务记录显示前几章已经可开写，但当前章节执行区还是空的，说明导演产物还没有完整落库。可以直接补齐导演产物继续修复。"
+          ? t("novel:novelEdit.consistency.missingChaptersDesc")
           : task.pendingManualRecovery
-            ? "任务已停在当前进度。你可以查看执行详情，再从最近进度点继续。"
+            ? t("novel:novelEdit.consistency.pendingRecoveryDesc")
           : buildTakeoverDescription({
             mode,
             checkpointType: task.checkpointType,
             reviewScope,
             scopeLabel: autoExecutionScopeLabel,
+            t,
           }),
       progress: typeof dashboardView?.progressPercent === "number"
         ? dashboardView.progressPercent
         : task.progress,
       currentAction: consistencyIssue === "missing_characters"
-        ? "检测到角色准备仍为空，当前导演结果需要继续补齐。"
+        ? t("novel:novelEdit.consistency.missingCharactersAction")
         : consistencyIssue === "missing_chapters"
-          ? "检测到章节执行区为空，当前导演结果需要继续同步章节资源。"
+          ? t("novel:novelEdit.consistency.missingChaptersAction")
           : task.pendingManualRecovery
             ? (
               task.blockingReason?.trim()
               || task.recoveryHint?.trim()
               || task.lastError?.trim()
-              || "任务已暂停，等待从最近检查点恢复。"
+              || t("novel:novelEdit.consistency.pendingRecoveryAction")
             )
           : dashboardView?.currentAction?.trim()
             ? dashboardView.currentAction.trim()
@@ -1643,16 +1647,16 @@ export default function NovelEdit() {
             ? activeDirectorSnapshot.displayState.currentAction.trim()
           : automationActionText
             ? automationActionText
-          : mode === "running" && task.checkpointType === "chapter_batch_ready" && task.currentItemLabel?.includes("已暂停")
-            ? `正在继续自动执行${autoExecutionScopeLabel}`
+          : mode === "running" && task.checkpointType === "chapter_batch_ready" && task.currentItemLabel?.includes("已暂停") // i18n-ignore: matching against server-emitted string
+            ? t("novel:novelEdit.consistency.continuingAutoExec", { scope: autoExecutionScopeLabel })
             : task.currentItemLabel ?? null,
       checkpointLabel: consistencyIssue
-        ? "导演产物待补齐"
+        ? t("novel:novelEdit.consistency.checkpointPending")
         : task.pendingManualRecovery
-          ? "等待恢复"
+          ? t("novel:novelEdit.consistency.checkpointWaitingRecovery")
         : mode === "running" && task.checkpointType === "chapter_batch_ready"
-          ? `${autoExecutionScopeLabel}自动执行中`
-          : formatTakeoverCheckpoint(task.checkpointType, task),
+          ? t("novel:novelEdit.consistency.checkpointRunning", { scope: autoExecutionScopeLabel })
+          : formatTakeoverCheckpoint(task.checkpointType, task, t),
       taskId: task.id,
       actions,
     };
@@ -1690,11 +1694,11 @@ export default function NovelEdit() {
     if (activeChapterTitleWarning) {
       actions.push({
         label: chapterTitleRepairMutation.isPending && chapterTitleRepairMutation.pendingTaskId === task.id
-          ? "AI 修复中..."
+          ? t("novel:novelEdit.chapterTitleRepair.aiRepairing")
           : activeChapterTitleWarning.label,
         onClick: () => {
           if (hasUnsavedVolumeDraft) {
-            toast.error("当前拆章工作区还有未保存修改，请先保存工作区，再发起 AI 修复标题。");
+            toast.error(t("novel:novelEdit.chapterTitleRepair.unsavedDraftError"));
             return;
           }
           chapterTitleRepairMutation.startRepair(task);
@@ -1705,14 +1709,14 @@ export default function NovelEdit() {
     }
     if (consistencyIssue) {
       actions.push({
-        label: continueAutoDirectorMutation.isPending ? "补齐中..." : "补齐导演产物",
+        label: continueAutoDirectorMutation.isPending ? t("novel:novelEdit.actions.fixing") : t("novel:novelEdit.actions.fixDirectorArtifacts"),
         onClick: () => continueAutoDirectorMutation.mutate({ directorTaskId: task.id }),
         variant: "default",
         disabled: continueAutoDirectorMutation.isPending,
       });
       if (consistencyIssue === "missing_characters") {
         actions.push({
-          label: "去角色准备",
+          label: t("novel:novelEdit.actions.goToCharacters"),
           onClick: () => {
             setActiveTab("character");
             setIsTaskDrawerOpen(false);
@@ -1722,7 +1726,7 @@ export default function NovelEdit() {
       }
     } else if (task.pendingManualRecovery) {
       actions.push({
-        label: continueAutoDirectorMutation.isPending ? "继续中..." : "继续自动导演",
+        label: continueAutoDirectorMutation.isPending ? t("novel:novelEdit.actions.continuing") : t("novel:novelEdit.actions.continueDirector"),
         onClick: () => continueAutoDirectorMutation.mutate({ directorTaskId: task.id }),
         variant: "default",
         disabled: continueAutoDirectorMutation.isPending,
@@ -1733,26 +1737,26 @@ export default function NovelEdit() {
     ) {
       const autoExecutionScopeLabel = resolveAutoExecutionScopeLabel(task);
       actions.push({
-        label: buildContinueAutoExecutionActionLabel(autoExecutionScopeLabel, continueAutoExecutionMutation.isPending),
+        label: buildContinueAutoExecutionActionLabel(autoExecutionScopeLabel, continueAutoExecutionMutation.isPending, t),
         onClick: () => continueAutoExecutionMutation.mutate({ directorTaskId: task.id }),
         variant: "default",
         disabled: continueAutoExecutionMutation.isPending,
       });
       actions.push({
-        label: "进入章节执行",
+        label: t("novel:novelEdit.actions.enterChapterExec"),
         onClick: () => openChapterExecution(task),
         variant: "outline",
       });
     } else if (task.status === "waiting_approval" && task.checkpointType === "candidate_selection_required") {
       actions.push({
-        label: "去确认书级方向",
+        label: t("novel:novelEdit.takeover.confirmDirection"),
         onClick: () => openCandidateSelection(task.id),
         variant: "default",
       });
     } else if (task.status === "waiting_approval" && task.checkpointType === "replan_required") {
       const autoExecutionScopeLabel = resolveAutoExecutionScopeLabel(task);
       actions.push({
-        label: buildSkipQualityRepairActionLabel(autoExecutionScopeLabel, continueAutoExecutionMutation.isPending),
+        label: buildSkipQualityRepairActionLabel(autoExecutionScopeLabel, continueAutoExecutionMutation.isPending, t),
         onClick: () => continueAutoExecutionMutation.mutate({
           directorTaskId: task.id,
           continuationMode: "skip_quality_repair",
@@ -1761,7 +1765,7 @@ export default function NovelEdit() {
         disabled: continueAutoExecutionMutation.isPending,
       });
       actions.push({
-        label: "打开质量修复",
+        label: t("novel:novelEdit.actions.openQualityRepair"),
         onClick: () => openQualityRepair(task),
         variant: "outline",
       });
@@ -1771,12 +1775,12 @@ export default function NovelEdit() {
       && task.checkpointType !== "chapter_batch_ready"
     ) {
       actions.push({
-        label: "去当前审核阶段",
+        label: t("novel:novelEdit.takeover.goToReviewStage"),
         onClick: openReviewStage,
         variant: "default",
       });
       actions.push({
-        label: continueAutoDirectorMutation.isPending ? "继续中..." : "继续自动导演",
+        label: continueAutoDirectorMutation.isPending ? t("novel:novelEdit.actions.continuing") : t("novel:novelEdit.actions.continueDirector"),
         onClick: () => continueAutoDirectorMutation.mutate({ directorTaskId: task.id }),
         variant: "outline",
         disabled: continueAutoDirectorMutation.isPending,
@@ -1784,19 +1788,19 @@ export default function NovelEdit() {
     } else if ((task.status === "failed" || task.status === "cancelled") && task.checkpointType === "chapter_batch_ready") {
       const autoExecutionScopeLabel = resolveAutoExecutionScopeLabel(task);
       actions.push({
-        label: buildContinueAutoExecutionActionLabel(autoExecutionScopeLabel, continueAutoExecutionMutation.isPending),
+        label: buildContinueAutoExecutionActionLabel(autoExecutionScopeLabel, continueAutoExecutionMutation.isPending, t),
         onClick: () => continueAutoExecutionMutation.mutate({ directorTaskId: task.id }),
         variant: "default",
         disabled: continueAutoExecutionMutation.isPending,
       });
       actions.push({
-        label: "打开质量修复",
+        label: t("novel:novelEdit.actions.openQualityRepair"),
         onClick: () => openQualityRepair(task),
         variant: "outline",
       });
     } else if (task.checkpointType === "chapter_batch_ready" || task.checkpointType === "workflow_completed") {
       actions.push({
-        label: "进入章节执行",
+        label: t("novel:novelEdit.actions.enterChapterExec"),
         onClick: () => openChapterExecution(task),
         variant: "default",
       });
@@ -1806,7 +1810,7 @@ export default function NovelEdit() {
 
     if (canCancelDirectorTask(task)) {
       actions.push({
-        label: cancelAutoDirectorMutation.isPending ? "取消中..." : "取消任务",
+        label: cancelAutoDirectorMutation.isPending ? t("novel:novelEdit.actions.cancelling") : t("novel:novelEdit.actions.cancelTask"),
         onClick: () => cancelAutoDirectorMutation.mutate(task.id),
         variant: "destructive",
         disabled: cancelAutoDirectorMutation.isPending,
@@ -1918,18 +1922,18 @@ export default function NovelEdit() {
       return;
     }
     const labels: Record<string, string> = {
-      basic: "项目设定已打开",
-      story_macro: "故事宏观规划已打开",
-      character: "角色准备已打开",
-      outline: "卷战略 / 卷骨架已打开",
-      structured: "节奏 / 拆章已打开",
-      chapter: selectedChapter ? `正在查看第${selectedChapter.order}章执行面板` : "章节执行已打开",
-      pipeline: "质量修复 / 流水线已打开",
+      basic: t("novel:novelEdit.workflowSync.basicOpened"),
+      story_macro: t("novel:novelEdit.workflowSync.storyMacroOpened"),
+      character: t("novel:novelEdit.workflowSync.characterOpened"),
+      outline: t("novel:novelEdit.workflowSync.outlineOpened"),
+      structured: t("novel:novelEdit.workflowSync.structuredOpened"),
+      chapter: selectedChapter ? t("novel:novelEdit.workflowSync.chapterViewing", { order: selectedChapter.order }) : t("novel:novelEdit.workflowSync.chapterOpened"),
+      pipeline: t("novel:novelEdit.workflowSync.pipelineOpened"),
     };
     void syncNovelWorkflowStageSilently({
       novelId: id,
       stage: workflowStageFromTab(activeTab),
-      itemLabel: labels[activeTab] ?? "小说主流程已打开",
+      itemLabel: labels[activeTab] ?? t("novel:novelEdit.workflowSync.mainFlowOpened"),
       chapterId: activeTab === "chapter" ? selectedChapterId || undefined : undefined,
       volumeId: activeTab === "structured" || activeTab === "outline" ? selectedVolumeId || undefined : undefined,
       status: "waiting_approval",
@@ -2067,10 +2071,10 @@ export default function NovelEdit() {
     mutationFn: (proposalId: string) => confirmCharacterResourceProposal(id, proposalId),
     onSuccess: async () => {
       await invalidateCharacterResourceViews();
-      toast.success("资源变更已确认，后续写作会参考它。");
+      toast.success(t("novel:novelEdit.characterResources.proposalConfirmed"));
     },
     onError: (error) => {
-      toast.error(error instanceof Error ? error.message : "确认资源变更失败。");
+      toast.error(error instanceof Error ? error.message : t("novel:novelEdit.characterResources.confirmFailed"));
     },
   });
 
@@ -2078,17 +2082,17 @@ export default function NovelEdit() {
     mutationFn: (proposalId: string) => rejectCharacterResourceProposal(id, proposalId),
     onSuccess: async () => {
       await invalidateCharacterResourceViews();
-      toast.success("资源变更已忽略。");
+      toast.success(t("novel:novelEdit.characterResources.proposalRejected"));
     },
     onError: (error) => {
-      toast.error(error instanceof Error ? error.message : "忽略资源变更失败。");
+      toast.error(error instanceof Error ? error.message : t("novel:novelEdit.characterResources.rejectFailed"));
     },
   });
 
   const extractChapterResourcesMutation = useMutation({
     mutationFn: async () => {
       if (!selectedChapterId) {
-        throw new Error("请先选择要复查资源的章节。");
+        throw new Error(t("novel:novelEdit.characterResources.selectChapterFirst"));
       }
       return extractChapterResources(id, selectedChapterId, {
         provider: llm.provider,
@@ -2100,15 +2104,15 @@ export default function NovelEdit() {
       const committedCount = response.data?.committed.length ?? 0;
       const pendingCount = response.data?.pendingReview.length ?? 0;
       if (pendingCount > 0) {
-        toast.success(`已复查本章资源，${pendingCount} 个变更需要你判断。`);
+        toast.success(t("novel:novelEdit.characterResources.reviewedWithPending", { count: pendingCount }));
         return;
       }
       toast.success(committedCount > 0
-        ? `已复查本章资源，${committedCount} 个变更会用于后续写作。`
-        : "已复查本章资源，未发现需要更新的关键资源。");
+        ? t("novel:novelEdit.characterResources.reviewedWithCommitted", { count: committedCount })
+        : t("novel:novelEdit.characterResources.reviewedNoChanges"));
     },
     onError: (error) => {
-      toast.error(error instanceof Error ? error.message : "复查本章资源失败。");
+      toast.error(error instanceof Error ? error.message : t("novel:novelEdit.characterResources.reviewFailed"));
     },
   });
 
@@ -2124,11 +2128,11 @@ export default function NovelEdit() {
       const committed = response.data?.committedCount ?? 0;
       const pending = response.data?.pendingReviewCount ?? 0;
       toast.success(pending > 0
-        ? `已回填最近 ${scanned} 章资源，${pending} 条变化需要你判断。`
-        : `已回填最近 ${scanned} 章资源，${committed} 条变化会用于后续写作。`);
+        ? t("novel:novelEdit.characterResources.backfilledWithPending", { scanned, pending })
+        : t("novel:novelEdit.characterResources.backfilledWithCommitted", { scanned, committed }));
     },
     onError: (error) => {
-      toast.error(error instanceof Error ? error.message : "回填角色资源失败。");
+      toast.error(error instanceof Error ? error.message : t("novel:novelEdit.characterResources.backfillFailed"));
     },
   });
 
@@ -2509,7 +2513,7 @@ export default function NovelEdit() {
     onAbortStream: handleAbortChapterStream,
     directorTakeoverEntry: undefined,
   };
-  const pipelineTab = { novelId: id, worldInjectionSummary, hasCharacters, onGoToCharacterTab: goToCharacterTab, pipelineForm, onPipelineFormChange: (field: "startOrder" | "endOrder" | "maxRetries" | "runMode" | "autoReview" | "autoRepair" | "skipCompleted" | "qualityThreshold" | "repairMode", value: number | boolean | string) => setPipelineForm((prev) => ({ ...prev, [field]: value } as typeof prev)), maxOrder, onGenerateBible: () => void bibleSSE.start(`/novels/${id}/bible/generate`, { provider: llm.provider, model: llm.model, temperature: 0.6 }), onAbortBible: bibleSSE.abort, isBibleStreaming: bibleSSE.isStreaming, bibleStreamContent: bibleSSE.content, onGenerateBeats: () => void beatsSSE.start(`/novels/${id}/beats/generate`, { provider: llm.provider, model: llm.model, targetChapters: pipelineForm.endOrder }), onAbortBeats: beatsSSE.abort, isBeatsStreaming: beatsSSE.isStreaming, beatsStreamContent: beatsSSE.content, onRunPipeline: (patch?: Partial<typeof pipelineForm>) => runPipelineMutation.mutate(patch), isRunningPipeline: runPipelineMutation.isPending, pipelineMessage, pipelineJob: pipelineJobQuery.data?.data, chapters, selectedChapterId, onSelectedChapterChange: setSelectedChapterId, onReviewChapter: () => reviewMutation.mutate(), isReviewing: reviewMutation.isPending, onRepairChapter: () => { setRepairBeforeContent(selectedChapter?.content ?? ""); setRepairAfterContent(""); setActiveRepairStream(selectedChapter ? { chapterId: selectedChapter.id, chapterLabel: `第${selectedChapter.order}章 ${selectedChapter.title || "未命名章节"}` } : null); void repairSSE.start(`/novels/${id}/chapters/${selectedChapterId}/repair`, { provider: llm.provider, model: llm.model, reviewIssues: reviewResult?.issues ?? [], auditIssueIds: openAuditIssueIds }); }, isRepairing: repairSSE.isStreaming, onGenerateHook: () => hookMutation.mutate(), isGeneratingHook: hookMutation.isPending, reviewResult, repairBeforeContent, repairAfterContent, repairStreamContent: repairSSE.content, isRepairStreaming: repairSSE.isStreaming, onAbortRepair: handleAbortRepair, qualitySummary, chapterReports: qualityReportQuery.data?.data?.chapterReports ?? [], bible, plotBeats };
+  const pipelineTab = { novelId: id, worldInjectionSummary, hasCharacters, onGoToCharacterTab: goToCharacterTab, pipelineForm, onPipelineFormChange: (field: "startOrder" | "endOrder" | "maxRetries" | "runMode" | "autoReview" | "autoRepair" | "skipCompleted" | "qualityThreshold" | "repairMode", value: number | boolean | string) => setPipelineForm((prev) => ({ ...prev, [field]: value } as typeof prev)), maxOrder, onGenerateBible: () => void bibleSSE.start(`/novels/${id}/bible/generate`, { provider: llm.provider, model: llm.model, temperature: 0.6 }), onAbortBible: bibleSSE.abort, isBibleStreaming: bibleSSE.isStreaming, bibleStreamContent: bibleSSE.content, onGenerateBeats: () => void beatsSSE.start(`/novels/${id}/beats/generate`, { provider: llm.provider, model: llm.model, targetChapters: pipelineForm.endOrder }), onAbortBeats: beatsSSE.abort, isBeatsStreaming: beatsSSE.isStreaming, beatsStreamContent: beatsSSE.content, onRunPipeline: (patch?: Partial<typeof pipelineForm>) => runPipelineMutation.mutate(patch), isRunningPipeline: runPipelineMutation.isPending, pipelineMessage, pipelineJob: pipelineJobQuery.data?.data, chapters, selectedChapterId, onSelectedChapterChange: setSelectedChapterId, onReviewChapter: () => reviewMutation.mutate(), isReviewing: reviewMutation.isPending, onRepairChapter: () => { setRepairBeforeContent(selectedChapter?.content ?? ""); setRepairAfterContent(""); setActiveRepairStream(selectedChapter ? { chapterId: selectedChapter.id, chapterLabel: `第${selectedChapter.order}章 ${selectedChapter.title || "未命名章节"}` /* i18n-ignore: internal label */ } : null); void repairSSE.start(`/novels/${id}/chapters/${selectedChapterId}/repair`, { provider: llm.provider, model: llm.model, reviewIssues: reviewResult?.issues ?? [], auditIssueIds: openAuditIssueIds }); }, isRepairing: repairSSE.isStreaming, onGenerateHook: () => hookMutation.mutate(), isGeneratingHook: hookMutation.isPending, reviewResult, repairBeforeContent, repairAfterContent, repairStreamContent: repairSSE.content, isRepairStreaming: repairSSE.isStreaming, onAbortRepair: handleAbortRepair, qualitySummary, chapterReports: qualityReportQuery.data?.data?.chapterReports ?? [], bible, plotBeats };
   const characterTab = {
     novelId: id,
     llmProvider: llm.provider,

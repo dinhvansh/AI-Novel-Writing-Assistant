@@ -1,3 +1,4 @@
+import type { TFunction } from "i18next";
 import type { VolumePlan } from "@ai-novel/shared/types/novel";
 import { assessChapterExecutionContractShape } from "@ai-novel/shared/types/chapterTaskSheetQuality";
 
@@ -14,10 +15,10 @@ export interface ChapterDetailBatchSelection {
 
 export type ChapterDetailBundleRequest = string | ChapterDetailBatchSelection;
 
-export function detailModeLabel(mode: ChapterDetailMode): string {
-  if (mode === "purpose") return "章节目标";
-  if (mode === "boundary") return "执行边界";
-  return "任务单";
+export function detailModeLabel(mode: ChapterDetailMode, t?: TFunction): string {
+  if (mode === "purpose") return t ? t("novel:chapterDetail.modes.purpose") : "章节目标"; // i18n-ignore: t() fallback
+  if (mode === "boundary") return t ? t("novel:chapterDetail.modes.boundary") : "执行边界"; // i18n-ignore: t() fallback
+  return t ? t("novel:chapterDetail.modes.taskSheet") : "任务单"; // i18n-ignore: t() fallback
 }
 
 export function hasChapterDetailDraft(

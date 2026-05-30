@@ -1,3 +1,4 @@
+﻿import { useTranslation } from "react-i18next";
 import type {
   DirectorAutoExecutionMode,
   DirectorAutoExecutionPlan,
@@ -28,49 +29,29 @@ const DEFAULT_DIRECTOR_AUTO_EXECUTION_DRAFT: DirectorAutoExecutionDraftState = {
 
 type DirectorAutoExecutionPlanUsage = "new_book" | "takeover";
 
-const NEW_BOOK_SCOPE_OPTIONS: Array<{
+function getNewBookScopeOptions(t: (key: string) => string): Array<{
   value: DirectorAutoExecutionMode;
   label: string;
   description: string;
-}> = [
-  {
-    value: "book",
-    label: "全书",
-    description: "适合直接让 AI 从规划到正文执行覆盖整本书。",
-  },
-  {
-    value: "chapter_range",
-    label: "第 1-N 章",
-    description: "适合先跑出开局样章，默认第 1-10 章，可按整书章节数调整。",
-  },
-  {
-    value: "volume",
-    label: "前 1 卷",
-    description: "适合先让 AI 完成第一卷的拆章、写作、审校和修复。",
-  },
-];
+}> {
+  return [
+    { value: "book", label: t("novel:autoExecution.scope.book"), description: t("novel:autoExecution.scopeDesc.bookNew") },
+    { value: "chapter_range", label: t("novel:autoExecution.scope.chapterRange"), description: t("novel:autoExecution.scopeDesc.chapterRangeNew") },
+    { value: "volume", label: t("novel:autoExecution.scope.volume"), description: t("novel:autoExecution.scopeDesc.volumeNew") },
+  ];
+}
 
-const TAKEOVER_SCOPE_OPTIONS: Array<{
+function getTakeoverScopeOptions(t: (key: string) => string): Array<{
   value: DirectorAutoExecutionMode;
   label: string;
   description: string;
-}> = [
-  {
-    value: "book",
-    label: "全书",
-    description: "适合让 AI 重新校验全本规划，并按整本书范围继续执行。",
-  },
-  {
-    value: "chapter_range",
-    label: "章节范围",
-    description: "适合只让 AI 接手某一段，比如第 11-20 章。",
-  },
-  {
-    value: "volume",
-    label: "卷范围",
-    description: "适合让 AI 接管指定卷及卷下章节。",
-  },
-];
+}> {
+  return [
+    { value: "book", label: t("novel:autoExecution.scope.book"), description: t("novel:autoExecution.scopeDesc.bookTakeover") },
+    { value: "chapter_range", label: t("novel:autoExecution.scope.chapterRangeTakeover"), description: t("novel:autoExecution.scopeDesc.chapterRangeTakeover") },
+    { value: "volume", label: t("novel:autoExecution.scope.volumeTakeover"), description: t("novel:autoExecution.scopeDesc.volumeTakeover") },
+  ];
+}
 
 function normalizePositiveInteger(value: string | number | undefined, fallback: number): number {
   const numericValue = typeof value === "number" ? value : Number.parseInt(value ?? "", 10);
@@ -187,22 +168,23 @@ export function buildDirectorAutoExecutionPlanFromDraft(
 
 export function buildDirectorAutoExecutionPlanLabel(
   plan: DirectorAutoExecutionPlan | null | undefined,
+  t?: (key: string, opts?: Record<string, unknown>) => string,
 ): string {
   if (plan?.mode === "book") {
-    return "全书";
+    return t ? t("novel:autoExecution.scope.book") : "全书";
   }
   if (plan?.mode === "chapter_range") {
     const startOrder = normalizePositiveInteger(plan.startOrder, 1);
     const endOrder = Math.max(startOrder, normalizePositiveInteger(plan.endOrder, startOrder));
     if (startOrder === endOrder) {
-      return `第 ${startOrder} 章`;
+      return t ? t("novel:autoExecution.chapterLabel", { order: startOrder }) : `第 ${startOrder} 章`;
     }
-    return `第 ${startOrder}-${endOrder} 章`;
+    return t ? t("novel:autoExecution.chapterRangeLabel", { start: startOrder, end: endOrder }) : `第 ${startOrder}-${endOrder} 章`;
   }
   if (plan?.mode === "volume") {
-    return `第 ${normalizePositiveInteger(plan.volumeOrder, 1)} 卷`;
+    return t ? t("novel:autoExecution.volumeLabel", { order: normalizePositiveInteger(plan.volumeOrder, 1) }) : `第 ${normalizePositiveInteger(plan.volumeOrder, 1)} 卷`;
   }
-  return `第 1-${normalizePositiveInteger(plan?.endOrder, 10)} 章`;
+  return t ? t("novel:autoExecution.chapterRangeLabel", { start: 1, end: normalizePositiveInteger(plan?.endOrder, 10) }) : `第 1-${normalizePositiveInteger(plan?.endOrder, 10)} 章`;
 }
 
 export function buildTakeoverAutoExecutionDraftFromExecutableRange(
@@ -238,23 +220,24 @@ export function DirectorAutoExecutionPlanFields({
   usage = "new_book",
   maxChapterCount,
 }: DirectorAutoExecutionPlanFieldsProps) {
+  const { t } = useTranslation();
   const plan = buildDirectorAutoExecutionPlanFromDraft(draft, { usage, maxChapterCount });
-  const scopeLabel = buildDirectorAutoExecutionPlanLabel(plan);
-  const scopeOptions = usage === "takeover" ? TAKEOVER_SCOPE_OPTIONS : NEW_BOOK_SCOPE_OPTIONS;
+  const scopeLabel = buildDirectorAutoExecutionPlanLabel(plan, t);
+  const scopeOptions = usage === "takeover" ? getTakeoverScopeOptions(t) : getNewBookScopeOptions(t);
   const canEditChapterCount = usage === "new_book" && draft.mode === "chapter_range";
   const canEditChapterRange = usage === "takeover" && draft.mode === "chapter_range";
   const canEditVolumeOrder = usage === "takeover" && draft.mode === "volume";
   const reviewLabel = draft.autoReview
     ? draft.autoRepair
-      ? "正文后自动审核 + 自动修复"
-      : "正文后自动审核，不自动修复"
-    : "正文后不做自动审核与修复";
+      ? t("novel:autoExecution.reviewLabel.autoReviewAndRepair")
+      : t("novel:autoExecution.reviewLabel.autoReviewOnly")
+    : t("novel:autoExecution.reviewLabel.noAutoReview");
 
   return (
     <div className="mt-3 min-w-0 rounded-md border border-primary/15 bg-primary/5 p-3">
       <div className="flex flex-wrap items-center justify-between gap-2">
-        <div className="text-xs font-medium text-foreground">自动执行范围</div>
-        <div className={`text-xs text-muted-foreground ${AUTO_DIRECTOR_MOBILE_CLASSES.wrapText}`}>当前将执行：{scopeLabel}</div>
+        <div className="text-xs font-medium text-foreground">{t("novel:autoExecution.scopeTitle")}</div>
+        <div className={`text-xs text-muted-foreground ${AUTO_DIRECTOR_MOBILE_CLASSES.wrapText}`}>{t("novel:autoExecution.willExecute")}：{scopeLabel}</div>
       </div>
 
       <div className="mt-3 grid min-w-0 gap-3 sm:grid-cols-3">
@@ -280,7 +263,7 @@ export function DirectorAutoExecutionPlanFields({
 
       {canEditChapterCount ? (
         <div className="mt-4 max-w-xs">
-          <div className="text-xs font-medium text-foreground">章节数量</div>
+          <div className="text-xs font-medium text-foreground">{t("novel:autoExecution.chapterCount")}</div>
           <Input
             className="mt-2"
             type="number"
@@ -288,10 +271,10 @@ export function DirectorAutoExecutionPlanFields({
             max={maxChapterCount ?? undefined}
             value={draft.endOrder}
             onChange={(event) => onChange({ endOrder: event.target.value })}
-            placeholder="例如 10"
+            placeholder={t("novel:autoExecution.chapterCountPlaceholder")}
           />
           {maxChapterCount ? (
-            <div className="mt-1 text-xs text-muted-foreground">最多不超过全书规划的 {maxChapterCount} 章。</div>
+            <div className="mt-1 text-xs text-muted-foreground">{t("novel:autoExecution.maxChapterHint", { count: maxChapterCount })}</div>
           ) : null}
         </div>
       ) : null}
@@ -299,7 +282,7 @@ export function DirectorAutoExecutionPlanFields({
       {canEditChapterRange ? (
         <div className="mt-4 grid gap-3 sm:grid-cols-2">
           <div>
-            <div className="text-xs font-medium text-foreground">起始章节</div>
+            <div className="text-xs font-medium text-foreground">{t("novel:autoExecution.startChapter")}</div>
             <Input
               className="mt-2"
               type="number"
@@ -307,11 +290,11 @@ export function DirectorAutoExecutionPlanFields({
               max={maxChapterCount ?? undefined}
               value={draft.startOrder}
               onChange={(event) => onChange({ startOrder: event.target.value })}
-              placeholder="例如 11"
+              placeholder={t("novel:autoExecution.startChapterPlaceholder")}
             />
           </div>
           <div>
-            <div className="text-xs font-medium text-foreground">结束章节</div>
+            <div className="text-xs font-medium text-foreground">{t("novel:autoExecution.endChapter")}</div>
             <Input
               className="mt-2"
               type="number"
@@ -319,7 +302,7 @@ export function DirectorAutoExecutionPlanFields({
               max={maxChapterCount ?? undefined}
               value={draft.endOrder}
               onChange={(event) => onChange({ endOrder: event.target.value })}
-              placeholder="例如 20"
+              placeholder={t("novel:autoExecution.endChapterPlaceholder")}
             />
           </div>
         </div>
@@ -327,14 +310,14 @@ export function DirectorAutoExecutionPlanFields({
 
       {canEditVolumeOrder ? (
         <div className="mt-4 max-w-xs">
-          <div className="text-xs font-medium text-foreground">卷序号</div>
+          <div className="text-xs font-medium text-foreground">{t("novel:autoExecution.volumeOrder")}</div>
           <Input
             className="mt-2"
             type="number"
             min={1}
             value={draft.volumeOrder}
             onChange={(event) => onChange({ volumeOrder: event.target.value })}
-            placeholder="例如 2"
+            placeholder={t("novel:autoExecution.volumeOrderPlaceholder")}
           />
         </div>
       ) : null}
@@ -342,9 +325,9 @@ export function DirectorAutoExecutionPlanFields({
       <div className="mt-4 rounded-xl border bg-background/80 p-3">
         <div className="flex items-start justify-between gap-3">
           <div className="min-w-0 space-y-1">
-            <div className="text-sm font-medium text-foreground">正文生成后自动审核</div>
+            <div className="text-sm font-medium text-foreground">{t("novel:autoExecution.autoReviewLabel")}</div>
             <div className={`text-xs leading-5 text-muted-foreground ${AUTO_DIRECTOR_MOBILE_CLASSES.wrapText}`}>
-              关闭后，正文生成完成即结束当前章节，质量校验交给你手动处理。
+              {t("novel:autoExecution.autoReviewHint")}
             </div>
           </div>
           <Switch
@@ -353,30 +336,31 @@ export function DirectorAutoExecutionPlanFields({
               autoReview: checked,
               autoRepair: checked ? draft.autoRepair : false,
             })}
-            aria-label="切换正文生成后是否自动审核"
+            aria-label={t("novel:autoExecution.autoReviewAriaLabel")}
           />
         </div>
 
         <div className="mt-4 flex items-start justify-between gap-3">
           <div className="min-w-0 space-y-1">
-            <div className="text-sm font-medium text-foreground">审核不通过时自动修复</div>
+            <div className="text-sm font-medium text-foreground">{t("novel:autoExecution.autoRepairLabel")}</div>
             <div className={`text-xs leading-5 text-muted-foreground ${AUTO_DIRECTOR_MOBILE_CLASSES.wrapText}`}>
-              只在开启自动审核后生效；关闭时会保留问题，等待你手动处理或重跑。
+              {t("novel:autoExecution.autoRepairHint")}
             </div>
           </div>
           <Switch
             checked={draft.autoReview && draft.autoRepair}
             disabled={!draft.autoReview}
             onCheckedChange={(checked) => onChange({ autoRepair: checked })}
-            aria-label="切换审核后是否自动修复"
+            aria-label={t("novel:autoExecution.autoRepairAriaLabel")}
           />
         </div>
       </div>
 
       <div className={`mt-3 text-xs leading-5 text-muted-foreground ${AUTO_DIRECTOR_MOBILE_CLASSES.wrapText}`}>
-        系统会按你选定的范围，自动准备节奏板、拆章和章节执行资源，再继续写作。
-        当前质量策略：{reviewLabel}。
+        {t("novel:autoExecution.systemNote")}
+        {t("novel:autoExecution.currentQualityPolicy")}：{reviewLabel}。
       </div>
     </div>
   );
 }
+

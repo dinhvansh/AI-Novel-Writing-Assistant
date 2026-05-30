@@ -1,3 +1,4 @@
+import type { TFunction } from "i18next";
 import type {
   StyleDetectionReport,
   StyleExtractionDraft,
@@ -77,25 +78,26 @@ export function isStarterStyleProfile(profile: Pick<StyleProfile, "sourceRefId">
 }
 
 export function getStyleProfileOriginLabel(
+  t: TFunction,
   profile: Pick<StyleProfile, "sourceRefId" | "sourceType">,
 ): string {
   if (isStarterStyleProfile(profile)) {
-    return "预置";
+    return t("writingFormula.originLabel.preset");
   }
   if (profile.sourceRefId?.startsWith(AI_STYLE_BRIEF_SOURCE_PREFIX)) {
-    return "AI生成";
+    return t("writingFormula.originLabel.aiGenerated");
   }
   if (profile.sourceType === "from_text") {
-    return "文本提取";
+    return t("writingFormula.originLabel.fromText");
   }
   if (profile.sourceType === "from_book_analysis") {
-    return "拆书生成";
+    return t("writingFormula.originLabel.fromBookAnalysis");
   }
   if (profile.sourceType === "from_knowledge_document") {
-    return "知识库原文";
+    return t("writingFormula.originLabel.fromKnowledge");
   }
   if (profile.sourceType === "from_current_work") {
-    return "当前作品";
+    return t("writingFormula.originLabel.fromCurrentWork");
   }
-  return "手动创建";
+  return t("writingFormula.originLabel.manual");
 }

@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
 import type { BaseCharacter } from "@ai-novel/shared/types/novel";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
@@ -57,6 +58,7 @@ export function CharacterEditDialog({
   onOpenChange,
   onSubmit,
 }: CharacterEditDialogProps) {
+  const { t } = useTranslation("characters");
   const [form, setForm] = useState<EditableBaseCharacter>(createEmptyForm());
 
   useEffect(() => {
@@ -96,27 +98,27 @@ export function CharacterEditDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="w-[96vw] max-h-[90vh] max-w-[1100px] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>{character ? `编辑角色：${character.name}` : "编辑角色"}</DialogTitle>
+          <DialogTitle>{character ? t("editDialog.titleWithName", { name: character.name }) : t("editDialog.title")}</DialogTitle>
         </DialogHeader>
 
         <div className="grid gap-2 md:grid-cols-2">
           <Input
-            placeholder="角色名称"
+            placeholder={t("editDialog.fields.name")}
             value={form.name}
             onChange={(event) => setForm((prev) => ({ ...prev, name: event.target.value }))}
           />
           <Input
-            placeholder="角色定位"
+            placeholder={t("editDialog.fields.role")}
             value={form.role}
             onChange={(event) => setForm((prev) => ({ ...prev, role: event.target.value }))}
           />
           <Input
-            placeholder="角色类别"
+            placeholder={t("editDialog.fields.category")}
             value={form.category}
             onChange={(event) => setForm((prev) => ({ ...prev, category: event.target.value }))}
           />
           <Input
-            placeholder="标签（逗号分隔）"
+            placeholder={t("editDialog.fields.tags")}
             value={form.tags}
             onChange={(event) => setForm((prev) => ({ ...prev, tags: event.target.value }))}
           />
@@ -125,43 +127,43 @@ export function CharacterEditDialog({
         <div className="space-y-2">
           <textarea
             className="min-h-[90px] w-full rounded-md border bg-background p-2 text-sm"
-            placeholder="性格"
+            placeholder={t("editDialog.fields.personality")}
             value={form.personality}
             onChange={(event) => setForm((prev) => ({ ...prev, personality: event.target.value }))}
           />
           <textarea
             className="min-h-[90px] w-full rounded-md border bg-background p-2 text-sm"
-            placeholder="背景故事"
+            placeholder={t("editDialog.fields.background")}
             value={form.background}
             onChange={(event) => setForm((prev) => ({ ...prev, background: event.target.value }))}
           />
           <textarea
             className="min-h-[90px] w-full rounded-md border bg-background p-2 text-sm"
-            placeholder="成长轨迹"
+            placeholder={t("editDialog.fields.development")}
             value={form.development}
             onChange={(event) => setForm((prev) => ({ ...prev, development: event.target.value }))}
           />
           <textarea
             className="min-h-[80px] w-full rounded-md border bg-background p-2 text-sm"
-            placeholder="外貌/体态"
+            placeholder={t("editDialog.fields.appearance")}
             value={form.appearance ?? ""}
             onChange={(event) => setForm((prev) => ({ ...prev, appearance: event.target.value }))}
           />
           <textarea
             className="min-h-[80px] w-full rounded-md border bg-background p-2 text-sm"
-            placeholder="弱点与代价"
+            placeholder={t("editDialog.fields.weaknesses")}
             value={form.weaknesses ?? ""}
             onChange={(event) => setForm((prev) => ({ ...prev, weaknesses: event.target.value }))}
           />
           <textarea
             className="min-h-[80px] w-full rounded-md border bg-background p-2 text-sm"
-            placeholder="习惯与特长"
+            placeholder={t("editDialog.fields.interests")}
             value={form.interests ?? ""}
             onChange={(event) => setForm((prev) => ({ ...prev, interests: event.target.value }))}
           />
           <textarea
             className="min-h-[80px] w-full rounded-md border bg-background p-2 text-sm"
-            placeholder="关键事件"
+            placeholder={t("editDialog.fields.keyEvents")}
             value={form.keyEvents ?? ""}
             onChange={(event) => setForm((prev) => ({ ...prev, keyEvents: event.target.value }))}
           />
@@ -169,10 +171,10 @@ export function CharacterEditDialog({
 
         <DialogFooter>
           <Button variant="outline" onClick={() => onOpenChange(false)} disabled={saving}>
-            取消
+            {t("editDialog.cancel")}
           </Button>
           <Button onClick={handleSubmit} disabled={saving || !hasRequiredFields || !character}>
-            {saving ? "保存中..." : "保存修改"}
+            {saving ? t("editDialog.saving") : t("editDialog.save")}
           </Button>
         </DialogFooter>
       </DialogContent>

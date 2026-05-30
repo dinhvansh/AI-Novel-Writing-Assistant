@@ -1,6 +1,7 @@
 import { Router } from "express";
 import type { ApiResponse } from "@ai-novel/shared/types/api";
 import { z } from "zod";
+import type { LocaleCode } from "@ai-novel/shared/localization";
 import { llmProviderSchema } from "../llm/providerSchema";
 import { authMiddleware } from "../middleware/auth";
 import { validate } from "../middleware/validate";
@@ -10,6 +11,7 @@ import {
   generateStoryModeTreeDraft,
 } from "../services/storyMode/storyModeGenerate";
 import { storyModeProfileSchema } from "../services/storyMode/storyModeProfile";
+import { localizeStoryMode } from "../services/localization/SeedTranslator";
 
 const router = Router();
 const storyModeService = new StoryModeService();
@@ -83,11 +85,16 @@ router.use(authMiddleware);
 router.get("/", async (_req, res, next) => {
   try {
     const data = await storyModeService.listStoryModeTree();
+    const locale = (res.locals as { locale?: LocaleCode }).locale ?? "vi-VN";
+    const localizedData = data.map((node: { id: string; name: string; description?: string | null; children?: unknown[] }) => ({
+      ...node,
+      ...localizeStoryMode(node, locale),
+    }));
     res.status(200).json({
       success: true,
-      data,
-      message: "获取流派模式树成功。",
-    } satisfies ApiResponse<typeof data>);
+      data: localizedData,
+      message: "获取流派模式树成功。" // i18n-ignore-internal-log: API success message, not user-facing
+    } satisfies ApiResponse<typeof localizedData>);
   } catch (error) {
     next(error);
   }
@@ -99,7 +106,7 @@ router.post("/", validate({ body: createStoryModeSchema }), async (req, res, nex
     res.status(201).json({
       success: true,
       data,
-      message: "创建流派模式成功。",
+      message: "创建流派模式成功。" // i18n-ignore-internal-log: API success message, not user-facing
     } satisfies ApiResponse<typeof data>);
   } catch (error) {
     next(error);
@@ -122,7 +129,7 @@ router.post("/batch-children", validate({ body: createStoryModeChildrenSchema })
     res.status(201).json({
       success: true,
       data,
-      message: "批量创建流派模式子类成功。",
+      message: "批量创建流派模式子类成功。" // i18n-ignore-internal-log: API success message, not user-facing
     } satisfies ApiResponse<typeof data>);
   } catch (error) {
     next(error);
@@ -135,7 +142,7 @@ router.post("/generate", validate({ body: generateStoryModeSchema }), async (req
     res.status(200).json({
       success: true,
       data,
-      message: "AI 流派模式树草稿生成成功。",
+      message: "AI 流派模式树草稿生成成功。" // i18n-ignore-internal-log: API success message, not user-facing
     } satisfies ApiResponse<typeof data>);
   } catch (error) {
     next(error);
@@ -148,7 +155,7 @@ router.post("/generate-child", validate({ body: generateStoryModeChildSchema }),
     res.status(200).json({
       success: true,
       data,
-      message: "AI 流派模式子类草稿生成成功。",
+      message: "AI 流派模式子类草稿生成成功。" // i18n-ignore-internal-log: API success message, not user-facing
     } satisfies ApiResponse<typeof data>);
   } catch (error) {
     next(error);
@@ -162,7 +169,7 @@ router.put("/:id", validate({ params: idParamsSchema, body: updateStoryModeSchem
     res.status(200).json({
       success: true,
       data,
-      message: "更新流派模式成功。",
+      message: "更新流派模式成功。" // i18n-ignore-internal-log: API success message, not user-facing
     } satisfies ApiResponse<typeof data>);
   } catch (error) {
     next(error);
@@ -175,7 +182,7 @@ router.delete("/:id", validate({ params: idParamsSchema }), async (req, res, nex
     await storyModeService.deleteStoryMode(id);
     res.status(200).json({
       success: true,
-      message: "删除流派模式成功。",
+      message: "删除流派模式成功。" // i18n-ignore-internal-log: API success message, not user-facing
     } satisfies ApiResponse<null>);
   } catch (error) {
     next(error);

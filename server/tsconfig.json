@@ -8,7 +8,8 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["src/*"],
-      "@ai-novel/shared/*": ["../shared/dist/*"]
+      "@ai-novel/shared/*": ["../shared/dist/*"],
+      "@ai-novel/shared/localization": ["../shared/dist/localization/index.d.ts"]
     },
     "types": ["node"],
     "noEmit": false,

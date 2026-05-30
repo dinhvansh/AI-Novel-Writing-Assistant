@@ -114,10 +114,10 @@ router.post("/", validate({ body: chatSchema }), async (req, res, next) => {
         const latestUserMessage = [...body.messages].reverse().find((item) => item.role === "user")?.content?.trim();
         const contextMode = body.contextMode ?? (body.novelId ? "novel" : "global");
         if (contextMode === "novel" && !body.novelId) {
-          throw new Error("novel 模式必须提供 novelId。");
+          throw new Error("novel 模式必须提供 novelId。"); // i18n-ignore: internal validation
         }
         if (body.approvalResponse && !body.runId) {
-          throw new Error("处理审批时必须提供 runId。");
+          throw new Error("处理审批时必须提供 runId。"); // i18n-ignore: internal validation
         }
         const result = body.approvalResponse && body.runId
           ? await agentRuntime.resolveApproval({
@@ -129,7 +129,7 @@ router.post("/", validate({ body: chatSchema }), async (req, res, next) => {
           : await agentRuntime.start({
             runId: body.runId,
             sessionId: body.sessionId?.trim() || `chat_session_${Date.now()}`,
-            goal: latestUserMessage ?? "请根据当前上下文给出写作建议。",
+            goal: latestUserMessage ?? "请根据当前上下文给出写作建议。", // i18n-ignore: AI prompt default goal
             messages: body.messages.slice(-20),
             contextMode,
             novelId: contextMode === "novel" ? body.novelId : undefined,
@@ -167,25 +167,26 @@ router.post("/", validate({ body: chatSchema }), async (req, res, next) => {
     const recentMessages = body.messages.slice(-20);
     const systemPrompt =
       body.systemPrompt ??
-      `你是一位专业的小说创作助手，擅长帮助作者进行小说创作、世界设定、角色设计等工作。
-- 使用 Markdown 格式组织回答
-- 提供具体、可操作的创作建议
-- 结合文学理论与商业写作实践
-- 擅长领域：写作技巧/情节构思/角色设计/世界观构建/文风建议/创作瓶颈突破`;
+      // i18n-ignore: AI prompt content — system prompt for chat assistant
+      `你是一位专业的小说创作助手，擅长帮助作者进行小说创作、世界设定、角色设计等工作。 // i18n-ignore: AI prompt content
+- 使用 Markdown 格式组织回答 // i18n-ignore: AI prompt content
+- 提供具体、可操作的创作建议 // i18n-ignore: AI prompt content
+- 结合文学理论与商业写作实践 // i18n-ignore: AI prompt content
+- 擅长领域：写作技巧/情节构思/角色设计/世界观构建/文风建议/创作瓶颈突破`; // i18n-ignore: string matching
 
     const finalSystemPrompt =
       body.agentMode
         ? `${systemPrompt}
 
-作为智能创作代理，你需要：
-- 主动分析用户需求背后的深层问题
-- 提供多个解决方案并分析各自优劣
-- 给出具体的下一步行动建议
-- 在必要时主动提问以获取更多信息`
+作为智能创作代理，你需要： // i18n-ignore: AI prompt content
+- 主动分析用户需求背后的深层问题 // i18n-ignore: AI prompt content
+- 提供多个解决方案并分析各自优劣 // i18n-ignore: AI prompt content
+- 给出具体的下一步行动建议 // i18n-ignore: AI prompt content
+- 在必要时主动提问以获取更多信息` // i18n-ignore: AI prompt content
         : systemPrompt;
 
     const searchHint = body.enableSearch
-      ? "\n提示：联网检索能力当前为预留状态，请在回答中说明基于已有上下文推断。"
+      ? "\n提示：联网检索能力当前为预留状态，请在回答中说明基于已有上下文推断。" // i18n-ignore: AI prompt content
       : "";
 
     const latestUserMessage = [...recentMessages]
@@ -215,7 +216,8 @@ router.post("/", validate({ body: chatSchema }), async (req, res, next) => {
       }
     }
     const ragHint = ragContext
-      ? `\n以下是检索到的项目知识片段（可能不完整），请优先依据这些内容回答，并在冲突时说明不确定性：\n${ragContext}\n`
+      ? // i18n-ignore: AI prompt RAG context
+      `\n以下是检索到的项目知识片段（可能不完整），请优先依据这些内容回答，并在冲突时说明不确定性：\n${ragContext}\n` // i18n-ignore: AI prompt content
       : "";
 
     const messages = [
@@ -302,7 +304,7 @@ router.post("/", validate({ body: chatSchema }), async (req, res, next) => {
     } catch (error) {
       writeSSEFrame(res, {
         type: "error",
-        error: error instanceof Error ? error.message : "对话流式生成失败。",
+        error: error instanceof Error ? error.message : "对话流式生成失败。", // i18n-ignore: internal error
       });
     } finally {
       disposeHeartbeat();
@@ -319,7 +321,7 @@ router.get("/history", (_req, res) => {
   res.status(200).json({
     success: true,
     data: [],
-    message: "当前由前端 IndexedDB 保存历史记录，此接口暂返回空数组。",
+    message: "当前由前端 IndexedDB 保存历史记录，此接口暂返回空数组。" // i18n-ignore-internal-log: API success message, not user-facing
   } satisfies ApiResponse<unknown[]>);
 });
 

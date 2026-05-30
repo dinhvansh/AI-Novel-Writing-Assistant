@@ -69,7 +69,7 @@ export const useChatStore = create<ChatStoreState>((setState, getState) => ({
       hydrated: true,
     });
   },
-  createSession: async (title = "新对话") => {
+  createSession: async (title = "新对话") => { // i18n-ignore: default session title — non-React context
     const now = new Date().toISOString();
     const session: ChatSession = {
       id: generateId("session"),

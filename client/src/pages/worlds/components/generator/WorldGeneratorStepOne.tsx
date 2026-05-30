@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import type { WorldOptionRefinementLevel, WorldReferenceAnchor, WorldReferenceMode } from "@ai-novel/shared/types/worldWizard";
 import { Button } from "@/components/ui/button";
 import KnowledgeDocumentPicker from "@/components/knowledge/KnowledgeDocumentPicker";
@@ -51,6 +52,7 @@ interface WorldGeneratorStepOneProps {
 }
 
 export default function WorldGeneratorStepOne(props: WorldGeneratorStepOneProps) {
+  const { t } = useTranslation("world");
   const {
     worldName,
     selectedGenreId,
@@ -95,20 +97,20 @@ export default function WorldGeneratorStepOne(props: WorldGeneratorStepOneProps)
     <div className="space-y-3">
       <input
         className="w-full rounded-md border p-2 text-sm"
-        placeholder="世界名称（可选）"
+        placeholder={t("generator.worldNamePlaceholder")}
         value={worldName}
         onChange={(event) => onWorldNameChange(event.target.value)}
       />
 
       <div className="space-y-2">
-        <div className="text-sm font-medium">世界类型</div>
+        <div className="text-sm font-medium">{t("generator.worldTypeLabel")}</div>
         <select
           className="w-full rounded-md border bg-background p-2 text-sm"
           value={selectedGenreId}
           disabled={genreLoading || genreOptions.length === 0}
           onChange={(event) => onGenreChange(event.target.value)}
         >
-          <option value="">{genreLoading ? "正在加载题材基底..." : "请选择题材基底"}</option>
+          <option value="">{genreLoading ? t("generator.genreLoadingOption") : t("generator.genreSelectOption")}</option>
           {genreOptions.map((genre) => (
             <option key={genre.id} value={genre.id}>
               {genre.path}
@@ -117,27 +119,27 @@ export default function WorldGeneratorStepOne(props: WorldGeneratorStepOneProps)
         </select>
         {selectedGenre ? (
           <div className="rounded-md border p-3 text-xs text-muted-foreground space-y-1">
-            <div>当前题材基底路径：{selectedGenre.path}</div>
-            {selectedGenre.description?.trim() ? <div>题材基底说明：{selectedGenre.description.trim()}</div> : null}
+            <div>{t("generator.genrePathLabel", { path: selectedGenre.path })}</div>
+            {selectedGenre.description?.trim() ? <div>{t("generator.genreDescriptionLabel", { description: selectedGenre.description.trim() })}</div> : null}
             {selectedGenre.template?.trim() ? (
-              <div className="whitespace-pre-wrap">题材基底模板：{selectedGenre.template.trim()}</div>
+              <div className="whitespace-pre-wrap">{t("generator.genreTemplateLabel", { template: selectedGenre.template.trim() })}</div>
             ) : null}
           </div>
         ) : null}
-        {genreLoading ? <div className="text-xs text-muted-foreground">正在加载题材基底树...</div> : null}
+        {genreLoading ? <div className="text-xs text-muted-foreground">{t("generator.genreLoadingTree")}</div> : null}
         {!genreLoading && genreOptions.length === 0 ? (
           <div className="rounded-md border border-dashed p-3 text-xs text-muted-foreground space-y-2">
-            <div>当前还没有可用题材基底。世界观向导会统一使用题材基底库。</div>
+            <div>{t("generator.noGenreTitle")}</div>
             <Button type="button" variant="outline" onClick={onOpenGenreManager}>
-              去题材基底库
+              {t("generator.goToGenreLibrary")}
             </Button>
           </div>
         ) : null}
         <div className="text-xs text-muted-foreground">
-          这里直接复用题材基底库，不再使用模板内置类型列表作为入口。
+          {t("generator.genreReuseHint")}
         </div>
         <div className="text-xs text-muted-foreground">
-          先确定题材基底，再生成概念卡、前置属性和后续模板筛选。
+          {t("generator.genreOrderHint")}
         </div>
       </div>
 
@@ -146,9 +148,9 @@ export default function WorldGeneratorStepOne(props: WorldGeneratorStepOneProps)
         value={inspirationMode}
         onChange={(event) => onInspirationModeChange(event.target.value as InspirationMode)}
       >
-        <option value="free">自由输入</option>
-        <option value="reference">参考作品</option>
-        <option value="random">随机灵感</option>
+        <option value="free">{t("generator.inspirationFree")}</option>
+        <option value="reference">{t("generator.inspirationReference")}</option>
+        <option value="random">{t("generator.inspirationRandom")}</option>
       </select>
 
       {isReferenceMode ? (
@@ -156,13 +158,13 @@ export default function WorldGeneratorStepOne(props: WorldGeneratorStepOneProps)
           <KnowledgeDocumentPicker
             selectedIds={selectedKnowledgeDocumentIds}
             onChange={(next) => onKnowledgeDocumentIdsChange(next ?? [])}
-            title="参考知识库文档"
-            description="这里选的是参考源，后续会先提取原作世界锚点，再生成架空改造方向。"
+            title={t("generator.referenceDocTitle")}
+            description={t("generator.referenceDocDescription")}
             queryStatus="enabled"
           />
 
           <div className="rounded-md border p-3 text-sm space-y-2">
-            <div className="font-medium">参考方式</div>
+            <div className="font-medium">{t("generator.referenceModeLabel")}</div>
             <select
               className="w-full rounded-md border bg-background p-2 text-sm"
               value={referenceMode}
@@ -181,30 +183,30 @@ export default function WorldGeneratorStepOne(props: WorldGeneratorStepOneProps)
 
           <div className="grid gap-3 md:grid-cols-3">
             <div className="rounded-md border p-3 text-sm space-y-2">
-              <div className="font-medium">必须保留</div>
+              <div className="font-medium">{t("generator.preserveLabel")}</div>
               <textarea
                 className="min-h-[120px] w-full rounded-md border p-2 text-sm"
-                placeholder="例如：现实都市基底、租房生活质感、成年人的情感拉扯"
+                placeholder={t("generator.preservePlaceholder")}
                 value={preserveText}
                 onChange={(event) => onPreserveTextChange(event.target.value)}
               />
             </div>
 
             <div className="rounded-md border p-3 text-sm space-y-2">
-              <div className="font-medium">允许改造</div>
+              <div className="font-medium">{t("generator.allowedChangesLabel")}</div>
               <textarea
                 className="min-h-[120px] w-full rounded-md border p-2 text-sm"
-                placeholder="例如：城市层级、社会规则、势力网络、地点系统"
+                placeholder={t("generator.allowedChangesPlaceholder")}
                 value={allowedChangesText}
                 onChange={(event) => onAllowedChangesTextChange(event.target.value)}
               />
             </div>
 
             <div className="rounded-md border p-3 text-sm space-y-2">
-              <div className="font-medium">禁止偏离</div>
+              <div className="font-medium">{t("generator.forbiddenLabel")}</div>
               <textarea
                 className="min-h-[120px] w-full rounded-md border p-2 text-sm"
-                placeholder="例如：不要超凡化、不要热血升级流、不要脱离现实社会逻辑"
+                placeholder={t("generator.forbiddenPlaceholder")}
                 value={forbiddenText}
                 onChange={(event) => onForbiddenTextChange(event.target.value)}
               />
@@ -217,8 +219,8 @@ export default function WorldGeneratorStepOne(props: WorldGeneratorStepOneProps)
         className="min-h-[180px] w-full rounded-md border p-2 text-sm"
         placeholder={
           isReferenceMode
-            ? "粘贴原作片段、世界总结或你对这部作品的理解；也可以只使用上方知识库文档"
-            : "描述你的世界灵感"
+            ? t("generator.inspirationPlaceholderReference")
+            : t("generator.inspirationPlaceholderFree")
         }
         value={inspirationText}
         onChange={(event) => onInspirationTextChange(event.target.value)}
@@ -226,20 +228,20 @@ export default function WorldGeneratorStepOne(props: WorldGeneratorStepOneProps)
 
       <div className="grid gap-3 md:grid-cols-2">
         <div className="rounded-md border p-3 text-sm space-y-2">
-          <div className="font-medium">属性选项细化程度</div>
+          <div className="font-medium">{t("generator.refinementLevelLabel")}</div>
           <select
             className="w-full rounded-md border bg-background p-2 text-sm"
             value={optionRefinementLevel}
             onChange={(event) => onOptionRefinementLevelChange(event.target.value as WorldOptionRefinementLevel)}
           >
-            <option value="basic">基础</option>
-            <option value="standard">标准</option>
-            <option value="detailed">详细</option>
+            <option value="basic">{t("generator.refinementBasic")}</option>
+            <option value="standard">{t("generator.refinementStandard")}</option>
+            <option value="detailed">{t("generator.refinementDetailed")}</option>
           </select>
         </div>
 
         <div className="rounded-md border p-3 text-sm space-y-2">
-          <div className="font-medium">生成前置属性数量</div>
+          <div className="font-medium">{t("generator.optionsCountLabel")}</div>
           <input
             className="w-full rounded-md border p-2 text-sm"
             type="number"
@@ -249,7 +251,7 @@ export default function WorldGeneratorStepOne(props: WorldGeneratorStepOneProps)
             onChange={(event) => onOptionsCountChange(Number(event.target.value) || 6)}
           />
           <div className="text-xs text-muted-foreground">
-            这一步会参考旧版 V2 的思路，先生成可选择的世界属性，再进入正式创建。
+            {t("generator.optionsCountHint")}
           </div>
         </div>
       </div>
@@ -260,35 +262,38 @@ export default function WorldGeneratorStepOne(props: WorldGeneratorStepOneProps)
 
       {analyzeStreaming ? (
         <div className="rounded-md border p-3 text-sm space-y-1">
-          <div className="font-medium">当前进度</div>
-          <div>{analyzeProgressMessage ?? "正在启动分析..."}</div>
+          <div className="font-medium">{t("generator.progressTitle")}</div>
+          <div>{analyzeProgressMessage ?? t("generator.progressStarting")}</div>
           <div className="text-xs text-muted-foreground">
             {isReferenceMode
-              ? "这一步会依次执行：整理参考材料、提取原作世界锚点、生成架空改造决策。"
-              : "这一步会依次执行：整理灵感输入、生成概念卡、生成前置属性选项。"}
+              ? t("generator.progressHintReference")
+              : t("generator.progressHintFree")}
           </div>
         </div>
       ) : null}
 
       {inspirationSourceMeta?.extracted ? (
         <div className="text-xs text-muted-foreground">
-          已自动分段提取：原文 {inspirationSourceMeta.originalLength} 字符，切分 {inspirationSourceMeta.chunkCount} 段。
+          {t("generator.extractedMeta", {
+            originalLength: inspirationSourceMeta.originalLength,
+            chunkCount: inspirationSourceMeta.chunkCount,
+          })}
         </div>
       ) : null}
 
       {concept ? (
         <div className="rounded-md border p-3 text-sm space-y-2">
-          <div className="font-medium">{isReferenceMode ? "参考分析摘要" : "概念卡"}</div>
-          <div>类型：{concept.worldType}</div>
-          <div>基调：{concept.tone}</div>
-          <div>关键词：{concept.keywords.join(" / ") || "-"}</div>
-          <div>前置属性选项：{propertyOptionsCount}</div>
+          <div className="font-medium">{isReferenceMode ? t("generator.referenceAnalysisTitle") : t("generator.conceptCardTitle")}</div>
+          <div>{t("generator.conceptTypeLabel", { worldType: concept.worldType })}</div>
+          <div>{t("generator.conceptToneLabel", { tone: concept.tone })}</div>
+          <div>{t("generator.conceptKeywordsLabel", { keywords: concept.keywords.join(" / ") || "-" })}</div>
+          <div>{t("generator.conceptPropertyOptionsLabel", { count: propertyOptionsCount })}</div>
           {isReferenceMode && referenceAnchors.length > 0 ? (
             <div className="space-y-1">
-              <div className="text-xs font-medium text-muted-foreground">原作世界锚点</div>
+              <div className="text-xs font-medium text-muted-foreground">{t("generator.referenceAnchorsTitle")}</div>
               {referenceAnchors.map((anchor) => (
                 <div key={anchor.id} className="text-xs text-muted-foreground">
-                  {anchor.label}：{anchor.content}
+                  {t("generator.referenceAnchorItem", { label: anchor.label, content: anchor.content })}
                 </div>
               ))}
             </div>

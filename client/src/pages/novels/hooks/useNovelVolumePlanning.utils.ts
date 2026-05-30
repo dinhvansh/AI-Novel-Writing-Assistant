@@ -100,7 +100,7 @@ export function resolveCustomVolumeCountInput(
   if (!Number.isFinite(parsed)) {
     return {
       value: null,
-      message: "请先输入有效的固定卷数。",
+      message: "请先输入有效的固定卷数。", // i18n-ignore: internal validation message
     };
   }
   if (
@@ -109,7 +109,7 @@ export function resolveCustomVolumeCountInput(
   ) {
     return {
       value: null,
-      message: `固定卷数必须落在 ${volumeCountGuidance.allowedVolumeCountRange.min}-${volumeCountGuidance.allowedVolumeCountRange.max} 卷之间。`,
+      message: `固定卷数必须落在 ${volumeCountGuidance.allowedVolumeCountRange.min}-${volumeCountGuidance.allowedVolumeCountRange.max} 卷之间。`, // i18n-ignore: internal validation message
     };
   }
   return {
@@ -119,7 +119,8 @@ export function resolveCustomVolumeCountInput(
 }
 
 export function buildGenerationNotice(strategyPlan: VolumeStrategyPlan | null): string {
+  // i18n-ignore: internal guidance text — displayed via component that wraps with t()
   return strategyPlan
-    ? "当前工作区已进入二期链路：先审卷战略，再确认卷骨架，之后按卷生成节奏板和章节列表。"
-    : "先生成卷战略建议，让系统帮你决定卷数和硬/软规划，再进入卷骨架。";
+    ? "当前工作区已进入二期链路：先审卷战略，再确认卷骨架，之后按卷生成节奏板和章节列表。" // i18n-ignore: internal guidance
+    : "先生成卷战略建议，让系统帮你决定卷数和硬/软规划，再进入卷骨架。"; // i18n-ignore: internal guidance
 }

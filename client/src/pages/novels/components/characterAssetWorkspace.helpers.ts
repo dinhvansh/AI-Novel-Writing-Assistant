@@ -1,35 +1,22 @@
+import i18n from "i18next";
 import type { Character, CharacterCastRole, CharacterGender } from "@ai-novel/shared/types/novel";
-
-const CAST_ROLE_LABELS: Record<CharacterCastRole, string> = {
-  protagonist: "主角",
-  antagonist: "主对手",
-  ally: "同盟",
-  foil: "镜像角色",
-  mentor: "导师",
-  love_interest: "情感牵引",
-  pressure_source: "压力源",
-  catalyst: "催化者",
-};
-
-const CHARACTER_GENDER_LABELS: Record<CharacterGender, string> = {
-  male: "男",
-  female: "女",
-  other: "其他",
-  unknown: "未知",
-};
 
 export function getCastRoleLabel(castRole?: CharacterCastRole | null): string {
   if (!castRole) {
-    return "未定义";
+    return i18n.t("novel:characterAsset.undefinedRole");
   }
-  return CAST_ROLE_LABELS[castRole] ?? castRole;
+  const key = `novel:characterAsset.castRoles.${castRole}`;
+  const translated = i18n.t(key);
+  return translated !== key ? translated : castRole;
 }
 
 export function getCharacterGenderLabel(gender?: CharacterGender | null): string {
   if (!gender) {
-    return "未知";
+    return i18n.t("novel:characterAsset.unknownGender");
   }
-  return CHARACTER_GENDER_LABELS[gender] ?? gender;
+  const key = `novel:characterAsset.genders.${gender}`;
+  const translated = i18n.t(key);
+  return translated !== key ? translated : gender;
 }
 
 export function isProtagonistCharacter(character?: Character | null): boolean {
@@ -40,5 +27,5 @@ export function isProtagonistCharacter(character?: Character | null): boolean {
     return true;
   }
   const roleText = `${character.role ?? ""} ${character.castRole ?? ""}`;
-  return /主角|男主|女主|主人公/.test(roleText);
+  return /主角|男主|女主|主人公/.test(roleText); // i18n-ignore: matching against DB role values
 }

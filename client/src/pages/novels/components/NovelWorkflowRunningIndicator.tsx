@@ -1,4 +1,5 @@
 import WorkflowProgressBar, { normalizeProgressPercent } from "@/components/workflow/WorkflowProgressBar";
+import { useTranslation } from "react-i18next";
 import { cn } from "@/lib/utils";
 
 interface NovelWorkflowRunningIndicatorProps {
@@ -11,8 +12,10 @@ export default function NovelWorkflowRunningIndicator(props: NovelWorkflowRunnin
   const {
     progress,
     className,
-    label = "AI 正在后台持续推进",
+    label,
   } = props;
+  const { t } = useTranslation("novel");
+  const resolvedLabel = label ?? t("workflowRunning.defaultLabel");
   const percent = normalizeProgressPercent(progress);
 
   return (
@@ -23,7 +26,7 @@ export default function NovelWorkflowRunningIndicator(props: NovelWorkflowRunnin
             <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-primary/40" />
             <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-primary" />
           </span>
-          <span className="truncate">{label}</span>
+          <span className="truncate">{resolvedLabel}</span>
         </div>
         <span className="shrink-0 tabular-nums text-muted-foreground">{percent}%</span>
       </div>

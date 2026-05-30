@@ -1,17 +1,18 @@
+import type { TFunction } from "i18next";
 import type { TitleSuggestionStyle } from "@ai-novel/shared/types/title";
 
-export function getTitleStyleLabel(style: TitleSuggestionStyle): string {
+export function getTitleStyleLabel(style: TitleSuggestionStyle, t: TFunction): string {
   switch (style) {
     case "literary":
-      return "叙事感";
+      return t("titles:studio.styleLabels.literary");
     case "conflict":
-      return "冲突钩子";
+      return t("titles:studio.styleLabels.conflict");
     case "suspense":
-      return "悬念感";
+      return t("titles:studio.styleLabels.suspense");
     case "high_concept":
-      return "高概念";
+      return t("titles:studio.styleLabels.highConcept");
     default:
-      return "标题策略";
+      return t("titles:studio.styleLabels.default");
   }
 }
 

@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useTranslation } from "react-i18next";
 import {
   getAutoDirectorApprovalPreferenceSettings,
   getAutoDirectorChannelSettings,
@@ -19,6 +20,7 @@ export default function AutoDirectorSettingsSection(props: {
 }) {
   const { onActionResult } = props;
   const queryClient = useQueryClient();
+  const { t } = useTranslation();
   const [autoDirectorChannelDraft, setAutoDirectorChannelDraft] = useState<AutoDirectorChannelDraft | null>(null);
   const [approvalPreferenceDraft, setApprovalPreferenceDraft] = useState<string[] | null>(null);
 
@@ -39,28 +41,28 @@ export default function AutoDirectorSettingsSection(props: {
   const saveAutoDirectorChannelsMutation = useMutation({
     mutationFn: saveAutoDirectorChannelSettings,
     onSuccess: async (response) => {
-      onActionResult(response.message ?? "导演跟进通道配置已保存。");
+      onActionResult(response.message ?? t("settings:autoDirectorApproval.channelsSavedMessage"));
       if (response.data) {
         setAutoDirectorChannelDraft(buildAutoDirectorChannelDraft(response.data));
       }
       await queryClient.invalidateQueries({ queryKey: queryKeys.settings.autoDirectorChannels });
     },
     onError: (error) => {
-      onActionResult(error instanceof Error ? error.message : "保存导演跟进通道配置失败。");
+      onActionResult(error instanceof Error ? error.message : t("settings:autoDirectorApproval.channelsSaveFailed"));
     },
   });
 
   const saveApprovalPreferenceMutation = useMutation({
     mutationFn: saveAutoDirectorApprovalPreferenceSettings,
     onSuccess: async (response) => {
-      onActionResult(response.message ?? "审批授权偏好已保存。");
+      onActionResult(response.message ?? t("settings:autoDirectorApproval.savedMessage"));
       if (response.data) {
         setApprovalPreferenceDraft(response.data.approvalPointCodes);
       }
       await queryClient.invalidateQueries({ queryKey: queryKeys.settings.autoDirectorApprovalPreferences });
     },
     onError: (error) => {
-      onActionResult(error instanceof Error ? error.message : "保存审批授权偏好失败。");
+      onActionResult(error instanceof Error ? error.message : t("settings:autoDirectorApproval.saveFailed"));
     },
   });
 

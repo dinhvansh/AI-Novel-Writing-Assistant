@@ -1,4 +1,5 @@
-﻿import type {
+﻿import type { TFunction } from "i18next";
+import type {
   AutoDirectorAction,
 } from "@ai-novel/shared/types/autoDirectorFollowUp";
 import type { TaskKind, TaskStatus } from "@ai-novel/shared/types/task";
@@ -24,13 +25,13 @@ export function getTimestamp(value: string | null | undefined): number {
   return new Date(value).getTime();
 }
 
-export function formatDate(value: string | null | undefined): string {
+export function formatDate(value: string | null | undefined, t: TFunction): string {
   if (!value) {
-    return "暂无";
+    return t("tasks:date.none");
   }
   const date = new Date(value);
   if (Number.isNaN(date.getTime())) {
-    return "暂无";
+    return t("tasks:date.none");
   }
   return date.toLocaleString();
 }
@@ -39,117 +40,57 @@ export function formatTokenCount(value: number | null | undefined): string {
   return new Intl.NumberFormat("zh-CN").format(Math.max(0, Math.round(value ?? 0)));
 }
 
-export function formatKind(kind: TaskKind): string {
-  if (kind === "book_analysis") {
-    return "拆书分析";
-  }
-  if (kind === "novel_workflow") {
-    return "小说创作";
-  }
-  if (kind === "novel_pipeline") {
-    return "小说流水线";
-  }
-  if (kind === "knowledge_document") {
-    return "知识库索引";
-  }
-  if (kind === "style_extraction") {
-    return "写法提取";
-  }
-  if (kind === "agent_run") {
-    return "Agent 运行";
-  }
-  return "图片生成";
+export function formatKind(kind: TaskKind, t: TFunction): string {
+  if (kind === "book_analysis") return t("tasks:kind.book_analysis");
+  if (kind === "novel_workflow") return t("tasks:kind.novel_workflow");
+  if (kind === "novel_pipeline") return t("tasks:kind.novel_pipeline");
+  if (kind === "knowledge_document") return t("tasks:kind.knowledge_document");
+  if (kind === "style_extraction") return t("tasks:kind.style_extraction");
+  if (kind === "agent_run") return t("tasks:kind.agent_run");
+  return t("tasks:kind.image_generation");
 }
 
-export function formatCheckpoint(checkpoint: NovelWorkflowMilestoneType | null | undefined, scopeLabel?: string | null): string {
-  const resolvedScopeLabel = scopeLabel?.trim() || "前 10 章";
-  if (checkpoint === "rewrite_snapshot_created") {
-    return "重写前备份已创建";
-  }
-  if (checkpoint === "candidate_selection_required") {
-    return "等待确认书级方向";
-  }
-  if (checkpoint === "book_contract_ready") {
-    return "Book Contract 已就绪";
-  }
-  if (checkpoint === "character_setup_required") {
-    return "角色准备待审核";
-  }
-  if (checkpoint === "volume_strategy_ready") {
-    return "卷战略已就绪";
-  }
-  if (checkpoint === "chapter_batch_ready") {
-    return `${resolvedScopeLabel}自动执行已暂停`;
-  }
-  if (checkpoint === "replan_required") {
-    return "需要重规划";
-  }
-  if (checkpoint === "workflow_completed") {
-    return "主流程完成";
-  }
-  return "暂无";
+export function formatCheckpoint(checkpoint: NovelWorkflowMilestoneType | null | undefined, t: TFunction, scopeLabel?: string | null): string {
+  const resolvedScopeLabel = scopeLabel?.trim() || t("tasks:checkpoint.defaultScope");
+  if (checkpoint === "rewrite_snapshot_created") return t("tasks:checkpoint.rewrite_snapshot_created");
+  if (checkpoint === "candidate_selection_required") return t("tasks:checkpoint.candidate_selection_required");
+  if (checkpoint === "book_contract_ready") return t("tasks:checkpoint.book_contract_ready");
+  if (checkpoint === "character_setup_required") return t("tasks:checkpoint.character_setup_required");
+  if (checkpoint === "volume_strategy_ready") return t("tasks:checkpoint.volume_strategy_ready");
+  if (checkpoint === "chapter_batch_ready") return t("tasks:checkpoint.chapter_batch_ready", { scope: resolvedScopeLabel });
+  if (checkpoint === "replan_required") return t("tasks:checkpoint.replan_required");
+  if (checkpoint === "workflow_completed") return t("tasks:checkpoint.workflow_completed");
+  return t("tasks:checkpoint.none");
 }
 
-export function formatResumeTarget(target: NovelWorkflowResumeTarget | null | undefined): string {
-  if (!target) {
-    return "暂无";
-  }
+export function formatResumeTarget(target: NovelWorkflowResumeTarget | null | undefined, t: TFunction): string {
+  if (!target) return t("tasks:resumeTarget.none");
   if (target.route === "/novels/create") {
-    return target.mode === "director" ? "创建页 / AI 自动导演" : "创建页";
+    return target.mode === "director" ? t("tasks:resumeTarget.createDirector") : t("tasks:resumeTarget.createManual");
   }
-  if (target.stage === "story_macro") {
-    return "小说编辑页 / 故事宏观规划";
-  }
-  if (target.stage === "character") {
-    return "小说编辑页 / 角色准备";
-  }
-  if (target.stage === "outline") {
-    return "小说编辑页 / 卷战略";
-  }
-  if (target.stage === "structured") {
-    return "小说编辑页 / 节奏拆章";
-  }
-  if (target.stage === "chapter") {
-    return "小说编辑页 / 章节执行";
-  }
-  if (target.stage === "pipeline") {
-    return "小说编辑页 / 质量修复";
-  }
-  return "小说编辑页 / 项目设定";
+  if (target.stage === "story_macro") return t("tasks:resumeTarget.storyMacro");
+  if (target.stage === "character") return t("tasks:resumeTarget.character");
+  if (target.stage === "outline") return t("tasks:resumeTarget.outline");
+  if (target.stage === "structured") return t("tasks:resumeTarget.structured");
+  if (target.stage === "chapter") return t("tasks:resumeTarget.chapter");
+  if (target.stage === "pipeline") return t("tasks:resumeTarget.pipeline");
+  return t("tasks:resumeTarget.basicInfo");
 }
 
-export function formatStatus(status: TaskStatus): string {
-  if (status === "queued") {
-    return "排队中";
-  }
-  if (status === "running") {
-    return "运行中";
-  }
-  if (status === "waiting_approval") {
-    return "等待审批";
-  }
-  if (status === "succeeded") {
-    return "已完成";
-  }
-  if (status === "failed") {
-    return "失败";
-  }
-  return "已取消";
+export function formatStatus(status: TaskStatus, t: TFunction): string {
+  if (status === "queued") return t("tasks:status.queued");
+  if (status === "running") return t("tasks:status.running");
+  if (status === "waiting_approval") return t("tasks:status.waiting_approval");
+  if (status === "succeeded") return t("tasks:status.succeeded");
+  if (status === "failed") return t("tasks:status.failed");
+  return t("tasks:status.cancelled");
 }
 
 export function toStatusVariant(status: TaskStatus): "default" | "outline" | "secondary" | "destructive" {
-  if (status === "running") {
-    return "default";
-  }
-  if (status === "waiting_approval") {
-    return "secondary";
-  }
-  if (status === "queued") {
-    return "secondary";
-  }
-  if (status === "failed") {
-    return "destructive";
-  }
+  if (status === "running") return "default";
+  if (status === "waiting_approval") return "secondary";
+  if (status === "queued") return "secondary";
+  if (status === "failed") return "destructive";
   return "outline";
 }
 
@@ -172,14 +113,10 @@ export function createIdempotencyKey(taskId: string, actionCode: string): string
   return `${taskId}:${actionCode}:${Date.now()}:${Math.random().toString(36).slice(2)}`;
 }
 
-export function formatFollowUpPriority(priority: "P0" | "P1" | "P2"): string {
-  if (priority === "P0") {
-    return "P0 立即处理";
-  }
-  if (priority === "P1") {
-    return "P1 尽快处理";
-  }
-  return "P2 可稍后处理";
+export function formatFollowUpPriority(priority: "P0" | "P1" | "P2", t: TFunction): string {
+  if (priority === "P0") return t("tasks:followUpPriority.P0");
+  if (priority === "P1") return t("tasks:followUpPriority.P1");
+  return t("tasks:followUpPriority.P2");
 }
 
 export function followUpActionVariant(action: AutoDirectorAction): "default" | "outline" {

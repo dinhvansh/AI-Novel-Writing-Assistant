@@ -2,6 +2,7 @@ import type { FailureDiagnostic } from "@ai-novel/shared/types/agent";
 import type { CreativeHubInterrupt, CreativeHubTurnSummary } from "@ai-novel/shared/types/creativeHub";
 import type { CreativeHubStreamFrame } from "@ai-novel/shared/types/api";
 import type { LangChainMessage } from "@assistant-ui/react-langgraph";
+import type { TFunction } from "i18next";
 import type { CreativeHubDebugTraceEntry } from "../components/CreativeHubDebugTraceCard";
 import { getIntentDisplayLabel, getPlannerSourceDisplayLabel } from "./plannerLabels";
 
@@ -11,22 +12,23 @@ function compactArgs(record: Record<string, string | boolean | null | undefined>
   );
 }
 
-function toStatusLabel(status: string): string {
+function toStatusLabel(status: string, t?: TFunction): string {
+  const _t = t ?? ((key: string) => key);
   switch (status) {
     case "running":
-      return "运行中";
+      return _t("creativeHub:syntheticMessages.status.running");
     case "queued":
-      return "排队中";
+      return _t("creativeHub:syntheticMessages.status.queued");
     case "waiting_approval":
-      return "等待审批";
+      return _t("creativeHub:syntheticMessages.status.waitingApproval");
     case "succeeded":
-      return "已完成";
+      return _t("creativeHub:syntheticMessages.status.succeeded");
     case "failed":
-      return "失败";
+      return _t("creativeHub:syntheticMessages.status.failed");
     case "cancelled":
-      return "已取消";
+      return _t("creativeHub:syntheticMessages.status.cancelled");
     case "interrupted":
-      return "待确认";
+      return _t("creativeHub:syntheticMessages.status.interrupted");
     default:
       return status;
   }
@@ -159,7 +161,10 @@ function buildDebugTraceEntry(
   frame: CreativeHubStreamFrame,
   fallbackRunId: string | null,
   sequence: number,
+  t?: TFunction,
 ): { runId: string; entry: CreativeHubDebugTraceEntry } | null {
+  const _t = t ?? ((key: string, _opts?: Record<string, unknown>) => key);
+
   if (frame.event === "creative_hub/turn_summary" || frame.event === "creative_hub/interrupt") {
     return null;
   }
@@ -173,10 +178,10 @@ function buildDebugTraceEntry(
       runId,
       entry: {
         id: `run_status_${sequence}`,
-        kind: "运行状态",
-        title: "运行状态",
-        summary: frame.data.message || `当前状态：${toStatusLabel(frame.data.status)}`,
-        meta: [toStatusLabel(frame.data.status), `Run ${runId.slice(0, 8)}`],
+        kind: _t("creativeHub:syntheticMessages.kind.runStatus"),
+        title: _t("creativeHub:syntheticMessages.kind.runStatus"),
+        summary: frame.data.message || _t("creativeHub:syntheticMessages.runStatus.currentStatus", { status: toStatusLabel(frame.data.status, t) }),
+        meta: [toStatusLabel(frame.data.status, t), `Run ${runId.slice(0, 8)}`],
         tone: frame.data.status === "failed" || frame.data.status === "cancelled"
           ? "destructive"
           : frame.data.status === "waiting_approval"
@@ -195,9 +200,9 @@ function buildDebugTraceEntry(
       runId,
       entry: {
         id: `tool_call_${sequence}`,
-        kind: "工具调用",
+        kind: _t("creativeHub:syntheticMessages.kind.toolCall"),
         title: frame.data.toolName,
-        summary: frame.data.inputSummary || "正在准备工具输入。",
+        summary: frame.data.inputSummary || _t("creativeHub:syntheticMessages.toolCall.preparingInput"),
         meta: [
           `Run ${runId.slice(0, 8)}`,
           frame.data.stepId ? `Step ${frame.data.stepId.slice(0, 8)}` : "",
@@ -215,11 +220,11 @@ function buildDebugTraceEntry(
       runId,
       entry: {
         id: `tool_result_${sequence}`,
-        kind: frame.data.success ? "工具完成" : "工具失败",
+        kind: frame.data.success ? _t("creativeHub:syntheticMessages.kind.toolSuccess") : _t("creativeHub:syntheticMessages.kind.toolFailed"),
         title: frame.data.toolName,
-        summary: frame.data.outputSummary || "工具返回了空结果。",
+        summary: frame.data.outputSummary || _t("creativeHub:syntheticMessages.toolResult.emptyResult"),
         meta: [
-          frame.data.success ? "成功" : "失败",
+          frame.data.success ? _t("creativeHub:syntheticMessages.toolResult.success") : _t("creativeHub:syntheticMessages.toolResult.failed"),
           `Run ${runId.slice(0, 8)}`,
         ],
         tone: frame.data.success ? "default" : "destructive",
@@ -236,9 +241,9 @@ function buildDebugTraceEntry(
       runId,
       entry: {
         id: `approval_${sequence}`,
-        kind: "审批结果",
-        title: frame.data.action === "approved" ? "审批通过" : "审批拒绝",
-        summary: frame.data.note?.trim() || "当前审批动作已记录。",
+        kind: _t("creativeHub:syntheticMessages.kind.approvalResult"),
+        title: frame.data.action === "approved" ? _t("creativeHub:syntheticMessages.approval.approved") : _t("creativeHub:syntheticMessages.approval.rejected"),
+        summary: frame.data.note?.trim() || _t("creativeHub:syntheticMessages.approval.recorded"),
         meta: [
           `Approval ${frame.data.approvalId.slice(0, 8)}`,
         ],
@@ -256,8 +261,8 @@ function buildDebugTraceEntry(
       runId,
       entry: {
         id: `error_${sequence}`,
-        kind: "运行异常",
-        title: "运行异常",
+        kind: _t("creativeHub:syntheticMessages.kind.runError"),
+        title: _t("creativeHub:syntheticMessages.kind.runError"),
         summary: frame.data.message,
         meta: [`Run ${runId.slice(0, 8)}`],
         tone: "destructive",
@@ -274,8 +279,8 @@ function buildDebugTraceEntry(
       runId,
       entry: {
         id: `reasoning_${sequence}`,
-        kind: "推理更新",
-        title: "推理更新",
+        kind: _t("creativeHub:syntheticMessages.kind.reasoningUpdate"),
+        title: _t("creativeHub:syntheticMessages.kind.reasoningUpdate"),
         summary: frame.data.reasoning,
         meta: [`Run ${runId.slice(0, 8)}`],
       },
@@ -292,11 +297,14 @@ function buildDebugTraceEntry(
       runId,
       entry: {
         id: `planner_${sequence}`,
-        kind: "意图识别",
-        title: "意图识别",
-        summary: `来源：${getPlannerSourceDisplayLabel(planner.source)}；意图：${getIntentDisplayLabel(planner.intent)}`,
+        kind: _t("creativeHub:syntheticMessages.kind.intentRecognition"),
+        title: _t("creativeHub:syntheticMessages.kind.intentRecognition"),
+        summary: _t("creativeHub:syntheticMessages.planner.summary", {
+          source: getPlannerSourceDisplayLabel(planner.source, t),
+          intent: getIntentDisplayLabel(planner.intent, t),
+        }),
         meta: [
-          "confidence" in planner ? `置信度 ${String(planner.confidence ?? "-")}` : "",
+          "confidence" in planner ? _t("creativeHub:syntheticMessages.planner.confidence", { value: String(planner.confidence ?? "-") }) : "",
           `Run ${runId.slice(0, 8)}`,
         ].filter(Boolean),
       },
@@ -315,8 +323,8 @@ function buildDebugTraceEntry(
       entry: {
         id: `checkpoint_${sequence}`,
         kind: "Checkpoint",
-        title: "检查点已写回",
-        summary: `Checkpoint ${frame.data.checkpointId.slice(0, 8)} 已写回线程历史。`,
+        title: _t("creativeHub:syntheticMessages.checkpoint.title"),
+        summary: _t("creativeHub:syntheticMessages.checkpoint.summary", { id: frame.data.checkpointId.slice(0, 8) }),
         meta: [`Run ${runId.slice(0, 8)}`],
       },
     };
@@ -329,8 +337,9 @@ export function createRunArtifactEvent(
   frame: CreativeHubStreamFrame,
   fallbackRunId: string | null,
   sequence: number,
+  t?: TFunction,
 ) {
-  return buildDebugTraceEntry(frame, fallbackRunId, sequence);
+  return buildDebugTraceEntry(frame, fallbackRunId, sequence, t);
 }
 
 export function buildInlineStateMessages(

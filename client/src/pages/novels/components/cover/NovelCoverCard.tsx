@@ -1,4 +1,5 @@
 import { useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { useQuery } from "@tanstack/react-query";
 import { listImageAssets, resolveImageAssetUrl } from "@/api/images";
 import { queryKeys } from "@/api/queryKeys";
@@ -35,6 +36,7 @@ interface NovelCoverCardProps {
 }
 
 export function NovelCoverCard(props: NovelCoverCardProps) {
+  const { t } = useTranslation("novel");
   const [open, setOpen] = useState(false);
 
   const assetsQuery = useQuery({
@@ -57,25 +59,25 @@ export function NovelCoverCard(props: NovelCoverCardProps) {
       <section className="space-y-4 rounded-xl border border-border/70 bg-background/95 p-4">
         <div className="flex flex-col gap-3 lg:flex-row lg:items-start lg:justify-between">
           <div className="space-y-1">
-            <div className="text-sm font-semibold text-foreground">小说封面主画面</div>
+            <div className="text-sm font-semibold text-foreground">{t("cover.cardTitle")}</div>
             <div className="text-sm leading-6 text-muted-foreground">
-              先生成这本书的封面主画面。当前阶段不直接生成可用书名字体，后续仍可继续排版成正式封面。
+              {t("cover.cardDescription")}
             </div>
           </div>
           <Button type="button" variant="outline" className="shrink-0" onClick={() => setOpen(true)}>
-            {assets.length > 0 ? "管理封面图库" : "生成封面主画面"}
+            {assets.length > 0 ? t("cover.manageGallery") : t("cover.generateCover")}
           </Button>
         </div>
 
         {assetsQuery.isLoading ? (
           <div className="rounded-xl border border-dashed border-border/70 bg-muted/20 px-4 py-8 text-sm text-muted-foreground">
-            正在读取当前封面图库...
+            {t("cover.loadingGalleryCard")}
           </div>
         ) : null}
 
         {!assetsQuery.isLoading && !primaryAsset ? (
           <div className="rounded-xl border border-dashed border-border/70 bg-muted/20 px-4 py-8 text-sm text-muted-foreground">
-            还没有封面主画面。点击上方按钮，系统会先根据当前小说信息整理一版封面输入草稿。
+            {t("cover.emptyGalleryCard")}
           </div>
         ) : null}
 
@@ -85,7 +87,7 @@ export function NovelCoverCard(props: NovelCoverCardProps) {
               <div className="aspect-[2/3] w-full">
                 <img
                   src={resolveImageAssetUrl(primaryAsset.url)}
-                  alt={`${props.basicForm.title || "小说"}当前封面`}
+                  alt={t("cover.coverAltCurrent", { title: props.basicForm.title || t("cover.novelFallback") })}
                   className="h-full w-full object-cover"
                   loading="lazy"
                 />
@@ -95,13 +97,13 @@ export function NovelCoverCard(props: NovelCoverCardProps) {
             <div className="space-y-3">
               <div className="flex flex-wrap items-center gap-2">
                 <span className="rounded-full bg-emerald-50 px-3 py-1 text-xs font-medium text-emerald-700">
-                  当前主封面
+                  {t("cover.primaryCoverBadge")}
                 </span>
-                <span className="text-xs text-muted-foreground">共 {assets.length} 张候选图</span>
+                <span className="text-xs text-muted-foreground">{t("cover.candidateCount", { count: assets.length })}</span>
               </div>
 
               <div className="text-sm leading-6 text-muted-foreground">
-                主封面会随图片域里的 `isPrimary` 切换，不会把封面状态写死到小说主表里。
+                {t("cover.primarySwitchNote")}
               </div>
 
               {assets.length > 1 ? (
@@ -112,12 +114,12 @@ export function NovelCoverCard(props: NovelCoverCardProps) {
                       type="button"
                       className="overflow-hidden rounded-xl border border-border/70 bg-muted/10 transition hover:border-primary/40"
                       onClick={() => setOpen(true)}
-                      title="打开封面图库"
+                      title={t("cover.openGalleryTitle")}
                     >
                       <div className="aspect-[2/3] w-full">
                         <img
                           src={resolveImageAssetUrl(asset.url)}
-                          alt={`${props.basicForm.title || "小说"}封面候选图`}
+                          alt={t("cover.coverAltCandidate", { title: props.basicForm.title || t("cover.novelFallback") })}
                           className="h-full w-full object-cover"
                           loading="lazy"
                         />

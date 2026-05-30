@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react";
 import type { ReactNode } from "react";
 import { useMutation, useQuery } from "@tanstack/react-query";
+import { useTranslation } from "react-i18next";
 import { Braces, Eye, LockKeyhole, RefreshCw, Search, ShieldCheck } from "lucide-react";
 import {
   exportNovelPromptMaterials,
@@ -20,45 +21,59 @@ import { cn } from "@/lib/utils";
 import { PromptAddendumPanel } from "./components/PromptAddendumPanel";
 
 const ENTRYPOINT_OPTIONS = [
-  { value: "creative_hub", label: "创作中枢" },
-  { value: "auto_director", label: "自动导演" },
-  { value: "chapter_pipeline", label: "章节流水线" },
-  { value: "manual_test", label: "手动测试" },
+  { value: "creative_hub", labelKey: "promptWorkbench:page.entrypoints.creative_hub" },
+  { value: "auto_director", labelKey: "promptWorkbench:page.entrypoints.auto_director" },
+  { value: "chapter_pipeline", labelKey: "promptWorkbench:page.entrypoints.chapter_pipeline" },
+  { value: "manual_test", labelKey: "promptWorkbench:page.entrypoints.manual_test" },
 ];
 
 const MANAGEMENT_STATUS_LABELS: Record<PromptCatalogItem["managementStatus"], string> = {
-  complete: "元数据完整",
-  missing_context_requirements: "缺上下文需求",
-  missing_editable_slots: "缺编辑槽位",
+  // i18n-ignore: these are fallback labels used before t() is available; runtime uses t() in components
+  complete: "元数据完整", // i18n-ignore: fallback
+  missing_context_requirements: "缺上下文需求", // i18n-ignore: fallback
+  missing_editable_slots: "缺编辑槽位", // i18n-ignore: fallback
 };
 
 const MATERIAL_IMPORTANCE_LABELS: Record<NovelMaterialImportance, string> = {
-  must: "必需",
-  high: "重要",
-  medium: "辅助",
-  low: "参考",
+  // i18n-ignore: these are fallback labels used before t() is available; runtime uses t() in components
+  must: "必需", // i18n-ignore: fallback
+  high: "重要", // i18n-ignore: fallback
+  medium: "辅助", // i18n-ignore: fallback
+  low: "参考", // i18n-ignore: fallback
 };
 
 function buildPreviewPromptInput(prompt: PromptCatalogItem): Record<string, unknown> {
   const base = {
+    // i18n-ignore: AI prompt content — these are sample inputs for AI prompt preview, not UI labels
     goal: "查看提示词预览",
     messages: [],
     contextMode: "novel",
     novelId: "novel-1",
+    // i18n-ignore: AI prompt content
     chapterTitle: "示例章节",
+    // i18n-ignore: AI prompt content
     chapterMission: "让主角发现关键线索。",
   };
 
   if (prompt.id === "novel.chapter_editor.workspace_diagnosis") {
     return {
+      // i18n-ignore: AI prompt content — sample data for workspace diagnosis preview
       chapterTitle: "示例章节",
+      // i18n-ignore: AI prompt content
       chapterMission: "让主角发现关键线索。",
+      // i18n-ignore: AI prompt content
       volumePositionLabel: "第一卷中段",
+      // i18n-ignore: AI prompt content
       volumePhaseLabel: "冲突展开",
+      // i18n-ignore: AI prompt content
       paceDirective: "加快推进",
+      // i18n-ignore: AI prompt content
       previousChapterBridge: "上一章留下追踪线索。",
+      // i18n-ignore: AI prompt content
       nextChapterBridge: "下一章进入正面对抗。",
+      // i18n-ignore: AI prompt content
       activePlotThreads: ["追踪档案站"],
+      // i18n-ignore: AI prompt content
       paragraphs: [{ index: 1, text: "主角走进旧仓库。" }],
       openIssues: [],
     };
@@ -90,6 +105,12 @@ function PromptListItem({
   active: boolean;
   onSelect: () => void;
 }) {
+  const { t } = useTranslation();
+  const managementStatusLabels: Record<PromptCatalogItem["managementStatus"], string> = {
+    complete: t("promptWorkbench:page.managementStatus.complete"),
+    missing_context_requirements: t("promptWorkbench:page.managementStatus.missing_context_requirements"),
+    missing_editable_slots: t("promptWorkbench:page.managementStatus.missing_editable_slots"),
+  };
   return (
     <button
       type="button"
@@ -110,7 +131,7 @@ function PromptListItem({
           </div>
         </div>
         <Badge variant={prompt.addendumSupported ? "default" : statusBadgeVariant(prompt.managementStatus)} className="shrink-0">
-          {prompt.addendumSupported ? "可补充" : MANAGEMENT_STATUS_LABELS[prompt.managementStatus]}
+          {prompt.addendumSupported ? t("promptWorkbench:page.addendumBadge") : managementStatusLabels[prompt.managementStatus]}
         </Badge>
       </div>
     </button>
@@ -135,6 +156,13 @@ function JsonBlock({ value }: { value: unknown }) {
 }
 
 function MaterialBlockCard({ block }: { block: NovelMaterialBlock }) {
+  const { t } = useTranslation();
+  const materialImportanceLabels: Record<NovelMaterialImportance, string> = {
+    must: t("promptWorkbench:page.materialImportance.must"),
+    high: t("promptWorkbench:page.materialImportance.high"),
+    medium: t("promptWorkbench:page.materialImportance.medium"),
+    low: t("promptWorkbench:page.materialImportance.low"),
+  };
   return (
     <div className="rounded-md border">
       <div className="flex flex-col gap-2 border-b bg-muted/40 px-3 py-2 md:flex-row md:items-center md:justify-between">
@@ -146,7 +174,7 @@ function MaterialBlockCard({ block }: { block: NovelMaterialBlock }) {
         </div>
         <div className="flex shrink-0 items-center gap-2">
           <Badge variant={block.required ? "default" : "secondary"}>
-            {MATERIAL_IMPORTANCE_LABELS[block.importance]}
+            {materialImportanceLabels[block.importance]}
           </Badge>
           <Badge variant="outline">{block.estimatedTokens} tokens</Badge>
         </div>
@@ -159,10 +187,11 @@ function MaterialBlockCard({ block }: { block: NovelMaterialBlock }) {
 }
 
 function PreviewPanel({ preview }: { preview: PromptPreviewResult | null }) {
+  const { t } = useTranslation();
   if (!preview) {
     return (
       <div className="rounded-md border border-dashed p-6 text-sm text-muted-foreground">
-        选择提示词后点击预览，查看最终消息、上下文选择和诊断结果。
+        {t("promptWorkbench:page.preview.empty")}
       </div>
     );
   }
@@ -171,19 +200,19 @@ function PreviewPanel({ preview }: { preview: PromptPreviewResult | null }) {
     <div className="space-y-4">
       <div className="grid gap-3 md:grid-cols-4">
         <div className="rounded-md border p-3">
-          <div className="text-xs text-muted-foreground">入口</div>
+          <div className="text-xs text-muted-foreground">{t("promptWorkbench:page.preview.entrypoint")}</div>
           <div className="mt-1 text-sm font-semibold">{preview.diagnostics.entrypoint}</div>
         </div>
         <div className="rounded-md border p-3">
-          <div className="text-xs text-muted-foreground">估算 Token</div>
+          <div className="text-xs text-muted-foreground">{t("promptWorkbench:page.preview.estimatedTokens")}</div>
           <div className="mt-1 text-sm font-semibold">{preview.context.estimatedInputTokens}</div>
         </div>
         <div className="rounded-md border p-3">
-          <div className="text-xs text-muted-foreground">选中上下文</div>
+          <div className="text-xs text-muted-foreground">{t("promptWorkbench:page.preview.selectedContext")}</div>
           <div className="mt-1 text-sm font-semibold">{preview.context.selectedBlockIds.length}</div>
         </div>
         <div className="rounded-md border p-3">
-          <div className="text-xs text-muted-foreground">缺失项</div>
+          <div className="text-xs text-muted-foreground">{t("promptWorkbench:page.preview.missing")}</div>
           <div className="mt-1 text-sm font-semibold">{preview.diagnostics.missingRequiredGroups.length}</div>
         </div>
       </div>
@@ -194,7 +223,7 @@ function PreviewPanel({ preview }: { preview: PromptPreviewResult | null }) {
         </div>
       ) : null}
 
-      <DetailSection title="最终消息">
+      <DetailSection title={t("promptWorkbench:page.preview.finalMessages")}>
         <div className="space-y-3">
           {preview.messages.map((message, index) => (
             <div key={`${message.role}-${index}`} className="rounded-md border">
@@ -209,7 +238,7 @@ function PreviewPanel({ preview }: { preview: PromptPreviewResult | null }) {
         </div>
       </DetailSection>
 
-      <DetailSection title="上下文诊断">
+      <DetailSection title={t("promptWorkbench:page.preview.contextDiagnostics")}>
         <JsonBlock
           value={{
             selectedBlockIds: preview.context.selectedBlockIds,
@@ -225,6 +254,7 @@ function PreviewPanel({ preview }: { preview: PromptPreviewResult | null }) {
 }
 
 export default function PromptWorkbenchPage() {
+  const { t } = useTranslation();
   const [keyword, setKeyword] = useState("");
   const [selectedKey, setSelectedKey] = useState<string | null>(null);
   const [entrypoint, setEntrypoint] = useState("manual_test");
@@ -251,6 +281,7 @@ export default function PromptWorkbenchPage() {
         entrypoint,
         novelId: "novel-1",
         chapterId: "chapter-1",
+        // i18n-ignore: AI prompt content — sample execution context for prompt preview
         userGoal: "查看提示词预览",
         resourceBindings: {
           novelId: "novel-1",
@@ -286,11 +317,11 @@ export default function PromptWorkbenchPage() {
           <div>
             <div className="flex items-center gap-2 text-sm font-semibold text-primary">
               <Braces className="h-4 w-4" />
-              提示词管理
+              {t("promptWorkbench:page.badge")}
             </div>
             <h1 className="mt-2 text-2xl font-semibold tracking-normal text-foreground">Prompt Workbench</h1>
             <p className="mt-1 text-sm text-muted-foreground">
-              查看内置提示词，并为主要写作链路追加自定义补充要求；当前只开放部分章节写作、审校和修复提示词。
+              {t("promptWorkbench:page.description")}
             </p>
           </div>
 
@@ -301,7 +332,7 @@ export default function PromptWorkbenchPage() {
             disabled={catalogQuery.isFetching}
           >
             <RefreshCw className={cn("mr-2 h-4 w-4", catalogQuery.isFetching && "animate-spin")} />
-            刷新目录
+            {t("promptWorkbench:page.refresh")}
           </Button>
         </div>
       </div>
@@ -313,16 +344,16 @@ export default function PromptWorkbenchPage() {
             <Input
               value={keyword}
               onChange={(event) => setKeyword(event.target.value)}
-              placeholder="搜索 id、任务类型、上下文或槽位"
+              placeholder={t("promptWorkbench:page.searchPlaceholder")}
               className="pl-9"
             />
           </div>
 
           <div className="min-h-0 flex-1 space-y-2 overflow-y-auto pr-1">
             {catalogQuery.isLoading ? (
-              <div className="rounded-md border p-4 text-sm text-muted-foreground">正在读取提示词目录...</div>
+              <div className="rounded-md border p-4 text-sm text-muted-foreground">{t("promptWorkbench:page.loading")}</div>
             ) : prompts.length === 0 ? (
-              <div className="rounded-md border p-4 text-sm text-muted-foreground">没有匹配的提示词。</div>
+              <div className="rounded-md border p-4 text-sm text-muted-foreground">{t("promptWorkbench:page.empty")}</div>
             ) : (
               prompts.map((prompt) => (
                 <PromptListItem
@@ -353,7 +384,14 @@ export default function PromptWorkbenchPage() {
                         <Badge variant="secondary">{selectedPrompt.taskType}</Badge>
                         <Badge variant="secondary">{selectedPrompt.outputType}</Badge>
                         <Badge variant={statusBadgeVariant(selectedPrompt.managementStatus)}>
-                          {MANAGEMENT_STATUS_LABELS[selectedPrompt.managementStatus]}
+                          {(() => {
+                            const labels: Record<PromptCatalogItem["managementStatus"], string> = {
+                              complete: t("promptWorkbench:page.managementStatus.complete"),
+                              missing_context_requirements: t("promptWorkbench:page.managementStatus.missing_context_requirements"),
+                              missing_editable_slots: t("promptWorkbench:page.managementStatus.missing_editable_slots"),
+                            };
+                            return labels[selectedPrompt.managementStatus];
+                          })()}
                         </Badge>
                       </div>
                     </div>
@@ -364,20 +402,20 @@ export default function PromptWorkbenchPage() {
                         className="h-10 rounded-md border bg-background px-3 text-sm"
                       >
                         {ENTRYPOINT_OPTIONS.map((option) => (
-                          <option key={option.value} value={option.value}>{option.label}</option>
+                          <option key={option.value} value={option.value}>{t(option.labelKey)}</option>
                         ))}
                       </select>
                     </div>
                   </div>
                 </CardHeader>
                 <CardContent className="grid gap-5 lg:grid-cols-2">
-                  <DetailSection title="提示词用途">
+                  <DetailSection title={t("promptWorkbench:page.sections.purpose")}>
                     <div className="rounded-md border bg-muted/30 p-4 text-sm leading-relaxed text-muted-foreground">
                       {selectedPrompt.description}
                     </div>
                   </DetailSection>
 
-                  <DetailSection title="基础信息">
+                  <DetailSection title={t("promptWorkbench:page.sections.basicInfo")}>
                     <JsonBlock
                       value={{
                         key: selectedPrompt.key,
@@ -390,24 +428,24 @@ export default function PromptWorkbenchPage() {
                     />
                   </DetailSection>
 
-                  <DetailSection title="能力标记">
+                  <DetailSection title={t("promptWorkbench:page.sections.capabilities")}>
                     <div className="flex flex-wrap gap-2">
                       {selectedCapabilities.length > 0 ? selectedCapabilities.map((label) => (
                         <Badge key={label} variant="secondary">{label}</Badge>
                       )) : (
-                        <span className="text-sm text-muted-foreground">当前提示词未声明结构化能力标记。</span>
+                        <span className="text-sm text-muted-foreground">{t("promptWorkbench:page.sections.noCapabilities")}</span>
                       )}
                     </div>
                   </DetailSection>
 
-                  <DetailSection title="上下文需求">
+                  <DetailSection title={t("promptWorkbench:page.sections.contextRequirements")}>
                     <div className="space-y-2">
                       {selectedPrompt.contextRequirements.length > 0 ? selectedPrompt.contextRequirements.map((requirement) => (
                         <div key={requirement.group} className="rounded-md border p-3 text-sm">
                           <div className="flex items-center justify-between gap-3">
                             <span className="font-semibold">{requirement.group}</span>
                             <Badge variant={requirement.required ? "default" : "outline"}>
-                              {requirement.required ? "必需" : "辅助"}
+                              {requirement.required ? t("promptWorkbench:page.sections.required") : t("promptWorkbench:page.sections.optional")}
                             </Badge>
                           </div>
                           {requirement.sourceHint ? (
@@ -415,30 +453,30 @@ export default function PromptWorkbenchPage() {
                           ) : null}
                         </div>
                       )) : (
-                        <div className="rounded-md border p-3 text-sm text-muted-foreground">未声明上下文需求。</div>
+                        <div className="rounded-md border p-3 text-sm text-muted-foreground">{t("promptWorkbench:page.sections.noContextRequirements")}</div>
                       )}
                     </div>
                   </DetailSection>
 
-                  <DetailSection title="安全编辑边界">
+                  <DetailSection title={t("promptWorkbench:page.sections.editBoundary")}>
                     <div className="space-y-3">
                       <div className="rounded-md border p-3">
                         <div className="mb-2 flex items-center gap-2 text-sm font-semibold">
                           <ShieldCheck className="h-4 w-4 text-primary" />
-                          可编辑槽位
+                          {t("promptWorkbench:page.sections.editableSlots")}
                         </div>
                         <div className="flex flex-wrap gap-2">
                           {selectedPrompt.editableSlots.length > 0 ? selectedPrompt.editableSlots.map((slot) => (
                             <Badge key={slot.key} variant="secondary">{slot.label}</Badge>
                           )) : (
-                            <span className="text-sm text-muted-foreground">未开放表达槽位。</span>
+                            <span className="text-sm text-muted-foreground">{t("promptWorkbench:page.sections.noEditableSlots")}</span>
                           )}
                         </div>
                       </div>
                       <div className="rounded-md border p-3">
                         <div className="mb-2 flex items-center gap-2 text-sm font-semibold">
                           <LockKeyhole className="h-4 w-4 text-primary" />
-                          锁定字段
+                          {t("promptWorkbench:page.sections.lockedFields")}
                         </div>
                         <div className="flex flex-wrap gap-2">
                           {selectedPrompt.lockedFields.map((field) => (
@@ -453,7 +491,7 @@ export default function PromptWorkbenchPage() {
 
               <Card className="rounded-lg">
                 <CardHeader>
-                  <CardTitle className="text-lg tracking-normal">自定义补充要求</CardTitle>
+                  <CardTitle className="text-lg tracking-normal">{t("promptWorkbench:page.sections.addendum")}</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <PromptAddendumPanel prompt={selectedPrompt} />
@@ -462,14 +500,14 @@ export default function PromptWorkbenchPage() {
 
               <details className="rounded-lg border bg-card">
                 <summary className="cursor-pointer px-6 py-4 text-lg font-semibold tracking-normal">
-                  调试查看
+                  {t("promptWorkbench:page.debug")}
                 </summary>
                 <div className="space-y-6 border-t p-6">
                   <div className="flex flex-col gap-3 lg:flex-row lg:items-start lg:justify-between">
                     <div>
-                      <h2 className="text-lg font-semibold tracking-normal">资料检查</h2>
+                      <h2 className="text-lg font-semibold tracking-normal">{t("promptWorkbench:page.materials.title")}</h2>
                       <p className="mt-1 text-sm text-muted-foreground">
-                        按当前提示词需要的资料组读取小说资料，确认资料是否齐全。
+                        {t("promptWorkbench:page.materials.description")}
                       </p>
                     </div>
                     <Button
@@ -477,7 +515,7 @@ export default function PromptWorkbenchPage() {
                       onClick={() => materialsMutation.mutate()}
                       disabled={materialsMutation.isPending || !materialNovelId.trim()}
                     >
-                      {materialsMutation.isPending ? "读取中..." : "读取资料"}
+                      {materialsMutation.isPending ? t("promptWorkbench:page.materials.fetching") : t("promptWorkbench:page.materials.fetch")}
                     </Button>
                   </div>
                   <div className="space-y-4">
@@ -500,16 +538,16 @@ export default function PromptWorkbenchPage() {
                     <Input
                       value={materialMaxTokens}
                       onChange={(event) => setMaterialMaxTokens(event.target.value)}
-                      placeholder="资料预算"
+                      placeholder={t("promptWorkbench:page.materials.budgetPlaceholder")}
                     />
                   </div>
 
-                  <DetailSection title="需要的资料组">
+                  <DetailSection title={t("promptWorkbench:page.materials.requiredGroups")}>
                     <div className="flex flex-wrap gap-2">
                       {materialGroups.length > 0 ? materialGroups.map((group) => (
                         <Badge key={group} variant="outline">{group}</Badge>
                       )) : (
-                        <span className="text-sm text-muted-foreground">当前提示词未声明资料需求，将读取默认核心资料组。</span>
+                        <span className="text-sm text-muted-foreground">{t("promptWorkbench:page.materials.noGroups")}</span>
                       )}
                     </div>
                   </DetailSection>
@@ -518,31 +556,31 @@ export default function PromptWorkbenchPage() {
                     <div className="space-y-4">
                       <div className="grid gap-3 md:grid-cols-4">
                         <div className="rounded-md border p-3">
-                          <div className="text-xs text-muted-foreground">已拿到</div>
+                          <div className="text-xs text-muted-foreground">{t("promptWorkbench:page.materials.fetched")}</div>
                           <div className="mt-1 text-sm font-semibold">{materialsMutation.data.data.blocks.length}</div>
                         </div>
                         <div className="rounded-md border p-3">
-                          <div className="text-xs text-muted-foreground">缺资料组</div>
+                          <div className="text-xs text-muted-foreground">{t("promptWorkbench:page.materials.missingGroups")}</div>
                           <div className="mt-1 text-sm font-semibold">{materialsMutation.data.data.missingGroups.length}</div>
                         </div>
                         <div className="rounded-md border p-3">
-                          <div className="text-xs text-muted-foreground">缺输入</div>
+                          <div className="text-xs text-muted-foreground">{t("promptWorkbench:page.materials.missingInputs")}</div>
                           <div className="mt-1 text-sm font-semibold">{materialsMutation.data.data.missingInputs.length}</div>
                         </div>
                         <div className="rounded-md border p-3">
-                          <div className="text-xs text-muted-foreground">裁剪提醒</div>
+                          <div className="text-xs text-muted-foreground">{t("promptWorkbench:page.materials.warnings")}</div>
                           <div className="mt-1 text-sm font-semibold">{materialsMutation.data.data.warnings.length}</div>
                         </div>
                       </div>
 
                       {materialsMutation.data.data.missingInputs.length > 0 ? (
                         <div className="rounded-md border bg-amber-50 p-3 text-sm text-amber-900">
-                          需要补充输入：{materialsMutation.data.data.missingInputs.join("、")}
+                          {t("promptWorkbench:page.materials.missingInputsHint", { inputs: materialsMutation.data.data.missingInputs.join("、") })}
                         </div>
                       ) : null}
                       {materialsMutation.data.data.missingGroups.length > 0 ? (
                         <div className="rounded-md border bg-muted/40 p-3 text-sm text-muted-foreground">
-                          未拿到资料：{materialsMutation.data.data.missingGroups.join("、")}
+                          {t("promptWorkbench:page.materials.missingGroupsHint", { groups: materialsMutation.data.data.missingGroups.join("、") })}
                         </div>
                       ) : null}
                       {materialsMutation.data.data.warnings.length > 0 ? (
@@ -559,16 +597,16 @@ export default function PromptWorkbenchPage() {
                     </div>
                   ) : (
                     <div className="rounded-md border border-dashed p-4 text-sm text-muted-foreground">
-                      输入小说 ID 后读取资料，检查当前提示词开工前的资料是否齐全。
+                      {t("promptWorkbench:page.materials.empty")}
                     </div>
                   )}
 
                   <div className="border-t pt-6">
                     <div className="mb-4 flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
                       <div>
-                        <h2 className="text-lg font-semibold tracking-normal">预览诊断</h2>
+                        <h2 className="text-lg font-semibold tracking-normal">{t("promptWorkbench:page.preview.title")}</h2>
                         <p className="mt-1 text-sm text-muted-foreground">
-                          查看最终消息、上下文选择和诊断结果。
+                          {t("promptWorkbench:page.preview.description")}
                         </p>
                       </div>
                       <Button
@@ -577,7 +615,7 @@ export default function PromptWorkbenchPage() {
                         disabled={previewMutation.isPending}
                       >
                         <Eye className="mr-2 h-4 w-4" />
-                        {previewMutation.isPending ? "预览中..." : "生成预览"}
+                        {previewMutation.isPending ? t("promptWorkbench:page.preview.generating") : t("promptWorkbench:page.preview.generate")}
                       </Button>
                     </div>
                     <PreviewPanel preview={preview} />
@@ -587,7 +625,7 @@ export default function PromptWorkbenchPage() {
               </details>
             </>
           ) : (
-            <div className="rounded-md border p-6 text-sm text-muted-foreground">请选择一个提示词。</div>
+            <div className="rounded-md border p-6 text-sm text-muted-foreground">{t("promptWorkbench:page.noSelection")}</div>
           )}
         </main>
       </div>

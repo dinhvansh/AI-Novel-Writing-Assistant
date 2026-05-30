@@ -1,4 +1,5 @@
 import { useMutation, type QueryClient } from "@tanstack/react-query";
+import { useTranslation } from "react-i18next";
 import type { PipelineRepairMode, PipelineRunMode, VolumePlanDocument } from "@ai-novel/shared/types/novel";
 import type { LLMProvider } from "@ai-novel/shared/types/llm";
 import {
@@ -93,13 +94,14 @@ export function useNovelEditMutations({
   queryClient,
   invalidateNovelDetail,
 }: UseNovelEditMutationsArgs) {
+  const { t } = useTranslation("novel");
   const saveBasicMutation = useMutation({
     mutationFn: () => updateNovel(id, buildNovelUpdatePayload(basicForm)),
     onSuccess: async () => {
       await syncNovelWorkflowStageSilently({
         novelId: id,
         stage: "project_setup",
-        itemLabel: "项目设定已保存",
+        itemLabel: t("mutations.saveBasic.itemLabel"),
         status: "waiting_approval",
       });
       await invalidateNovelDetail();
@@ -115,9 +117,9 @@ export function useNovelEditMutations({
       await syncNovelWorkflowStageSilently({
         novelId: id,
         stage: "volume_strategy",
-        itemLabel: "卷战略 / 卷骨架已保存",
+        itemLabel: t("mutations.saveOutline.itemLabel"),
         checkpointType: "volume_strategy_ready",
-        checkpointSummary: "当前卷战略与卷骨架已保存到工作区。",
+        checkpointSummary: t("mutations.saveOutline.checkpointSummary"),
         status: "waiting_approval",
       });
       await invalidateNovelDetail();
@@ -130,11 +132,11 @@ export function useNovelEditMutations({
       syncToChapterExecution: true,
     }),
     onSuccess: async () => {
-      setStructuredMessage("节奏拆章已保存，章节执行区会直接使用同一批章节。");
+      setStructuredMessage(t("mutations.saveStructured.message"));
       await syncNovelWorkflowStageSilently({
         novelId: id,
         stage: "structured_outline",
-        itemLabel: "节奏 / 拆章已保存",
+        itemLabel: t("mutations.saveStructured.itemLabel"),
         status: "waiting_approval",
       });
       await invalidateNovelDetail();
@@ -186,20 +188,20 @@ export function useNovelEditMutations({
     onSuccess: async (response) => {
       const preview = response.data;
       setStructuredMessage(
-        `连接修复完成：新增 ${preview?.createCount ?? 0}，更新 ${preview?.updateCount ?? 0}，删除 ${preview?.deleteCount ?? 0}。`,
+        t("mutations.syncStructured.message", { createCount: preview?.createCount ?? 0, updateCount: preview?.updateCount ?? 0, deleteCount: preview?.deleteCount ?? 0 }),
       );
       await syncNovelWorkflowStageSilently({
         novelId: id,
         stage: "structured_outline",
-        itemLabel: "卷级拆章已连接到章节执行",
+        itemLabel: t("mutations.syncStructured.itemLabel"),
         checkpointType: "chapter_batch_ready",
-        checkpointSummary: "章节列表、任务单和执行入口已准备好，可继续进入章节执行。",
+        checkpointSummary: t("mutations.syncStructured.checkpointSummary"),
         status: "waiting_approval",
       });
       await invalidateNovelDetail();
     },
     onError: (error) => {
-      const message = error instanceof Error ? error.message : "章节同步失败。";
+      const message = error instanceof Error ? error.message : t("mutations.syncStructured.errorFallback");
       setStructuredMessage(message);
     },
   });
@@ -218,7 +220,7 @@ export function useNovelEditMutations({
       await syncNovelWorkflowStageSilently({
         novelId: id,
         stage: "chapter_execution",
-        itemLabel: "已创建新的章节执行项",
+        itemLabel: t("mutations.createChapter.itemLabel"),
         chapterId: response.data?.id,
         status: "waiting_approval",
       });
@@ -250,7 +252,7 @@ export function useNovelEditMutations({
       await syncNovelWorkflowStageSilently({
         novelId: id,
         stage: "quality_repair",
-        itemLabel: "章节流水线运行中",
+        itemLabel: t("mutations.runPipeline.itemLabel"),
         status: "running",
       });
       await queryClient.invalidateQueries({ queryKey: queryKeys.novels.pipelineJob(id, response.data?.id ?? "none") });
@@ -270,7 +272,7 @@ export function useNovelEditMutations({
       await syncNovelWorkflowStageSilently({
         novelId: id,
         stage: "quality_repair",
-        itemLabel: "章节审校已完成",
+        itemLabel: t("mutations.review.itemLabel"),
         status: "waiting_approval",
       });
       await queryClient.invalidateQueries({ queryKey: queryKeys.novels.qualityReport(id) });
@@ -290,7 +292,7 @@ export function useNovelEditMutations({
       await syncNovelWorkflowStageSilently({
         novelId: id,
         stage: "chapter_execution",
-        itemLabel: "章节钩子已生成",
+        itemLabel: t("mutations.hook.itemLabel"),
         chapterId: selectedChapterId || undefined,
         status: "waiting_approval",
       });

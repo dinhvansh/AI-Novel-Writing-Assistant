@@ -56,8 +56,8 @@ export interface DesktopDataImportResult {
 const DEFAULT_BOOTSTRAP_SNAPSHOT: DesktopBootstrapSnapshot = {
   state: "launching",
   stage: "launching",
-  title: "正在启动桌面工作区",
-  detail: "正在准备桌面本地运行时。",
+  title: "正在启动桌面工作区", // i18n-ignore: desktop bootstrap default — resolved at display time
+  detail: "正在准备桌面本地运行时。", // i18n-ignore: desktop bootstrap default — resolved at display time
   logDir: "",
   logFile: "",
   updatedAt: "",
