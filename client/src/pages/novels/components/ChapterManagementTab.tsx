@@ -1,4 +1,5 @@
 import { useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -105,6 +106,8 @@ export default function ChapterManagementTab(props: ChapterTabViewProps) {
   const [queueFilter, setQueueFilter] = useState<QueueFilterKey>("all");
   const [rightRailTab, setRightRailTab] = useState<"insights" | "reference" | "agent">("insights");
 
+  const { t } = useTranslation("novel");
+
   const openAuditIssues = useMemo(
     () => chapterAuditReports.flatMap((report) => report.issues.filter((issue) => issue.status === "open").map((issue) => ({
       ...issue,
@@ -124,11 +127,11 @@ export default function ChapterManagementTab(props: ChapterTabViewProps) {
 
   const queueFilters = useMemo(
     () => ([
-      { key: "all", label: "全部" },
-      { key: "setup", label: "待准备" },
-      { key: "draft", label: "待写作" },
-      { key: "review", label: "待修整" },
-      { key: "completed", label: "已完成" },
+      { key: "all", label: t("chapterManagement.queueFilters.all") },
+      { key: "setup", label: t("chapterManagement.queueFilters.setup") },
+      { key: "draft", label: t("chapterManagement.queueFilters.draft") },
+      { key: "review", label: t("chapterManagement.queueFilters.review") },
+      { key: "completed", label: t("chapterManagement.queueFilters.completed") },
     ] as const).map((item) => ({
       ...item,
       count: chapters.filter((chapter) => chapterMatchesQueueFilter(chapter, item.key)).length,
@@ -139,21 +142,21 @@ export default function ChapterManagementTab(props: ChapterTabViewProps) {
   return (
     <div className="space-y-4">
       <DirectorTakeoverEntryPanel
-        title="从章节执行接管"
-        description="AI 会先判断当前是否有活动批次、检查点或可执行章节范围，再决定恢复当前批次还是按你的选择新开批次。"
+        title={t("chapterManagement.directorTakeoverTitle")}
+        description={t("chapterManagement.directorTakeoverDescription")}
         entry={directorTakeoverEntry}
       />
       <Card className="overflow-hidden">
       <CardHeader className="gap-3 border-b bg-gradient-to-b from-muted/25 via-background to-background">
         <div className="flex flex-col gap-3 xl:flex-row xl:items-start xl:justify-between">
           <div className="space-y-1">
-            <CardTitle>章节执行</CardTitle>
+            <CardTitle>{t("chapterManagement.title")}</CardTitle>
             <div className="text-sm leading-6 text-muted-foreground">
-              把这里收成真正的主工作台：左侧只管切章，中间完整承接正文，右侧专心放 AI 动作和策略。
+              {t("chapterManagement.description")}
             </div>
           </div>
           <Button onClick={onCreateChapter} disabled={isCreatingChapter}>
-            {isCreatingChapter ? "创建中..." : "新建章节"}
+            {isCreatingChapter ? t("chapterManagement.creatingChapterButton") : t("chapterManagement.createChapterButton")}
           </Button>
         </div>
       </CardHeader>
@@ -169,8 +172,8 @@ export default function ChapterManagementTab(props: ChapterTabViewProps) {
 
         {!hasCharacters ? (
           <div className="flex flex-col gap-3 rounded-2xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-900 md:flex-row md:items-center md:justify-between">
-            <span>请先添加至少 1 个角色，再生成章节内容。这样 AI 更容易识别出场者、关系变化和情节承接。</span>
-            <Button size="sm" variant="outline" onClick={onGoToCharacterTab}>去角色管理</Button>
+            <span>{t("chapterManagement.noCharactersWarning")}</span>
+            <Button size="sm" variant="outline" onClick={onGoToCharacterTab}>{t("chapterManagement.goToCharactersButton")}</Button>
           </div>
         ) : null}
 
@@ -224,9 +227,9 @@ export default function ChapterManagementTab(props: ChapterTabViewProps) {
               className="flex h-full min-h-0 flex-col"
             >
               <TabsList className="grid h-auto w-full shrink-0 grid-cols-3 rounded-xl bg-muted/50 p-1.5">
-                <TabsTrigger value="insights" className="rounded-lg px-3 py-2 text-sm">动态栏</TabsTrigger>
-                <TabsTrigger value="reference" className="rounded-lg px-3 py-2 text-sm">资料诊断</TabsTrigger>
-                <TabsTrigger value="agent" className="rounded-lg px-3 py-2 text-sm">AI 执行台</TabsTrigger>
+                <TabsTrigger value="insights" className="rounded-lg px-3 py-2 text-sm">{t("chapterManagement.rightRailTabs.insights")}</TabsTrigger>
+                <TabsTrigger value="reference" className="rounded-lg px-3 py-2 text-sm">{t("chapterManagement.rightRailTabs.reference")}</TabsTrigger>
+                <TabsTrigger value="agent" className="rounded-lg px-3 py-2 text-sm">{t("chapterManagement.rightRailTabs.agent")}</TabsTrigger>
               </TabsList>
               <TabsContent value="insights" className="mt-3 min-h-0 flex-1">
                 <ChapterExecutionInsightsSidebar

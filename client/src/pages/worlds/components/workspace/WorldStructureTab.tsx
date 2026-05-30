@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
 import type {
   WorldBindingSupport,
   WorldFaction,
@@ -15,13 +16,6 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 
-const SECTION_OPTIONS: Array<{ value: WorldStructureSectionKey; label: string }> = [
-  { value: "profile", label: "世界概要" },
-  { value: "rules", label: "规则中心" },
-  { value: "factions", label: "阵营与势力" },
-  { value: "locations", label: "地点与地形" },
-  { value: "relations", label: "关系网络" },
-];
 
 function updateArrayItem<T>(items: T[], index: number, nextItem: T): T[] {
   return items.map((item, itemIndex) => (itemIndex === index ? nextItem : item));
@@ -47,7 +41,15 @@ export default function WorldStructureTab(props: {
     bindingSupport: WorldBindingSupport,
   ) => Promise<{ structure: WorldStructuredData; bindingSupport: WorldBindingSupport } | undefined>;
 }) {
+  const { t } = useTranslation();
   const { initialPayload, savePending, backfillPending, generatePending, onSave, onBackfill, onGenerate } = props;
+  const SECTION_OPTIONS = [
+    { value: "profile" as WorldStructureSectionKey, label: t("novel:world.structure.sections.profile") },
+    { value: "rules" as WorldStructureSectionKey, label: t("novel:world.structure.sections.rules") },
+    { value: "factions" as WorldStructureSectionKey, label: t("novel:world.structure.sections.factions") },
+    { value: "locations" as WorldStructureSectionKey, label: t("novel:world.structure.sections.locations") },
+    { value: "relations" as WorldStructureSectionKey, label: t("novel:world.structure.sections.relations") },
+  ];
   const [activeSection, setActiveSection] = useState<WorldStructureSectionKey>("profile");
   const [draftStructure, setDraftStructure] = useState<WorldStructuredData | null>(initialPayload?.structure ?? null);
   const [draftBindingSupport, setDraftBindingSupport] = useState<WorldBindingSupport | null>(
@@ -80,9 +82,9 @@ export default function WorldStructureTab(props: {
     return (
       <Card>
         <CardHeader>
-          <CardTitle>结构化设定</CardTitle>
+          <CardTitle>{t("novel:world.structure.title")}</CardTitle>
         </CardHeader>
-        <CardContent className="text-sm text-muted-foreground">正在加载结构化世界数据...</CardContent>
+        <CardContent className="text-sm text-muted-foreground">{t("novel:world.structure.loading")}</CardContent>
       </Card>
     );
   }
@@ -90,7 +92,7 @@ export default function WorldStructureTab(props: {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>结构化设定</CardTitle>
+        <CardTitle>{t("novel:world.structure.title")}</CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="rounded-md border p-3 space-y-3">
@@ -118,7 +120,7 @@ export default function WorldStructureTab(props: {
               }}
               disabled={backfillPending}
             >
-              {backfillPending ? "提取中..." : hasStructuredData ? "重新从现有设定提取" : "从现有设定提取结构"}
+              {backfillPending ? t("novel:world.structure.extracting") : hasStructuredData ? t("novel:world.structure.reExtract") : t("novel:world.structure.extract")}
             </Button>
             <Button
               variant="outline"
@@ -131,16 +133,16 @@ export default function WorldStructureTab(props: {
               }}
               disabled={generatePending}
             >
-              {generatePending ? "补全中..." : "AI 补全当前区块"}
+              {generatePending ? t("novel:world.structure.completing") : t("novel:world.structure.aiComplete")}
             </Button>
             <Button onClick={() => void onSave(draftStructure, draftBindingSupport)} disabled={savePending}>
-              {savePending ? "保存中..." : "保存结构"}
+              {savePending ? t("novel:world.structure.saving") : t("novel:world.structure.save")}
             </Button>
           </div>
         </div>
 
         <div className="rounded-md border p-3 space-y-3">
-          <div className="font-medium">世界概要</div>
+          <div className="font-medium">{t("novel:world.structure.sections.profile")}</div>
           <Input
             value={draftStructure.profile.identity}
             onChange={(event) =>
@@ -150,7 +152,7 @@ export default function WorldStructureTab(props: {
                   : prev,
               )
             }
-            placeholder="世界身份 / 类型气质"
+            placeholder={t("novel:world.structure.profile.identityPlaceholder")}
           />
           <Input
             value={draftStructure.profile.tone}
@@ -161,7 +163,7 @@ export default function WorldStructureTab(props: {
                   : prev,
               )
             }
-            placeholder="整体调性"
+            placeholder={t("novel:world.structure.profile.tonePlaceholder")}
           />
           <textarea
             className="min-h-[100px] w-full rounded-md border bg-background p-2 text-sm"
@@ -173,7 +175,7 @@ export default function WorldStructureTab(props: {
                   : prev,
               )
             }
-            placeholder="世界摘要"
+            placeholder={t("novel:world.structure.profile.summaryPlaceholder")}
           />
           <textarea
             className="min-h-[80px] w-full rounded-md border bg-background p-2 text-sm"
@@ -185,7 +187,7 @@ export default function WorldStructureTab(props: {
                   : prev,
               )
             }
-            placeholder="核心冲突"
+            placeholder={t("novel:world.structure.profile.coreConflictPlaceholder")}
           />
           <Input
             value={draftStructure.profile.themes.join("、")}
@@ -202,13 +204,13 @@ export default function WorldStructureTab(props: {
                   : prev,
               )
             }
-            placeholder="主题关键词，使用顿号或逗号分隔"
+            placeholder={t("novel:world.structure.profile.themesPlaceholder")}
           />
         </div>
 
         <div className="rounded-md border p-3 space-y-3">
           <div className="flex items-center justify-between">
-            <div className="font-medium">规则中心</div>
+            <div className="font-medium">{t("novel:world.structure.sections.rules")}</div>
             <Button
               size="sm"
               variant="outline"
@@ -235,9 +237,7 @@ export default function WorldStructureTab(props: {
                     : prev,
                 )
               }
-            >
-              新增规则
-            </Button>
+            >{t("novel:world.structure.rules.addRule")}</Button>
           </div>
           <textarea
             className="min-h-[80px] w-full rounded-md border bg-background p-2 text-sm"
@@ -249,7 +249,7 @@ export default function WorldStructureTab(props: {
                   : prev,
               )
             }
-            placeholder="世界级规则总结"
+            placeholder={t("novel:world.structure.rules.summaryPlaceholder")}
           />
           {draftStructure.rules.axioms.map((rule, index) => (
             <div key={rule.id || index} className="rounded-md border p-3 space-y-2">
@@ -272,7 +272,7 @@ export default function WorldStructureTab(props: {
                         : prev,
                     )
                   }
-                  placeholder="规则名称"
+                  placeholder={t("novel:world.structure.rules.namePlaceholder")}
                 />
                 <Input
                   value={rule.cost}
@@ -292,7 +292,7 @@ export default function WorldStructureTab(props: {
                         : prev,
                     )
                   }
-                  placeholder="代价"
+                  placeholder={t("novel:world.structure.rules.costPlaceholder")}
                 />
               </div>
               <textarea
@@ -314,7 +314,7 @@ export default function WorldStructureTab(props: {
                       : prev,
                   )
                 }
-                placeholder="规则说明"
+                placeholder={t("novel:world.structure.rules.descPlaceholder")}
               />
               <div className="grid gap-2 md:grid-cols-2">
                 <Input
@@ -335,7 +335,7 @@ export default function WorldStructureTab(props: {
                         : prev,
                     )
                   }
-                  placeholder="边界条件"
+                  placeholder={t("novel:world.structure.rules.boundaryPlaceholder")}
                 />
                 <Input
                   value={rule.enforcement}
@@ -355,7 +355,7 @@ export default function WorldStructureTab(props: {
                         : prev,
                     )
                   }
-                  placeholder="约束/执行后果"
+                  placeholder={t("novel:world.structure.rules.enforcementPlaceholder")}
                 />
               </div>
             </div>
@@ -364,7 +364,7 @@ export default function WorldStructureTab(props: {
 
         <div className="rounded-md border p-3 space-y-3">
           <div className="flex items-center justify-between">
-            <div className="font-medium">阵营与势力</div>
+            <div className="font-medium">{t("novel:world.structure.sections.factions")}</div>
             <div className="flex gap-2">
               <Button
                 size="sm"
@@ -390,9 +390,7 @@ export default function WorldStructureTab(props: {
                       : prev,
                   )
                 }
-              >
-                新增阵营
-              </Button>
+              >{t("novel:world.structure.factions.addFaction")}</Button>
               <Button
                 size="sm"
                 variant="outline"
@@ -420,26 +418,24 @@ export default function WorldStructureTab(props: {
                       : prev,
                   )
                 }
-              >
-                新增势力
-              </Button>
+              >{t("novel:world.structure.factions.addForce")}</Button>
             </div>
           </div>
           <div className="rounded-md border border-dashed p-3 text-xs text-muted-foreground space-y-1">
-            <div>阵营 = 抽象立场、路线或世界站队；势力 = 具体组织、圈层、网络或机构。</div>
-            <div>像“社会压力机制”“行业运作规则”“人际网络法则”这类世界级默认规则，应优先写到“规则中心”，不要塞进阵营卡。</div>
+            <div>{t("novel:world.structure.factions.hint1")}</div>
+            <div>{t("novel:world.structure.factions.hint2")}</div>
             <div>
-              当前阵营 ID：{
+              {t("novel:world.structure.factions.currentFactionIds")}: {
                 draftStructure.factions.length > 0
-                  ? draftStructure.factions.map((item) => `${item.id}（${item.name || "未命名"}）`).join("、")
-                  : "暂无"
+                  ? draftStructure.factions.map((item) => `${item.id}（${item.name || t("novel:world.structure.unnamed")}）`).join("、")
+                  : t("novel:world.structure.none")
               }
             </div>
             <div>
-              当前势力 ID：{
+              {t("novel:world.structure.factions.currentForceIds")}: {
                 draftStructure.forces.length > 0
-                  ? draftStructure.forces.map((item) => `${item.id}（${item.name || "未命名"}）`).join("、")
-                  : "暂无"
+                  ? draftStructure.forces.map((item) => `${item.id}（${item.name || t("novel:world.structure.unnamed")}）`).join("、")
+                  : t("novel:world.structure.none")
               }
             </div>
           </div>
@@ -447,7 +443,7 @@ export default function WorldStructureTab(props: {
             {draftStructure.factions.map((faction, index) => (
               <div key={faction.id || index} className="rounded-md border p-3 space-y-2">
                 <div className="text-xs text-muted-foreground">
-                  阵营卡描述的是抽象站队，不是具体公司、部门或人脉网络。
+                  {t("novel:world.structure.factions.factionCardHint")}
                 </div>
                 <Input
                   value={faction.name}
@@ -464,7 +460,7 @@ export default function WorldStructureTab(props: {
                         : prev,
                     )
                   }
-                  placeholder="阵营名称，例如：体制内求稳派 / 市场逐利派 / 关系网络实用派"
+                  placeholder={t("novel:world.structure.factions.factionNamePlaceholder")}
                 />
                 <Input
                   value={faction.position}
@@ -481,7 +477,7 @@ export default function WorldStructureTab(props: {
                         : prev,
                     )
                   }
-                  placeholder="立场 / 世界站队"
+                  placeholder={t("novel:world.structure.factions.positionPlaceholder")}
                 />
                 <textarea
                   className="min-h-[80px] w-full rounded-md border bg-background p-2 text-sm"
@@ -499,7 +495,7 @@ export default function WorldStructureTab(props: {
                         : prev,
                     )
                   }
-                  placeholder="阵营理念 / 信条 / 主张"
+                  placeholder={t("novel:world.structure.factions.doctrinePlaceholder")}
                 />
                 <div className="grid gap-2 md:grid-cols-2">
                   <Input
@@ -517,7 +513,7 @@ export default function WorldStructureTab(props: {
                           : prev,
                       )
                     }
-                    placeholder="长期目标，使用顿号或逗号分隔"
+                    placeholder={t("novel:world.structure.factions.goalsPlaceholder")}
                   />
                   <Input
                     value={faction.methods.join("、")}
@@ -534,7 +530,7 @@ export default function WorldStructureTab(props: {
                           : prev,
                       )
                     }
-                    placeholder="常用手段，使用顿号或逗号分隔"
+                    placeholder={t("novel:world.structure.factions.methodsPlaceholder")}
                   />
                 </div>
                 <Input
@@ -552,11 +548,11 @@ export default function WorldStructureTab(props: {
                         : prev,
                     )
                   }
-                  placeholder="代表势力 ID，使用顿号或逗号分隔"
+                  placeholder={t("novel:world.structure.factions.representativeForceIdsPlaceholder")}
                 />
                 {faction.representativeForceIds.length > 0 ? (
                   <div className="text-xs text-muted-foreground">
-                    代表势力：{faction.representativeForceIds.map((id) => forceNameById.get(id) || id).join("、")}
+                    {t("novel:world.structure.factions.representativeForces")}: {faction.representativeForceIds.map((id) => forceNameById.get(id) || id).join("、")}
                   </div>
                 ) : null}
               </div>
@@ -564,7 +560,7 @@ export default function WorldStructureTab(props: {
             {draftStructure.forces.map((force, index) => (
               <div key={force.id || index} className="rounded-md border p-3 space-y-2">
                 <div className="text-xs text-muted-foreground">
-                  势力卡描述的是能施压、能占据地点、能参与关系网络的具体组织或圈层。
+                  {t("novel:world.structure.factions.forceCardHint")}
                 </div>
                 <div className="grid gap-2 md:grid-cols-3">
                   <Input
@@ -582,7 +578,7 @@ export default function WorldStructureTab(props: {
                           : prev,
                       )
                     }
-                    placeholder="势力名称，例如：广告公司管理层 / 房屋中介链 / 地方商业圈人脉网"
+                    placeholder={t("novel:world.structure.factions.forceNamePlaceholder")}
                   />
                   <Input
                     value={force.type}
@@ -599,7 +595,7 @@ export default function WorldStructureTab(props: {
                           : prev,
                       )
                     }
-                    placeholder="势力类型，例如：公司 / 部门 / 中介网络 / 商业圈层"
+                    placeholder={t("novel:world.structure.factions.forceTypePlaceholder")}
                   />
                   <Input
                     value={force.factionId ?? ""}
@@ -616,12 +612,12 @@ export default function WorldStructureTab(props: {
                           : prev,
                       )
                     }
-                    placeholder="所属阵营 ID（可空）"
+                    placeholder={t("novel:world.structure.factions.factionIdPlaceholder")}
                   />
                 </div>
                 {force.factionId ? (
                   <div className="text-xs text-muted-foreground">
-                    所属阵营：{factionNameById.get(force.factionId) || force.factionId}
+                    {t("novel:world.structure.factions.belongsToFaction")}: {factionNameById.get(force.factionId) || force.factionId}
                   </div>
                 ) : null}
                 <textarea
@@ -640,7 +636,7 @@ export default function WorldStructureTab(props: {
                         : prev,
                     )
                   }
-                  placeholder="势力概述 / 对外身份 / 在世界中的作用"
+                  placeholder={t("novel:world.structure.factions.forceSummaryPlaceholder")}
                 />
                 <div className="grid gap-2 md:grid-cols-2">
                   <Input
@@ -658,7 +654,7 @@ export default function WorldStructureTab(props: {
                           : prev,
                       )
                     }
-                    placeholder="权力基础 / 资源来源 / 控制抓手"
+                    placeholder={t("novel:world.structure.factions.baseOfPowerPlaceholder")}
                   />
                   <Input
                     value={force.currentObjective}
@@ -675,7 +671,7 @@ export default function WorldStructureTab(props: {
                           : prev,
                       )
                     }
-                    placeholder="当前目标 / 眼下想推进什么"
+                    placeholder={t("novel:world.structure.factions.currentObjectivePlaceholder")}
                   />
                 </div>
                 <div className="grid gap-2 md:grid-cols-2">
@@ -694,7 +690,7 @@ export default function WorldStructureTab(props: {
                           : prev,
                       )
                     }
-                    placeholder="领导者 / 关键人物（可空）"
+                    placeholder={t("novel:world.structure.factions.leaderPlaceholder")}
                   />
                   <Input
                     value={force.pressure}
@@ -711,7 +707,7 @@ export default function WorldStructureTab(props: {
                           : prev,
                       )
                     }
-                    placeholder="施压方式 / 高压来源 / 它如何逼迫角色"
+                    placeholder={t("novel:world.structure.factions.pressurePlaceholder")}
                   />
                 </div>
                 <div className="grid gap-2 md:grid-cols-1">
@@ -730,7 +726,7 @@ export default function WorldStructureTab(props: {
                           : prev,
                       )
                     }
-                    placeholder="叙事角色，例如：压迫源 / 诱导者 / 守门人 / 缓冲带"
+                    placeholder={t("novel:world.structure.factions.narrativeRolePlaceholder")}
                   />
                 </div>
               </div>
@@ -740,7 +736,7 @@ export default function WorldStructureTab(props: {
 
         <div className="rounded-md border p-3 space-y-3">
           <div className="flex items-center justify-between">
-            <div className="font-medium">地点与地形</div>
+            <div className="font-medium">{t("novel:world.structure.sections.locations")}</div>
             <Button
               size="sm"
               variant="outline"
@@ -767,9 +763,7 @@ export default function WorldStructureTab(props: {
                     : prev,
                 )
               }
-            >
-              新增地点
-            </Button>
+            >{t("novel:world.structure.locations.addLocation")}</Button>
           </div>
           {draftStructure.locations.map((location, index) => (
             <div key={location.id || index} className="rounded-md border p-3 space-y-2">
@@ -789,7 +783,7 @@ export default function WorldStructureTab(props: {
                         : prev,
                     )
                   }
-                  placeholder="地点名称"
+                  placeholder={t("novel:world.structure.locations.namePlaceholder")}
                 />
                 <Input
                   value={location.terrain}
@@ -806,7 +800,7 @@ export default function WorldStructureTab(props: {
                         : prev,
                     )
                   }
-                  placeholder="地形 / 地貌"
+                  placeholder={t("novel:world.structure.locations.terrainPlaceholder")}
                 />
               </div>
               <textarea
@@ -825,7 +819,7 @@ export default function WorldStructureTab(props: {
                       : prev,
                   )
                 }
-                placeholder="地点概述"
+                placeholder={t("novel:world.structure.locations.summaryPlaceholder")}
               />
               <div className="grid gap-2 md:grid-cols-2">
                 <Input
@@ -843,7 +837,7 @@ export default function WorldStructureTab(props: {
                         : prev,
                     )
                   }
-                  placeholder="叙事功能"
+                  placeholder={t("novel:world.structure.locations.narrativeFunctionPlaceholder")}
                 />
                 <Input
                   value={location.risk}
@@ -860,7 +854,7 @@ export default function WorldStructureTab(props: {
                         : prev,
                     )
                   }
-                  placeholder="风险"
+                  placeholder={t("novel:world.structure.locations.riskPlaceholder")}
                 />
               </div>
               <div className="grid gap-2 md:grid-cols-2">
@@ -879,7 +873,7 @@ export default function WorldStructureTab(props: {
                         : prev,
                     )
                   }
-                  placeholder="进入限制"
+                  placeholder={t("novel:world.structure.locations.entryConstraintPlaceholder")}
                 />
                 <Input
                   value={location.exitCost}
@@ -896,7 +890,7 @@ export default function WorldStructureTab(props: {
                         : prev,
                     )
                   }
-                  placeholder="离开代价"
+                  placeholder={t("novel:world.structure.locations.exitCostPlaceholder")}
                 />
               </div>
             </div>
@@ -905,7 +899,7 @@ export default function WorldStructureTab(props: {
 
         <div className="rounded-md border p-3 space-y-3">
           <div className="flex items-center justify-between">
-            <div className="font-medium">关系网络</div>
+            <div className="font-medium">{t("novel:world.structure.sections.relations")}</div>
             <div className="flex gap-2">
               <Button
                 size="sm"
@@ -933,9 +927,7 @@ export default function WorldStructureTab(props: {
                       : prev,
                   )
                 }
-              >
-                新增势力关系
-              </Button>
+              >{t("novel:world.structure.relations.addForceRelation")}</Button>
               <Button
                 size="sm"
                 variant="outline"
@@ -961,16 +953,14 @@ export default function WorldStructureTab(props: {
                       : prev,
                   )
                 }
-              >
-                新增地点控制
-              </Button>
+              >{t("novel:world.structure.relations.addLocationControl")}</Button>
             </div>
           </div>
           {draftStructure.relations.forceRelations.map((relation, index) => (
             <div key={relation.id || index} className="rounded-md border p-3 space-y-2">
               <div className="text-xs text-muted-foreground">
-                {forceNameById.get(relation.sourceForceId) || relation.sourceForceId || "源势力"} {"->"}{" "}
-                {forceNameById.get(relation.targetForceId) || relation.targetForceId || "目标势力"}
+                {forceNameById.get(relation.sourceForceId) || relation.sourceForceId || t("novel:world.structure.relations.sourceForce")} {"->"}{" "}
+                {forceNameById.get(relation.targetForceId) || relation.targetForceId || t("novel:world.structure.relations.targetForce")}
               </div>
               <div className="grid gap-2 md:grid-cols-2">
                 <Input
@@ -991,7 +981,7 @@ export default function WorldStructureTab(props: {
                         : prev,
                     )
                   }
-                  placeholder="源势力 ID"
+                  placeholder={t("novel:world.structure.relations.sourceForceIdPlaceholder")}
                 />
                 <Input
                   value={relation.targetForceId}
@@ -1011,7 +1001,7 @@ export default function WorldStructureTab(props: {
                         : prev,
                     )
                   }
-                  placeholder="目标势力 ID"
+                  placeholder={t("novel:world.structure.relations.targetForceIdPlaceholder")}
                 />
               </div>
               <div className="grid gap-2 md:grid-cols-2">
@@ -1033,7 +1023,7 @@ export default function WorldStructureTab(props: {
                         : prev,
                     )
                   }
-                  placeholder="关系类型"
+                  placeholder={t("novel:world.structure.relations.relationTypePlaceholder")}
                 />
                 <Input
                   value={relation.tension}
@@ -1053,7 +1043,7 @@ export default function WorldStructureTab(props: {
                         : prev,
                     )
                   }
-                  placeholder="张力 / 压力"
+                  placeholder={t("novel:world.structure.relations.tensionPlaceholder")}
                 />
               </div>
               <textarea
@@ -1075,15 +1065,15 @@ export default function WorldStructureTab(props: {
                       : prev,
                   )
                 }
-                placeholder="关系说明"
+                placeholder={t("novel:world.structure.relations.descPlaceholder")}
               />
             </div>
           ))}
           {draftStructure.relations.locationControls.map((relation, index) => (
             <div key={relation.id || index} className="rounded-md border p-3 space-y-2">
               <div className="text-xs text-muted-foreground">
-                {(forceNameById.get(relation.forceId) || relation.forceId || "势力")} 控制{" "}
-                {(locationNameById.get(relation.locationId) || relation.locationId || "地点")}
+                {(forceNameById.get(relation.forceId) || relation.forceId || t("novel:world.structure.factions.force"))} {t("novel:world.structure.relations.controls")}{" "}
+                {(locationNameById.get(relation.locationId) || relation.locationId || t("novel:world.structure.locations.location"))}
               </div>
               <div className="grid gap-2 md:grid-cols-2">
                 <Input
@@ -1105,7 +1095,7 @@ export default function WorldStructureTab(props: {
                         : prev,
                     )
                   }
-                  placeholder="势力 ID"
+                  placeholder={t("novel:world.structure.relations.forceIdPlaceholder")}
                 />
                 <Input
                   value={relation.locationId}
@@ -1126,7 +1116,7 @@ export default function WorldStructureTab(props: {
                         : prev,
                     )
                   }
-                  placeholder="地点 ID"
+                  placeholder={t("novel:world.structure.relations.locationIdPlaceholder")}
                 />
               </div>
               <Input
@@ -1148,7 +1138,7 @@ export default function WorldStructureTab(props: {
                       : prev,
                   )
                 }
-                placeholder="控制关系"
+                placeholder={t("novel:world.structure.relations.controlRelationPlaceholder")}
               />
               <textarea
                 className="min-h-[70px] w-full rounded-md border bg-background p-2 text-sm"
@@ -1170,38 +1160,38 @@ export default function WorldStructureTab(props: {
                       : prev,
                   )
                 }
-                placeholder="说明"
+                placeholder={t("novel:world.structure.relations.notesPlaceholder")}
               />
             </div>
           ))}
         </div>
 
         <div className="rounded-md border p-3 space-y-2">
-          <div className="font-medium">绑定建议</div>
-          <div className="text-xs text-muted-foreground">当前阶段只读展示，不接入小说绑定。</div>
+          <div className="font-medium">{t("novel:world.structure.binding.title")}</div>
+          <div className="text-xs text-muted-foreground">{t("novel:world.structure.binding.readOnlyHint")}</div>
           <div className="grid gap-3 md:grid-cols-2">
             <div className="rounded-md border p-3 text-sm">
-              <div className="font-medium">推荐进入点</div>
+              <div className="font-medium">{t("novel:world.structure.binding.entryPoints")}</div>
               <div className="mt-2 whitespace-pre-wrap">
-                {draftBindingSupport.recommendedEntryPoints.join("\n") || "暂无"}
+                {draftBindingSupport.recommendedEntryPoints.join("\n") || t("novel:world.structure.none")}
               </div>
             </div>
             <div className="rounded-md border p-3 text-sm">
-              <div className="font-medium">高压势力</div>
+              <div className="font-medium">{t("novel:world.structure.binding.highPressureForces")}</div>
               <div className="mt-2 whitespace-pre-wrap">
-                {draftBindingSupport.highPressureForces.join("\n") || "暂无"}
+                {draftBindingSupport.highPressureForces.join("\n") || t("novel:world.structure.none")}
               </div>
             </div>
             <div className="rounded-md border p-3 text-sm">
-              <div className="font-medium">可兼容冲突</div>
+              <div className="font-medium">{t("novel:world.structure.binding.compatibleConflicts")}</div>
               <div className="mt-2 whitespace-pre-wrap">
-                {draftBindingSupport.compatibleConflicts.join("\n") || "暂无"}
+                {draftBindingSupport.compatibleConflicts.join("\n") || t("novel:world.structure.none")}
               </div>
             </div>
             <div className="rounded-md border p-3 text-sm">
-              <div className="font-medium">禁止组合</div>
+              <div className="font-medium">{t("novel:world.structure.binding.forbiddenCombinations")}</div>
               <div className="mt-2 whitespace-pre-wrap">
-                {draftBindingSupport.forbiddenCombinations.join("\n") || "暂无"}
+                {draftBindingSupport.forbiddenCombinations.join("\n") || t("novel:world.structure.none")}
               </div>
             </div>
           </div>

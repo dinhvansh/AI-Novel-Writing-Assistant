@@ -8,6 +8,7 @@ import {
   Dialog,
 } from "@/components/ui/dialog";
 import { AUTO_DIRECTOR_MOBILE_CLASSES } from "@/mobile/autoDirector";
+import { useTranslation } from "react-i18next";
 import NovelAutoDirectorCandidateBatches from "./NovelAutoDirectorCandidateBatches";
 
 interface NovelAutoDirectorCandidateDialogProps {
@@ -55,12 +56,13 @@ export default function NovelAutoDirectorCandidateDialog({
   onConfirmCandidate,
   onGenerateNext,
 }: NovelAutoDirectorCandidateDialogProps) {
+  const { t } = useTranslation("autoDirector");
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <AppDialogContent
         className={`${AUTO_DIRECTOR_MOBILE_CLASSES.dialogContent} lg:max-w-6xl`}
-        title="确认书级方案"
-        description="比较 AI 给出的整本书方向。你可以先微调标题或方案，再选用一套创建项目。"
+        title={t("autoDirector:candidateDialog.title")}
+        description={t("autoDirector:candidateDialog.description")}
         bodyClassName={AUTO_DIRECTOR_MOBILE_CLASSES.dialogBody}
       >
         <NovelAutoDirectorCandidateBatches

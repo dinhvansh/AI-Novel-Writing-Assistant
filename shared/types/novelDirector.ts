@@ -54,6 +54,44 @@ export const DIRECTOR_CORRECTION_PRESETS = [
 
 export type DirectorCorrectionPreset = typeof DIRECTOR_CORRECTION_PRESETS[number]["value"];
 
+// i18n-ignore: key constants for useDirectorCorrectionPresets hook
+export const DIRECTOR_CORRECTION_PRESET_KEYS = {
+  more_hooky: {
+    label: "correctionPresets.more_hooky.label",
+    description: "correctionPresets.more_hooky.description",
+    promptHint: "correctionPresets.more_hooky.promptHint",
+  },
+  stronger_conflict: {
+    label: "correctionPresets.stronger_conflict.label",
+    description: "correctionPresets.stronger_conflict.description",
+    promptHint: "correctionPresets.stronger_conflict.promptHint",
+  },
+  sharper_protagonist: {
+    label: "correctionPresets.sharper_protagonist.label",
+    description: "correctionPresets.sharper_protagonist.description",
+    promptHint: "correctionPresets.sharper_protagonist.promptHint",
+  },
+  more_grounded: {
+    label: "correctionPresets.more_grounded.label",
+    description: "correctionPresets.more_grounded.description",
+    promptHint: "correctionPresets.more_grounded.promptHint",
+  },
+  lighter_ending: {
+    label: "correctionPresets.lighter_ending.label",
+    description: "correctionPresets.lighter_ending.description",
+    promptHint: "correctionPresets.lighter_ending.promptHint",
+  },
+} as const;
+
+export function useDirectorCorrectionPresets(t: (key: string) => string) {
+  return DIRECTOR_CORRECTION_PRESETS.map((preset) => ({
+    value: preset.value,
+    label: t(`${DIRECTOR_CORRECTION_PRESET_KEYS[preset.value].label}`),
+    description: t(`${DIRECTOR_CORRECTION_PRESET_KEYS[preset.value].description}`),
+    promptHint: t(`${DIRECTOR_CORRECTION_PRESET_KEYS[preset.value].promptHint}`),
+  }));
+}
+
 export const DIRECTOR_CANDIDATE_SETUP_STEPS = [
   {
     key: "candidate_seed_alignment",
@@ -78,6 +116,34 @@ export const DIRECTOR_CANDIDATE_SETUP_STEPS = [
 ] as const;
 
 export type DirectorCandidateSetupStepKey = typeof DIRECTOR_CANDIDATE_SETUP_STEPS[number]["key"];
+
+// i18n-ignore: key constants for useDirectorCandidateSetupSteps hook
+export const DIRECTOR_CANDIDATE_SETUP_STEP_KEYS = {
+  candidate_seed_alignment: {
+    label: "candidateSetupSteps.candidate_seed_alignment.label",
+    description: "candidateSetupSteps.candidate_seed_alignment.description",
+  },
+  candidate_project_framing: {
+    label: "candidateSetupSteps.candidate_project_framing.label",
+    description: "candidateSetupSteps.candidate_project_framing.description",
+  },
+  candidate_direction_batch: {
+    label: "candidateSetupSteps.candidate_direction_batch.label",
+    description: "candidateSetupSteps.candidate_direction_batch.description",
+  },
+  candidate_title_pack: {
+    label: "candidateSetupSteps.candidate_title_pack.label",
+    description: "candidateSetupSteps.candidate_title_pack.description",
+  },
+} as const;
+
+export function useDirectorCandidateSetupSteps(t: (key: string) => string) {
+  return DIRECTOR_CANDIDATE_SETUP_STEPS.map((step) => ({
+    key: step.key,
+    label: t(`${DIRECTOR_CANDIDATE_SETUP_STEP_KEYS[step.key].label}`),
+    description: t(`${DIRECTOR_CANDIDATE_SETUP_STEP_KEYS[step.key].description}`),
+  }));
+}
 
 export const DIRECTOR_RUN_MODES = [
   "full_book_autopilot",

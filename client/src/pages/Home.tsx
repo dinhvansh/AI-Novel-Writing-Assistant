@@ -2,6 +2,7 @@
 import { useMemo } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Link, useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { continueNovelWorkflow } from "@/api/novelWorkflow";
 import { getNovelList } from "@/api/novel";
 import type { NovelListResponse } from "@/api/novel/shared";
@@ -31,54 +32,6 @@ const MANUAL_CREATE_LINK = "/novels/create";
 
 type HomeNovelItem = NovelListResponse["items"][number];
 
-function formatDate(value: string | undefined): string {
-  if (!value) {
-    return "暂无";
-  }
-  const date = new Date(value);
-  if (Number.isNaN(date.getTime())) {
-    return "暂无";
-  }
-  return date.toLocaleString();
-}
-
-function getNovelPriorityScore(novel: HomeNovelItem): number {
-  const task = novel.latestAutoDirectorTask ?? null;
-  if (canContinueChapterBatchAutoExecution(task)) {
-    return 0;
-  }
-  if (requiresCandidateSelection(task)) {
-    return 1;
-  }
-  if (canContinueDirector(task)) {
-    return 2;
-  }
-  if (task?.status === "running" || task?.status === "queued") {
-    return 3;
-  }
-  if (canEnterChapterExecution(task)) {
-    return 4;
-  }
-  if (task?.status === "failed" || task?.status === "cancelled") {
-    return 5;
-  }
-  return 6;
-}
-
-function getNovelLeadSummary(novel: HomeNovelItem): string {
-  const workflowDescription = getWorkflowDescription(novel.latestAutoDirectorTask ?? null);
-  if (workflowDescription) {
-    return workflowDescription;
-  }
-  if (novel.description?.trim()) {
-    return novel.description.trim();
-  }
-  if (novel.world?.name) {
-    return `当前项目已绑定世界观「${novel.world.name}」，可以直接继续创作。`;
-  }
-  return "当前项目暂无简介，可以直接进入编辑页继续推进。";
-}
-
 function MetricCard(props: {
   title: string;
   value: string | number;
@@ -100,6 +53,32 @@ function MetricCard(props: {
 export default function Home() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
+  const { t } = useTranslation();
+
+  const formatDate = (value: string | undefined): string => {
+    if (!value) {
+      return t("novel:home.labels.noTime");
+    }
+    const date = new Date(value);
+    if (Number.isNaN(date.getTime())) {
+      return t("novel:home.labels.noTime");
+    }
+    return date.toLocaleString();
+  };
+
+  const getNovelLeadSummary = (novel: HomeNovelItem): string => {
+    const workflowDescription = getWorkflowDescription(novel.latestAutoDirectorTask ?? null);
+    if (workflowDescription) {
+      return workflowDescription;
+    }
+    if (novel.description?.trim()) {
+      return novel.description.trim();
+    }
+    if (novel.world?.name) {
+      return t("novel:home.labels.boundWorld", { name: novel.world.name });
+    }
+    return t("novel:home.labels.noWorld");
+  };
 
   const taskQuery = useQuery({
     queryKey: queryKeys.tasks.overview,
@@ -141,14 +120,37 @@ export default function Home() {
         error instanceof Error
           ? error.message
           : input.mode === "auto_execute_range"
-            ? "继续自动执行当前章节范围失败。"
-            : "继续自动导演失败。",
+            ? t("novel:home.actions.errorFallbackContinueRange")
+            : t("novel:home.actions.errorFallbackContinueDirector"),
       );
     },
   });
 
   const allNovels = novelQuery.data?.data?.items ?? [];
   const hasNovels = allNovels.length > 0;
+
+  function getNovelPriorityScore(novel: HomeNovelItem): number {
+    const task = novel.latestAutoDirectorTask ?? null;
+    if (canContinueChapterBatchAutoExecution(task)) {
+      return 0;
+    }
+    if (requiresCandidateSelection(task)) {
+      return 1;
+    }
+    if (canContinueDirector(task)) {
+      return 2;
+    }
+    if (task?.status === "running" || task?.status === "queued") {
+      return 3;
+    }
+    if (canEnterChapterExecution(task)) {
+      return 4;
+    }
+    if (task?.status === "failed" || task?.status === "cancelled") {
+      return 5;
+    }
+    return 6;
+  }
 
   const liveWorkflowCount = useMemo(
     () => allNovels.filter((novel) => isWorkflowRunningInBackground(novel.latestAutoDirectorTask ?? null)).length,
@@ -178,6 +180,7 @@ export default function Home() {
       const currentPriority = getNovelPriorityScore(current);
       return currentPriority < selectedPriority ? current : selected;
     }, null);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [allNovels]);
   const recentNovels = useMemo(
     () => allNovels.slice(0, HOME_RECENT_LIMIT),
@@ -211,6 +214,8 @@ export default function Home() {
     };
 
     if (canContinueChapterBatchAutoExecution(task)) {
+      const scopeLabel = task?.executionScopeLabel ?? t("novel:home.actions.currentChapterRange");
+      const defaultLabel = t("novel:home.actions.continueChapterRangeDefault", { scope: scopeLabel });
       return (
         <Button
           size={size}
@@ -226,7 +231,7 @@ export default function Home() {
           }}
           disabled={isWorkflowPending}
         >
-          {isWorkflowPending ? "继续执行中..." : (task?.resumeAction ?? `继续自动执行${task?.executionScopeLabel ?? "当前章节范围"}`)}
+          {isWorkflowPending ? t("novel:home.actions.continueExecuting") : (task?.resumeAction ?? defaultLabel)}
         </Button>
       );
     }
@@ -246,7 +251,7 @@ export default function Home() {
           }}
           disabled={isWorkflowPending}
         >
-          {isWorkflowPending ? "继续中..." : (task?.resumeAction ?? "继续导演")}
+          {isWorkflowPending ? t("novel:home.actions.continueDirector") : (task?.resumeAction ?? t("novel:home.actions.continueDirectorDefault"))}
         </Button>
       );
     }
@@ -258,7 +263,7 @@ export default function Home() {
             to={getCandidateSelectionLink(task!.id)}
             onClick={stopPropagation ? stopCardClick : undefined}
           >
-            {task!.resumeAction ?? "继续确认书级方向"}
+            {task!.resumeAction ?? t("novel:home.actions.selectDirection")}
           </Link>
         </Button>
       );
@@ -271,7 +276,7 @@ export default function Home() {
             to={`/novels/${novel.id}/edit`}
             onClick={stopPropagation ? stopCardClick : undefined}
           >
-            进入章节执行
+            {t("novel:home.actions.enterChapterExecution")}
           </Link>
         </Button>
       );
@@ -284,7 +289,7 @@ export default function Home() {
             to={`/novels/${novel.id}/edit?directorTaskId=${task.id}`}
             onClick={stopPropagation ? stopCardClick : undefined}
           >
-            查看推进状态
+            {t("novel:home.actions.viewProgress")}
           </Link>
         </Button>
       );
@@ -296,7 +301,7 @@ export default function Home() {
           to={`/novels/${novel.id}/edit`}
           onClick={stopPropagation ? stopCardClick : undefined}
         >
-          编辑小说
+          {t("novel:home.actions.editNovel")}
         </Link>
       </Button>
     );
@@ -306,27 +311,27 @@ export default function Home() {
     <div className="space-y-4">
       <div className="home-status-summary-grid grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
         <MetricCard
-          title="最近自动推进中"
+          title={t("novel:home.metrics.liveRunning")}
           value={liveWorkflowCount}
-          hint="最近项目中仍在后台推进的自动导演或自动执行项目。"
+          hint={t("novel:home.metrics.liveRunningHint")}
           pending={novelQuery.isPending}
         />
         <MetricCard
-          title="最近待你处理"
+          title={t("novel:home.metrics.actionRequired")}
           value={actionRequiredCount}
-          hint="最近项目里等待审核、失败或已取消后需要你决定下一步的项目。"
+          hint={t("novel:home.metrics.actionRequiredHint")}
           pending={novelQuery.isPending}
         />
         <MetricCard
-          title="最近可进入章节执行"
+          title={t("novel:home.metrics.readyForExecution")}
           value={readyForExecutionCount}
-          hint="最近项目里准备到可开写阶段，可以直接进入章节写作。"
+          hint={t("novel:home.metrics.readyForExecutionHint")}
           pending={novelQuery.isPending}
         />
         <MetricCard
-          title="后台失败任务"
+          title={t("novel:home.metrics.failedTasks")}
           value={failedTaskCount}
-          hint="来自任务中心的失败任务总数，可后续集中处理。"
+          hint={t("novel:home.metrics.failedTasksHint")}
           pending={taskQuery.isPending}
         />
       </div>
@@ -334,30 +339,30 @@ export default function Home() {
       <Card className="border-primary/30 bg-gradient-to-br from-primary/10 via-background to-primary/5 shadow-sm">
         <CardHeader>
           <div className="flex flex-wrap items-center gap-2">
-            <Badge>新手推荐</Badge>
-            <Badge variant="outline">低门槛开书</Badge>
+            <Badge>{t("novel:home.starter.beginnerTag")}</Badge>
+            <Badge variant="outline">{t("novel:home.starter.lowBarrierTag")}</Badge>
           </div>
           <CardTitle>
-            {hasNovels ? "想快速开启下一本书？先交给 AI 自动导演。" : "第一次使用？先让 AI 自动导演带你开一本书。"}
+            {hasNovels ? t("novel:home.starter.ctaTitleExisting") : t("novel:home.starter.ctaTitleNew")}
           </CardTitle>
           <CardDescription>
-            你只需要提供一个模糊想法，AI 会先帮你生成方向方案、标题包和开书准备，并在关键阶段停下来等你确认，不需要你一开始就把结构全部想清楚。
+            {t("novel:home.starter.ctaDescription")}
           </CardDescription>
         </CardHeader>
         <CardContent className="flex flex-wrap items-center justify-between gap-3">
           <div className="flex flex-wrap gap-x-4 gap-y-1 text-sm text-muted-foreground">
-            <span>适合还没想清楚题材、卖点和前 30 章承诺时使用</span>
-            <span>也适合先快速搭起一本可继续推进的新项目</span>
+            <span>{t("novel:home.starter.fitFor1")}</span>
+            <span>{t("novel:home.starter.fitFor2")}</span>
           </div>
           <div className="flex flex-wrap items-center gap-2">
             <Button asChild size="lg">
-              <Link to={DIRECTOR_CREATE_LINK}>AI 自动导演开书</Link>
+              <Link to={DIRECTOR_CREATE_LINK}>{t("novel:home.starter.directorCta")}</Link>
             </Button>
             <Button asChild size="lg" variant="outline">
-              <Link to={MANUAL_CREATE_LINK}>手动创建小说</Link>
+              <Link to={MANUAL_CREATE_LINK}>{t("novel:home.starter.manualCta")}</Link>
             </Button>
             <Button asChild size="lg" variant="outline">
-              <Link to="/help">新手上路</Link>
+              <Link to="/help">{t("novel:home.starter.helpCta")}</Link>
             </Button>
           </div>
         </CardContent>
@@ -365,8 +370,8 @@ export default function Home() {
 
       <Card>
         <CardHeader>
-          <CardTitle>继续最近项目</CardTitle>
-          <CardDescription>首页应该直接把你送回当前最值得继续的一本书。</CardDescription>
+          <CardTitle>{t("novel:home.primary.title")}</CardTitle>
+          <CardDescription>{t("novel:home.primary.subtitle")}</CardDescription>
         </CardHeader>
         <CardContent>
           {novelQuery.isPending ? (
@@ -382,9 +387,9 @@ export default function Home() {
           ) : novelQuery.isError ? (
             <div className="space-y-3">
               <div className="text-sm text-muted-foreground">
-                当前无法读取项目列表，首页没法为你推荐下一步入口。
+                {t("novel:home.primary.errorTitle")}
               </div>
-              <Button onClick={() => void novelQuery.refetch()}>重新加载项目</Button>
+              <Button onClick={() => void novelQuery.refetch()}>{t("novel:home.primary.reload")}</Button>
             </div>
           ) : primaryNovel ? (
             <div className="space-y-4">
@@ -404,15 +409,17 @@ export default function Home() {
                             ) : null;
                           })()}
                           <Badge variant="outline">
-                            进度 {Math.round((primaryNovel.latestAutoDirectorTask.progress ?? 0) * 100)}%
+                            {t("novel:home.labels.progressBadge", {
+                              percent: Math.round((primaryNovel.latestAutoDirectorTask.progress ?? 0) * 100),
+                            })}
                           </Badge>
                         </>
                       ) : null}
                       <Badge variant={primaryNovel.status === "published" ? "default" : "secondary"}>
-                        {primaryNovel.status === "published" ? "已发布" : "草稿"}
+                        {primaryNovel.status === "published" ? t("novel:home.labels.statusPublished") : t("novel:home.labels.statusDraft")}
                       </Badge>
                       <Badge variant="outline">
-                        {primaryNovel.writingMode === "continuation" ? "续写" : "原创"}
+                        {primaryNovel.writingMode === "continuation" ? t("novel:home.labels.modeContinuation") : t("novel:home.labels.modeOriginal")}
                       </Badge>
                     </div>
                   </div>
@@ -420,14 +427,14 @@ export default function Home() {
                     {getNovelLeadSummary(primaryNovel)}
                   </div>
                   <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-muted-foreground">
-                    <span>更新时间：{formatDate(primaryNovel.updatedAt)}</span>
-                    <span>章节数：{primaryNovel._count.chapters}</span>
-                    <span>角色数：{primaryNovel._count.characters}</span>
+                    <span>{t("novel:home.labels.updatedAt", { date: formatDate(primaryNovel.updatedAt) })}</span>
+                    <span>{t("novel:home.labels.chapterCount", { count: primaryNovel._count.chapters })}</span>
+                    <span>{t("novel:home.labels.characterCount", { count: primaryNovel._count.characters })}</span>
                     {primaryNovel.latestAutoDirectorTask?.currentStage ? (
-                      <span>当前阶段：{primaryNovel.latestAutoDirectorTask.currentStage}</span>
+                      <span>{t("novel:home.labels.currentStage", { stage: primaryNovel.latestAutoDirectorTask.currentStage })}</span>
                     ) : null}
                     {primaryNovel.latestAutoDirectorTask?.lastHealthyStage ? (
-                      <span>最近健康阶段：{primaryNovel.latestAutoDirectorTask.lastHealthyStage}</span>
+                      <span>{t("novel:home.labels.lastHealthyStage", { stage: primaryNovel.latestAutoDirectorTask.lastHealthyStage })}</span>
                     ) : null}
                   </div>
                 </div>
@@ -435,11 +442,11 @@ export default function Home() {
                   {renderNovelPrimaryAction(primaryNovel, { size: "lg" })}
                   {primaryNovel.latestAutoDirectorTask ? (
                     <Button asChild size="lg" variant="outline">
-                      <Link to={`/novels/${primaryNovel.id}/edit?directorTaskId=${primaryNovel.latestAutoDirectorTask.id}&taskPanel=1`}>执行详情</Link>
+                      <Link to={`/novels/${primaryNovel.id}/edit?directorTaskId=${primaryNovel.latestAutoDirectorTask.id}&taskPanel=1`}>{t("novel:home.primary.executionDetails")}</Link>
                     </Button>
                   ) : (
                     <Button asChild size="lg" variant="outline">
-                      <Link to={`/novels/${primaryNovel.id}/edit`}>打开项目</Link>
+                      <Link to={`/novels/${primaryNovel.id}/edit`}>{t("novel:home.primary.openProject")}</Link>
                     </Button>
                   )}
                 </div>
@@ -448,17 +455,17 @@ export default function Home() {
           ) : (
             <div className="space-y-3">
               <div className="text-sm text-muted-foreground">
-                你还没有开始小说项目。第一次使用时，推荐直接走 AI 自动导演，它会先帮你搭好方向和开写准备。
+                {t("novel:home.starter.ctaDescription")}
               </div>
               <div className="flex flex-wrap gap-2">
                 <Button asChild>
-                  <Link to={DIRECTOR_CREATE_LINK}>AI 自动导演开书</Link>
+                  <Link to={DIRECTOR_CREATE_LINK}>{t("novel:home.starter.directorCta")}</Link>
                 </Button>
                 <Button asChild variant="outline">
-                  <Link to={MANUAL_CREATE_LINK}>手动创建小说</Link>
+                  <Link to={MANUAL_CREATE_LINK}>{t("novel:home.starter.manualCta")}</Link>
                 </Button>
                 <Button asChild variant="outline">
-                  <Link to="/help">新手上路</Link>
+                  <Link to="/help">{t("novel:home.starter.helpCta")}</Link>
                 </Button>
               </div>
             </div>
@@ -468,32 +475,32 @@ export default function Home() {
 
       <Card>
         <CardHeader>
-          <CardTitle>快捷操作</CardTitle>
-          <CardDescription>把常用入口和新手最容易上手的开书方式放在一起。</CardDescription>
+          <CardTitle>{t("novel:home.quickActions.title")}</CardTitle>
+          <CardDescription>{t("novel:home.quickActions.subtitle")}</CardDescription>
         </CardHeader>
         <CardContent className="flex flex-wrap gap-2">
           <Button asChild>
-            <Link to={DIRECTOR_CREATE_LINK}>AI 自动导演开书</Link>
+            <Link to={DIRECTOR_CREATE_LINK}>{t("novel:home.starter.directorCta")}</Link>
           </Button>
           <Button asChild variant="outline">
-            <Link to={MANUAL_CREATE_LINK}>手动创建小说</Link>
+            <Link to={MANUAL_CREATE_LINK}>{t("novel:home.starter.manualCta")}</Link>
           </Button>
           <Button asChild variant="outline">
-            <Link to="/book-analysis">新建拆书</Link>
+            <Link to="/book-analysis">{t("novel:home.quickActions.newBookAnalysis")}</Link>
           </Button>
           <Button asChild variant="outline">
-            <Link to="/tasks">后台任务</Link>
+            <Link to="/tasks">{t("novel:home.quickActions.backgroundTasks")}</Link>
           </Button>
           <Button asChild variant="outline">
-            <Link to="/help">新手上路</Link>
+            <Link to="/help">{t("novel:home.starter.helpCta")}</Link>
           </Button>
         </CardContent>
       </Card>
 
       <Card>
         <CardHeader>
-          <CardTitle>最近项目</CardTitle>
-          <CardDescription>这里不只显示标题，也直接显示当前所处阶段和恢复入口。</CardDescription>
+          <CardTitle>{t("novel:home.recent.title")}</CardTitle>
+          <CardDescription>{t("novel:home.recent.subtitle")}</CardDescription>
         </CardHeader>
         <CardContent>
           {novelQuery.isPending ? (
@@ -509,13 +516,13 @@ export default function Home() {
           ) : novelQuery.isError ? (
             <div className="space-y-3">
               <div className="text-sm text-muted-foreground">
-                当前无法加载最近项目，稍后可以重试。
+                {t("novel:home.recent.errorTitle")}
               </div>
-              <Button variant="outline" onClick={() => void novelQuery.refetch()}>重新加载</Button>
+              <Button variant="outline" onClick={() => void novelQuery.refetch()}>{t("novel:home.recent.reload")}</Button>
             </div>
           ) : recentNovels.length === 0 ? (
             <div className="rounded-md border border-dashed p-4 text-sm text-muted-foreground">
-              暂无小说项目，先从“新建小说”开始。
+              {t("novel:home.recent.empty")}
             </div>
           ) : (
             <div className="grid gap-3 md:grid-cols-2">
@@ -545,19 +552,19 @@ export default function Home() {
                             {workflowBadge ? (
                               <Badge variant={workflowBadge.variant}>{workflowBadge.label}</Badge>
                             ) : (
-                              <Badge variant="outline">无自动导演任务</Badge>
+                              <Badge variant="outline">{t("novel:home.labels.noDirectorTask")}</Badge>
                             )}
                             {workflowTask ? (
-                              <Badge variant="outline">进度 {Math.round(workflowTask.progress * 100)}%</Badge>
+                              <Badge variant="outline">{t("novel:home.labels.progressBadge", { percent: Math.round(workflowTask.progress * 100) })}</Badge>
                             ) : null}
                           </div>
                         </div>
                         <div className="flex flex-wrap items-center justify-end gap-2">
                           <Badge variant={novel.status === "published" ? "default" : "secondary"}>
-                            {novel.status === "published" ? "已发布" : "草稿"}
+                            {novel.status === "published" ? t("novel:home.labels.statusPublished") : t("novel:home.labels.statusDraft")}
                           </Badge>
                           <Badge variant="outline">
-                            {novel.writingMode === "continuation" ? "续写" : "原创"}
+                            {novel.writingMode === "continuation" ? t("novel:home.labels.modeContinuation") : t("novel:home.labels.modeOriginal")}
                           </Badge>
                         </div>
                       </div>
@@ -567,14 +574,14 @@ export default function Home() {
                     </CardHeader>
                     <CardContent className="space-y-3">
                       <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-muted-foreground">
-                        <span>更新时间：{formatDate(novel.updatedAt)}</span>
-                        <span>章节数：{novel._count.chapters}</span>
-                        <span>角色数：{novel._count.characters}</span>
+                        <span>{t("novel:home.labels.updatedAt", { date: formatDate(novel.updatedAt) })}</span>
+                        <span>{t("novel:home.labels.chapterCount", { count: novel._count.chapters })}</span>
+                        <span>{t("novel:home.labels.characterCount", { count: novel._count.characters })}</span>
                         {workflowTask?.currentStage ? (
-                          <span>阶段：{workflowTask.currentStage}</span>
+                          <span>{t("novel:home.labels.stage", { stage: workflowTask.currentStage })}</span>
                         ) : null}
                         {workflowTask?.lastHealthyStage ? (
-                          <span>最近健康阶段：{workflowTask.lastHealthyStage}</span>
+                          <span>{t("novel:home.labels.lastHealthyStage", { stage: workflowTask.lastHealthyStage })}</span>
                         ) : null}
                       </div>
 
@@ -582,11 +589,11 @@ export default function Home() {
                         {renderNovelPrimaryAction(novel, { stopPropagation: true })}
                         {workflowTask ? (
                           <Button asChild size="sm" variant="outline">
-                            <Link to={`/novels/${novel.id}/edit?directorTaskId=${workflowTask.id}&taskPanel=1`} onClick={stopCardClick}>执行详情</Link>
+                            <Link to={`/novels/${novel.id}/edit?directorTaskId=${workflowTask.id}&taskPanel=1`} onClick={stopCardClick}>{t("novel:home.primary.executionDetails")}</Link>
                           </Button>
                         ) : (
                           <Button asChild size="sm" variant="outline">
-                            <Link to={`/novels/${novel.id}/edit`} onClick={stopCardClick}>打开项目</Link>
+                            <Link to={`/novels/${novel.id}/edit`} onClick={stopCardClick}>{t("novel:home.primary.openProject")}</Link>
                           </Button>
                         )}
                       </div>

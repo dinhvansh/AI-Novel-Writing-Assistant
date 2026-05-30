@@ -1,6 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import type { UnifiedTaskDetail } from "@ai-novel/shared/types/task";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { repairNovelWorkflowChapterTitles } from "@/api/novelWorkflow";
 import { queryKeys } from "@/api/queryKeys";
 import { toast } from "@/components/ui/toast";
@@ -17,12 +18,13 @@ interface DirectorChapterTitleRepairOptions {
 export function useDirectorChapterTitleRepair(options: DirectorChapterTitleRepairOptions = {}) {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
+  const { t } = useTranslation("novel");
 
   const mutation = useMutation({
     mutationFn: async (task: UnifiedTaskDetail) => {
       const warning = resolveChapterTitleWarning(task);
       if (!warning) {
-        throw new Error("当前任务没有可直接 AI 修复的章节标题提醒。");
+        throw new Error(t("directorRepair.noRepairableWarning"));
       }
       const response = await repairNovelWorkflowChapterTitles(task.id, {
         volumeId: warning.volumeId ?? undefined,
@@ -52,10 +54,10 @@ export function useDirectorChapterTitleRepair(options: DirectorChapterTitleRepai
           warning,
         })).catch(() => {});
       }
-      toast.success("已开始 AI 修复章节标题，系统正在重写当前卷拆章。");
+      toast.success(t("directorRepair.startedSuccess"));
     },
     onError: (error) => {
-      const message = error instanceof Error ? error.message : "AI 修复章节标题失败。";
+      const message = error instanceof Error ? error.message : t("directorRepair.failed");
       toast.error(message);
     },
   });
@@ -63,7 +65,7 @@ export function useDirectorChapterTitleRepair(options: DirectorChapterTitleRepai
   return {
     startRepair: (task: UnifiedTaskDetail | null | undefined) => {
       if (!task) {
-        toast.error("当前没有可修复的自动导演任务。");
+        toast.error(t("directorRepair.noTask"));
         return;
       }
       mutation.mutate(task);

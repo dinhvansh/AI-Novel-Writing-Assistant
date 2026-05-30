@@ -1,43 +1,32 @@
+import type { TFunction } from "i18next";
 import type { BookAnalysisDetail, BookAnalysisSection, BookAnalysisStatus } from "@ai-novel/shared/types/bookAnalysis";
 import type { SectionDraft } from "./bookAnalysis.types";
 
-export function formatStatus(status: BookAnalysisStatus | BookAnalysisSection["status"]): string {
+export function formatStatus(status: BookAnalysisStatus | BookAnalysisSection["status"], t: TFunction): string {
   switch (status) {
-    case "draft":
-      return "草稿";
-    case "queued":
-      return "排队中";
-    case "running":
-      return "运行中";
-    case "succeeded":
-      return "成功";
-    case "failed":
-      return "失败";
-    case "archived":
-      return "已归档";
-    case "idle":
-      return "待处理";
-    default:
-      return status;
+    case "draft": return t("bookAnalysis:utils.status.draft");
+    case "queued": return t("bookAnalysis:utils.status.queued");
+    case "running": return t("bookAnalysis:utils.status.running");
+    case "succeeded": return t("bookAnalysis:utils.status.succeeded");
+    case "failed": return t("bookAnalysis:utils.status.failed");
+    case "archived": return t("bookAnalysis:utils.status.archived");
+    case "idle": return t("bookAnalysis:utils.status.idle");
+    default: return status;
   }
 }
 
-export function formatStage(stage?: string | null): string {
+export function formatStage(stage: string | null | undefined, t: TFunction): string {
   switch (stage) {
-    case "loading_cache":
-      return "查缓存";
-    case "preparing_notes":
-      return "准备 notes";
-    case "generating_sections":
-      return "生成章节";
-    default:
-      return stage?.trim() || "暂无";
+    case "loading_cache": return t("bookAnalysis:utils.stage.loading_cache");
+    case "preparing_notes": return t("bookAnalysis:utils.stage.preparing_notes");
+    case "generating_sections": return t("bookAnalysis:utils.stage.generating_sections");
+    default: return stage?.trim() || t("bookAnalysis:utils.stage.none");
   }
 }
 
-export function formatDate(value?: string | null): string {
+export function formatDate(value: string | null | undefined, t: TFunction): string {
   if (!value) {
-    return "暂无";
+    return t("bookAnalysis:utils.date.none");
   }
   return new Date(value).toLocaleString();
 }

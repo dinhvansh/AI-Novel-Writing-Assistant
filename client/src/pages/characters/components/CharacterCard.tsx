@@ -1,4 +1,5 @@
 import { useState, type ReactNode } from "react";
+import { useTranslation } from "react-i18next";
 import type { ImageAsset } from "@ai-novel/shared/types/image";
 import { resolveImageAssetUrl } from "@/api/images";
 import type { BaseCharacter } from "@ai-novel/shared/types/novel";
@@ -34,10 +35,11 @@ export function CharacterCard({
   deleting,
   extraActions,
 }: CharacterCardProps) {
+  const { t } = useTranslation("characters");
   const [previewAsset, setPreviewAsset] = useState<ImageAsset | null>(null);
 
   const handleDeleteAsset = async (asset: ImageAsset) => {
-    const confirmed = window.confirm("确认删除这张形象图？此操作不可恢复。");
+    const confirmed = window.confirm(t("card.confirmDeleteAsset"));
     if (!confirmed) {
       return;
     }
@@ -45,7 +47,7 @@ export function CharacterCard({
       await onDeleteAsset(asset);
       setPreviewAsset((current) => (current?.id === asset.id ? null : current));
     } catch (error) {
-      window.alert(error instanceof Error ? error.message : "删除图片失败，请稍后重试。");
+      window.alert(error instanceof Error ? error.message : t("card.deleteAssetError"));
     }
   };
 
@@ -59,30 +61,30 @@ export function CharacterCard({
         <div className="flex flex-wrap items-center justify-end gap-2">
           {extraActions}
           <Button size="sm" variant="outline" onClick={onGenerateImage}>
-            生成形象图
+            {t("card.generateImage")}
           </Button>
           <Button size="sm" variant="outline" onClick={onEdit}>
-            编辑
+            {t("card.edit")}
           </Button>
           <Button size="sm" variant="destructive" onClick={onDelete} disabled={deleting}>
-            {deleting ? "删除中..." : "删除"}
+            {deleting ? t("card.deleting") : t("card.delete")}
           </Button>
         </div>
       </div>
 
       <div className="space-y-1 text-sm">
-        <div><span className="text-muted-foreground">性格：</span>{character.personality || "暂无"}</div>
-        <div><span className="text-muted-foreground">外貌/体态：</span>{character.appearance || "暂无"}</div>
-        <div><span className="text-muted-foreground">弱点与代价：</span>{character.weaknesses || "暂无"}</div>
-        <div><span className="text-muted-foreground">习惯与特长：</span>{character.interests || "暂无"}</div>
-        <div><span className="text-muted-foreground">关键事件：</span>{character.keyEvents || "暂无"}</div>
+        <div><span className="text-muted-foreground">{t("card.personalityLabel")}</span>{character.personality || t("card.empty")}</div>
+        <div><span className="text-muted-foreground">{t("card.appearanceLabel")}</span>{character.appearance || t("card.empty")}</div>
+        <div><span className="text-muted-foreground">{t("card.weaknessesLabel")}</span>{character.weaknesses || t("card.empty")}</div>
+        <div><span className="text-muted-foreground">{t("card.interestsLabel")}</span>{character.interests || t("card.empty")}</div>
+        <div><span className="text-muted-foreground">{t("card.keyEventsLabel")}</span>{character.keyEvents || t("card.empty")}</div>
       </div>
 
       <div className="space-y-2">
-        <div className="text-sm font-medium">形象图库</div>
-        {assetsLoading ? <div className="text-xs text-muted-foreground">加载中...</div> : null}
+        <div className="text-sm font-medium">{t("card.imageGallery")}</div>
+        {assetsLoading ? <div className="text-xs text-muted-foreground">{t("card.loading")}</div> : null}
         {!assetsLoading && assets.length === 0 ? (
-          <div className="text-xs text-muted-foreground">暂无图片，点击“生成形象图”创建。</div>
+          <div className="text-xs text-muted-foreground">{t("card.noImages")}</div>
         ) : null}
         {assets.length > 0 ? (
           <div className="grid justify-items-start gap-2 sm:grid-cols-2 lg:grid-cols-4">
@@ -92,20 +94,20 @@ export function CharacterCard({
                   type="button"
                   className="block aspect-square w-full overflow-hidden rounded-md bg-muted"
                   onClick={() => setPreviewAsset(asset)}
-                  title="点击预览"
+                  title={t("card.previewTitle")}
                 >
                   <img
                     src={resolveImageAssetUrl(asset.url)}
-                    alt={`${character.name}-形象图`}
+                    alt={t("card.imageAlt", { name: character.name })}
                     className="h-full w-full object-cover transition-transform duration-200 hover:scale-[1.02]"
                     loading="lazy"
                   />
                 </button>
                 <div className="text-[11px] leading-4 text-muted-foreground break-all">
-                  本地路径：{asset.localPath ?? "未落地本地文件"}
+                  {t("card.localPathLabel", { path: asset.localPath ?? t("card.noLocalFile") })}
                 </div>
                 <div className="flex items-center justify-between gap-2">
-                  <div className="text-xs text-muted-foreground">{asset.isPrimary ? "主图" : "候选图"}</div>
+                  <div className="text-xs text-muted-foreground">{asset.isPrimary ? t("card.primaryImage") : t("card.candidateImage")}</div>
                   <div className="flex items-center gap-2">
                     <Button
                       size="sm"
@@ -113,7 +115,7 @@ export function CharacterCard({
                       disabled={asset.isPrimary || settingPrimary || deletingAssetId === asset.id}
                       onClick={() => onSetPrimary(asset.id)}
                     >
-                      设为主图
+                      {t("card.setPrimary")}
                     </Button>
                     <Button
                       size="sm"
@@ -121,7 +123,7 @@ export function CharacterCard({
                       disabled={deletingAssetId === asset.id}
                       onClick={() => void handleDeleteAsset(asset)}
                     >
-                      {deletingAssetId === asset.id ? "删除中..." : "删除"}
+                      {deletingAssetId === asset.id ? t("card.deleting") : t("card.delete")}
                     </Button>
                   </div>
                 </div>
@@ -141,7 +143,7 @@ export function CharacterCard({
       >
         <AppDialogContent
           className="max-w-[1000px]"
-          title={previewAsset ? `${character.name} - 图片预览` : "图片预览"}
+          title={previewAsset ? t("card.previewDialogTitle", { name: character.name }) : t("card.previewDialogFallback")}
           bodyClassName="space-y-3"
           footer={previewAsset ? (
             <>
@@ -151,7 +153,7 @@ export function CharacterCard({
                 disabled={previewAsset.isPrimary || settingPrimary || deletingAssetId === previewAsset.id}
                 onClick={() => onSetPrimary(previewAsset.id)}
               >
-                设为主图
+                {t("card.setPrimary")}
               </Button>
               <Button
                 type="button"
@@ -159,7 +161,7 @@ export function CharacterCard({
                 disabled={deletingAssetId === previewAsset.id}
                 onClick={() => void handleDeleteAsset(previewAsset)}
               >
-                {deletingAssetId === previewAsset.id ? "删除中..." : "删除图片"}
+                {deletingAssetId === previewAsset.id ? t("card.deleting") : t("card.deleteImage")}
               </Button>
             </>
           ) : null}
@@ -170,13 +172,13 @@ export function CharacterCard({
               <div className="flex max-h-[70vh] items-center justify-center overflow-auto rounded-md bg-muted/30 p-2">
                 <img
                   src={resolveImageAssetUrl(previewAsset.url)}
-                  alt={`${character.name}-预览图`}
+                  alt={t("card.previewImageAlt", { name: character.name })}
                   className="max-h-[66vh] w-auto max-w-full rounded-md object-contain"
                 />
               </div>
               {previewAsset.localPath ? (
                 <div className="text-xs text-muted-foreground break-all">
-                  本地路径：{previewAsset.localPath}
+                  {t("card.localPathLabel", { path: previewAsset.localPath })}
                 </div>
               ) : null}
             </>

@@ -1,5 +1,6 @@
-import { useEffect, useMemo, useState } from "react";
+﻿import { useEffect, useMemo, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useTranslation } from "react-i18next";
 import type {
   BookAnalysisPublishResult,
   BookAnalysisSection,
@@ -39,6 +40,7 @@ export function useBookAnalysisWorkspace(): BookAnalysisWorkspace {
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
   const llmStore = useLLMStore();
+  const { t } = useTranslation("bookAnalysis");
 
   const [keyword, setKeyword] = useState("");
   const [status, setStatus] = useState<BookAnalysisStatus | "">("");
@@ -274,14 +276,18 @@ export function useBookAnalysisWorkspace(): BookAnalysisWorkspace {
       }
       setLastPublishResult(published);
       setPublishFeedback(
-        `发布完成：文档 ${published.knowledgeDocumentId}，版本 v${published.knowledgeDocumentVersionNumber}，绑定 ${published.bindingCount} 项`,
+        t("hooks.publishSuccess", {
+          documentId: published.knowledgeDocumentId,
+          versionNumber: published.knowledgeDocumentVersionNumber,
+          bindingCount: published.bindingCount,
+        }),
       );
       await queryClient.invalidateQueries({ queryKey: queryKeys.knowledge.documents("book-analysis-source") });
       await queryClient.invalidateQueries({ queryKey: queryKeys.novelsKnowledge.bindings(payload.novelId) });
       await refreshAnalysisData(payload.id);
     },
     onError: (error) => {
-      const message = error instanceof Error ? error.message : "发布失败。";
+      const message = error instanceof Error ? error.message : t("hooks.publishFailed");
       setLastPublishResult(null);
       setPublishFeedback(message);
     },
@@ -295,7 +301,7 @@ export function useBookAnalysisWorkspace(): BookAnalysisWorkspace {
       temperature: llmConfig.temperature,
     }),
     onMutate: () => {
-      setStyleProfileFeedback("正在根据拆书里的“文风与技法”生成写法资产，完成后会自动跳转到写法引擎。");
+      setStyleProfileFeedback(t("hooks.styleProfileGenerating"));
     },
     onSuccess: async (response) => {
       const createdProfile = response.data;
@@ -303,12 +309,12 @@ export function useBookAnalysisWorkspace(): BookAnalysisWorkspace {
         return;
       }
       setStyleProfileFeedback("");
-      toast.success("已从拆书生成写法，正在打开写法引擎。");
+      toast.success(t("hooks.styleProfileSuccess"));
       await queryClient.invalidateQueries({ queryKey: queryKeys.styleEngine.profiles });
       navigate(`/style-engine?profileId=${createdProfile.id}&source=book-analysis`);
     },
     onError: (error) => {
-      const message = error instanceof Error ? error.message : "从拆书生成写法失败。";
+      const message = error instanceof Error ? error.message : t("hooks.styleProfileFailed");
       setStyleProfileFeedback(message);
     },
   });
@@ -551,7 +557,7 @@ export function useBookAnalysisWorkspace(): BookAnalysisWorkspace {
     }
     await createStyleProfileMutation.mutateAsync({
       bookAnalysisId: selectedAnalysis.id,
-      name: `${selectedAnalysis.title}-写法资产`,
+      name: `${selectedAnalysis.title}${t("hooks.styleProfileSuffix")}`,
     });
   };
 

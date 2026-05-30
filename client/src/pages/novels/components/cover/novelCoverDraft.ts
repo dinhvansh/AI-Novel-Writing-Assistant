@@ -2,6 +2,7 @@ import {
   buildDefaultNovelCoverSourceDescription,
   type NovelCoverImagePromptNovelContext,
 } from "@ai-novel/shared/imagePrompt";
+import type { TFunction } from "i18next";
 import { normalizeCommercialTags } from "@ai-novel/shared/types/novelFraming";
 import type { StoryWorldSliceView } from "@ai-novel/shared/types/storyWorldSlice";
 import type { NovelBasicFormState } from "../../novelBasicInfo.shared";
@@ -30,25 +31,32 @@ export interface BuildNovelCoverDraftInput {
   storyModeOptions: StoryModeOption[];
   worldOptions: WorldOption[];
   worldSliceView?: StoryWorldSliceView | null;
+  t: TFunction;
 }
 
-const NARRATIVE_POV_LABELS: Record<NovelBasicFormState["narrativePov"], string> = {
-  first_person: "第一人称",
-  third_person: "第三人称",
-  mixed: "混合视角",
-};
+function getNarrativePovLabels(t: TFunction): Record<NovelBasicFormState["narrativePov"], string> {
+  return {
+    first_person: t("novel:coverDraft.narrativePov.firstPerson"),
+    third_person: t("novel:coverDraft.narrativePov.thirdPerson"),
+    mixed: t("novel:coverDraft.narrativePov.mixed"),
+  };
+}
 
-const PACE_PREFERENCE_LABELS: Record<NovelBasicFormState["pacePreference"], string> = {
-  slow: "慢节奏",
-  balanced: "均衡",
-  fast: "快节奏",
-};
+function getPacePreferenceLabels(t: TFunction): Record<NovelBasicFormState["pacePreference"], string> {
+  return {
+    slow: t("novel:coverDraft.pacePreference.slow"),
+    balanced: t("novel:coverDraft.pacePreference.balanced"),
+    fast: t("novel:coverDraft.pacePreference.fast"),
+  };
+}
 
-const EMOTION_INTENSITY_LABELS: Record<NovelBasicFormState["emotionIntensity"], string> = {
-  low: "低情绪浓度",
-  medium: "中情绪浓度",
-  high: "高情绪浓度",
-};
+function getEmotionIntensityLabels(t: TFunction): Record<NovelBasicFormState["emotionIntensity"], string> {
+  return {
+    low: t("novel:coverDraft.emotionIntensity.low"),
+    medium: t("novel:coverDraft.emotionIntensity.medium"),
+    high: t("novel:coverDraft.emotionIntensity.high"),
+  };
+}
 
 function normalizeOptionalText(value: string | null | undefined): string | null {
   const trimmed = value?.trim();
@@ -68,6 +76,7 @@ function findNamedOption<T extends { id: string }>(
 export function buildNovelCoverDraftContext(
   input: BuildNovelCoverDraftInput,
 ): NovelCoverImagePromptNovelContext {
+  const { t } = input;
   const genre = findNamedOption(input.genreOptions, input.basicForm.genreId);
   const primaryStoryMode = findNamedOption(input.storyModeOptions, input.basicForm.primaryStoryModeId);
   const secondaryStoryMode = findNamedOption(input.storyModeOptions, input.basicForm.secondaryStoryModeId);
@@ -76,7 +85,7 @@ export function buildNovelCoverDraftContext(
   const commercialTags = normalizeCommercialTags(input.basicForm.commercialTagsText);
 
   return {
-    title: normalizeOptionalText(input.basicForm.title) ?? "这本小说",
+    title: normalizeOptionalText(input.basicForm.title) ?? t("novel:coverDraft.defaultTitle"),
     description: normalizeOptionalText(input.basicForm.description),
     targetAudience: normalizeOptionalText(input.basicForm.targetAudience),
     bookSellingPoint: normalizeOptionalText(input.basicForm.bookSellingPoint),
@@ -89,9 +98,9 @@ export function buildNovelCoverDraftContext(
     worldName: normalizeOptionalText(world?.name),
     worldSummary,
     styleTone: normalizeOptionalText(input.basicForm.styleTone),
-    narrativePovLabel: NARRATIVE_POV_LABELS[input.basicForm.narrativePov],
-    pacePreferenceLabel: PACE_PREFERENCE_LABELS[input.basicForm.pacePreference],
-    emotionIntensityLabel: EMOTION_INTENSITY_LABELS[input.basicForm.emotionIntensity],
+    narrativePovLabel: getNarrativePovLabels(t)[input.basicForm.narrativePov],
+    pacePreferenceLabel: getPacePreferenceLabels(t)[input.basicForm.pacePreference],
+    emotionIntensityLabel: getEmotionIntensityLabels(t)[input.basicForm.emotionIntensity],
   };
 }
 

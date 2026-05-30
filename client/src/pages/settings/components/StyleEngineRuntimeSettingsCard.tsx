@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useTranslation } from "react-i18next";
 import {
   getStyleEngineRuntimeSettings,
   saveStyleEngineRuntimeSettings,
@@ -22,6 +23,7 @@ function toMinutes(value: number | undefined): number {
 
 export default function StyleEngineRuntimeSettingsCard() {
   const queryClient = useQueryClient();
+  const { t } = useTranslation();
   const [timeoutMinutes, setTimeoutMinutes] = useState("10");
   const [feedback, setFeedback] = useState("");
 
@@ -50,11 +52,11 @@ export default function StyleEngineRuntimeSettingsCard() {
         styleExtractionTimeoutMs: minutes * MS_PER_MINUTE,
       }),
     onSuccess: async (response) => {
-      setFeedback(response.message ?? "写法引擎运行设置保存成功。");
+      setFeedback(response.message ?? t("settings:styleEngineRuntime.saveSuccess"));
       await queryClient.invalidateQueries({ queryKey: queryKeys.settings.styleEngineRuntime });
     },
     onError: (error) => {
-      setFeedback(error instanceof Error ? error.message : "写法引擎运行设置保存失败。");
+      setFeedback(error instanceof Error ? error.message : t("settings:styleEngineRuntime.saveFailed"));
     },
   });
 
@@ -67,18 +69,20 @@ export default function StyleEngineRuntimeSettingsCard() {
     <Card className="min-w-0 overflow-hidden">
       <CardHeader className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
         <div className="min-w-0 space-y-1">
-          <CardTitle>写法引擎运行设置</CardTitle>
+          <CardTitle>{t("settings:styleEngineRuntime.title")}</CardTitle>
           <CardDescription className={AUTO_DIRECTOR_MOBILE_CLASSES.wrapText}>
-            控制写法提取等待模型返回的最长时间。长篇原文提取可以适当调高，短文本保持较短更容易发现异常。
+            {t("settings:styleEngineRuntime.description")}
           </CardDescription>
         </div>
-        <Badge variant="outline">生效值 {limits.effectiveMinutes} 分钟</Badge>
+        <Badge variant="outline">
+          {t("settings:styleEngineRuntime.effectiveBadge", { minutes: limits.effectiveMinutes })}
+        </Badge>
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="space-y-2">
           <div className="grid gap-3 md:grid-cols-[minmax(0,1fr)_auto] md:items-end">
             <div className="space-y-2">
-              <div className="text-sm font-medium">写法提取超时（分钟）</div>
+              <div className="text-sm font-medium">{t("settings:styleEngineRuntime.timeoutLabel")}</div>
               <Input
                 type="number"
                 min={limits.minMinutes}
@@ -96,22 +100,34 @@ export default function StyleEngineRuntimeSettingsCard() {
               onClick={() => saveMutation.mutate(parsedMinutes)}
               disabled={settingsQuery.isLoading || saveMutation.isPending || !isValidTimeout}
             >
-              {saveMutation.isPending ? "保存中..." : "保存设置"}
+              {saveMutation.isPending
+                ? t("settings:styleEngineRuntime.saving")
+                : t("settings:styleEngineRuntime.saveButton")}
             </Button>
           </div>
           <div className={`text-xs text-muted-foreground ${AUTO_DIRECTOR_MOBILE_CLASSES.wrapText}`}>
-            可设置范围：{limits.minMinutes}-{limits.maxMinutes} 分钟。默认值 {limits.defaultMinutes} 分钟。
-            保存后，新提交和重试的写法提取任务会使用该等待时间。
+            {t("settings:styleEngineRuntime.rangeHint", {
+              min: limits.minMinutes,
+              max: limits.maxMinutes,
+              default: limits.defaultMinutes,
+            })}
           </div>
         </div>
 
         {!isValidTimeout ? (
           <div className="rounded-md border border-amber-200 bg-amber-50 px-3 py-2 text-sm text-amber-900">
-            请输入 {limits.minMinutes}-{limits.maxMinutes} 分钟之间的整数。
+            {t("settings:styleEngineRuntime.rangeError", {
+              min: limits.minMinutes,
+              max: limits.maxMinutes,
+            })}
           </div>
         ) : null}
 
-        {feedback ? <div className={`text-sm text-muted-foreground ${AUTO_DIRECTOR_MOBILE_CLASSES.wrapText}`}>{feedback}</div> : null}
+        {feedback ? (
+          <div className={`text-sm text-muted-foreground ${AUTO_DIRECTOR_MOBILE_CLASSES.wrapText}`}>
+            {feedback}
+          </div>
+        ) : null}
       </CardContent>
     </Card>
   );

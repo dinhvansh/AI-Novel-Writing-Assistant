@@ -8,6 +8,7 @@ import type {
   ModelRouteStructuredResponseFormat,
   ModelRouteTaskType,
 } from "@ai-novel/shared/types/novel";
+import type { TFunction } from "i18next";
 
 export interface RouteDraft {
   provider: string;
@@ -100,30 +101,49 @@ export function isSameRouteDraft(draft: RouteDraft, route: SavedModelRoute | und
     && draft.structuredResponseFormat === route.structuredResponseFormat;
 }
 
-export function formatStructuredStatus(status: ModelRouteConnectivityStatus["structured"]): string {
+export function formatStructuredStatus(t: TFunction, status: ModelRouteConnectivityStatus["structured"]): string {
   if (!status) {
-    return "结构化诊断：未执行";
+    return t("settings:modelRouteConnectivity.structuredNotRun");
   }
   if (status.ok) {
-    return `结构化正常 · ${status.requestProtocol ?? "auto"} · ${status.strategy ?? "prompt_json"}${status.reasoningForcedOff ? " · 会关闭 thinking" : ""}`;
+    const protocol = status.requestProtocol ?? "auto";
+    const strategy = status.strategy ?? "prompt_json";
+    return status.reasoningForcedOff
+      ? t("settings:modelRouteConnectivity.structuredOkThinkingOff", { protocol, strategy })
+      : t("settings:modelRouteConnectivity.structuredOk", { protocol, strategy });
   }
-  return `结构化异常 · ${status.errorCategory ?? "unknown"} · ${status.error ?? "未知错误"}`;
+  return t("settings:modelRouteConnectivity.structuredFailed", {
+    category: status.errorCategory ?? "unknown",
+    error: status.error ?? t("settings:modelRouteConnectivity.unknownError"),
+  });
 }
 
-export function formatConnectivityStatus(status?: ModelRouteConnectivityStatus | null): string {
+export function formatConnectivityStatus(t: TFunction, status?: ModelRouteConnectivityStatus | null): string {
   if (!status) {
-    return "尚未检测生效路由。";
+    return t("settings:modelRouteConnectivity.noStatus");
   }
   const parts: string[] = [];
   if (status.plain) {
-    parts.push(
-      status.plain.ok
-        ? `普通连通正常${status.plain.latency != null ? ` · ${status.plain.latency}ms` : ""}`
-        : `普通连通失败 · ${status.plain.error ?? "未知错误"}`,
-    );
+    if (status.plain.ok) {
+      parts.push(
+        status.plain.latency != null
+          ? t("settings:modelRouteConnectivity.plainOkLatency", { latency: status.plain.latency })
+          : t("settings:modelRouteConnectivity.plainOk"),
+      );
+    } else {
+      parts.push(
+        t("settings:modelRouteConnectivity.plainFailed", {
+          error: status.plain.error ?? t("settings:modelRouteConnectivity.unknownError"),
+        }),
+      );
+    }
   }
-  parts.push(formatStructuredStatus(status.structured));
-  return `${status.provider} / ${status.model} · ${parts.join(" · ")}`;
+  parts.push(formatStructuredStatus(t, status.structured));
+  return t("settings:modelRouteConnectivity.summary", {
+    provider: status.provider,
+    model: status.model,
+    parts: parts.join(" · "),
+  });
 }
 
 export function resolveConnectivityState(

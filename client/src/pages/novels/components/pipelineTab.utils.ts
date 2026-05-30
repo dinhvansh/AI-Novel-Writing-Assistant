@@ -1,3 +1,4 @@
+import type { TFunction } from "i18next";
 import type { Chapter, PipelineJob } from "@ai-novel/shared/types/novel";
 
 export interface PipelineStageItem {
@@ -5,15 +6,17 @@ export interface PipelineStageItem {
   label: string;
 }
 
-export const PIPELINE_STAGE_ITEMS: PipelineStageItem[] = [
-  { key: "assemble_context", label: "装配上下文" },
-  { key: "generate_task_sheet", label: "生成任务单" },
-  { key: "generate_scene_cards", label: "生成场景拍点" },
-  { key: "generate_content", label: "生成正文" },
-  { key: "quality_check", label: "质量检测" },
-  { key: "auto_repair", label: "自动修复" },
-  { key: "update_memory", label: "更新剧情记忆" },
-];
+export function getPipelineStageItems(t: TFunction): PipelineStageItem[] {
+  return [
+    { key: "assemble_context", label: t("pipeline.stages.assembleContext") },
+    { key: "generate_task_sheet", label: t("pipeline.stages.generateTaskSheet") },
+    { key: "generate_scene_cards", label: t("pipeline.stages.generateSceneCards") },
+    { key: "generate_content", label: t("pipeline.stages.generateContent") },
+    { key: "quality_check", label: t("pipeline.stages.qualityCheck") },
+    { key: "auto_repair", label: t("pipeline.stages.autoRepair") },
+    { key: "update_memory", label: t("pipeline.stages.updateMemory") },
+  ];
+}
 
 function mapCurrentStage(currentStage: string | null | undefined): string | null {
   if (!currentStage) {

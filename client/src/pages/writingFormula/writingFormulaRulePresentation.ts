@@ -1,3 +1,4 @@
+import type { TFunction } from "i18next";
 import type {
   CharacterRules,
   LanguageRules,
@@ -50,119 +51,120 @@ const FIELD_ORDER: Record<RuleSection, string[]> = {
   ],
 };
 
-const FIELD_LABELS: Record<RuleSection, Record<string, string>> = {
-  narrativeRules: {
-    summary: "整体推进感",
-    progressionMode: "推进方式",
-    sceneUnitPattern: "场景单位",
-    multiPov: "多视角",
-    looping: "循环回钩",
-    endingStyle: "收尾方式",
-    povSwitchStyle: "视角切换",
-  },
-  characterRules: {
-    summary: "人物表达总述",
-    dialogueStyle: "对白风格",
-    emotionExpression: "情绪外显",
-    defenseMechanisms: "防御机制",
-    allowSelfReflection: "自省表达",
-    facePriority: "体面优先",
-  },
-  languageRules: {
-    summary: "语言质感总述",
-    register: "语言基调",
-    roughness: "粗粝度",
-    sentenceVariation: "句式变化",
-    allowIncompleteSentences: "不完整句",
-    allowSwearing: "粗口口语",
-    allowUselessDetails: "生活杂音",
-  },
-  rhythmRules: {
-    summary: "节奏控制总述",
-    pace: "推进速度",
-    paragraphDensity: "段落密度",
-    allowFragmentedFlow: "碎片化推进",
-    actionOverExplanation: "动作优先",
-  },
-};
+function getFieldLabels(t: TFunction): Record<RuleSection, Record<string, string>> {
+  return {
+    narrativeRules: {
+      summary: t("novel:writingFormula.fields.narrativeRules.summary"),
+      progressionMode: t("novel:writingFormula.fields.narrativeRules.progressionMode"),
+      sceneUnitPattern: t("novel:writingFormula.fields.narrativeRules.sceneUnitPattern"),
+      multiPov: t("novel:writingFormula.fields.narrativeRules.multiPov"),
+      looping: t("novel:writingFormula.fields.narrativeRules.looping"),
+      endingStyle: t("novel:writingFormula.fields.narrativeRules.endingStyle"),
+      povSwitchStyle: t("novel:writingFormula.fields.narrativeRules.povSwitchStyle"),
+    },
+    characterRules: {
+      summary: t("novel:writingFormula.fields.characterRules.summary"),
+      dialogueStyle: t("novel:writingFormula.fields.characterRules.dialogueStyle"),
+      emotionExpression: t("novel:writingFormula.fields.characterRules.emotionExpression"),
+      defenseMechanisms: t("novel:writingFormula.fields.characterRules.defenseMechanisms"),
+      allowSelfReflection: t("novel:writingFormula.fields.characterRules.allowSelfReflection"),
+      facePriority: t("novel:writingFormula.fields.characterRules.facePriority"),
+    },
+    languageRules: {
+      summary: t("novel:writingFormula.fields.languageRules.summary"),
+      register: t("novel:writingFormula.fields.languageRules.register"),
+      roughness: t("novel:writingFormula.fields.languageRules.roughness"),
+      sentenceVariation: t("novel:writingFormula.fields.languageRules.sentenceVariation"),
+      allowIncompleteSentences: t("novel:writingFormula.fields.languageRules.allowIncompleteSentences"),
+      allowSwearing: t("novel:writingFormula.fields.languageRules.allowSwearing"),
+      allowUselessDetails: t("novel:writingFormula.fields.languageRules.allowUselessDetails"),
+    },
+    rhythmRules: {
+      summary: t("novel:writingFormula.fields.rhythmRules.summary"),
+      pace: t("novel:writingFormula.fields.rhythmRules.pace"),
+      paragraphDensity: t("novel:writingFormula.fields.rhythmRules.paragraphDensity"),
+      allowFragmentedFlow: t("novel:writingFormula.fields.rhythmRules.allowFragmentedFlow"),
+      actionOverExplanation: t("novel:writingFormula.fields.rhythmRules.actionOverExplanation"),
+    },
+  };
+}
 
-const FIELD_VALUE_MAPS: Record<string, Record<string, string>> = {
-  progressionMode: {
-    time_sequence: "按时间顺推",
-    goal_driven: "目标驱动推进",
-    mystery_escalation: "悬疑逐层加压",
-    relationship_push_pull: "关系拉扯推进",
-    multi_thread: "多线交织推进",
-    scene_immersion: "场景沉浸推进",
-    fact_driven: "事实驱动推进",
-    contrast_driven: "反差驱动推进",
-  },
-  endingStyle: {
-    unresolved: "不收束核心困境",
-    hook: "结尾抛钩子",
-    suspense: "悬念式收尾",
-    emotional_hook: "情绪钩子收尾",
-    cross_hook: "交叉线钩子收尾",
-    soft_open: "柔开放收尾",
-    pressure_continue: "压力延续式收尾",
-    bitter_aftertaste: "苦涩余味收尾",
-  },
-  povSwitchStyle: {
-    controlled: "受控切换",
-  },
-  emotionExpression: {
-    behavior_only: "只通过动作外露",
-    dialogue_and_action: "对白和动作共同外露",
-    reaction_only: "主要通过反应外露",
-    subtext: "通过言外之意外露",
-    mixed: "对白、动作和反应混合外露",
-    light_behavior: "以轻动作轻反应外露",
-    suppressed: "压住不直说",
-    deadpan: "冷反应式外露",
-  },
-  dialogueStyle: {
-    short_colloquial: "短句口语式",
-    direct: "直接硬朗",
-    restrained: "克制收着说",
-    subtext_heavy: "言外之意重",
-    distinct_by_role: "按角色明显拉开口吻差异",
-    daily_natural: "日常自然口吻",
-    informational: "信息型克制对白",
-    deadpan_colloquial: "冷面口语式",
-  },
-  register: {
-    colloquial: "口语化",
-    direct: "直接明快",
-    restrained: "克制收束",
-    natural: "自然日常",
-    flexible: "随角色灵活变化",
-    professional: "专业克制",
-  },
-  sentenceVariation: {
-    high: "变化大",
-    medium: "变化适中",
-    medium_high: "变化偏大",
-  },
-  pace: {
-    medium_fast: "中快",
-    fast: "快",
-    medium: "中速",
-    medium_slow: "中慢",
-    balanced: "均衡",
-    slow: "慢",
-  },
-  paragraphDensity: {
-    high: "高密度",
-    medium: "中密度",
-    medium_high: "中高密度",
-  },
-};
+function getFieldValueMaps(t: TFunction): Record<string, Record<string, string>> {
+  return {
+    progressionMode: {
+      time_sequence: t("novel:writingFormula.values.progressionMode.timeSequence"),
+      goal_driven: t("novel:writingFormula.values.progressionMode.goalDriven"),
+      mystery_escalation: t("novel:writingFormula.values.progressionMode.mysteryEscalation"),
+      relationship_push_pull: t("novel:writingFormula.values.progressionMode.relationshipPushPull"),
+      multi_thread: t("novel:writingFormula.values.progressionMode.multiThread"),
+      scene_immersion: t("novel:writingFormula.values.progressionMode.sceneImmersion"),
+      fact_driven: t("novel:writingFormula.values.progressionMode.factDriven"),
+      contrast_driven: t("novel:writingFormula.values.progressionMode.contrastDriven"),
+    },
+    endingStyle: {
+      unresolved: t("novel:writingFormula.values.endingStyle.unresolved"),
+      hook: t("novel:writingFormula.values.endingStyle.hook"),
+      suspense: t("novel:writingFormula.values.endingStyle.suspense"),
+      emotional_hook: t("novel:writingFormula.values.endingStyle.emotionalHook"),
+      cross_hook: t("novel:writingFormula.values.endingStyle.crossHook"),
+      soft_open: t("novel:writingFormula.values.endingStyle.softOpen"),
+      pressure_continue: t("novel:writingFormula.values.endingStyle.pressureContinue"),
+      bitter_aftertaste: t("novel:writingFormula.values.endingStyle.bitterAftertaste"),
+    },
+    povSwitchStyle: {
+      controlled: t("novel:writingFormula.values.povSwitchStyle.controlled"),
+    },
+    emotionExpression: {
+      behavior_only: t("novel:writingFormula.values.emotionExpression.behaviorOnly"),
+      dialogue_and_action: t("novel:writingFormula.values.emotionExpression.dialogueAndAction"),
+      reaction_only: t("novel:writingFormula.values.emotionExpression.reactionOnly"),
+      subtext: t("novel:writingFormula.values.emotionExpression.subtext"),
+      mixed: t("novel:writingFormula.values.emotionExpression.mixed"),
+      light_behavior: t("novel:writingFormula.values.emotionExpression.lightBehavior"),
+      suppressed: t("novel:writingFormula.values.emotionExpression.suppressed"),
+      deadpan: t("novel:writingFormula.values.emotionExpression.deadpan"),
+    },
+    dialogueStyle: {
+      short_colloquial: t("novel:writingFormula.values.dialogueStyle.shortColloquial"),
+      direct: t("novel:writingFormula.values.dialogueStyle.direct"),
+      restrained: t("novel:writingFormula.values.dialogueStyle.restrained"),
+      subtext_heavy: t("novel:writingFormula.values.dialogueStyle.subtextHeavy"),
+      distinct_by_role: t("novel:writingFormula.values.dialogueStyle.distinctByRole"),
+      daily_natural: t("novel:writingFormula.values.dialogueStyle.dailyNatural"),
+      informational: t("novel:writingFormula.values.dialogueStyle.informational"),
+      deadpan_colloquial: t("novel:writingFormula.values.dialogueStyle.deadpanColloquial"),
+    },
+    register: {
+      colloquial: t("novel:writingFormula.values.register.colloquial"),
+      direct: t("novel:writingFormula.values.register.direct"),
+      restrained: t("novel:writingFormula.values.register.restrained"),
+      natural: t("novel:writingFormula.values.register.natural"),
+      flexible: t("novel:writingFormula.values.register.flexible"),
+      professional: t("novel:writingFormula.values.register.professional"),
+    },
+    sentenceVariation: {
+      high: t("novel:writingFormula.values.sentenceVariation.high"),
+      medium: t("novel:writingFormula.values.sentenceVariation.medium"),
+      medium_high: t("novel:writingFormula.values.sentenceVariation.mediumHigh"),
+    },
+    pace: {
+      medium_fast: t("novel:writingFormula.values.pace.mediumFast"),
+      fast: t("novel:writingFormula.values.pace.fast"),
+      medium: t("novel:writingFormula.values.pace.medium"),
+      medium_slow: t("novel:writingFormula.values.pace.mediumSlow"),
+      balanced: t("novel:writingFormula.values.pace.balanced"),
+      slow: t("novel:writingFormula.values.pace.slow"),
+    },
+    paragraphDensity: {
+      high: t("novel:writingFormula.values.paragraphDensity.high"),
+      medium: t("novel:writingFormula.values.paragraphDensity.medium"),
+      medium_high: t("novel:writingFormula.values.paragraphDensity.mediumHigh"),
+    },
+  };
+}
 
 function compactText(value: unknown): string {
-  if (typeof value !== "string") {
-    return "";
-  }
-
+  if (typeof value !== "string") return "";
   return value.replace(/\s+/g, " ").trim();
 }
 
@@ -170,85 +172,43 @@ function humanizeUnknownToken(value: string): string {
   return value.replace(/_/g, " ").trim();
 }
 
-function formatBooleanValue(key: string, value: boolean): string {
-  if (key === "multiPov") {
-    return value ? "允许多视角切换" : "尽量保持单视角";
-  }
-  if (key === "looping") {
-    return value ? "允许循环回钩" : "尽量直线推进";
-  }
-  if (key === "allowSelfReflection") {
-    return value ? "允许明确自省" : "尽量少做直白自省";
-  }
-  if (key === "facePriority") {
-    return value ? "优先保住体面" : "不强求体面";
-  }
-  if (key === "allowIncompleteSentences") {
-    return value ? "允许不完整句" : "句子尽量完整";
-  }
-  if (key === "allowSwearing") {
-    return value ? "允许带一点粗口或脏字" : "尽量避免粗口";
-  }
-  if (key === "allowUselessDetails") {
-    return value ? "允许保留生活杂音" : "尽量减少无关杂音";
-  }
-  if (key === "allowFragmentedFlow") {
-    return value ? "允许碎片化推进" : "尽量保持完整推进";
-  }
-  if (key === "actionOverExplanation") {
-    return value ? "动作先于解释" : "解释比动作更重要";
-  }
-  return value ? "是" : "否";
+function formatBooleanValue(key: string, value: boolean, t: TFunction): string {
+  return t(`novel:writingFormula.booleans.${key}.${value ? "true" : "false"}`, {
+    defaultValue: value ? t("novel:writingFormula.booleans.default.true") : t("novel:writingFormula.booleans.default.false"),
+  });
 }
 
 function formatArrayValue(value: unknown[]): string {
   return value
     .map((item) => {
-      if (typeof item === "string") {
-        return humanizeUnknownToken(item);
-      }
+      if (typeof item === "string") return humanizeUnknownToken(item);
       return String(item);
     })
     .filter(Boolean)
     .join(" / ");
 }
 
-export function formatRuleFieldLabel(section: RuleSection, key: string): string {
-  return FIELD_LABELS[section][key] ?? humanizeUnknownToken(key);
+export function formatRuleFieldLabel(section: RuleSection, key: string, t: TFunction): string {
+  return getFieldLabels(t)[section][key] ?? humanizeUnknownToken(key);
 }
 
-export function formatRuleFieldValue(section: RuleSection, key: string, value: unknown): string {
-  if (value === null || value === undefined) {
-    return "";
-  }
-
-  if (typeof value === "boolean") {
-    return formatBooleanValue(key, value);
-  }
-
+export function formatRuleFieldValue(section: RuleSection, key: string, value: unknown, t: TFunction): string {
+  if (value === null || value === undefined) return "";
+  if (typeof value === "boolean") return formatBooleanValue(key, value, t);
   if (typeof value === "number") {
-    if (key === "roughness") {
-      return `${Math.round(value * 100)} / 100`;
-    }
+    if (key === "roughness") return `${Math.round(value * 100)} / 100`;
     return String(value);
   }
-
-  if (Array.isArray(value)) {
-    return formatArrayValue(value);
-  }
-
+  if (Array.isArray(value)) return formatArrayValue(value);
   if (typeof value === "string") {
     const normalized = compactText(value);
-    if (!normalized) {
-      return "";
-    }
-    return FIELD_VALUE_MAPS[key]?.[normalized] ?? normalized;
+    if (!normalized) return "";
+    return getFieldValueMaps(t)[key]?.[normalized] ?? normalized;
   }
-
   return "";
 }
 
-export function buildReadableRuleEntries(section: RuleSection, rules: RuleObject | Record<string, unknown>): RuleEntry[] {
+export function buildReadableRuleEntries(section: RuleSection, rules: RuleObject | Record<string, unknown>, t: TFunction): RuleEntry[] {
   const record = rules as Record<string, unknown>;
   const keySet = new Set<string>([
     ...FIELD_ORDER[section],
@@ -258,8 +218,8 @@ export function buildReadableRuleEntries(section: RuleSection, rules: RuleObject
   return Array.from(keySet)
     .map((key) => ({
       key,
-      label: formatRuleFieldLabel(section, key),
-      value: formatRuleFieldValue(section, key, record[key]),
+      label: formatRuleFieldLabel(section, key, t),
+      value: formatRuleFieldValue(section, key, record[key], t),
     }))
     .filter((entry) => Boolean(entry.value))
     .sort((left, right) => {
@@ -275,12 +235,10 @@ export function buildReadableRuleSummary(
   section: RuleSection,
   rules: RuleObject | Record<string, unknown>,
   fallback: string,
+  t: TFunction,
 ): string {
-  const entries = buildReadableRuleEntries(section, rules);
-  if (entries.length === 0) {
-    return fallback;
-  }
-
+  const entries = buildReadableRuleEntries(section, rules, t);
+  if (entries.length === 0) return fallback;
   return entries
     .slice(0, 3)
     .map((entry) => (entry.key === "summary" ? entry.value : `${entry.label}：${entry.value}`))

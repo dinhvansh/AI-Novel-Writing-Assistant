@@ -1,5 +1,6 @@
 import type { DirectorIdeaInspiration } from "@ai-novel/shared/types/novelDirector";
 import { Check, Sparkles } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import { AUTO_DIRECTOR_MOBILE_CLASSES } from "@/mobile/autoDirector";
 
@@ -16,18 +17,23 @@ export default function NovelAutoDirectorIdeaInspirationPanel({
   onGenerate,
   onUseIdea,
 }: NovelAutoDirectorIdeaInspirationPanelProps) {
+  const { t } = useTranslation("novel");
   return (
     <div className="mt-2 rounded-xl border bg-muted/15 p-3">
       <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
         <div className="min-w-0">
-          <div className="text-sm font-medium text-foreground">可以参考的 5 个起始想法</div>
+          <div className="text-sm font-medium text-foreground">{t("autoDirector.ideaInspiration.title")}</div>
           <div className={`mt-1 text-xs leading-5 text-muted-foreground ${AUTO_DIRECTOR_MOBILE_CLASSES.wrapText}`}>
-            这些只是临时灵感，不会自动保存，也不会自动参与生成。选择使用后会填入上方输入框。
+            {t("autoDirector.ideaInspiration.hint")}
           </div>
         </div>
         <Button type="button" size="sm" variant="outline" onClick={onGenerate} disabled={isGenerating}>
           <Sparkles className="h-4 w-4" />
-          {isGenerating ? "生成中..." : ideas.length > 0 ? "换一组" : "生成灵感"}
+          {isGenerating
+            ? t("autoDirector.ideaInspiration.generating")
+            : ideas.length > 0
+              ? t("autoDirector.ideaInspiration.regenerate")
+              : t("autoDirector.ideaInspiration.generate")}
         </Button>
       </div>
       {ideas.length > 0 ? (
@@ -59,7 +65,7 @@ export default function NovelAutoDirectorIdeaInspirationPanel({
                 onClick={() => onUseIdea(idea.text)}
               >
                 <Check className="h-4 w-4" />
-                使用这个
+                {t("autoDirector.ideaInspiration.useThis")}
               </Button>
             </div>
           ))}

@@ -1,5 +1,6 @@
 import { FormEvent, useEffect, useMemo, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useTranslation } from "react-i18next";
 import type { AntiAiRule } from "@ai-novel/shared/types/styleEngine";
 import { Plus, ShieldCheck } from "lucide-react";
 import {
@@ -35,6 +36,7 @@ import AntiAiRuleStats from "./components/AntiAiRuleStats";
 export default function AntiAiRulesPage() {
   const queryClient = useQueryClient();
   const llm = useLLMStore();
+  const { t } = useTranslation("antiAiRules");
   const [filter, setFilter] = useState<RuleFilter>("all");
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editingRule, setEditingRule] = useState<AntiAiRule | null>(null);
@@ -111,20 +113,20 @@ export default function AntiAiRulesPage() {
     mutationFn: (payload: ReturnType<typeof buildPayload>) => createAntiAiRule(payload),
     onSuccess: async () => {
       await refreshRules();
-      toast.success("反 AI 规则已创建。");
+      toast.success(t("page.createSuccess"));
       setDialogOpen(false);
     },
-    onError: (error) => toast.error(error instanceof Error ? error.message : "创建规则失败。"),
+    onError: (error) => toast.error(error instanceof Error ? error.message : t("page.createError")),
   });
 
   const updateMutation = useMutation({
     mutationFn: ({ id, payload }: { id: string; payload: Partial<ReturnType<typeof buildPayload>> }) => updateAntiAiRule(id, payload),
     onSuccess: async () => {
       await refreshRules();
-      toast.success("反 AI 规则已保存。");
+      toast.success(t("page.updateSuccess"));
       setDialogOpen(false);
     },
-    onError: (error) => toast.error(error instanceof Error ? error.message : "保存规则失败。"),
+    onError: (error) => toast.error(error instanceof Error ? error.message : t("page.updateError")),
   });
 
   const aiDraftMutation = useMutation({
@@ -148,7 +150,7 @@ export default function AntiAiRulesPage() {
     onSuccess: (response) => {
       const result = response.data;
       if (!result) {
-        toast.error("AI 没有返回可用草稿。");
+        toast.error(t("page.aiNoDraft"));
         return;
       }
       setForm({
@@ -164,9 +166,9 @@ export default function AntiAiRulesPage() {
         globalBaselineEnabled: result.draft.globalBaselineEnabled,
         autoRewrite: result.draft.autoRewrite,
       });
-      toast.success("草稿填入表单，请检查后保存。");
+      toast.success(t("page.aiDraftFilled"));
     },
-    onError: (error) => toast.error(error instanceof Error ? error.message : "AI 生成草稿失败。"),
+    onError: (error) => toast.error(error instanceof Error ? error.message : t("page.aiDraftError")),
   });
 
   const detectionMutation = useMutation({
@@ -179,7 +181,7 @@ export default function AntiAiRulesPage() {
       temperature: 0.2,
     }),
     onSuccess: () => setRewritePreview(""),
-    onError: (error) => toast.error(error instanceof Error ? error.message : "检测失败。"),
+    onError: (error) => toast.error(error instanceof Error ? error.message : t("page.detectError")),
   });
 
   const rewriteMutation = useMutation({
@@ -212,7 +214,7 @@ export default function AntiAiRulesPage() {
       });
     },
     onSuccess: (response) => setRewritePreview(response.data?.content ?? ""),
-    onError: (error) => toast.error(error instanceof Error ? error.message : "修正失败。"),
+    onError: (error) => toast.error(error instanceof Error ? error.message : t("page.rewriteError")),
   });
 
   useEffect(() => {
@@ -239,7 +241,7 @@ export default function AntiAiRulesPage() {
     event.preventDefault();
     const payload = buildPayload(form);
     if (!payload.key || !payload.name || !payload.description) {
-      toast.error("请填写规则标识、名称和说明。");
+      toast.error(t("page.validationError"));
       return;
     }
     if (editingRule) {
@@ -268,15 +270,15 @@ export default function AntiAiRulesPage() {
           <div className="space-y-1">
             <CardTitle className="flex items-center gap-2">
               <ShieldCheck className="h-5 w-5" />
-              反 AI 规则
+              {t("page.title")}
             </CardTitle>
             <CardDescription>
-              管理正文生成会参考的反 AI 规则，控制哪些规则进入全局默认，哪些只留给写法资产绑定使用。
+              {t("page.description")}
             </CardDescription>
           </div>
           <Button type="button" onClick={openCreateDialog}>
             <Plus className="h-4 w-4" />
-            新建规则
+            {t("page.newRule")}
           </Button>
         </CardHeader>
         <CardContent>

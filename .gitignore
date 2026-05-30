@@ -33,3 +33,6 @@ server/.tmp/
 desktop/build/
 desktop/runtime-migration-smoke/
 server/prisma-diff-migrations-to-schema.sql
+
+# i18n extraction cache (regenerated on demand)
+scripts/i18n/.cache/

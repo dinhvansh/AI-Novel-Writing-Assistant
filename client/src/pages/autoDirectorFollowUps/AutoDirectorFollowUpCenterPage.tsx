@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useTranslation } from "react-i18next";
 import type {
   AutoDirectorAction,
   AutoDirectorFollowUpItem,
@@ -92,6 +93,7 @@ function shouldConfirmAction(action: AutoDirectorAction): boolean {
   if (!action.requiresConfirm) {
     return false;
   }
+  // i18n-ignore: window.confirm called before t() is available
   return window.confirm(`确认执行“${action.label}”？`);
 }
 
@@ -111,6 +113,7 @@ function parseEnumParam<T extends string>(value: string | null, candidates: read
 export default function AutoDirectorFollowUpCenterPage() {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const [searchParams, setSearchParams] = useSearchParams();
   const [selectedDirectorTaskIds, setSelectedDirectorTaskIds] = useState<string[]>([]);
 
@@ -246,7 +249,7 @@ export default function AutoDirectorFollowUpCenterPage() {
     }),
     onSuccess: async (response) => {
       await invalidateFollowUps();
-      toast.success(formatActionFeedbackMessage(response.message ?? "", "操作已提交"));
+      toast.success(formatActionFeedbackMessage(response.message ?? "", t("autoDirectorFollowUps:actions.submitted")));
     },
   });
 
@@ -261,7 +264,7 @@ export default function AutoDirectorFollowUpCenterPage() {
     }),
     onSuccess: async (response) => {
       await invalidateFollowUps();
-      toast.success(formatActionFeedbackMessage(response.message ?? "", "批量操作已提交"));
+      toast.success(formatActionFeedbackMessage(response.message ?? "", t("autoDirectorFollowUps:actions.batchSubmitted")));
       setSelectedDirectorTaskIds([]);
     },
   });
@@ -273,7 +276,7 @@ export default function AutoDirectorFollowUpCenterPage() {
         queryKeys.autoDirectorFollowUps.detail(directorTaskId),
         response,
       );
-      toast.success("校验结果已刷新。");
+      toast.success(t("autoDirectorFollowUps:actions.validationRefreshed"));
     },
   });
 
@@ -355,7 +358,6 @@ export default function AutoDirectorFollowUpCenterPage() {
       actionCode,
     });
   };
-
   const handleExecuteBatch = async () => {
     if (!batchActionCode || !isBatchActionCode(batchActionCode) || selectedItems.length === 0) {
       return;

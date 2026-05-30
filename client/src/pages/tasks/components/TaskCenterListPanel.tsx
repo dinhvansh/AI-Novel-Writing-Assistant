@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import type { UnifiedTaskSummary } from "@ai-novel/shared/types/task";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -22,10 +23,11 @@ export default function TaskCenterListPanel({
   selectedId,
   onSelectTask,
 }: TaskCenterListPanelProps) {
+  const { t } = useTranslation();
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="text-base">任务列表</CardTitle>
+        <CardTitle className="text-base">{t("tasks:page.listTitle")}</CardTitle>
       </CardHeader>
       <CardContent className="space-y-3">
         {tasks.map((task) => {
@@ -41,38 +43,38 @@ export default function TaskCenterListPanel({
             >
               <div className="flex flex-wrap items-center justify-between gap-2">
                 <div className="font-medium">{task.title}</div>
-                <Badge variant={toStatusVariant(task.status)}>{formatStatus(task.status)}</Badge>
+                <Badge variant={toStatusVariant(task.status)}>{formatStatus(task.status, t)}</Badge>
               </div>
               <div className="mt-2 text-xs text-muted-foreground">
-                {formatKind(task.kind)} | 进度 {Math.round(task.progress * 100)}%
+                {formatKind(task.kind, t)} | {t("tasks:detail.progress", { percent: Math.round(task.progress * 100) })}
               </div>
               <div className="mt-1 text-xs text-muted-foreground">
-                阶段：{task.currentStage ?? "暂无"} | 当前项：{task.currentItemLabel ?? "暂无"}
+                {t("tasks:detail.currentStage", { stage: task.currentStage ?? t("tasks:detail.none") })} | {t("tasks:detail.currentItem", { item: task.currentItemLabel ?? t("tasks:detail.none") })}
               </div>
               {task.displayStatus || task.lastHealthyStage ? (
                 <div className="mt-1 text-xs text-muted-foreground">
-                  状态：{task.displayStatus ?? formatStatus(task.status)} | 最近健康阶段：{task.lastHealthyStage ?? "暂无"}
+                  {t("tasks:detail.displayStatus", { status: task.displayStatus ?? formatStatus(task.status, t) })} | {t("tasks:detail.lastHealthyStage", { stage: task.lastHealthyStage ?? t("tasks:detail.none") })}
                 </div>
               ) : null}
               {task.kind === "novel_workflow" ? (
                 <div className="mt-1 text-xs text-muted-foreground">
-                  检查点：{formatCheckpoint(task.checkpointType, task.executionScopeLabel)} | 建议继续：{task.resumeAction ?? task.nextActionLabel ?? "继续主流程"}
+                  {t("tasks:detail.latestCheckpoint", { checkpoint: formatCheckpoint(task.checkpointType, t, task.executionScopeLabel) })} | {t("tasks:detail.suggestContinue", { action: task.resumeAction ?? task.nextActionLabel ?? t("tasks:detail.defaultContinue") })}
                 </div>
               ) : null}
               {task.blockingReason ? (
                 <div className="mt-1 text-xs text-muted-foreground line-clamp-2">
-                  原因：{task.blockingReason}
+                  {t("tasks:detail.blockingReason", { reason: task.blockingReason })}
                 </div>
               ) : null}
               <div className="mt-1 text-xs text-muted-foreground">
-                最近心跳：{formatDate(task.heartbeatAt)} | 更新时间：{formatDate(task.updatedAt)}
+                {t("tasks:detail.latestHeartbeat", { date: formatDate(task.heartbeatAt, t) })} | {t("tasks:detail.finishedAt", { date: formatDate(task.updatedAt, t) })}
               </div>
             </button>
           );
         })}
         {tasks.length === 0 ? (
           <div className="rounded-md border border-dashed p-6 text-sm text-muted-foreground">
-            当前没有符合条件的任务。
+            {t("tasks:page.noTasks")}
           </div>
         ) : null}
       </CardContent>

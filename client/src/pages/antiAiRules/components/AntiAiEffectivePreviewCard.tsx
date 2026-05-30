@@ -1,5 +1,6 @@
 import type { AntiAiEffectiveRulesResult, StyleProfile } from "@ai-novel/shared/types/styleEngine";
 import { SlidersHorizontal } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import EffectiveRuleList from "./EffectiveRuleList";
@@ -13,15 +14,16 @@ interface AntiAiEffectivePreviewCardProps {
 }
 
 export default function AntiAiEffectivePreviewCard(props: AntiAiEffectivePreviewCardProps) {
+  const { t } = useTranslation("antiAiRules");
   return (
     <Card>
       <CardHeader>
         <CardTitle className="flex items-center gap-2 text-xl">
           <SlidersHorizontal className="h-5 w-5" />
-          生效预览
+          {t("effectivePreview.title")}
         </CardTitle>
         <CardDescription>
-          查看正文生成会拿到的全局规则，以及选中写法后叠加的专属规则。
+          {t("effectivePreview.description")}
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
@@ -30,10 +32,10 @@ export default function AntiAiEffectivePreviewCard(props: AntiAiEffectivePreview
           onValueChange={(value) => props.onStyleProfileChange(value === "__global__" ? "" : value)}
         >
           <SelectTrigger>
-            <SelectValue placeholder="选择预览上下文" />
+            <SelectValue placeholder={t("effectivePreview.selectPlaceholder")} />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="__global__">只看全局默认</SelectItem>
+            <SelectItem value="__global__">{t("effectivePreview.globalOnly")}</SelectItem>
             {props.profiles.map((profile) => (
               <SelectItem key={profile.id} value={profile.id}>{profile.name}</SelectItem>
             ))}
@@ -41,30 +43,30 @@ export default function AntiAiEffectivePreviewCard(props: AntiAiEffectivePreview
         </Select>
 
         {props.loading ? (
-          <div className="text-sm text-muted-foreground">正在计算生效规则...</div>
+          <div className="text-sm text-muted-foreground">{t("effectivePreview.calculating")}</div>
         ) : null}
 
         {props.effective ? (
           <div className="space-y-4">
             <div className="grid gap-2 text-sm sm:grid-cols-2">
               <div className="rounded-md border bg-muted/20 p-3">
-                <div className="text-xs text-muted-foreground">全局基线</div>
-                <div className="mt-1 font-semibold">{props.effective.usesGlobalAntiAiBaseline ? "应用" : "未应用"}</div>
+                <div className="text-xs text-muted-foreground">{t("effectivePreview.globalBaselineLabel")}</div>
+                <div className="mt-1 font-semibold">{props.effective.usesGlobalAntiAiBaseline ? t("effectivePreview.applied") : t("effectivePreview.notApplied")}</div>
               </div>
               <div className="rounded-md border bg-muted/20 p-3">
-                <div className="text-xs text-muted-foreground">生效规则</div>
+                <div className="text-xs text-muted-foreground">{t("effectivePreview.effectiveRulesLabel")}</div>
                 <div className="mt-1 font-semibold">{props.effective.effectiveRules.length}</div>
               </div>
             </div>
             <EffectiveRuleList
-              title="全局默认规则"
+              title={t("effectivePreview.globalDefaultRulesTitle")}
               rules={props.effective.globalBaselineRules}
-              empty="没有全局默认规则。"
+              empty={t("effectivePreview.noGlobalRules")}
             />
             <EffectiveRuleList
-              title="写法专属规则"
+              title={t("effectivePreview.styleSpecificRulesTitle")}
               rules={props.effective.styleSpecificRules}
-              empty="预览上下文没有叠加写法专属规则。"
+              empty={t("effectivePreview.noStyleRules")}
             />
           </div>
         ) : null}

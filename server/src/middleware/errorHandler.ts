@@ -1,6 +1,8 @@
 import type { NextFunction, Request, Response } from "express";
 import type { ApiResponse } from "@ai-novel/shared/types/api";
 import { ZodError, type ZodIssue } from "zod";
+import { DEFAULT_LOCALE, type LocaleCode } from "@ai-novel/shared/localization";
+import { getI18nServerHandle } from "../i18n";
 
 export class AppError extends Error {
   readonly statusCode: number;
@@ -18,57 +20,61 @@ function joinErrorParts(parts: Array<string | undefined>): string {
   return parts.map((part) => part?.trim() ?? "").filter(Boolean).join(" | ");
 }
 
-const VALIDATION_FIELD_LABELS: Record<string, string> = {
-  id: "项目 ID",
-  field: "字段",
-  provider: "模型提供商",
-  model: "模型",
-  temperature: "温度",
-  storyInput: "故事想法输入",
-  expansion: "故事引擎原型",
-  decomposition: "推进与兑现摘要",
-  constraints: "叙事规则",
-  lockedFields: "锁定字段",
-  state: "故事状态",
-  expanded_premise: "扩展前提",
-  protagonist_core: "主角核心",
-  conflict_engine: "冲突引擎",
-  conflict_layers: "冲突层",
-  external: "外部压迫",
-  internal: "内部崩塌",
-  relational: "关系压力",
-  mystery_box: "核心未知",
-  emotional_line: "情绪线",
-  setpiece_seeds: "高张力场面种子",
-  tone_reference: "氛围参考",
-  selling_point: "卖点",
-  core_conflict: "核心冲突",
-  main_hook: "主钩子",
-  progression_loop: "推进循环",
-  growth_path: "成长路径",
-  major_payoffs: "关键兑现点",
-  ending_flavor: "结局风味",
-  currentPhase: "当前阶段",
-  progress: "进度",
-  protagonistState: "主角当前处境",
-};
+function getRequestLocale(res: Response): LocaleCode {
+  const fromLocals = (res.locals as { locale?: LocaleCode }).locale;
+  return fromLocals ?? DEFAULT_LOCALE;
+}
 
-function formatValidationPath(path: PropertyKey[]): string {
+/**
+ * Translate a server-error key with the per-request locale. Returns the
+ * raw zh-CN canonical text when the i18n handle has not booted yet — the
+ * worst case is the user sees Chinese, never raw `serverErrors:foo` keys
+ * or a crash.
+ */
+function tError(
+  res: Response,
+  key: string,
+  values?: Record<string, unknown>,
+  fallback?: string,
+): string {
+  const handle = getI18nServerHandle();
+  if (!handle) {
+    return fallback ?? key;
+  }
+  const lng = getRequestLocale(res);
+  return handle.t("serverErrors", key, { lng, values });
+}
+
+function formatValidationPath(res: Response, path: PropertyKey[]): string {
   return path
     .map((segment) => {
       if (typeof segment === "number") {
-        return `第 ${segment + 1} 项`;
+        return tError(res, "validationItem", { index: segment + 1 }, `第 ${segment + 1} 项`);
       }
       if (typeof segment === "symbol") {
         return segment.toString();
       }
-      return VALIDATION_FIELD_LABELS[segment] ?? segment;
+      // Try the field-label dictionary first; fall back to the raw key.
+      const handle = getI18nServerHandle();
+      if (handle) {
+        const lng = getRequestLocale(res);
+        const localized = handle.t(
+          "serverErrors",
+          `validationField.${segment}`,
+          { lng },
+        );
+        // i18next returns the raw key when missing; treat that as a miss.
+        if (typeof localized === "string" && localized !== `serverErrors:validationField.${segment}`) {
+          return localized;
+        }
+      }
+      return String(segment);
     })
     .filter(Boolean)
     .join(" / ");
 }
 
-function formatZodIssueMessage(issue: ZodIssue): string {
+function formatZodIssueMessage(res: Response, issue: ZodIssue): string {
   const issueRecord = issue as ZodIssue & Record<string, unknown>;
   const code = String(issue.code);
   const origin = typeof issueRecord.origin === "string" ? issueRecord.origin : undefined;
@@ -76,51 +82,56 @@ function formatZodIssueMessage(issue: ZodIssue): string {
   switch (code) {
     case "invalid_type":
       if (issueRecord.input === undefined) {
-        return "不能为空。";
+        return tError(res, "zod.invalidTypeMissing", undefined, "不能为空。");
       }
       if (issueRecord.expected === "string") {
-        return "必须是文本。";
+        return tError(res, "zod.invalidTypeString", undefined, "必须是文本。");
       }
       if (issueRecord.expected === "number") {
-        return "必须是数字。";
+        return tError(res, "zod.invalidTypeNumber", undefined, "必须是数字。");
       }
       if (issueRecord.expected === "boolean") {
-        return "必须是布尔值。";
+        return tError(res, "zod.invalidTypeBoolean", undefined, "必须是布尔值。");
       }
-      return issue.message || "类型不正确。";
+      return issue.message || tError(res, "zod.invalidTypeGeneric", undefined, "类型不正确。");
     case "invalid_value":
-      return issue.message || "取值不合法。";
+      return issue.message || tError(res, "zod.invalidValueGeneric", undefined, "取值不合法。");
     case "too_small":
       if (origin === "array") {
-        return `至少需要 ${issueRecord.minimum} 项。`;
+        return tError(res, "zod.tooSmallArray", { minimum: issueRecord.minimum }, `至少需要 ${issueRecord.minimum} 项。`);
       }
       if (origin === "string") {
-        return issueRecord.minimum === 1 ? "不能为空。" : `至少 ${issueRecord.minimum} 个字符。`;
+        return issueRecord.minimum === 1
+          ? tError(res, "zod.tooSmallStringEmpty", undefined, "不能为空。")
+          : tError(res, "zod.tooSmallString", { minimum: issueRecord.minimum }, `至少 ${issueRecord.minimum} 个字符。`);
       }
       if (origin === "number") {
-        return `不能小于 ${issueRecord.minimum}。`;
+        return tError(res, "zod.tooSmallNumber", { minimum: issueRecord.minimum }, `不能小于 ${issueRecord.minimum}。`);
       }
-      return issue.message || "内容过短。";
+      return issue.message || tError(res, "zod.tooSmallGeneric", undefined, "内容过短。");
     case "too_big":
       if (origin === "array") {
-        return `最多只能填写 ${issueRecord.maximum} 项。`;
+        return tError(res, "zod.tooBigArray", { maximum: issueRecord.maximum }, `最多只能填写 ${issueRecord.maximum} 项。`);
       }
       if (origin === "string") {
-        return `不能超过 ${issueRecord.maximum} 个字符。`;
+        return tError(res, "zod.tooBigString", { maximum: issueRecord.maximum }, `不能超过 ${issueRecord.maximum} 个字符。`);
       }
       if (origin === "number") {
-        return `不能大于 ${issueRecord.maximum}。`;
+        return tError(res, "zod.tooBigNumber", { maximum: issueRecord.maximum }, `不能大于 ${issueRecord.maximum}。`);
       }
-      return issue.message || "内容过长。";
+      return issue.message || tError(res, "zod.tooBigGeneric", undefined, "内容过长。");
     default:
-      return issue.message || "格式不正确。";
+      return issue.message || tError(res, "zod.formatGeneric", undefined, "格式不正确。");
   }
 }
 
-function formatValidationIssue(issue: ZodIssue): string {
-  const path = formatValidationPath(issue.path);
-  const message = formatZodIssueMessage(issue);
-  return path ? `${path}：${message}` : message;
+function formatValidationIssue(res: Response, issue: ZodIssue): string {
+  const path = formatValidationPath(res, issue.path);
+  const message = formatZodIssueMessage(res, issue);
+  if (!path) {
+    return message;
+  }
+  return tError(res, "validationPath", { path, message }, `${path}：${message}`);
 }
 
 function setRequestErrorMessage(
@@ -185,7 +196,7 @@ function findConnectionCause(error: unknown, depth = 0): {
   return findConnectionCause(record.cause, depth + 1);
 }
 
-function formatUpstreamConnectionError(error: unknown): string | null {
+function formatUpstreamConnectionError(res: Response, error: unknown): string | null {
   const joinedMessage = collectErrorMessages(error).join(" | ").trim();
   const isNetworkLike = /connection error|fetch failed|ECONNRESET|ETIMEDOUT|ENOTFOUND|EAI_AGAIN|socket hang up|tls/i
     .test(joinedMessage);
@@ -193,11 +204,17 @@ function formatUpstreamConnectionError(error: unknown): string | null {
     return null;
   }
   const cause = findConnectionCause(error);
+  const fallbackTarget = tError(res, "upstreamServiceFallbackTarget", undefined, "上游模型服务");
   const target = cause?.host
     ? `${cause.host}${cause.port ? `:${cause.port}` : ""}`
-    : "上游模型服务";
+    : fallbackTarget;
   const code = cause?.code ? `（${cause.code}）` : "";
-  return `上游模型服务连接失败：当前服务器无法连接到 ${target}${code}。请检查该提供商的网络连通性，或切换到其它可用模型提供商。`;
+  return tError(
+    res,
+    "upstreamConnectionGeneric",
+    { target, code },
+    `上游模型服务连接失败：当前服务器无法连接到 ${target}${code}。请检查该提供商的网络连通性，或切换到其它可用模型提供商。`,
+  );
 }
 
 export function errorHandler(
@@ -212,20 +229,22 @@ export function errorHandler(
     && "type" in error
     && (error as { type?: string }).type === "entity.too.large"
   ) {
-    setRequestErrorMessage(res, "请求体过大，请缩短文本或分段上传。");
+    const message = tError(res, "requestBodyTooLarge", undefined, "请求体过大，请缩短文本或分段上传。");
+    setRequestErrorMessage(res, message);
     res.status(413).json({
       success: false,
-      error: "请求体过大，请缩短文本或分段上传。",
+      error: message,
     });
     return;
   }
 
   if (error instanceof ZodError) {
-    const detail = error.issues.map((issue) => formatValidationIssue(issue)).join(" ");
-    setRequestErrorMessage(res, "请求参数校验失败。", detail);
+    const detail = error.issues.map((issue) => formatValidationIssue(res, issue)).join(" ");
+    const message = tError(res, "validationFailed", undefined, "请求参数校验失败。");
+    setRequestErrorMessage(res, message, detail);
     res.status(400).json({
       success: false,
-      error: "请求参数校验失败。",
+      error: message,
       message: detail,
     });
     return;
@@ -245,8 +264,9 @@ export function errorHandler(
     return;
   }
 
-  const message = error instanceof Error ? error.message : "服务器发生未知错误。";
-  const upstreamConnectionMessage = formatUpstreamConnectionError(error);
+  const fallbackUnknown = tError(res, "internalUnknown", undefined, "服务器发生未知错误。");
+  const message = error instanceof Error ? error.message : fallbackUnknown;
+  const upstreamConnectionMessage = formatUpstreamConnectionError(res, error);
   if (upstreamConnectionMessage) {
     setRequestErrorMessage(res, upstreamConnectionMessage);
     logServerError(req, error);

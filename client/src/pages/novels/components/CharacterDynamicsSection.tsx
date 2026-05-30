@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useTranslation } from "react-i18next";
 import type { Character } from "@ai-novel/shared/types/novel";
 import AiButton from "@/components/common/AiButton";
 import { Badge } from "@/components/ui/badge";
@@ -40,6 +41,7 @@ function riskTone(risk: "none" | "info" | "warn" | "high"): string {
 
 export default function CharacterDynamicsSection(props: CharacterDynamicsSectionProps) {
   const { novelId, selectedCharacter, selectedCharacterId, onSelectedCharacterChange } = props;
+  const { t } = useTranslation("novel");
   const queryClient = useQueryClient();
   const [activeView, setActiveView] = useState<DynamicsView>("overview");
   const [manualState, setManualState] = useState({
@@ -126,7 +128,7 @@ export default function CharacterDynamicsSection(props: CharacterDynamicsSection
   const manualStateMutation = useMutation({
     mutationFn: () => {
       if (!selectedCharacterId) {
-        throw new Error("请先选择一个角色。");
+        throw new Error(t("character.dynamics.noCharacterError"));
       }
       return updateCharacterDynamicState(novelId, selectedCharacterId, {
         currentState: manualState.currentState.trim() || undefined,
@@ -147,21 +149,21 @@ export default function CharacterDynamicsSection(props: CharacterDynamicsSection
       <CardHeader className="gap-3">
         <div className="flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
           <div className="space-y-1">
-            <CardTitle>动态角色系统</CardTitle>
+            <CardTitle>{t("character.dynamics.title")}</CardTitle>
             <div className="text-sm text-muted-foreground">
-              这里把卷级职责、缺席风险、新角色候选和关系阶段放回角色页主流程，不再依赖你自己手工追踪。
+              {t("character.dynamics.description")}
             </div>
           </div>
           <div className="flex flex-wrap gap-2">
-            <Badge variant="outline">{overview?.currentVolume?.title ?? "未定位当前卷"}</Badge>
-            <Badge variant="outline">{overview?.pendingCandidateCount ?? pendingCandidates.length} 个待确认候选</Badge>
+            <Badge variant="outline">{overview?.currentVolume?.title ?? t("character.dynamics.noCurrentVolume")}</Badge>
+            <Badge variant="outline">{t("character.dynamics.pendingCandidatesBadge", { count: overview?.pendingCandidateCount ?? pendingCandidates.length })}</Badge>
             <AiButton
               variant="outline"
               size="sm"
               onClick={() => rebuildMutation.mutate()}
               disabled={rebuildMutation.isPending}
             >
-              {rebuildMutation.isPending ? "重建中..." : "重建动态角色"}
+              {rebuildMutation.isPending ? t("character.dynamics.rebuildingButton") : t("character.dynamics.rebuildButton")}
             </AiButton>
           </div>
         </div>
@@ -175,10 +177,10 @@ export default function CharacterDynamicsSection(props: CharacterDynamicsSection
               onClick={() => setActiveView(view)}
             >
               {{
-                overview: "动态总览",
-                candidates: "新角色候选",
-                relations: "关系阶段",
-                duties: "卷级职责与缺席风险",
+                overview: t("character.dynamics.tabOverview"),
+                candidates: t("character.dynamics.tabCandidates"),
+                relations: t("character.dynamics.tabRelations"),
+                duties: t("character.dynamics.tabDuties"),
               }[view]}
             </Button>
           ))}
@@ -187,7 +189,7 @@ export default function CharacterDynamicsSection(props: CharacterDynamicsSection
       <CardContent className="space-y-4">
         {overviewQuery.isLoading ? (
           <div className="rounded-2xl border border-dashed p-6 text-sm text-muted-foreground">
-            正在加载动态角色系统...
+            {t("character.dynamics.loadingHint")}
           </div>
         ) : null}
 
@@ -210,14 +212,20 @@ export default function CharacterDynamicsSection(props: CharacterDynamicsSection
                       <div className="text-xs text-muted-foreground">{item.role}</div>
                     </div>
                     <Badge className={riskTone(item.absenceRisk)} variant="outline">
-                      {item.absenceRisk === "none" ? "稳定" : `风险 ${item.absenceRisk}`}
+                      {item.absenceRisk === "none" ? t("character.dynamics.absenceStable") : t("character.dynamics.absenceRisk", { risk: item.absenceRisk })}
                     </Badge>
                   </div>
                   <div className="mt-3 space-y-1 text-xs text-muted-foreground">
-                    <div>卷级职责：{item.volumeResponsibility ?? "尚未分配"}</div>
-                    <div>计划出场章：{item.plannedChapterOrders.join("、") || "未定义"}</div>
-                    <div>最近出场：{item.lastAppearanceChapterOrder ?? "暂无"} / 出场次数：{item.appearanceCount}</div>
-                    {item.factionLabel ? <div>阵营：{item.factionLabel}{item.stanceLabel ? ` | 立场：${item.stanceLabel}` : ""}</div> : null}
+                    <div>{t("character.dynamics.volumeResponsibilityLabel", { value: item.volumeResponsibility ?? t("character.dynamics.volumeResponsibilityEmpty") })}</div>
+                    <div>{t("character.dynamics.plannedChaptersLabel", { chapters: item.plannedChapterOrders.join("、") || t("character.dynamics.plannedChaptersEmpty") })}</div>
+                    <div>{t("character.dynamics.lastAppearanceLabel", { chapter: item.lastAppearanceChapterOrder ?? t("character.dynamics.lastAppearanceNone"), count: item.appearanceCount })}</div>
+                    {item.factionLabel ? (
+                      <div>
+                        {item.stanceLabel
+                          ? t("character.dynamics.factionWithStance", { faction: item.factionLabel, stance: item.stanceLabel })
+                          : t("character.dynamics.factionLabel", { faction: item.factionLabel })}
+                      </div>
+                    ) : null}
                   </div>
                 </button>
               ))}
@@ -225,32 +233,32 @@ export default function CharacterDynamicsSection(props: CharacterDynamicsSection
 
             {selectedCharacter ? (
               <div className="rounded-2xl border border-border/70 bg-background/80 p-4">
-                <div className="mb-3 text-sm font-medium">手动修正当前角色动态状态</div>
+                <div className="mb-3 text-sm font-medium">{t("character.dynamics.manualEditTitle")}</div>
                 <div className="grid gap-3 md:grid-cols-2">
                   <Input
-                    placeholder="当前状态"
+                    placeholder={t("character.dynamics.currentStatePlaceholder")}
                     value={manualState.currentState}
                     onChange={(event) => setManualState((prev) => ({ ...prev, currentState: event.target.value }))}
                   />
                   <Input
-                    placeholder="当前目标"
+                    placeholder={t("character.dynamics.currentGoalPlaceholder")}
                     value={manualState.currentGoal}
                     onChange={(event) => setManualState((prev) => ({ ...prev, currentGoal: event.target.value }))}
                   />
                   <Input
-                    placeholder="阵营/站队"
+                    placeholder={t("character.dynamics.factionPlaceholder")}
                     value={manualState.factionLabel}
                     onChange={(event) => setManualState((prev) => ({ ...prev, factionLabel: event.target.value }))}
                   />
                   <Input
-                    placeholder="立场说明"
+                    placeholder={t("character.dynamics.stancePlaceholder")}
                     value={manualState.stanceLabel}
                     onChange={(event) => setManualState((prev) => ({ ...prev, stanceLabel: event.target.value }))}
                   />
                 </div>
                 <textarea
                   className="mt-3 min-h-[88px] w-full rounded-xl border bg-background p-3 text-sm"
-                  placeholder="补充这次变化的原因、后续作用或提醒 planner 的重点。"
+                  placeholder={t("character.dynamics.summaryPlaceholder")}
                   value={manualState.summary}
                   onChange={(event) => setManualState((prev) => ({ ...prev, summary: event.target.value }))}
                 />
@@ -259,10 +267,10 @@ export default function CharacterDynamicsSection(props: CharacterDynamicsSection
                     onClick={() => manualStateMutation.mutate()}
                     disabled={manualStateMutation.isPending || !selectedCharacterId}
                   >
-                    {manualStateMutation.isPending ? "保存中..." : "保存动态状态"}
+                    {manualStateMutation.isPending ? t("character.dynamics.savingButton") : t("character.dynamics.saveButton")}
                   </Button>
                   {selectedOverviewCharacter?.volumeResponsibility ? (
-                    <Badge variant="outline">当前卷职责：{selectedOverviewCharacter.volumeResponsibility}</Badge>
+                    <Badge variant="outline">{t("character.dynamics.currentVolumeResponsibility", { value: selectedOverviewCharacter.volumeResponsibility })}</Badge>
                   ) : null}
                 </div>
               </div>
@@ -279,16 +287,16 @@ export default function CharacterDynamicsSection(props: CharacterDynamicsSection
                     <div>
                       <div className="font-medium">{candidate.proposedName}</div>
                       <div className="text-xs text-muted-foreground">
-                        {candidate.proposedRole || "未标注角色定位"}{typeof candidate.sourceChapterOrder === "number" ? ` | 来源第 ${candidate.sourceChapterOrder} 章` : ""}
+                        {candidate.proposedRole || t("character.dynamics.candidateRoleEmpty")}{typeof candidate.sourceChapterOrder === "number" ? t("character.dynamics.candidateSourceChapter", { order: candidate.sourceChapterOrder }) : ""}
                       </div>
                     </div>
-                    <Badge variant="outline">{typeof candidate.confidence === "number" ? `置信度 ${Math.round(candidate.confidence * 100)}%` : "待确认"}</Badge>
+                    <Badge variant="outline">{typeof candidate.confidence === "number" ? t("character.dynamics.candidateConfidence", { percent: Math.round(candidate.confidence * 100) }) : t("character.dynamics.candidatePending")}</Badge>
                   </div>
                   {candidate.summary ? <div className="mt-3 text-sm text-muted-foreground">{candidate.summary}</div> : null}
                   {candidate.evidence.length > 0 ? (
                     <div className="mt-3 space-y-1 text-xs text-muted-foreground">
                       {candidate.evidence.map((evidence, index) => (
-                        <div key={`${candidate.id}-${index}`}>证据：{evidence}</div>
+                        <div key={`${candidate.id}-${index}`}>{t("character.dynamics.evidenceLabel", { evidence })}</div>
                       ))}
                     </div>
                   ) : null}
@@ -298,7 +306,7 @@ export default function CharacterDynamicsSection(props: CharacterDynamicsSection
                       onClick={() => confirmMutation.mutate(candidate.id)}
                       disabled={confirmMutation.isPending}
                     >
-                      {confirmMutation.isPending ? "确认中..." : "确认成新角色"}
+                      {confirmMutation.isPending ? t("character.dynamics.confirmingButton") : t("character.dynamics.confirmButton")}
                     </Button>
                     <Button
                       size="sm"
@@ -306,7 +314,7 @@ export default function CharacterDynamicsSection(props: CharacterDynamicsSection
                       onClick={() => mergeMutation.mutate(candidate.id)}
                       disabled={mergeMutation.isPending || !selectedCharacterId}
                     >
-                      {mergeMutation.isPending ? "合并中..." : selectedCharacterId ? `并入当前焦点` : "先选一个已存在角色"}
+                      {mergeMutation.isPending ? t("character.dynamics.mergingButton") : selectedCharacterId ? t("character.dynamics.mergeIntoButton") : t("character.dynamics.mergeSelectFirst")}
                     </Button>
                   </div>
                 </div>
@@ -314,7 +322,7 @@ export default function CharacterDynamicsSection(props: CharacterDynamicsSection
             </div>
           ) : (
             <div className="rounded-2xl border border-dashed p-6 text-sm text-muted-foreground">
-              还没有待确认的新角色候选。写完几章后，这里会自动汇总 AI 抽取到的新人物入口。
+              {t("character.dynamics.noCandidatesHint")}
             </div>
           )
         ) : null}
@@ -330,16 +338,16 @@ export default function CharacterDynamicsSection(props: CharacterDynamicsSection
                   </div>
                   <div className="mt-3 text-sm text-muted-foreground">{relation.stageSummary}</div>
                   <div className="mt-3 space-y-1 text-xs text-muted-foreground">
-                    {relation.volumeTitle ? <div>卷：{relation.volumeTitle}</div> : null}
-                    {typeof relation.chapterOrder === "number" ? <div>最近推进章：第 {relation.chapterOrder} 章</div> : null}
-                    {relation.nextTurnPoint ? <div>下一阶段触发点：{relation.nextTurnPoint}</div> : null}
+                    {relation.volumeTitle ? <div>{t("character.dynamics.relationVolumeLabel", { title: relation.volumeTitle })}</div> : null}
+                    {typeof relation.chapterOrder === "number" ? <div>{t("character.dynamics.relationChapterLabel", { order: relation.chapterOrder })}</div> : null}
+                    {relation.nextTurnPoint ? <div>{t("character.dynamics.relationNextTurnPoint", { value: relation.nextTurnPoint })}</div> : null}
                   </div>
                 </div>
               ))}
             </div>
           ) : (
             <div className="rounded-2xl border border-dashed p-6 text-sm text-muted-foreground">
-              当前还没有关系阶段数据。应用阵容或完成章节后，这里会自动出现。
+              {t("character.dynamics.noRelationsHint")}
             </div>
           )
         ) : null}
@@ -357,16 +365,16 @@ export default function CharacterDynamicsSection(props: CharacterDynamicsSection
                         <div className="text-xs text-muted-foreground">{assignment?.roleLabel || item.role}</div>
                       </div>
                       <div className="flex flex-wrap gap-2">
-                        {assignment?.isCore ? <Badge variant="secondary">本卷核心</Badge> : null}
+                        {assignment?.isCore ? <Badge variant="secondary">{t("character.dynamics.isCoreBadge")}</Badge> : null}
                         <Badge className={riskTone(item.absenceRisk)} variant="outline">
-                          {item.absenceRisk === "none" ? "无缺席风险" : `缺席 ${item.absenceSpan} 章`}
+                          {item.absenceRisk === "none" ? t("character.dynamics.absenceNone") : t("character.dynamics.absenceSpan", { span: item.absenceSpan })}
                         </Badge>
                       </div>
                     </div>
                     <div className="mt-3 grid gap-2 text-sm text-muted-foreground md:grid-cols-3">
-                      <div>职责：{assignment?.responsibility ?? "未分配"}</div>
-                      <div>预计出场：{assignment?.appearanceExpectation ?? "未定义"}</div>
-                      <div>计划章：{assignment?.plannedChapterOrders.join("、") || "未定义"}</div>
+                      <div>{t("character.dynamics.dutyLabel", { value: assignment?.responsibility ?? t("character.dynamics.dutyEmpty") })}</div>
+                      <div>{t("character.dynamics.appearanceExpectationLabel", { value: assignment?.appearanceExpectation ?? t("character.dynamics.appearanceExpectationEmpty") })}</div>
+                      <div>{t("character.dynamics.plannedChapterOrdersLabel", { chapters: assignment?.plannedChapterOrders.join("、") || t("character.dynamics.plannedChaptersEmpty") })}</div>
                     </div>
                   </div>
                 );
@@ -374,7 +382,7 @@ export default function CharacterDynamicsSection(props: CharacterDynamicsSection
             </div>
           ) : (
             <div className="rounded-2xl border border-dashed p-6 text-sm text-muted-foreground">
-              当前卷还没有角色职责投影。点击上方“重建动态角色”即可初始化。
+              {t("character.dynamics.noDutiesHint")}
             </div>
           )
         ) : null}

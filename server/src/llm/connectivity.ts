@@ -56,17 +56,49 @@ export interface ModelRouteConnectivityStatus extends LLMConnectivityStatus {
 }
 
 function toErrorMessage(error: unknown): string {
-  if (error instanceof Error && error.message.trim()) {
-    return error.message.trim();
+  const raw = error instanceof Error && error.message.trim() ? error.message.trim() : "";
+  if (!raw) {
+    return "连接测试失败。";
   }
-  return "连接测试失败。";
+  // 上游网关（CloudFront、Cloudflare 等）失败时常返回整页 HTML/JS。
+  // 这种内容直接弹给用户毫无意义且会撑爆界面，提取 HTTP 状态后给一句简洁的人类可读说明。
+  const looksLikeHtmlBlob = raw.length > 600 || /<html|<head|<body|<script|font-family/i.test(raw);
+  if (looksLikeHtmlBlob) {
+    const statusMatch = raw.match(/\((\d{3})\)/);
+    const status = statusMatch?.[1];
+    if (status === "401" || status === "403") {
+      return `上游接口拒绝访问（HTTP ${status}）。请检查 API Key、API 地址和该 Key 对所选模型的访问权限。`;
+    }
+    if (status === "404") {
+      return `上游接口未找到对应路径（HTTP ${status}）。请确认 API 地址（通常以 /v1 结尾）以及模型名称是否正确。`;
+    }
+    if (status === "429") {
+      return `上游接口触发限流（HTTP ${status}）。稍后重试，或检查账户配额。`;
+    }
+    if (status && /^5\d\d$/.test(status)) {
+      return `上游接口暂时不可用（HTTP ${status}）。稍后重试。`;
+    }
+    return status
+      ? `上游接口返回错误（HTTP ${status}）。`
+      : "上游接口返回非预期响应。请检查 API 地址、API Key 和模型名称。";
+  }
+  return raw;
 }
 
-function getProtocolCandidates(preferred?: ModelRouteRequestProtocol): ModelRouteRequestProtocol[] {
+function getProtocolCandidates(
+  provider: LLMProvider,
+  preferred?: ModelRouteRequestProtocol,
+): ModelRouteRequestProtocol[] {
+  // 用户在路由配置里明确选了协议，按用户意愿执行，不做协议级 fallback。
   if (preferred === "openai_compatible" || preferred === "anthropic") {
-    return [preferred, preferred === "anthropic" ? "openai_compatible" : "anthropic"];
+    return [preferred];
   }
-  return ["openai_compatible", "anthropic"];
+  // Anthropic 厂商使用 Anthropic 协议；其余厂商（含 openai、deepseek、gemini、grok、kimi、
+  // minimax、glm、siliconflow、modelscope、custom 等 OpenAI 兼容网关）默认走 OpenAI 协议。
+  if (provider === "anthropic") {
+    return ["anthropic"];
+  }
+  return ["openai_compatible"];
 }
 
 function getStructuredFormatCandidates(input: {
@@ -295,7 +327,7 @@ async function testConnection(input: {
   let plain: LLMConnectivityStatus | null = null;
   let structured: LLMConnectivityStatus | null = null;
   if (probeMode === "plain" || probeMode === "both") {
-    for (const requestProtocol of getProtocolCandidates(input.requestProtocol)) {
+    for (const requestProtocol of getProtocolCandidates(input.provider, input.requestProtocol)) {
       plain = await testPlainConnection({ ...input, requestProtocol });
       if (plain.ok) {
         break;
@@ -303,7 +335,7 @@ async function testConnection(input: {
     }
   }
   if (probeMode === "structured" || probeMode === "both") {
-    for (const requestProtocol of getProtocolCandidates(input.requestProtocol)) {
+    for (const requestProtocol of getProtocolCandidates(input.provider, input.requestProtocol)) {
       for (const structuredResponseFormat of getStructuredFormatCandidates({
         provider: input.provider,
         model: input.model,

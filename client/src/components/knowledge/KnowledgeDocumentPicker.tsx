@@ -1,4 +1,5 @@
 import { useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { useQuery } from "@tanstack/react-query";
 import type { KnowledgeDocumentStatus } from "@ai-novel/shared/types/knowledge";
 import { listKnowledgeDocuments } from "@/api/knowledge";
@@ -15,6 +16,7 @@ interface KnowledgeDocumentPickerProps {
 }
 
 export default function KnowledgeDocumentPicker(props: KnowledgeDocumentPickerProps) {
+  const { t } = useTranslation("knowledge");
   const [keyword, setKeyword] = useState("");
 
   const documentsQuery = useQuery({
@@ -47,35 +49,35 @@ export default function KnowledgeDocumentPicker(props: KnowledgeDocumentPickerPr
             className={`rounded-md border px-3 py-1 text-sm ${isAuto ? "bg-accent" : ""}`}
             onClick={() => props.onChange(null)}
           >
-            自动
+            {t("picker.auto")}
           </button>
           <button
             type="button"
             className={`rounded-md border px-3 py-1 text-sm ${!isAuto ? "bg-accent" : ""}`}
             onClick={() => props.onChange(selectedIds)}
           >
-            自定义
+            {t("picker.custom")}
           </button>
         </div>
       ) : null}
 
       {isAuto ? (
         <div className="rounded-md border border-dashed p-3 text-sm text-muted-foreground">
-          当前使用自动规则：若有实体绑定文档则优先使用绑定文档，否则回退到全部启用文档。
+          {t("picker.autoHint")}
         </div>
       ) : (
         <>
           <Input
             value={keyword}
             onChange={(event) => setKeyword(event.target.value)}
-            placeholder="搜索知识文档"
+            placeholder={t("picker.searchPlaceholder")}
           />
           <div className="max-h-64 space-y-2 overflow-auto rounded-md border p-2">
             {documentsQuery.isLoading ? (
-              <div className="text-sm text-muted-foreground">加载中...</div>
+              <div className="text-sm text-muted-foreground">{t("picker.loading")}</div>
             ) : null}
             {visibleDocuments.length === 0 && !documentsQuery.isLoading ? (
-              <div className="text-sm text-muted-foreground">没有可选文档。</div>
+              <div className="text-sm text-muted-foreground">{t("picker.empty")}</div>
             ) : null}
             {visibleDocuments.map((item) => {
               const checked = selectedIds.includes(item.id);
@@ -106,7 +108,7 @@ export default function KnowledgeDocumentPicker(props: KnowledgeDocumentPickerPr
             })}
           </div>
           <div className="text-xs text-muted-foreground">
-            已选择 {selectedIds.length} 个文档。保持为空会显式关闭知识库检索。
+            {t("picker.selectedCount", { count: selectedIds.length })}
           </div>
         </>
       )}

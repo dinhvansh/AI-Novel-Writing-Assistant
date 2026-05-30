@@ -46,27 +46,47 @@ function buildFallbackPhases(lines: string[]): { early: string; middle: string; 
 export function parseStorylineStructuredView(draftText: string): StorylineStructuredView {
   const lines = normalizeLines(draftText);
   const fallbackPhases = buildFallbackPhases(lines);
+  // i18n-ignore: AI parsing keywords — these are Chinese keyword patterns used to parse AI-generated text, not UI display strings
   const coreTheme = findByKeywords(lines, ["核心主题", "主题"]);
+  // i18n-ignore: AI parsing keywords
   const mainGoal = findByKeywords(lines, ["主线目标", "目标", "核心任务"]);
+  // i18n-ignore: AI parsing keywords
   const earlyPhase = findByKeywords(lines, ["前期", "开篇", "第一阶段"]) || fallbackPhases.early;
+  // i18n-ignore: AI parsing keywords
   const middlePhase = findByKeywords(lines, ["中期", "第二阶段", "转折"]) || fallbackPhases.middle;
+  // i18n-ignore: AI parsing keywords
   const latePhase = findByKeywords(lines, ["后期", "第三阶段", "收束", "结局阶段"]) || fallbackPhases.late;
+  // i18n-ignore: AI parsing keywords
   const growthCurve = findByKeywords(lines, ["成长", "成长路径", "成长弧"]);
+  // i18n-ignore: AI parsing keywords
   const emotionTrend = findByKeywords(lines, ["情感", "情绪", "情感线"]);
+  // i18n-ignore: AI parsing keywords
   const coreConflicts = findByKeywords(lines, ["冲突", "矛盾", "对抗"]);
+  // i18n-ignore: AI parsing keywords
   const endingDirection = findByKeywords(lines, ["结局", "终局", "收尾"]);
+  // i18n-ignore: AI parsing keywords
   const forbiddenItems = findByKeywords(lines, ["禁止", "避免", "禁忌"]);
 
   return {
+    // i18n-ignore: AI parsing keywords — "未标注" is a fallback marker for unparsed AI content, not a UI label
     coreTheme: coreTheme || "未标注",
+    // i18n-ignore: AI parsing keywords — "未标注" is a fallback marker for unparsed AI content, not a UI label
     mainGoal: mainGoal || "未标注",
+    // i18n-ignore: AI parsing keywords — "未标注" is a fallback marker for unparsed AI content, not a UI label
     earlyPhase: earlyPhase || "未标注",
+    // i18n-ignore: AI parsing keywords — "未标注" is a fallback marker for unparsed AI content, not a UI label
     middlePhase: middlePhase || "未标注",
+    // i18n-ignore: AI parsing keywords — "未标注" is a fallback marker for unparsed AI content, not a UI label
     latePhase: latePhase || "未标注",
+    // i18n-ignore: AI parsing keywords — "未标注" is a fallback marker for unparsed AI content, not a UI label
     growthCurve: growthCurve || "未标注",
+    // i18n-ignore: AI parsing keywords — "未标注" is a fallback marker for unparsed AI content, not a UI label
     emotionTrend: emotionTrend || "未标注",
+    // i18n-ignore: AI parsing keywords — "未标注" is a fallback marker for unparsed AI content, not a UI label
     coreConflicts: coreConflicts || "未标注",
+    // i18n-ignore: AI parsing keywords — "未标注" is a fallback marker for unparsed AI content, not a UI label
     endingDirection: endingDirection || "未标注",
+    // i18n-ignore: AI parsing keywords — "未标注" is a fallback marker for unparsed AI content, not a UI label
     forbiddenItems: forbiddenItems || "未标注",
   };
 }

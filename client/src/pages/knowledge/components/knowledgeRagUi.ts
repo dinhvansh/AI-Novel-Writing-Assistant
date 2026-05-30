@@ -1,23 +1,24 @@
+import i18n from "i18next";
 import type { RagJobSummary } from "@/api/knowledge";
 
 export function formatStatus(status: string): string {
   switch (status) {
     case "enabled":
-      return "已启用";
+      return i18n.t("knowledge:ragUi.statusEnabled");
     case "disabled":
-      return "已停用";
+      return i18n.t("knowledge:ragUi.statusDisabled");
     case "archived":
-      return "已归档";
+      return i18n.t("knowledge:ragUi.statusArchived");
     case "idle":
-      return "空闲";
+      return i18n.t("knowledge:ragUi.statusIdle");
     case "queued":
-      return "排队中";
+      return i18n.t("knowledge:ragUi.statusQueued");
     case "running":
-      return "执行中";
+      return i18n.t("knowledge:ragUi.statusRunning");
     case "succeeded":
-      return "成功";
+      return i18n.t("knowledge:ragUi.statusSucceeded");
     case "failed":
-      return "失败";
+      return i18n.t("knowledge:ragUi.statusFailed");
     default:
       return status;
   }
@@ -37,15 +38,15 @@ export function getRagJobProgressWidth(job: RagJobSummary): string {
 }
 
 export function formatRagJobMeta(job: RagJobSummary): string {
-  const parts = [job.jobType, `尝试 ${job.attempts}/${job.maxAttempts}`];
+  const parts = [job.jobType, i18n.t("knowledge:ragUi.attempts", { current: job.attempts, max: job.maxAttempts })];
   if (job.progress?.current !== undefined && job.progress?.total !== undefined && job.progress.total > 0) {
     parts.push(`${job.progress.current}/${job.progress.total}`);
   }
   if (job.progress?.chunks) {
-    parts.push(`${job.progress.chunks} 分块`);
+    parts.push(i18n.t("knowledge:ragUi.chunks", { count: job.progress.chunks }));
   }
   if (job.progress?.documents) {
-    parts.push(`${job.progress.documents} 文档`);
+    parts.push(i18n.t("knowledge:ragUi.documents", { count: job.progress.documents }));
   }
   return parts.join(" | ");
 }

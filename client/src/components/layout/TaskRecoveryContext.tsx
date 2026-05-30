@@ -1,5 +1,6 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useTranslation } from "react-i18next";
 import type { RecoverableTaskSummary } from "@ai-novel/shared/types/task";
 import {
   listRecoveryCandidates,
@@ -59,6 +60,7 @@ function writeDismissedRecoverySignature(signature: string): void {
 }
 
 export function TaskRecoveryProvider({ children }: { children: ReactNode }) {
+  const { t } = useTranslation();
   const queryClient = useQueryClient();
   const [manualOpen, setManualOpen] = useState(false);
   const [recoveryQueryEnabled, setRecoveryQueryEnabled] = useState(false);
@@ -108,12 +110,12 @@ export function TaskRecoveryProvider({ children }: { children: ReactNode }) {
         next.add(recoveryItemKey(variables));
         return next;
       });
-      toast.success("已开始恢复任务。");
+      toast.success(t("desktop:taskRecovery.resumeStarted"));
       refreshTaskState();
       void recoveryQuery.refetch();
     },
     onError: (error) => {
-      toast.error(error instanceof Error ? error.message : "恢复任务失败。");
+      toast.error(error instanceof Error ? error.message : t("desktop:taskRecovery.resumeFailed"));
     },
   });
 
@@ -128,12 +130,12 @@ export function TaskRecoveryProvider({ children }: { children: ReactNode }) {
         }
         return next;
       });
-      toast.success(resumedCount > 0 ? `已开始恢复 ${resumedCount} 个任务。` : "当前没有可恢复任务。");
+      toast.success(resumedCount > 0 ? t("desktop:taskRecovery.resumeAllStarted", { count: resumedCount }) : t("desktop:taskRecovery.noRecoverableTask"));
       refreshTaskState();
       void recoveryQuery.refetch();
     },
     onError: (error) => {
-      toast.error(error instanceof Error ? error.message : "批量恢复任务失败。");
+      toast.error(error instanceof Error ? error.message : t("desktop:taskRecovery.resumeAllFailed"));
     },
   });
 
