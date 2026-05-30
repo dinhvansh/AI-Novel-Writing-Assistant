@@ -7,12 +7,14 @@ import { getI18nServerHandle } from "../i18n";
 export class AppError extends Error {
   readonly statusCode: number;
   readonly details?: unknown;
+  readonly code?: string;
 
-  constructor(message: string, statusCode = 500, details?: unknown) {
+  constructor(message: string, statusCode = 500, details?: unknown, code?: string) {
     super(message);
     this.name = "AppError";
     this.statusCode = statusCode;
     this.details = details;
+    this.code = code;
   }
 }
 
@@ -252,13 +254,17 @@ export function errorHandler(
 
   if (error instanceof AppError) {
     const detail = typeof error.details === "string" ? error.details : undefined;
-    setRequestErrorMessage(res, error.message, detail);
+    // If the error has a code, translate it; otherwise use the message verbatim
+    const message = error.code
+      ? tError(res, error.code, undefined, error.message)
+      : error.message;
+    setRequestErrorMessage(res, message, detail);
     if (error.statusCode >= 500) {
       logServerError(req, error);
     }
     res.status(error.statusCode).json({
       success: false,
-      error: error.message,
+      error: message,
       message: detail,
     });
     return;

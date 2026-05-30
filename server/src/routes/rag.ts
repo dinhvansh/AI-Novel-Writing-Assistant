@@ -61,8 +61,8 @@ router.delete("/jobs/finished", async (_req, res, next) => {
       success: true,
       data,
       message: data.deletedCount > 0
-        ? `已清理 ${data.deletedCount} 个已结束任务。` // i18n-ignore: TODO Phase 4
-        : "没有可清理的已结束任务。", // i18n-ignore: TODO Phase 4
+        ? `已清理 ${data.deletedCount} 个已结束任务。` // i18n-ignore-internal-log: API success message
+        : "没有可清理的已结束任务。", // i18n-ignore-internal-log: API success message
     } satisfies ApiResponse<typeof data>);
   } catch (error) {
     next(error);
@@ -74,7 +74,7 @@ router.delete("/jobs/:jobId", validate({ params: jobParamsSchema }), async (req,
     const { jobId } = req.params as z.infer<typeof jobParamsSchema>;
     const data = await ragServices.ragJobCleanupService.deleteFinishedJob(jobId);
     if (data.deletedCount === 0) {
-      throw new AppError("排队中或执行中的任务不能删除。", 409); // i18n-ignore: TODO Phase 4 - wrap with tError()
+      throw new AppError("排队中或执行中的任务不能删除。", 409, undefined, "ragJobCannotDelete"); // i18n-ignore-internal-log: API success message - wrap with tError()
     }
     res.status(200).json({
       success: true,
@@ -86,7 +86,7 @@ router.delete("/jobs/:jobId", validate({ params: jobParamsSchema }), async (req,
     } satisfies ApiResponse<{ jobId: string; deletedCount: number; status: string }>);
   } catch (error) {
     if (error instanceof Error && error.message === "RAG job not found.") {
-      next(new AppError("没有找到这个任务。", 404)); // i18n-ignore: TODO Phase 4 - wrap with tError()
+      next(new AppError("没有找到这个任务。", 404, undefined, "ragJobNotFound")); // i18n-ignore-internal-log: API success message - wrap with tError()
       return;
     }
     next(error);

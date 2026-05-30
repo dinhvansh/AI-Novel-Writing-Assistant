@@ -137,7 +137,7 @@ export function registerCustomProviderRoutes(router: Router): void {
         const baseURL = body.baseURL.trim();
         let model = normalizeOptionalText(body.model);
         let models = getFallbackModels(model);
-        let message = "自定义厂商已创建。"; // i18n-ignore-internal-log: TODO Phase 4
+        let message = "自定义厂商已创建。"; // i18n-ignore-internal-log: API success message
 
         try {
           models = await refreshProviderModels(provider, apiKey, baseURL);
@@ -147,7 +147,7 @@ export function registerCustomProviderRoutes(router: Router): void {
             const detail = error instanceof Error ? `：${error.message}` : "。";
             throw new AppError(`未能获取模型列表，请检查 API URL，或手动填写一个默认模型${detail}`, 400); // i18n-ignore: TODO Phase 4 - wrap with tError()
           }
-          message = "自定义厂商已创建，但模型列表刷新失败。可以稍后在厂商卡片中刷新。"; // i18n-ignore-internal-log: TODO Phase 4
+          message = "自定义厂商已创建，但模型列表刷新失败。可以稍后在厂商卡片中刷新。"; // i18n-ignore-internal-log: API success message
         }
 
         const data = await secretStore.createProvider(provider, {
@@ -218,11 +218,11 @@ export function registerCustomProviderRoutes(router: Router): void {
       try {
         const { provider } = req.params as z.infer<typeof providerSchema>;
         if (isBuiltInProvider(provider)) {
-          throw new AppError("内置厂商不能删除。", 400); // i18n-ignore: TODO Phase 4 - wrap with tError()
+          throw new AppError("内置厂商不能删除。", 400, undefined, "providerBuiltinCannotDelete"); // i18n-ignore: TODO Phase 4 - wrap with tError()
         }
         const existing = await secretStore.getProvider(provider);
         if (!existing) {
-          throw new AppError("没有找到这个自定义厂商。", 404); // i18n-ignore: TODO Phase 4 - wrap with tError()
+          throw new AppError("没有找到这个自定义厂商。", 404, undefined, "providerNotFound"); // i18n-ignore: TODO Phase 4 - wrap with tError()
         }
         const routeInUse = await prisma.modelRouteConfig.findFirst({
           where: { provider },

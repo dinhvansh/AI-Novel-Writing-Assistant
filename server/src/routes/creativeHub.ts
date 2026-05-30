@@ -283,7 +283,7 @@ router.post("/threads/:threadId/runs/stream", validate({
     } catch (error) {
       writeCreativeHubFrame(res, {
         event: "creative_hub/error",
-        data: { message: error instanceof Error ? error.message : "创作中枢运行失败。" }, // i18n-ignore: TODO Phase 4
+        data: { message: error instanceof Error ? error.message : "创作中枢运行失败。" }, // i18n-ignore: internal error 4
       });
     } finally {
       disposeHeartbeat();

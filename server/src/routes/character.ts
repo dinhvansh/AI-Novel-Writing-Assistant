@@ -110,7 +110,7 @@ router.get("/:id", validate({ params: idSchema }), async (req, res, next) => {
     if (!data) {
       res.status(404).json({
         success: false,
-        error: "角色不存在。", // i18n-ignore: TODO Phase 4 - wrap with tError()
+        error: "角色不存在。", // i18n-ignore-internal-log: API success message - wrap with tError()
       } satisfies ApiResponse<null>);
       return;
     }
@@ -136,7 +136,7 @@ router.put(
       });
       const revision = await characterLibrarySyncService.createBaseRevision(
         data.id,
-        "更新角色库基础设定。", // i18n-ignore: TODO Phase 4
+        "更新角色库基础设定。", // i18n-ignore-internal-log: API success message
         "manual_base_character_update",
       );
       await characterLibrarySyncService.createLibraryUpdateProposals(data.id, revision.id);
@@ -173,8 +173,8 @@ router.post("/generate", validate({ body: generateSchema }), async (req, res, ne
       success: true,
       data: result.data,
       message: result.outputAnomaly
-        ? "AI 角色生成完成（模型输出异常，已自动回退）。" // i18n-ignore: TODO Phase 4
-        : "AI 角色生成成功。", // i18n-ignore: TODO Phase 4
+        ? "AI 角色生成完成（模型输出异常，已自动回退）。" // i18n-ignore-internal-log: API success message
+        : "AI 角色生成成功。", // i18n-ignore-internal-log: API success message
     } satisfies ApiResponse<typeof result.data>);
   } catch (error) {
     next(error);

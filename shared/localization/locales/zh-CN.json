@@ -7673,7 +7673,26 @@
       "tooBigGeneric": "内容过长。",
       "formatGeneric": "格式不正确。"
     },
-    "astrologyNotImplemented": "占星模块暂未实现。"
+    "astrologyNotImplemented": "占星模块暂未实现。",
+    "characterNotFound": "角色不存在。",
+    "ragJobCannotDelete": "排队中或执行中的任务不能删除。",
+    "ragJobNotFound": "没有找到这个任务。",
+    "llmFallbackProviderRequired": "启用结构化备用模型时，provider 和 model 不能为空。",
+    "llmNoUsableConnection": "未配置可用的模型连接。",
+    "llmConnectivityFailed": "模型连通性测试失败。",
+    "providerBuiltinCannotDelete": "内置厂商不能删除。",
+    "providerNotFound": "没有找到这个自定义厂商。",
+    "providerApiKeyRequired": "请先填写 API Key。",
+    "providerDefaultModelRequired": "请先为自定义厂商选择或填写默认模型。",
+    "providerApiUrlRequired": "请先填写自定义厂商的 API URL。",
+    "providerBalanceNotSupported": "自定义厂商暂不支持刷新余额。",
+    "providerApiKeyRequiredForRefresh": "请先配置 API Key，再刷新模型列表。",
+    "styleProfileNotFound": "写法资产不存在。",
+    "knowledgeDocumentNotFound": "知识库文档不存在。",
+    "knowledgeDocumentArchived": "归档知识库文档不能用于创建写法。",
+    "knowledgeDocumentNoActiveVersion": "知识库文档没有可用的活动版本。",
+    "knowledgeDocumentEmptyContent": "知识库文档活动版本内容为空，不能用于创建写法。",
+    "writingFormulaNotFound": "写作公式不存在。"
   },
   "serverLogs": {},
   "workflow": {

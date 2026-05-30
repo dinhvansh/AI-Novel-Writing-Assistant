@@ -138,19 +138,19 @@ router.post(
       const body = req.body as z.infer<typeof fromKnowledgeDocumentTaskSchema>;
       const document = await knowledgeService.getDocumentById(body.documentId);
       if (!document) {
-        throw new AppError("知识库文档不存在。", 404); // i18n-ignore: TODO Phase 4 - wrap with tError()
+        throw new AppError("知识库文档不存在。", 404, undefined, "knowledgeDocumentNotFound"); // i18n-ignore: TODO Phase 4 - wrap with tError()
       }
       if (document.status === "archived") {
-        throw new AppError("归档知识库文档不能用于创建写法。", 400); // i18n-ignore: TODO Phase 4 - wrap with tError()
+        throw new AppError("归档知识库文档不能用于创建写法。", 400, undefined, "knowledgeDocumentArchived"); // i18n-ignore: TODO Phase 4 - wrap with tError()
       }
 
       const activeVersion = document.versions.find((version) => version.isActive);
       if (!activeVersion) {
-        throw new AppError("知识库文档没有可用的活动版本。", 400); // i18n-ignore: TODO Phase 4 - wrap with tError()
+        throw new AppError("知识库文档没有可用的活动版本。", 400, undefined, "knowledgeDocumentNoActiveVersion"); // i18n-ignore: TODO Phase 4 - wrap with tError()
       }
       const sourceText = activeVersion.content;
       if (!sourceText.trim()) {
-        throw new AppError("知识库文档活动版本内容为空，不能用于创建写法。", 400); // i18n-ignore: TODO Phase 4 - wrap with tError()
+        throw new AppError("知识库文档活动版本内容为空，不能用于创建写法。", 400, undefined, "knowledgeDocumentEmptyContent"); // i18n-ignore: TODO Phase 4 - wrap with tError()
       }
 
       const task = await styleExtractionTaskService.createTask({

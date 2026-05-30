@@ -96,7 +96,7 @@ const antiAiRuleSchema = z.object({
 
 const antiAiRuleUpdateSchema = antiAiRuleSchema.partial().refine(
   (value) => Object.keys(value).length > 0,
-  { message: "至少提供一个更新字段。" }, // i18n-ignore: TODO Phase 4
+  { message: "至少提供一个更新字段。" }, // i18n-ignore-internal-log: Zod validation
 );
 
 const antiAiRuleDraftFieldsSchema = z.object({
@@ -267,7 +267,7 @@ router.get("/style-profiles/:id", validate({ params: idSchema }), async (req, re
     if (!data) {
       res.status(404).json({
         success: false,
-        error: "写法资产不存在。", // i18n-ignore: TODO Phase 4 - wrap with tError()
+        error: "写法资产不存在。", // i18n-ignore-internal-log: Zod validation - wrap with tError()
       } satisfies ApiResponse<null>);
       return;
     }

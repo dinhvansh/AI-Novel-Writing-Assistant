@@ -168,25 +168,25 @@ router.post("/", validate({ body: chatSchema }), async (req, res, next) => {
     const systemPrompt =
       body.systemPrompt ??
       // i18n-ignore: AI prompt content — system prompt for chat assistant
-      `你是一位专业的小说创作助手，擅长帮助作者进行小说创作、世界设定、角色设计等工作。 // i18n-ignore: TODO Phase 4
-- 使用 Markdown 格式组织回答 // i18n-ignore: TODO Phase 4
-- 提供具体、可操作的创作建议 // i18n-ignore: TODO Phase 4
-- 结合文学理论与商业写作实践 // i18n-ignore: TODO Phase 4
+      `你是一位专业的小说创作助手，擅长帮助作者进行小说创作、世界设定、角色设计等工作。 // i18n-ignore: AI prompt content
+- 使用 Markdown 格式组织回答 // i18n-ignore: AI prompt content
+- 提供具体、可操作的创作建议 // i18n-ignore: AI prompt content
+- 结合文学理论与商业写作实践 // i18n-ignore: AI prompt content
 - 擅长领域：写作技巧/情节构思/角色设计/世界观构建/文风建议/创作瓶颈突破`; // i18n-ignore: string matching
 
     const finalSystemPrompt =
       body.agentMode
         ? `${systemPrompt}
 
-作为智能创作代理，你需要： // i18n-ignore: TODO Phase 4
-- 主动分析用户需求背后的深层问题 // i18n-ignore: TODO Phase 4
-- 提供多个解决方案并分析各自优劣 // i18n-ignore: TODO Phase 4
-- 给出具体的下一步行动建议 // i18n-ignore: TODO Phase 4
-- 在必要时主动提问以获取更多信息` // i18n-ignore: TODO Phase 4
+作为智能创作代理，你需要： // i18n-ignore: AI prompt content
+- 主动分析用户需求背后的深层问题 // i18n-ignore: AI prompt content
+- 提供多个解决方案并分析各自优劣 // i18n-ignore: AI prompt content
+- 给出具体的下一步行动建议 // i18n-ignore: AI prompt content
+- 在必要时主动提问以获取更多信息` // i18n-ignore: AI prompt content
         : systemPrompt;
 
     const searchHint = body.enableSearch
-      ? "\n提示：联网检索能力当前为预留状态，请在回答中说明基于已有上下文推断。" // i18n-ignore: TODO Phase 4
+      ? "\n提示：联网检索能力当前为预留状态，请在回答中说明基于已有上下文推断。" // i18n-ignore: AI prompt content
       : "";
 
     const latestUserMessage = [...recentMessages]
@@ -217,7 +217,7 @@ router.post("/", validate({ body: chatSchema }), async (req, res, next) => {
     }
     const ragHint = ragContext
       ? // i18n-ignore: AI prompt RAG context
-      `\n以下是检索到的项目知识片段（可能不完整），请优先依据这些内容回答，并在冲突时说明不确定性：\n${ragContext}\n` // i18n-ignore: TODO Phase 4
+      `\n以下是检索到的项目知识片段（可能不完整），请优先依据这些内容回答，并在冲突时说明不确定性：\n${ragContext}\n` // i18n-ignore: AI prompt content
       : "";
 
     const messages = [

@@ -6787,7 +6787,26 @@
       "tooBigGeneric": "Nội dung quá dài.",
       "formatGeneric": "Định dạng không đúng."
     },
-    "astrologyNotImplemented": "Mô-đun chiêm tinh chưa được triển khai."
+    "astrologyNotImplemented": "Mô-đun chiêm tinh chưa được triển khai.",
+    "characterNotFound": "Nhân vật không tồn tại.",
+    "ragJobCannotDelete": "Tác vụ đang xếp hàng hoặc đang thực thi không thể xóa.",
+    "ragJobNotFound": "Không tìm thấy tác vụ này.",
+    "llmFallbackProviderRequired": "Khi bật mô hình dự phòng có cấu trúc, provider và model không được để trống.",
+    "llmNoUsableConnection": "Chưa cấu hình kết nối mô hình khả dụng.",
+    "llmConnectivityFailed": "Kiểm tra kết nối mô hình thất bại.",
+    "providerBuiltinCannotDelete": "Nhà cung cấp tích hợp sẵn không thể xóa.",
+    "providerNotFound": "Không tìm thấy nhà cung cấp tùy chỉnh này.",
+    "providerApiKeyRequired": "Vui lòng điền API Key trước.",
+    "providerDefaultModelRequired": "Vui lòng chọn hoặc điền mô hình mặc định cho nhà cung cấp tùy chỉnh.",
+    "providerApiUrlRequired": "Vui lòng điền API URL của nhà cung cấp tùy chỉnh.",
+    "providerBalanceNotSupported": "Nhà cung cấp tùy chỉnh hiện chưa hỗ trợ làm mới số dư.",
+    "providerApiKeyRequiredForRefresh": "Vui lòng cấu hình API Key trước, sau đó làm mới danh sách mô hình.",
+    "styleProfileNotFound": "Tài sản văn phong không tồn tại.",
+    "knowledgeDocumentNotFound": "Tài liệu Kho tri thức không tồn tại.",
+    "knowledgeDocumentArchived": "Tài liệu Kho tri thức đã lưu trữ không thể dùng để tạo văn phong.",
+    "knowledgeDocumentNoActiveVersion": "Tài liệu Kho tri thức không có phiên bản hoạt động khả dụng.",
+    "knowledgeDocumentEmptyContent": "Nội dung phiên bản hoạt động của tài liệu Kho tri thức trống, không thể dùng để tạo văn phong.",
+    "writingFormulaNotFound": "Công thức viết không tồn tại."
   },
   "serverLogs": {},
   "seedData": {

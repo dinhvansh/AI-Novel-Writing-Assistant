@@ -40,9 +40,9 @@ const replayBodySchema = z.object({
 function enrichRunDetail(detail: AgentRunDetail): AgentRunDetail {
   const failedStep = [...detail.steps].reverse().find((step) => step.status === "failed");
   const failureSummary = detail.run.status === "failed"
-    ? normalizeFailureSummary(detail.run.error ?? failedStep?.error, "运行失败，但没有记录明确错误。") // i18n-ignore: TODO Phase 4
+    ? normalizeFailureSummary(detail.run.error ?? failedStep?.error, "运行失败，但没有记录明确错误。") // i18n-ignore-internal-log: internal label
     : detail.run.status === "waiting_approval"
-      ? "当前运行在等待审批。" // i18n-ignore: TODO Phase 4
+      ? "当前运行在等待审批。" // i18n-ignore-internal-log: internal label
       : detail.run.error ?? null;
   return {
     ...detail,
@@ -69,7 +69,7 @@ function enrichRunDetail(detail: AgentRunDetail): AgentRunDetail {
       ? [{
         type: "chapter",
         id: detail.run.chapterId,
-        label: detail.run.currentStep ?? "章节目标", // i18n-ignore: TODO Phase 4
+        label: detail.run.currentStep ?? "章节目标", // i18n-ignore-internal-log: internal label
         route: detail.run.novelId ? `/novels/${detail.run.novelId}/edit` : `/creative-hub?runId=${detail.run.id}`,
       }]
       : [],
