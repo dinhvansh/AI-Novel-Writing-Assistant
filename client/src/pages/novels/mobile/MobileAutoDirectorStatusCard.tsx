@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import WorkflowProgressBar, {
@@ -9,22 +10,6 @@ import type { NovelEditTakeoverState } from "../components/NovelEditView.types";
 
 interface MobileAutoDirectorStatusCardProps {
   takeover: NovelEditTakeoverState;
-}
-
-function modeLabel(mode: NovelEditTakeoverState["mode"]): string {
-  switch (mode) {
-    case "loading":
-      return "加载中";
-    case "running":
-      return "接管中";
-    case "waiting":
-      return "等待确认";
-    case "action_required":
-      return "待处理";
-    case "failed":
-    default:
-      return "异常";
-  }
 }
 
 function progressTone(mode: NovelEditTakeoverState["mode"]): WorkflowProgressTone {
@@ -51,6 +36,24 @@ function cardClass(mode: NovelEditTakeoverState["mode"]): string {
 }
 
 export default function MobileAutoDirectorStatusCard({ takeover }: MobileAutoDirectorStatusCardProps) {
+  const { t } = useTranslation("novel");
+
+  function modeLabel(mode: NovelEditTakeoverState["mode"]): string {
+    switch (mode) {
+      case "loading":
+        return t("workspace.mobile.statusCard.modeLoading");
+      case "running":
+        return t("workspace.mobile.statusCard.modeRunning");
+      case "waiting":
+        return t("workspace.mobile.statusCard.modeWaiting");
+      case "action_required":
+        return t("workspace.mobile.statusCard.modeActionRequired");
+      case "failed":
+      default:
+        return t("workspace.mobile.statusCard.modeFailed");
+    }
+  }
+
   const resolvedProgress = typeof takeover.progress === "number"
     ? normalizeProgressPercent(takeover.progress)
     : null;
@@ -84,7 +87,7 @@ export default function MobileAutoDirectorStatusCard({ takeover }: MobileAutoDir
             <div className="truncate text-foreground">{takeover.currentAction}</div>
           ) : null}
           {takeover.checkpointLabel ? (
-            <div className="truncate text-muted-foreground">检查点：{takeover.checkpointLabel}</div>
+            <div className="truncate text-muted-foreground">{t("workspace.mobile.statusCard.checkpointLabel", { label: takeover.checkpointLabel })}</div>
           ) : null}
         </div>
       ) : null}

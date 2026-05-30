@@ -1,4 +1,5 @@
 import type { TitleFactorySuggestion } from "@ai-novel/shared/types/title";
+import { useTranslation } from "react-i18next";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { getClickRateBadgeClass, getTitleStyleLabel } from "../titleStudio.shared";
@@ -17,17 +18,20 @@ interface TitleSuggestionListProps {
 export default function TitleSuggestionList({
   suggestions,
   selectedTitle = "",
-  primaryActionLabel = "复制标题",
+  primaryActionLabel,
   onPrimaryAction,
   onCopy,
   onSave,
   savingTitle = "",
-  emptyMessage = "还没有生成任何标题。",
+  emptyMessage,
 }: TitleSuggestionListProps) {
+  const { t } = useTranslation("titles");
+  const resolvedPrimaryActionLabel = primaryActionLabel ?? t("suggestionList.copyTitle");
+  const resolvedEmptyMessage = emptyMessage ?? t("suggestionList.emptyMessage");
   if (suggestions.length === 0) {
     return (
       <div className="rounded-xl border border-dashed p-6 text-center text-sm text-muted-foreground">
-        {emptyMessage}
+        {resolvedEmptyMessage}
       </div>
     );
   }
@@ -47,11 +51,11 @@ export default function TitleSuggestionList({
               <div className="space-y-2">
                 <div className="flex flex-wrap items-center gap-2">
                   <Badge className={getClickRateBadgeClass(suggestion.clickRate)}>
-                    预估 {suggestion.clickRate}
+                    {t("suggestionList.clickRateBadge", { rate: suggestion.clickRate })}
                   </Badge>
                   <Badge variant="secondary">{getTitleStyleLabel(suggestion.style)}</Badge>
                   {suggestion.angle ? <Badge variant="outline">{suggestion.angle}</Badge> : null}
-                  {isSelected ? <Badge variant="outline">当前选中</Badge> : null}
+                  {isSelected ? <Badge variant="outline">{t("suggestionList.selected")}</Badge> : null}
                 </div>
                 <div className="text-lg font-semibold text-foreground">{suggestion.title}</div>
                 {suggestion.reason ? (
@@ -62,12 +66,12 @@ export default function TitleSuggestionList({
               <div className="flex flex-wrap items-center gap-2">
                 {onPrimaryAction ? (
                   <Button type="button" size="sm" onClick={() => onPrimaryAction(suggestion)}>
-                    {primaryActionLabel}
+                    {resolvedPrimaryActionLabel}
                   </Button>
                 ) : null}
                 {onCopy ? (
                   <Button type="button" variant="outline" size="sm" onClick={() => onCopy(suggestion)}>
-                    复制
+                    {t("suggestionList.copy")}
                   </Button>
                 ) : null}
                 {onSave ? (
@@ -78,7 +82,7 @@ export default function TitleSuggestionList({
                     disabled={savingTitle === suggestion.title}
                     onClick={() => onSave(suggestion)}
                   >
-                    {savingTitle === suggestion.title ? "保存中..." : "加入标题库"}
+                    {savingTitle === suggestion.title ? t("suggestionList.saving") : t("suggestionList.saveToLibrary")}
                   </Button>
                 ) : null}
               </div>

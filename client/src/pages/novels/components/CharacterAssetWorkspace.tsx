@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+﻿import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import type { TFunction } from "i18next";
 import type {
@@ -325,8 +325,8 @@ export default function CharacterAssetWorkspace(props: CharacterAssetWorkspacePr
                     <div>
                       <div className="text-sm font-medium">
                         {applicableVisibleProfileCount > 0
-                          ? `已为“${visibleProfileSuggestion.characterName}”生成 ${applicableVisibleProfileCount} 项可写入外显资料`
-                          : `“{t("novel:character.workspace.visibleProfile.noApplicableFor", { name: visibleProfileSuggestion.characterName })}`}
+                          ? t("novel:character.workspace.visibleProfile.generatedFor", { name: visibleProfileSuggestion.characterName, count: applicableVisibleProfileCount })
+                          : t("novel:character.workspace.visibleProfile.noApplicableFor", { name: visibleProfileSuggestion.characterName })}
                       </div>
                       <div className="mt-1 text-xs text-muted-foreground">
                         {t("novel:character.workspace.visibleProfile.confirmHint")}
@@ -387,7 +387,7 @@ export default function CharacterAssetWorkspace(props: CharacterAssetWorkspacePr
                         <div className="font-medium">{result.characterName}</div>
                         <div className="text-muted-foreground">
                           {result.hasApplicableChanges
-                            ? `{t("novel:character.workspace.visibleProfile.applicableCount", { count: Object.keys(result.fields).length })}`
+                            ? t("novel:character.workspace.visibleProfile.applicableCount", { count: Object.keys(result.fields).length })
                             : t("novel:character.workspace.visibleProfile.noApplicable")}
                         </div>
                         <div>{visibleProfileFields.map((field) => result.fields[field.key]).filter(Boolean).join(" / ")}</div>
@@ -395,7 +395,7 @@ export default function CharacterAssetWorkspace(props: CharacterAssetWorkspacePr
                     ))}
                     {batchVisibleProfileResult.skippedCharacters.map((item) => (
                       <div key={item.characterId} className="rounded-md border border-dashed p-2 text-xs text-muted-foreground">
-                        {item.characterName}：{item.reason}
+                        {t("novel:character.workspace.visibleProfile.skippedItem", { name: item.characterName, reason: item.reason })}
                       </div>
                     ))}
                   </div>

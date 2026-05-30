@@ -5,7 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
-import { RuleFilter, severityLabels, typeLabels } from "../antiAiRulesPage.shared";
+import { RuleFilter, getSeverityLabels, getTypeLabels } from "../antiAiRulesPage.shared";
 import AntiAiToggleLine from "./AntiAiToggleLine";
 
 interface AntiAiRuleListProps {
@@ -22,6 +22,8 @@ interface AntiAiRuleListProps {
 
 export default function AntiAiRuleList(props: AntiAiRuleListProps) {
   const { t } = useTranslation();
+  const typeLabels = getTypeLabels(t);
+  const severityLabels = getSeverityLabels(t);
   const testingRuleIdSet = new Set(props.testingRuleIds);
 
   return (

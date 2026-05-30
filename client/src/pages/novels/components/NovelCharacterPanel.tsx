@@ -352,7 +352,7 @@ export default function NovelCharacterPanel(props: NovelCharacterPanelProps) {
           <div className="flex flex-wrap items-center gap-2 rounded-2xl border border-border/70 bg-background/70 p-3">
             <Button onClick={() => setIsCharacterEntryOpen(true)}>{t("novel:character.panel.addCharacter")}</Button>
             <AiButton variant="outline" onClick={handleOpenSupplementalDialog}>
-              补充角色
+              {t("novel:character.panel.supplementCharacter")}
             </AiButton>
             <AiButton
               variant="secondary"
@@ -671,15 +671,15 @@ export default function NovelCharacterPanel(props: NovelCharacterPanelProps) {
                                 <div className="font-medium text-foreground">{getSupplementalRelationLabel(candidate, relation)}</div>
                                 <div>{t("novel:character.panel.supplemental.candidate.surfaceRelation")}: {relation.surfaceRelation}</div>
                                 {relation.hiddenTension ? <div>{t("novel:character.panel.supplemental.candidate.hiddenTension")}: {relation.hiddenTension}</div> : null}
-                                {relation.conflictSource ? <div>冲突来源：{relation.conflictSource}</div> : null}
-                                {relation.nextTurnPoint ? <div>下一反转点：{relation.nextTurnPoint}</div> : null}
+                                {relation.conflictSource ? <div>{t("novel:character.panel.supplemental.candidate.conflictSource")}: {relation.conflictSource}</div> : null}
+                                {relation.nextTurnPoint ? <div>{t("novel:character.panel.supplemental.candidate.nextTurnPoint")}: {relation.nextTurnPoint}</div> : null}
                               </div>
                             ))}
                           </div>
                         </div>
                       ) : (
                         <div className="mt-3 rounded-xl border border-dashed p-3 text-xs text-muted-foreground">
-                          这名角色更偏向独立补位，当前没有强制绑定的结构化关系。
+                          {t("novel:character.panel.supplemental.candidate.noRelations")}
                         </div>
                       )}
                     </div>
@@ -687,7 +687,7 @@ export default function NovelCharacterPanel(props: NovelCharacterPanelProps) {
                 </div>
               ) : (
                 <div className="flex min-h-[320px] items-center justify-center rounded-xl border border-dashed px-6 text-center text-sm text-muted-foreground">
-                  先说明你想补哪类角色，或直接交给 AI 判断，再生成候选。
+                  {t("novel:character.panel.supplemental.emptyHint")}
                 </div>
               )}
             </div>

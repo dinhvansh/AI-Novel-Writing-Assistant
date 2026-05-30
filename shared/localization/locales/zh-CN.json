@@ -162,7 +162,15 @@
         "saveStoryMacro": "保存故事规划",
         "saveCharacter": "保存角色",
         "saveOutline": "保存卷工作区",
-        "saveStructured": "保存拆章"
+        "saveStructured": "保存拆章",
+        "statusCard": {
+          "modeLoading": "加载中",
+          "modeRunning": "接管中",
+          "modeWaiting": "等待确认",
+          "modeActionRequired": "待处理",
+          "modeFailed": "异常",
+          "checkpointLabel": "检查点：{label}"
+        }
       }
     },
     "storyMacro": {
@@ -1661,6 +1669,9 @@
         "blocked": "受阻",
         "notStarted": "未开始"
       },
+      "pagination": "第 {page} 页 / 共 {totalPages} 页（{totalNovels} 本）",
+      "prevPage": "上一页",
+      "nextPage": "下一页",
       "card": {
         "published": "已发布",
         "draft": "草稿",
@@ -1671,6 +1682,7 @@
         "aiRunning": "AI 正在后台持续推进",
         "runningInBackground": "后台运行中",
         "progress": "进度 {percent}%",
+        "progressPercent": "进度 {percent}%",
         "currentStage": "当前阶段：{stage}",
         "defaultStage": "自动导演",
         "lastHealthyStage": "最近健康阶段：{stage}",
@@ -2525,8 +2537,12 @@
             "whyNow": "为什么现在补",
             "suggestedRelations": "建议同步的关系",
             "surfaceRelation": "表层关系",
-            "hiddenTension": "隐藏张力"
-          }
+            "hiddenTension": "隐藏张力",
+            "conflictSource": "冲突来源",
+            "nextTurnPoint": "下一反转点",
+            "noRelations": "这名角色更偏向独立补位，当前没有强制绑定的结构化关系。"
+          },
+          "emptyHint": "先说明你想补哪类角色，或直接交给 AI 判断，再生成候选。"
         }
       },
       "workspace": {
@@ -2581,6 +2597,7 @@
           "guidanceHint": "留空时按小说设定自动补齐；填写后，AI 会优先按你的倾向生成可写入建议。",
           "generatingFor": "正在为\"{name}\"整理外貌、体态、声音和登场记忆点。",
           "generatedCount": "已为\"{name}\"生成 {count} 项可写入外显资料",
+          "generatedFor": "已为\"{name}\"生成 {count} 项可写入外显资料",
           "noApplicableFor": "\"{name}\"当前没有可写入的外显资料",
           "confirmHint": "请先看下面差异，确认后点击保存到角色卡。",
           "save": "保存到角色卡",
@@ -2595,6 +2612,7 @@
           "applying": "写入中...",
           "applicableCount": "可写入 {count} 项",
           "noApplicable": "没有可写入项",
+          "skippedItem": "\"{name}\"已跳过：{reason}",
           "fields": {
             "appearance": {
               "label": "样貌记忆点",
@@ -3031,6 +3049,13 @@
       "error": {
         "chapterRangeNotReady": "章节范围只能从节奏拆章、章节执行或质量修复开始，请先完成前置步骤。",
         "alreadyHasTask": "当前已有自动导演任务，请先处理当前任务再重新接管。"
+      },
+      "diagnosis": {
+        "title": "接续诊断",
+        "loadingReadiness": "读取项目进度",
+        "enterCurrentTask": "进入当前任务",
+        "starting": "启动中...",
+        "preserveHint": "默认保留已有资产，仅在高级设置选择重跑时才会重建对应步骤。"
       }
     },
     "writingFormula": {
@@ -4503,59 +4528,25 @@
       "noContentDescription": "进入章节编辑页生成或补写正文后，这里会显示完整内容。"
     },
     "chapterInsights": {
-      "noSelectionHint": "选中章节后，这里会显示任务单、场景拆解、质量反馈、修复记录和诊断信息。",
-      "noObjectiveHint": "这一章还没有明确目标，建议先补章节计划。",
-      "panelTitle": "资料诊断",
-      "panelDescription": "查看本章任务、质量和修复依据，不占用正文阅读区。",
-      "chapterOrderBadge": "第{{order}}章",
+      "sidebarTitle": "章节侧栏",
+      "sidebarDescription": "先看本章概览，再查看时间线、角色动态和资源风险。",
+      "chapterBadge": "第{order}章",
+      "noChapterBadge": "未选章节",
       "tabs": {
-        "taskSheet": "任务单",
-        "sceneCards": "场景",
-        "quality": "质量",
-        "repair": "修复",
-        "contextDiagnosis": "上下文诊断"
+        "overview": "本章概览",
+        "timeline": "时间线",
+        "character": "角色动态",
+        "resources": "资源风险"
       },
-      "taskSheet": {
-        "title": "本章任务单",
-        "emptyHint": "暂无任务单。你可以先让 AI 生成任务单，再回来继续写这章。"
-      },
-      "chapterObjectiveLabel": "章节目标",
-      "latestStateLabel": "最新状态",
-      "noStateSummary": "暂无状态摘要。",
-      "sceneBudgetTitle": "场景预算合同",
-      "wordCountUnit": "字",
-      "sceneCountLabel": "场景数",
-      "sceneLabel": "场景 {{index}}",
-      "mustAdvanceLabel": "必须推进",
-      "mustPreserveLabel": "必须保留",
-      "entryStateLabel": "起始状态",
-      "exitStateLabel": "结束状态",
-      "forbiddenExpansionLabel": "禁止展开",
-      "noneValue": "无",
-      "sceneCardsTitle": "场景拆解",
-      "legacySceneCardsHint": "当前是旧版场景拆解文本，建议重新生成章节执行合同。",
-      "noSceneCards": "暂无场景拆解。",
-      "quality": {
-        "overall": "总体",
-        "coherence": "连贯性",
-        "repetition": "重复度",
-        "pacing": "节奏",
-        "voice": "文风",
-        "engagement": "吸引力",
-        "reviewIssuesTitle": "最近审校问题",
-        "noReviewIssues": "当前没有最近审校问题。",
-        "auditIssuesTitle": "结构化审计问题",
-        "noAuditIssues": "当前没有结构化审计问题。"
-      },
-      "repair": {
-        "otherChapterRepairingTitle": "还有其他章节正在后台修复",
-        "otherChapterRepairingDescription": "{{label}} 仍在修复中。当前章节不会显示那一章的修复流，返回对应章节即可继续查看。",
-        "anotherChapterFallback": "另一章",
-        "streamTitle": "问题修复输出",
-        "finalizingHint": "修复文本已经输出完成，系统正在保存并复审。",
-        "waitingHint": "等待修复输出...",
-        "historyTitle": "修复记录",
-        "noHistory": "暂无修复记录。"
+      "mobile": {
+        "overviewTitle": "本章概览",
+        "overviewBadge": "优先查看",
+        "timelineTitle": "时间线",
+        "timelineBadge": "默认",
+        "characterTitle": "角色动态",
+        "characterBadge": "展开查看",
+        "resourceTitle": "资源与风险",
+        "resourceBadge": "展开查看"
       }
     },
     "versionHistory": {
@@ -4649,28 +4640,6 @@
         "customPlaceholder": "例如：让这段更压抑一点，保留原信息，但把节奏压得更紧。",
         "cancelCustom": "取消",
         "submitCustom": "提交指令"
-      }
-    },
-    "chapterInsights": {
-      "sidebarTitle": "章节侧栏",
-      "sidebarDescription": "先看本章概览，再查看时间线、角色动态和资源风险。",
-      "chapterBadge": "第{order}章",
-      "noChapterBadge": "未选章节",
-      "tabs": {
-        "overview": "本章概览",
-        "timeline": "时间线",
-        "character": "角色动态",
-        "resources": "资源风险"
-      },
-      "mobile": {
-        "overviewTitle": "本章概览",
-        "overviewBadge": "优先查看",
-        "timelineTitle": "时间线",
-        "timelineBadge": "默认",
-        "characterTitle": "角色动态",
-        "characterBadge": "展开查看",
-        "resourceTitle": "资源与风险",
-        "resourceBadge": "展开查看"
       }
     },
     "characterDynamics": {
@@ -6574,7 +6543,7 @@
       }
     },
     "hooks": {
-      "publishSuccess": "发布完成：文档 ，版本 v，绑定项",
+      "publishSuccess": "发布完成：文档 {{documentId}}，版本 v{{versionNumber}}，绑定 {{bindingCount}} 项",
       "publishFailed": "发布失败。",
       "styleProfileGenerating": "正在根据拆书里的\"文风与技法\"生成写法资产，完成后会自动跳转到写法引擎。",
       "styleProfileSuccess": "已从拆书生成写法，正在打开写法引擎。",
@@ -6654,6 +6623,15 @@
     },
     "shared": {
       "titleStudio": "标题工坊"
+    },
+    "suggestionList": {
+      "copyTitle": "复制标题",
+      "emptyMessage": "还没有生成任何标题。",
+      "clickRateBadge": "预估 {rate}",
+      "selected": "当前选中",
+      "copy": "复制",
+      "saving": "保存中...",
+      "saveToLibrary": "加入标题库"
     }
   },
   "knowledge": {
@@ -7702,6 +7680,16 @@
         "overviewWithVis": "总览/可视化",
         "assets": "素材/版本/导入导出"
       },
+      "deepeningTab": {
+        "title": "问答深化",
+        "generating": "生成中...",
+        "generate": "生成深化问题",
+        "quickOptionsHint": "快捷选项（由模型返回，可一键填入）",
+        "noQuickOptions": "当前问题未返回快捷选项，请直接填写回答。",
+        "answerPlaceholder": "填写你的回答",
+        "submitting": "整合中...",
+        "submit": "提交并整合回答"
+      },
       "consistency": {
         "title": "一致性检查",
         "checkButton": "运行一致性检查",
@@ -7749,6 +7737,14 @@
         "conflicts": "核心冲突",
         "description": "世界概述",
         "factions": "势力关系"
+      },
+      "axioms": {
+        "title": "核心规则（公理）",
+        "hint": "可以把它理解成“这个世界不能随便打破的底层规则”。后面的自动生成、一致性检查都会参考这里。",
+        "placeholder": "核心规则 {{index}}",
+        "addButton": "新增一条",
+        "saving": "保存中...",
+        "saveButton": "保存核心规则"
       }
     },
     "generator": {
@@ -7949,6 +7945,14 @@
     }
   },
   "characters": {
+    "library": {
+      "confirmDelete": "确认删除角色「{{name}}」？此操作不可恢复。",
+      "createdCount": "已创建角色：{{count}}",
+      "sendToHub": "角色库发往创作中枢",
+      "listTitle": "角色列表",
+      "empty": "暂无角色。",
+      "continueWithCharacter": "带着角色继续"
+    },
     "editDialog": {
       "title": "编辑角色",
       "titleWithName": "编辑角色：{{name}}",
@@ -8209,7 +8213,7 @@
   "genres": {
     "page": {
       "cardTitle": "题材基底库",
-      "cardDescription": "按树结构维护作品的题材基底，例如修仙、玄幻、都市、历史架空。它回答的是\u201c这是什么书\u201d，会作为小说项目的正式题材资产，而不是临时输入字段。",
+      "cardDescription": "按树结构维护作品的题材基底，例如修仙、玄幻、都市、历史架空。它回答的是“这是什么书”，会作为小说项目的正式题材资产，而不是临时输入字段。",
       "totalCount": "当前题材基底数：{count}",
       "createTreeBtn": "新建题材基底树",
       "loading": "正在加载题材基底树...",

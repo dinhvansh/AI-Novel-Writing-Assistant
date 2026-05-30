@@ -4,7 +4,7 @@ import { FlaskConical, X } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { severityLabels, typeLabels } from "../antiAiRulesPage.shared";
+import { getSeverityLabels, getTypeLabels } from "../antiAiRulesPage.shared";
 
 interface AntiAiRuleEffectTestCardProps {
   content: string;
@@ -24,6 +24,8 @@ interface AntiAiRuleEffectTestCardProps {
 export default function AntiAiRuleEffectTestCard(props: AntiAiRuleEffectTestCardProps) {
   const { t } = useTranslation("antiAiRules");
   const totalRuleCount = props.effectiveRuleCount + props.previewRules.length;
+  const typeLabels = getTypeLabels(t);
+  const severityLabels = getSeverityLabels(t);
 
   return (
     <Card>

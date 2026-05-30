@@ -397,7 +397,15 @@
         "saveStoryMacro": "Lưu kế hoạch câu chuyện",
         "saveCharacter": "Lưu nhân vật",
         "saveOutline": "Lưu không gian làm việc tập",
-        "saveStructured": "Lưu phân chương"
+        "saveStructured": "Lưu phân chương",
+        "statusCard": {
+          "modeLoading": "Đang tải",
+          "modeRunning": "Đang tiếp quản",
+          "modeWaiting": "Chờ xác nhận",
+          "modeActionRequired": "Cần xử lý",
+          "modeFailed": "Bất thường",
+          "checkpointLabel": "Điểm kiểm tra: {label}"
+        }
       }
     },
     "storyMacro": {
@@ -1840,6 +1848,13 @@
       "error": {
         "chapterRangeNotReady": "Phạm vi chương chỉ có thể bắt đầu từ nhịp độ tách chương, thực thi chương hoặc sửa chất lượng, vui lòng hoàn thành bước trước.",
         "alreadyHasTask": "Hiện đã có tác vụ đạo diễn tự động, vui lòng xử lý tác vụ hiện tại trước khi tiếp quản lại."
+      },
+      "diagnosis": {
+        "title": "Chẩn đoán tiếp nối",
+        "loadingReadiness": "Đọc tiến độ dự án",
+        "enterCurrentTask": "Vào tác vụ hiện tại",
+        "starting": "Đang khởi động...",
+        "preserveHint": "Mặc định giữ lại tài sản hiện có, chỉ khi chọn chạy lại trong cài đặt nâng cao mới xây dựng lại bước tương ứng."
       }
     },
     "taskDrawer": {
@@ -2030,7 +2045,8 @@
         "delete": "Xóa",
         "preview": "Xem trước",
         "continueAutoExec": "Tiếp tục thực thi tự động {scope}",
-        "defaultScope": "Phạm vi chương hiện tại"
+        "defaultScope": "Phạm vi chương hiện tại",
+        "progressPercent": "Tiến độ {percent}%"
       },
       "cockpit": {
         "title": "Bảng điều khiển AI",
@@ -2040,7 +2056,10 @@
         "loadError": "Không thể đọc trạng thái AI của cuốn sách này, vui lòng thử lại sau.",
         "reload": "Đọc lại",
         "noTask": "Cuốn sách này không có tác vụ AI tự động tiến triển nào cần xử lý."
-      }
+      },
+      "pagination": "Trang {page} / Tổng số {totalPages} trang ({totalNovels} cuốn)",
+      "prevPage": "Trang trước",
+      "nextPage": "Trang sau"
     },
     "character": {
       "workspace": {
@@ -2134,7 +2153,9 @@
               "label": "Ấn tượng xuất hiện",
               "placeholder": "Cảm nhận trực quan cho độc giả khi nhân vật xuất hiện lần đầu hoặc thường xuyên"
             }
-          }
+          },
+          "generatedFor": "Đã tạo {count} mục hồ sơ ngoại hiện có thể ghi cho \"{name}\"",
+          "skippedItem": "\"{name}\" đã bỏ qua: {reason}"
         },
         "resource": {
           "title": "Tài nguyên chính",
@@ -2337,8 +2358,12 @@
             "whyNow": "Tại sao bổ sung ngay bây giờ",
             "suggestedRelations": "Mối quan hệ đề xuất đồng bộ",
             "surfaceRelation": "Mối quan hệ bề mặt",
-            "hiddenTension": "Căng thẳng ẩn"
-          }
+            "hiddenTension": "Căng thẳng ẩn",
+            "conflictSource": "Nguồn xung đột",
+            "nextTurnPoint": "Điểm đảo chiều tiếp theo",
+            "noRelations": "Nhân vật này thiên về bổ sung độc lập, hiện không có quan hệ cấu trúc ràng buộc bắt buộc."
+          },
+          "emptyHint": "Hãy nói rõ bạn muốn bổ sung loại nhân vật nào, hoặc để AI tự đánh giá, sau đó tạo ứng viên."
         }
       },
       "cast": {
@@ -7150,6 +7175,24 @@
         "resolveButton": "Đánh dấu đã giải quyết",
         "ignoreButton": "Bỏ qua",
         "noIssues": "Chưa có bản ghi vấn đề nhất quán nào, kết quả sẽ được hiển thị ở đây sau khi chạy kiểm tra."
+      },
+      "deepeningTab": {
+        "title": "Hỏi đáp sâu",
+        "generating": "Đang tạo...",
+        "generate": "Tạo câu hỏi sâu",
+        "quickOptionsHint": "Tùy chọn nhanh (do mô hình trả về, có thể điền một lần)",
+        "noQuickOptions": "Câu hỏi hiện tại chưa trả về tùy chọn nhanh, vui lòng điền trực tiếp câu trả lời.",
+        "answerPlaceholder": "Điền câu trả lời của bạn",
+        "submitting": "Đang tích hợp...",
+        "submit": "Gửi và tích hợp câu trả lời"
+      },
+      "axioms": {
+        "title": "Quy tắc cốt lõi (Công lý)",
+        "hint": "Có thể hiểu đây là 'quy tắc nền tảng không thể tùy tiện phá vỡ của thế giới này'. Các bước tự động tạo và kiểm tra nhất quán sau này sẽ tham khảo ở đây.",
+        "placeholder": "Quy tắc cốt lõi {{index}}",
+        "addButton": "Thêm một mục",
+        "saving": "Đang lưu...",
+        "saveButton": "Lưu quy tắc cốt lõi"
       }
     },
     "propertySelector": {
@@ -8198,7 +8241,7 @@
       }
     },
     "hooks": {
-      "publishSuccess": "Phát hành hoàn tất: tài liệu , phiên bản v, mục ràng buộc",
+      "publishSuccess": "Phát hành hoàn tất: tài liệu {{documentId}}, phiên bản v{{versionNumber}}, {{bindingCount}} mục ràng buộc",
       "publishFailed": "Phát hành thất bại.",
       "styleProfileGenerating": "Đang tạo tài sản viết từ \"văn phong và kỹ thuật\" trong phân tích sách, sau khi hoàn tất sẽ tự động chuyển đến công cụ viết.",
       "styleProfileSuccess": "Đã tạo cách viết từ phân tích sách, đang mở công cụ viết.",
@@ -8278,6 +8321,15 @@
     },
     "shared": {
       "titleStudio": "Xưởng tiêu đề"
+    },
+    "suggestionList": {
+      "copyTitle": "Sao chép tiêu đề",
+      "emptyMessage": "Chưa có tiêu đề nào được tạo.",
+      "clickRateBadge": "Dự kiến {rate}",
+      "selected": "Đang chọn",
+      "copy": "Sao chép",
+      "saving": "Đang lưu...",
+      "saveToLibrary": "Thêm vào kho tiêu đề"
     }
   },
   "storyModes": {
@@ -8454,6 +8506,14 @@
       "cancel": "Hủy",
       "save": "Lưu thay đổi",
       "saving": "Đang lưu..."
+    },
+    "library": {
+      "confirmDelete": "Xác nhận xóa nhân vật「{{name}}」? Thao tác này không thể khôi phục.",
+      "createdCount": "Đã tạo nhân vật: {{count}}",
+      "sendToHub": "Gửi thư viện nhân vật đến trung tâm sáng tác",
+      "listTitle": "Danh sách nhân vật",
+      "empty": "Chưa có nhân vật.",
+      "continueWithCharacter": "Tiếp tục với nhân vật"
     }
   },
   "antiAiRules": {

@@ -283,7 +283,7 @@ export default function NovelList() {
 
         <div className="flex flex-wrap items-center gap-2">
           <Badge variant="outline">
-            第 {page} / {totalPages} 页，共 {totalNovels} 本
+            {t("novel:novelList.pagination", { page, totalPages, totalNovels })}
           </Badge>
           {recoveryCandidateCount > 0 ? (
             <Button variant="outline" onClick={openRecoveryDialog}>
@@ -421,7 +421,7 @@ export default function NovelList() {
                         {workflowBadge ? (
                           <Badge variant={workflowBadge.variant}>{workflowBadge.label}</Badge>
                         ) : null}
-                        <Badge variant="outline">进度 {Math.round(workflowTask.progress * 100)}%</Badge>
+                        <Badge variant="outline">{t("novel:novelList.card.progressPercent", { percent: Math.round(workflowTask.progress * 100) })}</Badge>
                         {isWorkflowRunning ? (
                           <Badge variant="outline">{t("novel:novelList.card.runningInBackground")}</Badge>
                         ) : null}
@@ -479,7 +479,7 @@ export default function NovelList() {
                       }}
                     >
                       <Gauge className="h-4 w-4" aria-hidden="true" />
-                      AI 驾驶舱
+                      {t("novel:novelList.card.cockpit")}
                     </Button>
 
                     {canContinueChapterBatchAutoExecution(workflowTask) ? (
@@ -540,7 +540,7 @@ export default function NovelList() {
                     <Button asChild size="sm" variant="outline">
                       <Link to={`/novels/${novel.id}/preview`} onClick={stopCardClick}>
                         <BookOpen className="h-4 w-4" aria-hidden="true" />
-                        预览
+                        {t("novel:novelList.card.preview")}
                       </Link>
                     </Button>
 
@@ -583,7 +583,7 @@ export default function NovelList() {
                 disabled={page <= 1 || novelListQuery.isFetching}
                 onClick={() => setPage((current) => Math.max(1, current - 1))}
               >
-                上一页
+                {t("novel:novelList.prevPage")}
               </Button>
               <Button
                 type="button"
@@ -591,7 +591,7 @@ export default function NovelList() {
                 disabled={page >= totalPages || novelListQuery.isFetching}
                 onClick={() => setPage((current) => Math.min(totalPages, current + 1))}
               >
-                下一页
+                {t("novel:novelList.nextPage")}
               </Button>
             </div>
           ) : null}
