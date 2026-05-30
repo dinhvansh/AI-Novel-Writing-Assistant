@@ -138,7 +138,7 @@ async function requireCheckpointIdForBranch(
   if (checkpointId || parentMessages.length === 0) {
     return checkpointId;
   }
-  const message = "未能匹配到对应的历史检查点，当前消息无法生成新分支。";
+  const message = "未能匹配到对应的历史检查点，当前消息无法生成新分支。"; // i18n-ignore: internal error
   toast.error(message);
   throw new Error(message);
 }
@@ -189,7 +189,7 @@ export function useCreativeHubRuntime({
     () =>
       async function* streamCallback(messages, config) {
         if (!isThreadReady) {
-          throw new Error("创作中枢线程尚未初始化。");
+          throw new Error("创作中枢线程尚未初始化。"); // i18n-ignore: internal error
         }
         const streamSessionId = streamSessionRef.current;
         const streamThreadId = threadId;

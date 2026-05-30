@@ -41,7 +41,7 @@ function scoreDecodedTxt(text: string): number {
   const controlChars = text.match(/[\u0000-\u0008\u000B\u000C\u000E-\u001F]/g)?.length ?? 0;
   const privateUseChars = text.match(/[\uE000-\uF8FF]/g)?.length ?? 0;  // i18n-ignore: mojibake detection regex
 
-  const mojibakeChars = text.match(/[鑴欒剹闄囧▌鎼傜瘬鍗על┐闄哴]/g)?.length ?? 0;
+  const mojibakeChars = text.match(/[鑴欒剹闄囧▌鎼傜瘬鍗על┐闄哴]/g)?.length ?? 0; // i18n-ignore: mojibake detection regex
   const suspiciousTokenCount = SUSPICIOUS_MOJIBAKE_TOKENS.reduce(
     (total, token) => total + countOccurrences(text, token),
     0,
