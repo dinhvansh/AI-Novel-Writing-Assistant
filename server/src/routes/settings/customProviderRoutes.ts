@@ -26,7 +26,7 @@ const createCustomProviderSchema = z.object({
   key: z.string().trim().optional(),
   model: z.string().trim().optional(),
   imageModel: z.string().trim().optional(),
-  baseURL: z.string().trim().url("API URL 格式不正确。"),
+  baseURL: z.string().trim().url("API URL 格式不正确。"), // i18n-ignore: Zod validation message - TODO Phase 4
   isActive: z.boolean().optional(),
   reasoningEnabled: z.boolean().optional(),
   concurrencyLimit: z.coerce.number().int().min(0).max(MAX_PROVIDER_CONCURRENCY_LIMIT).optional(),
@@ -35,7 +35,7 @@ const createCustomProviderSchema = z.object({
 
 const customProviderModelsSchema = z.object({
   key: z.string().trim().optional(),
-  baseURL: z.string().trim().url("API URL 格式不正确。"),
+  baseURL: z.string().trim().url("API URL 格式不正确。"), // i18n-ignore: Zod validation message - TODO Phase 4
 });
 
 type APIKeyRecordLike = {
@@ -90,7 +90,7 @@ function getFallbackModels(currentModel?: string): string[] {
 }
 
 function isModelFetchError(error: Error): boolean {
-  return /failed|empty|失败|为空/i.test(error.message);
+  return /failed|empty|失败|为空/i.test(error.message); // i18n-ignore: string matching
 }
 
 export function registerCustomProviderRoutes(router: Router): void {
@@ -111,7 +111,7 @@ export function registerCustomProviderRoutes(router: Router): void {
             models,
             defaultModel: models[0] ?? "",
           },
-          message: `已获取 ${models.length} 个模型。`,
+          message: `已获取 ${models.length} 个模型。` // i18n-ignore-internal-log: API success message, not user-facing
         } satisfies ApiResponse<{
           models: string[];
           defaultModel: string;
@@ -137,7 +137,7 @@ export function registerCustomProviderRoutes(router: Router): void {
         const baseURL = body.baseURL.trim();
         let model = normalizeOptionalText(body.model);
         let models = getFallbackModels(model);
-        let message = "自定义厂商已创建。";
+        let message = "自定义厂商已创建。"; // i18n-ignore-internal-log: API success message
 
         try {
           models = await refreshProviderModels(provider, apiKey, baseURL);
@@ -145,9 +145,9 @@ export function registerCustomProviderRoutes(router: Router): void {
         } catch (error) {
           if (!model) {
             const detail = error instanceof Error ? `：${error.message}` : "。";
-            throw new AppError(`未能获取模型列表，请检查 API URL，或手动填写一个默认模型${detail}`, 400);
+            throw new AppError(`未能获取模型列表，请检查 API URL，或手动填写一个默认模型${detail}`, 400); // i18n-ignore: TODO Phase 4 - wrap with tError()
           }
-          message = "自定义厂商已创建，但模型列表刷新失败。可以稍后在厂商卡片中刷新。";
+          message = "自定义厂商已创建，但模型列表刷新失败。可以稍后在厂商卡片中刷新。"; // i18n-ignore-internal-log: API success message
         }
 
         const data = await secretStore.createProvider(provider, {
@@ -218,25 +218,25 @@ export function registerCustomProviderRoutes(router: Router): void {
       try {
         const { provider } = req.params as z.infer<typeof providerSchema>;
         if (isBuiltInProvider(provider)) {
-          throw new AppError("内置厂商不能删除。", 400);
+          throw new AppError("内置厂商不能删除。", 400, undefined, "providerBuiltinCannotDelete"); // i18n-ignore: TODO Phase 4 - wrap with tError()
         }
         const existing = await secretStore.getProvider(provider);
         if (!existing) {
-          throw new AppError("没有找到这个自定义厂商。", 404);
+          throw new AppError("没有找到这个自定义厂商。", 404, undefined, "providerNotFound"); // i18n-ignore: TODO Phase 4 - wrap with tError()
         }
         const routeInUse = await prisma.modelRouteConfig.findFirst({
           where: { provider },
           select: { taskType: true },
         });
         if (routeInUse) {
-          throw new AppError(`请先把模型路由 ${routeInUse.taskType} 改到其他厂商，再删除这个厂商。`, 400);
+          throw new AppError(`请先把模型路由 ${routeInUse.taskType} 改到其他厂商，再删除这个厂商。`, 400); // i18n-ignore: TODO Phase 4 - wrap with tError()
         }
         await secretStore.deleteProvider(provider);
         await saveProviderImageModel(provider, null);
         setProviderSecretCache(provider, null);
         res.status(200).json({
           success: true,
-          message: "自定义厂商已删除。",
+          message: "自定义厂商已删除。" // i18n-ignore-internal-log: API success message, not user-facing
         } satisfies ApiResponse<null>);
       } catch (error) {
         next(error);

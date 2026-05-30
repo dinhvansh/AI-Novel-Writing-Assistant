@@ -7672,7 +7672,27 @@
       "tooBigNumber": "不能大于 {maximum}。",
       "tooBigGeneric": "内容过长。",
       "formatGeneric": "格式不正确。"
-    }
+    },
+    "astrologyNotImplemented": "占星模块暂未实现。",
+    "characterNotFound": "角色不存在。",
+    "ragJobCannotDelete": "排队中或执行中的任务不能删除。",
+    "ragJobNotFound": "没有找到这个任务。",
+    "llmFallbackProviderRequired": "启用结构化备用模型时，provider 和 model 不能为空。",
+    "llmNoUsableConnection": "未配置可用的模型连接。",
+    "llmConnectivityFailed": "模型连通性测试失败。",
+    "providerBuiltinCannotDelete": "内置厂商不能删除。",
+    "providerNotFound": "没有找到这个自定义厂商。",
+    "providerApiKeyRequired": "请先填写 API Key。",
+    "providerDefaultModelRequired": "请先为自定义厂商选择或填写默认模型。",
+    "providerApiUrlRequired": "请先填写自定义厂商的 API URL。",
+    "providerBalanceNotSupported": "自定义厂商暂不支持刷新余额。",
+    "providerApiKeyRequiredForRefresh": "请先配置 API Key，再刷新模型列表。",
+    "styleProfileNotFound": "写法资产不存在。",
+    "knowledgeDocumentNotFound": "知识库文档不存在。",
+    "knowledgeDocumentArchived": "归档知识库文档不能用于创建写法。",
+    "knowledgeDocumentNoActiveVersion": "知识库文档没有可用的活动版本。",
+    "knowledgeDocumentEmptyContent": "知识库文档活动版本内容为空，不能用于创建写法。",
+    "writingFormulaNotFound": "写作公式不存在。"
   },
   "serverLogs": {},
   "workflow": {
@@ -7687,10 +7707,338 @@
     }
   },
   "seedData": {
-    "genres": {},
-    "storyModes": {},
-    "styleTemplates": {},
-    "antiAiRules": {}
+    "genres": {
+      "genre_fantasy_root": {
+        "name": "奇幻",
+        "description": "包含东方玄幻、西方魔幻等奇幻类型。"
+      },
+      "genre_fantasy_eastern": {
+        "name": "东方玄幻",
+        "description": "修炼体系、宗门势力与家国叙事并重。"
+      },
+      "genre_fantasy_western": {
+        "name": "西方魔幻",
+        "description": "骑士、法师、神话生物等经典元素。"
+      },
+      "genre_fantasy_xianxia": {
+        "name": "仙侠修真",
+        "description": "以修真体系、道统因果、飞升长生为核心母题。"
+      },
+      "genre_fantasy_high_martial": {
+        "name": "高武幻想",
+        "description": "高强度力量体系、战斗成长和世界阶层跃迁并重。"
+      },
+      "genre_urban_root": {
+        "name": "都市",
+        "description": "以现代城市为主要舞台，强调现实冲突与人物关系。"
+      },
+      "genre_urban_superpower": {
+        "name": "都市异能",
+        "description": "现代都市框架下叠加超常能力、隐秘规则或特殊职业。"
+      },
+      "genre_urban_workplace": {
+        "name": "都市职场",
+        "description": "围绕职业成长、组织关系与现实利益推进剧情。"
+      },
+      "genre_urban_life": {
+        "name": "都市生活",
+        "description": "以现实生活、邻里关系、家庭与日常经营为主要舞台。"
+      },
+      "genre_history_root": {
+        "name": "历史",
+        "description": "以古代或历史类社会结构为舞台，强调时代约束与局势变化。"
+      },
+      "genre_history_alt": {
+        "name": "历史架空",
+        "description": "借用历史质感与制度逻辑，但允许重构关键势力和事件走向。"
+      },
+      "genre_history_power": {
+        "name": "朝堂权谋",
+        "description": "围绕朝局、派系、官场生存与政治选择展开。"
+      },
+      "genre_history_war": {
+        "name": "王朝争霸",
+        "description": "围绕势力扩张、战争推进和大格局重组持续展开。"
+      },
+      "genre_scifi_root": {
+        "name": "科幻",
+        "description": "以科技变革、未来秩序、宇宙探索或末世生存为核心驱动力。"
+      },
+      "genre_scifi_near_future": {
+        "name": "近未来科幻",
+        "description": "基于现实延展的近未来社会、技术和日常冲突。"
+      },
+      "genre_scifi_cyberpunk": {
+        "name": "赛博朋克",
+        "description": "高科技低生活、资本垄断、义体改造与身份异化并存。"
+      },
+      "genre_scifi_apocalypse": {
+        "name": "末世科幻",
+        "description": "灾变、资源危机和秩序重建共同驱动人物选择。"
+      },
+      "genre_scifi_space": {
+        "name": "星际冒险",
+        "description": "以远航、未知文明、舰队行动或星际任务推进剧情。"
+      },
+      "genre_suspense_root": {
+        "name": "悬疑惊悚",
+        "description": "以谜团、异常、危险逼近和真相回收驱动持续阅读。"
+      },
+      "genre_suspense_detective": {
+        "name": "刑侦推理",
+        "description": "围绕案件调查、证据链和逻辑推演持续推进。"
+      },
+      "genre_suspense_thriller": {
+        "name": "惊悚悬疑",
+        "description": "危险持续逼近，未知威胁和心理压迫感并重。"
+      },
+      "genre_suspense_weird_rules": {
+        "name": "规则怪谈",
+        "description": "围绕规则、禁忌、异常逻辑和错误代价组织故事。"
+      },
+      "genre_suspense_infinite": {
+        "name": "无限副本",
+        "description": "通过一个个副本、关卡或循环空间推进生存与破局。"
+      },
+      "genre_romance_root": {
+        "name": "言情",
+        "description": "以关系推进、情绪兑现和人物陪伴感为主要阅读驱动力。"
+      },
+      "genre_romance_modern": {
+        "name": "现代言情",
+        "description": "现代生活语境中的关系推进、情绪拉扯与现实选择。"
+      },
+      "genre_romance_ancient": {
+        "name": "古代言情",
+        "description": "古代礼法、身份约束和命运纠葛共同作用于关系发展。"
+      },
+      "genre_romance_campus": {
+        "name": "校园青春",
+        "description": "围绕成长、同伴关系、试探靠近和青春氛围展开。"
+      },
+      "genre_game_root": {
+        "name": "游戏竞技",
+        "description": "围绕比赛、职业体系、数值成长或系统化任务持续推进。"
+      },
+      "genre_game_esports": {
+        "name": "电竞",
+        "description": "以赛事对抗、团队磨合、训练成长和成绩突破为主线。"
+      },
+      "genre_game_online": {
+        "name": "虚拟网游",
+        "description": "围绕职业体系、副本、工会关系和游戏世界成长展开。"
+      }
+    },
+    "storyModes": {
+      "story_mode_power_root": {
+        "name": "爽感推进",
+        "description": "以优势兑现、立威、反差和阶段性压制为主驱动力的阅读模式。"
+      },
+      "story_mode_invincible": {
+        "name": "无敌流",
+        "description": "主角优势非常明确，悬念来自展示方式和秩序改写，而不是生存危机。"
+      },
+      "story_mode_face_slap": {
+        "name": "打脸流",
+        "description": "以误判、轻视和反转羞辱构成高频爽点。"
+      },
+      "story_mode_misread": {
+        "name": "迪化流",
+        "description": "围绕他人误读主角、主动脑补和失控放大来制造趣味与爽感。"
+      },
+      "story_mode_secret_identity": {
+        "name": "马甲流",
+        "description": "用多重身份、隐藏层级和掉马风险驱动阅读欲。"
+      },
+      "story_mode_build_root": {
+        "name": "建设经营",
+        "description": "以积累、建设、经营和阶段性收成为主要推进方式的阅读模式。"
+      },
+      "story_mode_farming": {
+        "name": "种田流",
+        "description": "重视生产、积累、生活秩序和长期回暖感的建设型模式。"
+      },
+      "story_mode_management": {
+        "name": "经营流",
+        "description": "以商业、组织、品牌或系统运营推动剧情。"
+      },
+      "story_mode_territory_building": {
+        "name": "领地建设",
+        "description": "围绕据点、城镇、势力版图和秩序搭建持续推进。"
+      },
+      "story_mode_family_management": {
+        "name": "家族经营",
+        "description": "以家业、家族关系和代际责任推动持续阅读。"
+      },
+      "story_mode_healing_root": {
+        "name": "日常治愈",
+        "description": "以陪伴、修复、生活回暖和低烈度持续陪伴感为核心驱动。"
+      },
+      "story_mode_healing_daily": {
+        "name": "治愈日常",
+        "description": "以日常互动、陪伴和情绪回温为主要看点的治愈模式。"
+      },
+      "story_mode_shop_daily": {
+        "name": "小店日常",
+        "description": "以店铺经营和人与人来往构成稳定、治愈的追读节奏。"
+      },
+      "story_mode_slow_life": {
+        "name": "慢生活",
+        "description": "以节奏放缓、生活细节和日常秩序修复构成阅读吸引力。"
+      },
+      "story_mode_companion_healing": {
+        "name": "陪伴疗愈",
+        "description": "把人与人之间稳定陪伴、照料和共同恢复作为主要推进器。"
+      },
+      "story_mode_comedy_root": {
+        "name": "喜剧整活",
+        "description": "以反差、包袱、误会和失控回收构成主要追读动力。"
+      },
+      "story_mode_comedy": {
+        "name": "搞笑流",
+        "description": "高频笑点、反差和轻松回收是阅读核心。"
+      },
+      "story_mode_misunderstanding_comedy": {
+        "name": "误会喜剧",
+        "description": "靠多方信息差和误会扩散制造连续喜剧效果。"
+      },
+      "story_mode_absurd_subversion": {
+        "name": "沙雕反套路",
+        "description": "用离谱展开、反套路回收和节奏突转制造强烈轻松感。"
+      },
+      "story_mode_mystery_root": {
+        "name": "悬念博弈",
+        "description": "以信息差、推演、布局和对抗智性满足驱动追读。"
+      },
+      "story_mode_mystery_inference": {
+        "name": "悬疑推演",
+        "description": "以线索、推理和真相揭示节奏构成阅读核心。"
+      },
+      "story_mode_mind_game": {
+        "name": "智斗流",
+        "description": "强调布局、博弈、对手思维和反制节奏。"
+      },
+      "story_mode_survival_game": {
+        "name": "生存博弈",
+        "description": "在有限资源、高压环境和规则竞争中制造持续紧张感。"
+      },
+      "story_mode_relationship_root": {
+        "name": "关系情感",
+        "description": "以关系推进、情感兑现和人物之间的拉扯变化作为主驱动。"
+      },
+      "story_mode_romantic_tension": {
+        "name": "恋爱拉扯",
+        "description": "以暧昧、靠近、退缩和关系试探制造持续吸引力。"
+      },
+      "story_mode_chasing_wife": {
+        "name": "追妻火葬场",
+        "description": "以前期伤害或错失为前提，靠后续追偿、悔意和关系重建推进。"
+      },
+      "story_mode_ensemble_bond": {
+        "name": "群像羁绊",
+        "description": "通过多人关系网、共同经历和羁绊演化形成阅读黏性。"
+      },
+      "story_mode_growth_root": {
+        "name": "成长冒险",
+        "description": "以升级、探索、闯关和阶段性突破构成追读主动力。"
+      },
+      "story_mode_growth_leveling": {
+        "name": "升级成长",
+        "description": "围绕角色能力、认知和阶段门槛突破构建阅读快感。"
+      },
+      "story_mode_adventure_exploration": {
+        "name": "探索冒险",
+        "description": "以新地图、新文明和未知风险驱动阅读新鲜感。"
+      },
+      "story_mode_dungeon_challenge": {
+        "name": "副本闯关",
+        "description": "以阶段关卡、规则破解和通关反馈形成强节奏推进。"
+      }
+    },
+    "styleTemplates": {
+      "bottom-loop-reality": {
+        "name": "底层循环现实流",
+        "description": "通过碎片化生活与反复落空表现人物困境。"
+      },
+      "power-up-escalation": {
+        "name": "爽文递进推进流",
+        "description": "持续升级冲突和收益点，强化目标推进与爽点兑现。"
+      },
+      "suspense-pressure": {
+        "name": "悬疑压迫递增流",
+        "description": "通过信息遮蔽、细节异常和压力叠加制造不安感。"
+      },
+      "emotional-tension": {
+        "name": "情绪拉扯流",
+        "description": "通过错位表达、停顿和误读制造关系张力。"
+      },
+      "ensemble-weave": {
+        "name": "群像交织流",
+        "description": "以多人行动线和视角差异交织推进事件。"
+      },
+      "immersive-daily": {
+        "name": "日常浸没流",
+        "description": "通过生活细节和细微情绪变化建立持续沉浸感。"
+      },
+      "cold-professional": {
+        "name": "冷峻专业流",
+        "description": "以专业事实和行业细节压住情绪，形成克制压力感。"
+      },
+      "absurd-dark-humor": {
+        "name": "荒诞黑色幽默流",
+        "description": "通过反差、冷感观察和荒诞细节制造黑色幽默。"
+      }
+    },
+    "antiAiRules": {
+      "forbid-explicit-psychology": {
+        "name": "禁止解释型心理描写",
+        "description": "禁止直接使用“他感到”“他意识到”等句式解释人物心理。"
+      },
+      "forbid-ending-elevation": {
+        "name": "禁止段尾升华",
+        "description": "禁止在段尾或收尾处用总结句升华主题。"
+      },
+      "forbid-theme-summary": {
+        "name": "禁止总结主题",
+        "description": "禁止把段落写成总结中心思想或提炼人生道理。"
+      },
+      "forbid-direct-preaching": {
+        "name": "禁止直接说教",
+        "description": "禁止作者替角色或读者做直接价值判断和说教。"
+      },
+      "risk-even-paragraph-length": {
+        "name": "段落长度过于整齐",
+        "description": "段落长度和节奏过于平均，容易产生 AI 作文感。"
+      },
+      "risk-three-paragraphs-exposition": {
+        "name": "连续三段解释性叙事",
+        "description": "连续几段只有解释没有动作，会削弱现场感。"
+      },
+      "risk-dialogue-too-functional": {
+        "name": "对话纯功能推进",
+        "description": "对话只有信息推进，没有人物语气和生活噪音。"
+      },
+      "risk-repeated-sentence-structure": {
+        "name": "句式重复率过高",
+        "description": "连续句式过于整齐，容易显得机械。"
+      },
+      "encourage-useless-action": {
+        "name": "鼓励无意义小动作",
+        "description": "鼓励加入真实但不推动主线的小动作增强人味。"
+      },
+      "encourage-reality-gap": {
+        "name": "鼓励现实落差",
+        "description": "让人物预期和现实结果之间出现落差。"
+      },
+      "encourage-hard-mouth-compensation": {
+        "name": "鼓励嘴硬补偿",
+        "description": "人物吃瘪后用嘴硬、转移或找补来维持体面。"
+      },
+      "encourage-life-noise": {
+        "name": "鼓励生活噪音",
+        "description": "适当加入与主线不完全相关的生活噪音增加现场感。"
+      }
+    }
   },
   "storyModes": {
     "page": {
