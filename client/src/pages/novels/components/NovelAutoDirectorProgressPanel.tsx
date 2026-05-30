@@ -450,7 +450,7 @@ export default function NovelAutoDirectorProgressPanel({
   const resolveDashboardAction = (dashboardAction: DirectorDashboardAction) => {
     if (dashboardAction.type === "confirm_and_continue" && onConfirmAndContinue) {
       return {
-        label: isConfirmingAndContinuing ? t("autoDirector:progressPanel.actions.continuing") : dashboardAction.label,
+        label: isConfirmingAndContinuing ? t("autoDirector:progressPanel.actions.continuing") : (translateDirectorLabel(dashboardAction.label) ?? dashboardAction.label),
         onClick: onConfirmAndContinue,
         variant: "default" as const,
         disabled: isConfirmingAndContinuing,
@@ -458,21 +458,21 @@ export default function NovelAutoDirectorProgressPanel({
     }
     if (dashboardAction.type === "background_continue") {
       return {
-        label: dashboardAction.label,
+        label: translateDirectorLabel(dashboardAction.label) ?? dashboardAction.label,
         onClick: onBackgroundContinue,
         variant: "outline" as const,
       };
     }
     if (dashboardAction.type === "open_task_center") {
       return {
-        label: dashboardAction.label,
+        label: translateDirectorLabel(dashboardAction.label) ?? dashboardAction.label,
         onClick: onOpenTaskCenter,
         variant: dashboardAction.emphasis === "primary" ? ("default" as const) : ("outline" as const),
       };
     }
     if (dashboardAction.type === "resume_from_checkpoint" || dashboardAction.type === "retry") {
       return {
-        label: dashboardAction.label,
+        label: translateDirectorLabel(dashboardAction.label) ?? dashboardAction.label,
         onClick: onOpenTaskCenter,
         variant: "outline" as const,
       };

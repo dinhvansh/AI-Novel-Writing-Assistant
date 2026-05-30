@@ -120,20 +120,20 @@ export type DirectorCandidateSetupStepKey = typeof DIRECTOR_CANDIDATE_SETUP_STEP
 // i18n-ignore: key constants for useDirectorCandidateSetupSteps hook
 export const DIRECTOR_CANDIDATE_SETUP_STEP_KEYS = {
   candidate_seed_alignment: {
-    label: "candidateSetupSteps.candidate_seed_alignment.label",
-    description: "candidateSetupSteps.candidate_seed_alignment.description",
+    label: "autoDirector:candidateSetupSteps.candidate_seed_alignment.label",
+    description: "autoDirector:candidateSetupSteps.candidate_seed_alignment.description",
   },
   candidate_project_framing: {
-    label: "candidateSetupSteps.candidate_project_framing.label",
-    description: "candidateSetupSteps.candidate_project_framing.description",
+    label: "autoDirector:candidateSetupSteps.candidate_project_framing.label",
+    description: "autoDirector:candidateSetupSteps.candidate_project_framing.description",
   },
   candidate_direction_batch: {
-    label: "candidateSetupSteps.candidate_direction_batch.label",
-    description: "candidateSetupSteps.candidate_direction_batch.description",
+    label: "autoDirector:candidateSetupSteps.candidate_direction_batch.label",
+    description: "autoDirector:candidateSetupSteps.candidate_direction_batch.description",
   },
   candidate_title_pack: {
-    label: "candidateSetupSteps.candidate_title_pack.label",
-    description: "candidateSetupSteps.candidate_title_pack.description",
+    label: "autoDirector:candidateSetupSteps.candidate_title_pack.label",
+    description: "autoDirector:candidateSetupSteps.candidate_title_pack.description",
   },
 } as const;
 
