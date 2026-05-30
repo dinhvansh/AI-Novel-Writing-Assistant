@@ -1,48 +1,54 @@
-const INTENT_LABELS: Record<string, string> = {
-  social_opening: "轻度开场",
-  list_novels: "列出小说",
-  list_worlds: "列出世界观",
-  query_task_status: "查询任务状态",
-  create_novel: "创建小说",
-  select_novel_workspace: "切换小说工作区",
-  bind_world_to_novel: "绑定世界观到小说",
-  unbind_world_from_novel: "解除小说世界观绑定",
-  produce_novel: "整本生产",
-  query_novel_production_status: "查询整本生产状态",
-  query_novel_title: "查询小说标题",
-  query_chapter_content: "查询章节内容",
-  query_progress: "查询创作进度",
-  inspect_failure_reason: "诊断失败原因",
-  write_chapter: "写作章节",
-  rewrite_chapter: "重写章节",
-  save_chapter_draft: "保存章节草稿",
-  start_pipeline: "启动流水线",
-  inspect_characters: "查看角色规划",
-  inspect_timeline: "查看时间线",
-  inspect_world: "查看世界观",
-  search_knowledge: "检索知识库",
-  ideate_novel_setup: "生成设定备选",
-  general_chat: "一般对话",
-  unknown: "未识别意图",
+import type { TFunction } from "i18next";
+
+const INTENT_LABEL_KEYS: Record<string, string> = {
+  social_opening: "creativeHub:planner.intent.socialOpening",
+  list_novels: "creativeHub:planner.intent.listNovels",
+  list_worlds: "creativeHub:planner.intent.listWorlds",
+  query_task_status: "creativeHub:planner.intent.queryTaskStatus",
+  create_novel: "creativeHub:planner.intent.createNovel",
+  select_novel_workspace: "creativeHub:planner.intent.selectNovelWorkspace",
+  bind_world_to_novel: "creativeHub:planner.intent.bindWorldToNovel",
+  unbind_world_from_novel: "creativeHub:planner.intent.unbindWorldFromNovel",
+  produce_novel: "creativeHub:planner.intent.produceNovel",
+  query_novel_production_status: "creativeHub:planner.intent.queryNovelProductionStatus",
+  query_novel_title: "creativeHub:planner.intent.queryNovelTitle",
+  query_chapter_content: "creativeHub:planner.intent.queryChapterContent",
+  query_progress: "creativeHub:planner.intent.queryProgress",
+  inspect_failure_reason: "creativeHub:planner.intent.inspectFailureReason",
+  write_chapter: "creativeHub:planner.intent.writeChapter",
+  rewrite_chapter: "creativeHub:planner.intent.rewriteChapter",
+  save_chapter_draft: "creativeHub:planner.intent.saveChapterDraft",
+  start_pipeline: "creativeHub:planner.intent.startPipeline",
+  inspect_characters: "creativeHub:planner.intent.inspectCharacters",
+  inspect_timeline: "creativeHub:planner.intent.inspectTimeline",
+  inspect_world: "creativeHub:planner.intent.inspectWorld",
+  search_knowledge: "creativeHub:planner.intent.searchKnowledge",
+  ideate_novel_setup: "creativeHub:planner.intent.ideateNovelSetup",
+  general_chat: "creativeHub:planner.intent.generalChat",
+  unknown: "creativeHub:planner.intent.unknown",
 };
 
-const PLANNER_SOURCE_LABELS: Record<string, string> = {
-  llm: "大模型识别",
-  unknown: "未知来源",
+const PLANNER_SOURCE_LABEL_KEYS: Record<string, string> = {
+  llm: "creativeHub:planner.source.llm",
+  unknown: "creativeHub:planner.source.unknown",
 };
 
 function formatBilingualLabel(label: string, rawValue: string) {
   return `${label}（${rawValue}）`;
 }
 
-export function getIntentDisplayLabel(intent: unknown): string {
+export function getIntentDisplayLabel(intent: unknown, t?: TFunction): string {
+  const _t = t ?? ((key: string) => key);
   const rawValue = typeof intent === "string" && intent.trim() ? intent.trim() : "unknown";
-  const label = INTENT_LABELS[rawValue] ?? "未映射意图";
+  const labelKey = INTENT_LABEL_KEYS[rawValue];
+  const label = labelKey ? _t(labelKey) : _t("creativeHub:planner.intent.unmapped");
   return formatBilingualLabel(label, rawValue);
 }
 
-export function getPlannerSourceDisplayLabel(source: unknown): string {
+export function getPlannerSourceDisplayLabel(source: unknown, t?: TFunction): string {
+  const _t = t ?? ((key: string) => key);
   const rawValue = typeof source === "string" && source.trim() ? source.trim() : "unknown";
-  const label = PLANNER_SOURCE_LABELS[rawValue] ?? "未映射来源";
+  const labelKey = PLANNER_SOURCE_LABEL_KEYS[rawValue];
+  const label = labelKey ? _t(labelKey) : _t("creativeHub:planner.source.unmapped");
   return formatBilingualLabel(label, rawValue);
 }

@@ -1,3 +1,4 @@
+import type { TFunction } from "i18next";
 import type {
   VolumeBeatSheet,
   VolumeChapterListGenerationMode,
@@ -25,6 +26,7 @@ export interface VolumeGenerationPayload {
 }
 
 export function startStrategyGenerationAction(params: {
+  t: TFunction;
   ensureCharacterGuard: () => boolean;
   userPreferredVolumeCount: number | null;
   forceSystemRecommendedVolumeCount: boolean;
@@ -39,17 +41,28 @@ export function startStrategyGenerationAction(params: {
   if (!params.ensureCharacterGuard()) {
     return;
   }
+  const { t } = params;
   const confirmed = window.confirm([
-    "将生成卷战略建议，帮助决定推荐卷数、硬规划卷数和各卷角色定位。",
-    "这一步不会直接生成卷骨架，也不会拆章节。",
+    t("volumePlan.actions.strategyConfirm.intro"),
+    t("volumePlan.actions.strategyConfirm.notSkeleton"),
     params.userPreferredVolumeCount != null
-      ? `本次将固定为 ${params.userPreferredVolumeCount} 卷生成分卷策略。`
+      ? t("volumePlan.actions.strategyConfirm.fixedCount", { count: params.userPreferredVolumeCount })
       : params.forceSystemRecommendedVolumeCount
-        ? `本次将按系统建议卷数生成（当前建议 ${params.volumeCountGuidance.systemRecommendedVolumeCount} 卷），不沿用现有草稿卷数。`
+        ? t("volumePlan.actions.strategyConfirm.systemRecommended", { count: params.volumeCountGuidance.systemRecommendedVolumeCount })
         : params.volumeCountGuidance.respectedExistingVolumeCount != null
-          ? `本次会优先沿用当前草稿的 ${params.volumeCountGuidance.respectedExistingVolumeCount} 卷结构，同时保持在允许区间 ${params.volumeCountGuidance.allowedVolumeCountRange.min}-${params.volumeCountGuidance.allowedVolumeCountRange.max} 内。`
-          : `当前系统建议 ${params.volumeCountGuidance.systemRecommendedVolumeCount} 卷，允许区间 ${params.volumeCountGuidance.allowedVolumeCountRange.min}-${params.volumeCountGuidance.allowedVolumeCountRange.max} 卷。`,
-    params.hasUnsavedVolumeDraft ? "本次会直接使用当前页面未保存草稿作为参考。" : "本次会基于当前工作区状态生成建议。",
+          ? t("volumePlan.actions.strategyConfirm.respectExisting", {
+              count: params.volumeCountGuidance.respectedExistingVolumeCount,
+              min: params.volumeCountGuidance.allowedVolumeCountRange.min,
+              max: params.volumeCountGuidance.allowedVolumeCountRange.max,
+            })
+          : t("volumePlan.actions.strategyConfirm.systemRange", {
+              count: params.volumeCountGuidance.systemRecommendedVolumeCount,
+              min: params.volumeCountGuidance.allowedVolumeCountRange.min,
+              max: params.volumeCountGuidance.allowedVolumeCountRange.max,
+            }),
+    params.hasUnsavedVolumeDraft
+      ? t("volumePlan.actions.strategyConfirm.useDraft")
+      : t("volumePlan.actions.strategyConfirm.useWorkspace"),
   ].join("\n\n"));
   if (!confirmed) {
     return;
@@ -68,6 +81,7 @@ export function startStrategyCritiqueAction(params: {
 }
 
 export function startSkeletonGenerationAction(params: {
+  t: TFunction;
   ensureCharacterGuard: () => boolean;
   hasUnsavedVolumeDraft: boolean;
   generate: (payload: VolumeGenerationPayload) => void;
@@ -75,10 +89,13 @@ export function startSkeletonGenerationAction(params: {
   if (!params.ensureCharacterGuard()) {
     return;
   }
+  const { t } = params;
   const confirmed = window.confirm([
-    "将根据当前卷战略建议生成或重生成全书卷骨架。",
-    "这一步会清空已有节奏板和相邻卷再平衡建议，但不会直接删除章节正文。",
-    params.hasUnsavedVolumeDraft ? "本次会直接使用当前页面草稿作为卷骨架上下文。" : "本次会基于当前卷工作区继续推进。",
+    t("volumePlan.actions.skeletonConfirm.intro"),
+    t("volumePlan.actions.skeletonConfirm.warning"),
+    params.hasUnsavedVolumeDraft
+      ? t("volumePlan.actions.skeletonConfirm.useDraft")
+      : t("volumePlan.actions.skeletonConfirm.useWorkspace"),
   ].join("\n\n"));
   if (!confirmed) {
     return;
@@ -87,6 +104,7 @@ export function startSkeletonGenerationAction(params: {
 }
 
 export function startBeatSheetGenerationAction(params: {
+  t: TFunction;
   volumeId: string;
   normalizedVolumeDraft: VolumePlan[];
   strategyPlan: object | null;
@@ -95,13 +113,14 @@ export function startBeatSheetGenerationAction(params: {
   setStructuredMessage: (value: string) => void;
   generate: (payload: VolumeGenerationPayload) => void;
 }): void {
+  const { t } = params;
   const targetVolume = params.normalizedVolumeDraft.find((volume) => volume.id === params.volumeId);
   if (!targetVolume) {
-    params.setStructuredMessage("当前卷不存在，无法生成节奏板。");
+    params.setStructuredMessage(t("volumePlan.actions.beatSheet.missingVolume"));
     return;
   }
   if (!params.strategyPlan) {
-    params.setStructuredMessage("请先生成卷战略建议，再生成当前卷节奏板。");
+    params.setStructuredMessage(t("volumePlan.actions.beatSheet.missingStrategy"));
     return;
   }
   if (!params.ensureCharacterGuard()) {
@@ -110,9 +129,11 @@ export function startBeatSheetGenerationAction(params: {
   const existingBeatSheet = findBeatSheet(params.beatSheets, params.volumeId);
   if (existingBeatSheet) {
     const confirmed = window.confirm([
-      `将重新生成「${targetVolume.title?.trim() || `第${targetVolume.sortOrder}卷`}」的节奏板。`,
-      "这一步会覆盖当前卷现有节奏段与交付项。",
-      "已有章节列表和章节细化资产不会被直接删除，但如果新节奏区间发生变化，建议随后检查章节列表是否仍然匹配。",
+      t("volumePlan.actions.beatSheet.regenerateConfirm.intro", {
+        title: targetVolume.title?.trim() || t("volumePlan.fallback.volumeTitle", { order: targetVolume.sortOrder }),
+      }),
+      t("volumePlan.actions.beatSheet.regenerateConfirm.overwrite"),
+      t("volumePlan.actions.beatSheet.regenerateConfirm.checkAfter"),
     ].join("\n\n"));
     if (!confirmed) {
       return;
@@ -125,6 +146,7 @@ export function startBeatSheetGenerationAction(params: {
 }
 
 export function startChapterListGenerationAction(params: {
+  t: TFunction;
   volumeId: string;
   request?: ChapterListGenerationRequest;
   normalizedVolumeDraft: VolumePlan[];
@@ -133,13 +155,14 @@ export function startChapterListGenerationAction(params: {
   setStructuredMessage: (value: string) => void;
   generate: (payload: VolumeGenerationPayload) => void;
 }): void {
+  const { t } = params;
   const targetVolume = params.normalizedVolumeDraft.find((volume) => volume.id === params.volumeId);
   if (!targetVolume) {
-    params.setStructuredMessage("当前卷不存在，无法生成章节列表。");
+    params.setStructuredMessage(t("volumePlan.actions.chapterList.missingVolume"));
     return;
   }
   if (!findBeatSheet(params.beatSheets, params.volumeId)) {
-    params.setStructuredMessage("当前卷还没有节奏板，默认不能直接拆章节列表。");
+    params.setStructuredMessage(t("volumePlan.actions.chapterList.missingBeatSheet"));
     return;
   }
   if (!params.ensureCharacterGuard()) {
@@ -148,7 +171,7 @@ export function startChapterListGenerationAction(params: {
   const generationMode = params.request?.generationMode ?? "full_volume";
   const targetBeatKey = params.request?.targetBeatKey?.trim();
   if (generationMode === "single_beat" && !targetBeatKey) {
-    params.setStructuredMessage("当前节奏段不存在，无法重生该段章节标题。");
+    params.setStructuredMessage(t("volumePlan.actions.chapterList.missingBeat"));
     return;
   }
   params.generate({
@@ -160,25 +183,36 @@ export function startChapterListGenerationAction(params: {
 }
 
 export function buildChapterListSuccessMessage(params: {
+  t: TFunction;
   document: VolumePlanDocument;
   targetVolumeId?: string;
   generationMode?: VolumeChapterListGenerationMode;
   targetBeatKey?: string;
   autoSyncedToChapterExecution?: boolean;
 }): string {
+  const { t } = params;
   const updatedVolume = params.targetVolumeId
     ? params.document.volumes.find((volume) => volume.id === params.targetVolumeId)
     : undefined;
   const updatedChapterCount = updatedVolume?.chapters.length ?? 0;
-  const syncSuffix = params.autoSyncedToChapterExecution ? "，并连接到章节执行区" : "";
+  const syncSuffix = params.autoSyncedToChapterExecution
+    ? t("volumePlan.actions.chapterListSuccess.syncSuffix")
+    : "";
   if (params.generationMode === "single_beat" && params.targetVolumeId && params.targetBeatKey) {
     const targetBeat = findBeatSheet(params.document.beatSheets, params.targetVolumeId)?.beats
       .find((beat) => beat.key === params.targetBeatKey);
     return updatedChapterCount > 0
-      ? `当前卷节奏段「${targetBeat?.label ?? params.targetBeatKey}」已重生并自动保存${syncSuffix}，本卷现有 ${updatedChapterCount} 章，相邻卷再平衡建议也已同步更新。`
-      : `当前卷节奏段「${targetBeat?.label ?? params.targetBeatKey}」已重生并自动保存${syncSuffix}，相邻卷再平衡建议也已同步更新。`;
+      ? t("volumePlan.actions.chapterListSuccess.singleBeatWithCount", {
+          label: targetBeat?.label ?? params.targetBeatKey,
+          syncSuffix,
+          count: updatedChapterCount,
+        })
+      : t("volumePlan.actions.chapterListSuccess.singleBeat", {
+          label: targetBeat?.label ?? params.targetBeatKey,
+          syncSuffix,
+        });
   }
   return updatedChapterCount > 0
-    ? `当前卷章节列表已生成并自动保存${syncSuffix}，现已更新为 ${updatedChapterCount} 章，相邻卷再平衡建议也已同步更新。`
-    : `当前卷章节列表已生成并自动保存${syncSuffix}，相邻卷再平衡建议也已同步更新。`;
+    ? t("volumePlan.actions.chapterListSuccess.fullVolumeWithCount", { syncSuffix, count: updatedChapterCount })
+    : t("volumePlan.actions.chapterListSuccess.fullVolume", { syncSuffix });
 }

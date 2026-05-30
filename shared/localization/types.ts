@@ -43,6 +43,7 @@ export type NamespaceKey =
   | "creativeHub"
   | "antiAiRules"
   | "knowledge"
+  | "bookAnalysis"
   | "settings"
   | "serverErrors"
   | "serverLogs"
@@ -58,6 +59,7 @@ export const NAMESPACE_KEYS: readonly NamespaceKey[] = [
   "creativeHub",
   "antiAiRules",
   "knowledge",
+  "bookAnalysis",
   "settings",
   "serverErrors",
   "serverLogs",

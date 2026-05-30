@@ -1,15 +1,17 @@
 import type { Dispatch, SetStateAction } from "react";
+import { useTranslation } from "react-i18next";
 import type { World } from "@ai-novel/shared/types/world";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import StreamOutput from "@/components/common/StreamOutput";
 import {
   LAYERS,
-  LAYER_STATUS_LABELS,
+  getLayerLabel,
+  getLayerStatusLabel,
+  getRefineAttributeOptions,
   pickLayerFieldText,
   type LayerKey,
   type RefineAttribute,
-  REFINE_ATTRIBUTE_OPTIONS,
 } from "./worldWorkspaceShared";
 
 interface WorldLayersTabProps {
@@ -44,6 +46,8 @@ interface WorldLayersTabProps {
 }
 
 export default function WorldLayersTab(props: WorldLayersTabProps) {
+  const { t } = useTranslation();
+  const refineAttributeOptions = getRefineAttributeOptions(t);
   const {
     world,
     selectedLayer,
@@ -109,9 +113,9 @@ export default function WorldLayersTab(props: WorldLayersTabProps) {
             return (
               <div key={layer.key} className="rounded-md border p-3 space-y-2">
                 <div className="flex flex-wrap items-center justify-between gap-2">
-                  <div className="font-medium">{layer.label}</div>
+                  <div className="font-medium">{getLayerLabel(t, layer.key)}</div>
                   <div className="text-xs text-muted-foreground">
-                    状态：{LAYER_STATUS_LABELS[layerStatus] ?? layerStatus}
+                    状态：{getLayerStatusLabel(t, layerStatus)}
                   </div>
                 </div>
                 <textarea
@@ -173,7 +177,7 @@ export default function WorldLayersTab(props: WorldLayersTabProps) {
               value={refineAttribute}
               onChange={(event) => setRefineAttribute(event.target.value as RefineAttribute)}
             >
-              {REFINE_ATTRIBUTE_OPTIONS.map((item) => (
+              {refineAttributeOptions.map((item) => (
                 <option key={item.value} value={item.value}>
                   {item.label}
                 </option>

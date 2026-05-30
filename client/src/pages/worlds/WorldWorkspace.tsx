@@ -51,6 +51,7 @@ import WorldOverviewTab from "./components/workspace/WorldOverviewTab";
 import WorldStructureTab from "./components/workspace/WorldStructureTab";
 import {
   LAYERS,
+  LAYER_FIELDS_BY_KEY,
   parseLayerStates,
   type LayerKey,
   type RefineAttribute,
@@ -244,7 +245,7 @@ export default function WorldWorkspace() {
     mutationFn: () =>
       createWorldLibraryItem({
         name: publishName.trim() || `${world?.name ?? "world"}-${selectedLayerMeta.key}`,
-        description: publishDescription.trim() || (world?.[selectedLayerMeta.primaryField] ?? "")?.slice(0, 240) || "world setting item",
+        description: publishDescription.trim() || (world?.[LAYER_FIELDS_BY_KEY[selectedLayerMeta.key][0]] ?? "")?.slice(0, 240) || "world setting item",
         category: publishCategory,
         worldType: world?.worldType ?? undefined,
         sourceWorldId: id,
@@ -456,7 +457,7 @@ export default function WorldWorkspace() {
           <WorldAssetsTab
             worldId={id}
             world={world}
-            selectedLayerPrimaryField={selectedLayerMeta.primaryField}
+            selectedLayerPrimaryField={LAYER_FIELDS_BY_KEY[selectedLayerMeta.key][0] as "background" | "magicSystem" | "politics" | "cultures" | "history" | "conflicts"}
             libraryKeyword={libraryKeyword}
             setLibraryKeyword={setLibraryKeyword}
             libraryCategory={libraryCategory}
@@ -491,7 +492,7 @@ export default function WorldWorkspace() {
               })
             }
             onInjectLibraryField={(libraryId) =>
-              void useWorldLibraryItem(libraryId, { worldId: id, targetField: selectedLayerMeta.primaryField }).then(
+              void useWorldLibraryItem(libraryId, { worldId: id, targetField: LAYER_FIELDS_BY_KEY[selectedLayerMeta.key][0] }).then(
                 () => invalidateWorld(),
               )
             }

@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState, type Dispatch, type SetStateAction } from "react";
 import { useQueryClient } from "@tanstack/react-query";
+import { useTranslation } from "react-i18next";
 import { buildVolumeCountGuidance } from "@ai-novel/shared/types/volumePlanning";
 import type {
   VolumeBeatSheet,
@@ -102,6 +103,7 @@ export function useNovelVolumePlanning({
   setStructuredMessage,
 }: UseNovelVolumePlanningArgs) {
   const queryClient = useQueryClient();
+  const { t } = useTranslation();
   const normalizedVolumeDraft = useMemo(() => normalizeVolumeDraft(volumeDraft), [volumeDraft]);
   const normalizedSavedVolumes = useMemo(
     () => normalizeVolumeDraft(savedWorkspace?.volumes ?? []),
@@ -193,11 +195,12 @@ export function useNovelVolumePlanning({
     if (hasCharacters) {
       return true;
     }
-    return window.confirm("当前小说还没有角色。继续生成会降低后续一致性，是否继续？");
+    return window.confirm(t("novel:volumePlan.actions.characterGuard.confirm"));
   };
 
   const startStrategyGeneration = () => {
     startStrategyGenerationAction({
+      t,
       ensureCharacterGuard,
       userPreferredVolumeCount,
       forceSystemRecommendedVolumeCount,
@@ -220,6 +223,7 @@ export function useNovelVolumePlanning({
 
   const startSkeletonGeneration = () => {
     startSkeletonGenerationAction({
+      t,
       ensureCharacterGuard,
       hasUnsavedVolumeDraft,
       generate: (payload) => generateMutation.mutate(payload),
@@ -228,6 +232,7 @@ export function useNovelVolumePlanning({
 
   const startBeatSheetGeneration = (volumeId: string) => {
     startBeatSheetGenerationAction({
+      t,
       volumeId,
       normalizedVolumeDraft,
       strategyPlan,
@@ -240,6 +245,7 @@ export function useNovelVolumePlanning({
 
   const startChapterListGeneration = (volumeId: string, request?: ChapterListGenerationRequest) => {
     startChapterListGenerationAction({
+      t,
       volumeId,
       request,
       normalizedVolumeDraft,

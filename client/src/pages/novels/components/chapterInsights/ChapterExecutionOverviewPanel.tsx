@@ -48,7 +48,7 @@ function OverviewStat(props: { label: string; value: string; hint?: string }) {
 }
 
 export default function ChapterExecutionOverviewPanel(props: ChapterExecutionOverviewPanelProps) {
-  const { t } = useTranslation();
+  const { t } = useTranslation("novel");
   const {
     selectedChapter,
     chapterPlan,
@@ -61,14 +61,14 @@ export default function ChapterExecutionOverviewPanel(props: ChapterExecutionOve
   if (!selectedChapter) {
     return (
       <section className="rounded-2xl border border-dashed border-border/70 bg-background p-4 text-sm leading-6 text-muted-foreground">
-        选中章节后，这里显示本章状态、目标、字数、质量和待处理问题。
+        {t("chapter.overviewPanel.noSelectionHint")}
       </section>
     );
   }
 
-  const chapterLabel = `第${selectedChapter.order}章`;
-  const chapterTitle = selectedChapter.title || "未命名章节";
-  const chapterObjective = chapterPlan?.objective ?? selectedChapter.expectation ?? "这一章还没有明确目标，建议先补章节计划。";
+  const chapterLabel = t("chapter.overviewPanel.chapterLabel", { order: selectedChapter.order });
+  const chapterTitle = selectedChapter.title || t("chapter.overviewPanel.unnamedChapter");
+  const chapterObjective = chapterPlan?.objective ?? selectedChapter.expectation ?? t("chapter.overviewPanel.noObjectiveHint");
   const runtimePackage = chapterRuntimePackage?.chapterId === selectedChapter.id ? chapterRuntimePackage : null;
   const lengthControl = runtimePackage?.lengthControl ?? null;
   const qualityOverall = chapterQualityReport?.overall ?? selectedChapter.qualityScore ?? null;
@@ -78,7 +78,7 @@ export default function ChapterExecutionOverviewPanel(props: ChapterExecutionOve
   const currentWordCount = runtimePackage?.draft.wordCount ?? selectedChapter.content?.trim().length ?? 0;
   const targetWordCount = selectedChapter.targetWordCount ?? null;
   const issueCount = openAuditIssues.length || reviewResult?.issues?.length || 0;
-  const updatedAt = selectedChapter.updatedAt ? new Date(selectedChapter.updatedAt).toLocaleString("zh-CN") : "暂无";
+  const updatedAt = selectedChapter.updatedAt ? new Date(selectedChapter.updatedAt).toLocaleString("zh-CN") : t("chapter.overviewPanel.noUpdateTime");
 
   return (
     <section className="space-y-3 rounded-2xl border border-border/70 bg-background/95 p-4">
@@ -91,12 +91,12 @@ export default function ChapterExecutionOverviewPanel(props: ChapterExecutionOve
             </Badge>
             {generationLabel ? <Badge variant="outline">{generationLabel}</Badge> : null}
             {typeof qualityOverall === "number" ? (
-              <Badge variant={getQualityBadgeVariant(qualityOverall)}>质量 {qualityOverall}</Badge>
+              <Badge variant={getQualityBadgeVariant(qualityOverall)}>{t("chapter.overviewPanel.qualityBadge", { score: qualityOverall })}</Badge>
             ) : null}
           </div>
 
           <div className="space-y-2">
-            <div className="text-xs font-medium text-muted-foreground">章节概览</div>
+            <div className="text-xs font-medium text-muted-foreground">{t("chapter.overviewPanel.overviewTitle")}</div>
             <div className="text-base font-semibold text-foreground">{chapterTitle}</div>
             <p className="line-clamp-6 text-sm leading-6 text-muted-foreground">
               {chapterObjective}
@@ -105,28 +105,34 @@ export default function ChapterExecutionOverviewPanel(props: ChapterExecutionOve
         </div>
 
         <Button asChild size="sm" variant="outline" className="w-full justify-center">
-          <Link to={`/novels/${selectedChapter.novelId}/chapters/${selectedChapter.id}`}>打开章节编辑器</Link>
+          <Link to={`/novels/${selectedChapter.novelId}/chapters/${selectedChapter.id}`}>{t("chapter.overviewPanel.openEditor")}</Link>
         </Button>
       </div>
 
       <div className="space-y-2">
-        <OverviewStat label="当前字数" value={String(currentWordCount)} hint="主面板正在显示的正文长度。" />
-        <OverviewStat label="章节目标" value={targetWordCount ? `${targetWordCount} 字` : "未设定"} hint="用于判断当前篇幅是否足够。" />
-        <OverviewStat label="待处理问题" value={String(issueCount)} hint="问题越少，越适合继续推进。" />
-        <OverviewStat label="最近更新" value={updatedAt} hint="用于判断这一章是否需要重新检查。" />
+        <OverviewStat label={t("chapter.overviewPanel.statWordCount")} value={String(currentWordCount)} hint={t("chapter.overviewPanel.statWordCountHint")} />
+        <OverviewStat label={t("chapter.overviewPanel.statTargetWordCount")} value={targetWordCount ? t("chapter.overviewPanel.targetWordCountValue", { count: targetWordCount }) : t("chapter.overviewPanel.targetWordCountUnset")} hint={t("chapter.overviewPanel.statTargetWordCountHint")} />
+        <OverviewStat label={t("chapter.overviewPanel.statIssues")} value={String(issueCount)} hint={t("chapter.overviewPanel.statIssuesHint")} />
+        <OverviewStat label={t("chapter.overviewPanel.statUpdatedAt")} value={updatedAt} hint={t("chapter.overviewPanel.statUpdatedAtHint")} />
       </div>
 
       {lengthControl ? (
         <div className="space-y-2">
           <OverviewStat
-            label="预算区间"
+            label={t("chapter.overviewPanel.statBudgetRange")}
             value={`${lengthControl.softMinWordCount}-${lengthControl.softMaxWordCount}`}
-            hint={`硬上限 ${lengthControl.hardMaxWordCount} 字`}
+            hint={t("chapter.overviewPanel.statBudgetRangeHint", { max: lengthControl.hardMaxWordCount })}
           />
           <OverviewStat
-            label="控字模式"
-            value={lengthControl.wordControlMode === "prompt_only" ? "自然优先" : lengthControl.wordControlMode === "balanced" ? "标准控字" : "混合控字"}
-            hint={`偏差 ${Math.round(lengthControl.variance * 100)}%`}
+            label={t("chapter.overviewPanel.statWordControlMode")}
+            value={
+              lengthControl.wordControlMode === "prompt_only"
+                ? t("chapter.overviewPanel.wordControlModeNatural")
+                : lengthControl.wordControlMode === "balanced"
+                  ? t("chapter.overviewPanel.wordControlModeBalanced")
+                  : t("chapter.overviewPanel.wordControlModeMixed")
+            }
+            hint={t("chapter.overviewPanel.statVarianceHint", { variance: Math.round(lengthControl.variance * 100) })}
           />
         </div>
       ) : null}
