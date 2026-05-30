@@ -5579,7 +5579,39 @@
         "low": "Rủi ro thấp"
       },
       "noneWillAutoPass": "Sẽ không tự động thông qua điểm phê duyệt",
-      "summarySuffix": "{first} và {count} mục khác"
+      "summarySuffix": "{first} và {count} mục khác",
+      "candidate_direction_confirmed": {
+        "label": "Xác nhận hướng ứng viên xong thì tiếp tục",
+        "description": "Sau khi xác nhận hướng cấp tập, cho phép AI tiếp tục xây dựng tập và vào mạch chính."
+      },
+      "character_setup_ready": {
+        "label": "Nhân vật chuẩn bị xong thì tiếp tục",
+        "description": "Sau khi áp dụng dàn nhân vật xong, cho phép AI tiếp tục tạo chiến lược tập."
+      },
+      "volume_strategy_ready": {
+        "label": "Chiến lược tập thông qua thì tiếp tục",
+        "description": "Sau khi hoàn thành chiến lược tập và khung tập, cho phép AI tiếp tục nhịp độ tách chương."
+      },
+      "structured_outline_ready": {
+        "label": "Nhịp độ tách chương xong thì tiếp tục",
+        "description": "Sau khi tách chương phạm vi mục tiêu và chuẩn bị tài nguyên Thực thi chương xong, cho phép AI tiếp tục đến giai đoạn viết."
+      },
+      "chapter_execution_continue": {
+        "label": "Thực thi chương lô xong thì tiếp tục",
+        "description": "Sau khi hoàn thành một lô chương, cho phép AI tiếp tục xử lý các chương còn lại."
+      },
+      "low_risk_quality_repair_continue": {
+        "label": "Sửa chất lượng rủi ro thấp xong thì tiếp tục",
+        "description": "Khi kết quả sửa chất lượng rõ ràng là rủi ro thấp, cho phép AI tiếp tục Thực thi chương."
+      },
+      "replan_continue": {
+        "label": "Xử lý lập kế hoạch lại xong thì tiếp tục",
+        "description": "Lập kế hoạch lại sẽ thay đổi đường dẫn thực thi tiếp theo, trước khi ủy quyền nên xác nhận thủ công."
+      },
+      "rewrite_cleanup_confirmed": {
+        "label": "Tạo lại / Viết lại xác nhận xong thì tiếp tục",
+        "description": "Sau khi dọn dẹp tài sản phạm vi mục tiêu, cho phép AI tiếp tục quy trình viết lại."
+      }
     },
     "taskUi": {
       "defaultScopeLabel": "Chương 1-10",
@@ -5621,6 +5653,28 @@
     },
     "bookAutomationCard": {
       "projectNav": "Điều hướng dự án"
+    },
+    "approvalGroups": {
+      "low_risk_continue": {
+        "label": "Rủi ro thấp tiếp tục",
+        "description": "Bước tiếp theo đã sẵn sàng tiếp tục, không xóa tài sản."
+      },
+      "planning_review": {
+        "label": "Duyệt kế hoạch",
+        "description": "Sau khi tài sản kế hoạch như chuẩn bị nhân vật, chiến lược tập, nhịp độ tách chương thông qua thì tiếp tục."
+      },
+      "chapter_execution": {
+        "label": "Thực thi chính văn",
+        "description": "Phạm vi chương hoặc phạm vi tập vào Thực thi chương."
+      },
+      "repair_replan": {
+        "label": "Sửa / Lập kế hoạch lại",
+        "description": "Sửa rủi ro thấp xong thì tiếp tục; lập kế hoạch lại và làm lại phạm vi lớn nên xác nhận thủ công."
+      },
+      "rewrite_cleanup": {
+        "label": "Dọn dẹp viết lại",
+        "description": "Tạo lại hoặc viết lại sẽ dọn dẹp tài sản phạm vi mục tiêu, cần ủy quyền cẩn thận."
+      }
     }
   },
   "creativeHub": {

@@ -58,12 +58,24 @@ export function summarizeDirectorAutoApprovalPoints(codes: string[], t?: ReturnT
 export default function AutoDirectorApprovalPointMultiSelect({
   value,
   onChange,
-  groups = DIRECTOR_AUTO_APPROVAL_GROUPS.map((item) => ({ ...item })),
-  approvalPoints = DIRECTOR_AUTO_APPROVAL_POINTS.map((item) => ({ ...item })),
+  groups: groupsProp,
+  approvalPoints: approvalPointsProp,
   compact = false,
 }: AutoDirectorApprovalPointMultiSelectProps) {
   const { t } = useTranslation();
   const selected = normalizeDirectorAutoApprovalPointCodes(value, []);
+
+  // Localize groups and points using i18n keys, falling back to the original labels
+  const groups = (groupsProp ?? DIRECTOR_AUTO_APPROVAL_GROUPS.map((item) => ({ ...item }))).map((group) => ({
+    ...group,
+    label: t(`autoDirector:approvalGroups.${group.id}.label`, { defaultValue: group.label }),
+    description: t(`autoDirector:approvalGroups.${group.id}.description`, { defaultValue: group.description }),
+  }));
+  const approvalPoints = (approvalPointsProp ?? DIRECTOR_AUTO_APPROVAL_POINTS.map((item) => ({ ...item }))).map((point) => ({
+    ...point,
+    label: t(`autoDirector:approvalPoints.${point.code}.label`, { defaultValue: point.label }),
+    description: t(`autoDirector:approvalPoints.${point.code}.description`, { defaultValue: point.description }),
+  }));
 
   return (
     <div className="min-w-0 space-y-3">

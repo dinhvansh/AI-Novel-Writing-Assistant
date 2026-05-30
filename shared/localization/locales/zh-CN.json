@@ -5412,13 +5412,45 @@
       "advancedApproval": "高级审批授权"
     },
     "approvalPoints": {
+      "candidate_direction_confirmed": {
+        "label": "候选方向确认后继续",
+        "description": "确认书级方向后，允许 AI 继续建书并进入主链。"
+      },
+      "character_setup_ready": {
+        "label": "角色准备通过后继续",
+        "description": "角色阵容应用完成后，允许 AI 继续生成卷战略。"
+      },
+      "volume_strategy_ready": {
+        "label": "卷战略通过后继续",
+        "description": "卷战略和卷骨架完成后，允许 AI 继续节奏拆章。"
+      },
+      "structured_outline_ready": {
+        "label": "节奏拆章完成后继续",
+        "description": "目标范围拆章和章节执行资源准备好后，允许 AI 继续到写作阶段。"
+      },
+      "chapter_execution_continue": {
+        "label": "章节执行批次完成后继续",
+        "description": "一个章节批次完成后，允许 AI 继续处理剩余章节。"
+      },
+      "low_risk_quality_repair_continue": {
+        "label": "低风险质量修复后继续",
+        "description": "质量修复结果明确为低风险时，允许 AI 继续章节执行。"
+      },
+      "replan_continue": {
+        "label": "重规划处理后继续",
+        "description": "重规划会改变后续执行路径，授权前建议先人工确认。"
+      },
+      "rewrite_cleanup_confirmed": {
+        "label": "重新生成 / 重写确认后继续",
+        "description": "目标范围资产清理后，允许 AI 继续重写流程。"
+      },
       "risk": {
         "high": "高风险",
         "medium": "中风险",
         "low": "低风险"
       },
       "noneWillAutoPass": "不会自动通过审批点",
-      "summarySuffix": "{first} 等 {count} 项"
+      "summarySuffix": "{{first}} 等 {{count}} 项"
     },
     "taskUi": {
       "defaultScopeLabel": "第 1-10 章",
@@ -5460,6 +5492,28 @@
     },
     "bookAutomationCard": {
       "projectNav": "项目导航"
+    },
+    "approvalGroups": {
+      "low_risk_continue": {
+        "label": "低风险继续",
+        "description": "已准备好的下一步继续推进，不清除资产。"
+      },
+      "planning_review": {
+        "label": "规划类审核",
+        "description": "角色准备、卷战略、节奏拆章等规划资产通过后继续。"
+      },
+      "chapter_execution": {
+        "label": "正文执行",
+        "description": "章节范围或卷范围进入章节执行。"
+      },
+      "repair_replan": {
+        "label": "修复 / 重规划",
+        "description": "低风险修复后继续；重规划和大范围返工建议人工确认。"
+      },
+      "rewrite_cleanup": {
+        "label": "重写清理",
+        "description": "重新生成或重写会清理目标范围资产，需谨慎授权。"
+      }
     }
   },
   "creativeHub": {
