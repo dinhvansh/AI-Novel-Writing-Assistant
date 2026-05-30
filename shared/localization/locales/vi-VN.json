@@ -6786,7 +6786,8 @@
       "tooBigNumber": "Không thể lớn hơn {maximum}.",
       "tooBigGeneric": "Nội dung quá dài.",
       "formatGeneric": "Định dạng không đúng."
-    }
+    },
+    "astrologyNotImplemented": "Mô-đun chiêm tinh chưa được triển khai."
   },
   "serverLogs": {},
   "seedData": {

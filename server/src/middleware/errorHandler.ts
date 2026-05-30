@@ -31,7 +31,7 @@ function getRequestLocale(res: Response): LocaleCode {
  * worst case is the user sees Chinese, never raw `serverErrors:foo` keys
  * or a crash.
  */
-function tError(
+export function tError(
   res: Response,
   key: string,
   values?: Record<string, unknown>,

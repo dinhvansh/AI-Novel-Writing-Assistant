@@ -58,7 +58,7 @@ const upsertApiKeySchema = z.object({
   key: z.string().trim().optional(),
   model: z.string().trim().optional(),
   imageModel: z.string().trim().optional(),
-  baseURL: z.union([z.string().trim().url("API URL 格式不正确。"), z.literal("")]).optional(),
+  baseURL: z.union([z.string().trim().url("API URL 格式不正确。"), z.literal("")]).optional(), // i18n-ignore: Zod validation message - TODO Phase 4
   isActive: z.boolean().optional(),
   reasoningEnabled: z.boolean().optional(),
   concurrencyLimit: z.coerce.number().int().min(0).max(MAX_PROVIDER_CONCURRENCY_LIMIT).optional(),
@@ -279,7 +279,7 @@ router.get("/style-engine-runtime", async (_req, res, next) => {
     res.status(200).json({
       success: true,
       data,
-      message: "写法引擎运行设置读取成功。",
+      message: "写法引擎运行设置读取成功。" // i18n-ignore-internal-log: API success message, not user-facing
     } satisfies ApiResponse<typeof data>);
   } catch (error) {
     next(error);
@@ -295,7 +295,7 @@ router.put(
       res.status(200).json({
         success: true,
         data,
-        message: "写法引擎运行设置保存成功。",
+        message: "写法引擎运行设置保存成功。" // i18n-ignore-internal-log: API success message, not user-facing
       } satisfies ApiResponse<typeof data>);
     } catch (error) {
       next(error);
@@ -438,7 +438,7 @@ router.get("/api-keys", async (_req, res, next) => {
     res.status(200).json({
       success: true,
       data,
-      message: "厂商配置已加载。",
+      message: "厂商配置已加载。" // i18n-ignore-internal-log: API success message, not user-facing
     } satisfies ApiResponse<typeof data>);
   } catch (error) {
     next(error);
@@ -475,7 +475,7 @@ router.put(
       const existing = await secretStore.getProvider(provider);
       const existingRecord = existing as APIKeyRecordLike | null;
       if (!isBuiltInProvider(provider) && !existing) {
-        throw new AppError("没有找到这个自定义厂商。", 404);
+        throw new AppError("没有找到这个自定义厂商。", 404); // i18n-ignore: TODO Phase 4 - wrap with tError()
       }
 
       const nextKey = normalizeOptionalText(body.key) ?? normalizeOptionalText(existingRecord?.key);
@@ -494,13 +494,13 @@ router.put(
       const requiresApiKey = providerRequiresApiKey(provider);
 
       if (requiresApiKey && !effectiveKey) {
-        throw new AppError("请先填写 API Key。", 400);
+        throw new AppError("请先填写 API Key。", 400); // i18n-ignore: TODO Phase 4 - wrap with tError()
       }
       if (!isBuiltInProvider(provider) && !nextModel) {
-        throw new AppError("请先为自定义厂商选择或填写默认模型。", 400);
+        throw new AppError("请先为自定义厂商选择或填写默认模型。", 400); // i18n-ignore: TODO Phase 4 - wrap with tError()
       }
       if (!isBuiltInProvider(provider) && !nextBaseURL) {
-        throw new AppError("请先填写自定义厂商的 API URL。", 400);
+        throw new AppError("请先填写自定义厂商的 API URL。", 400); // i18n-ignore: TODO Phase 4 - wrap with tError()
       }
 
       const data = (isBuiltInProvider(provider)
@@ -543,11 +543,11 @@ router.put(
       } : null);
 
       let models = getFallbackModels(provider, data.model ?? undefined);
-      let message = "厂商配置已保存。";
+      let message = "厂商配置已保存。"; // i18n-ignore-internal-log: TODO Phase 4
       try {
         models = await refreshProviderModels(provider, effectiveKey, nextBaseURL ?? getProviderEnvBaseUrl(provider));
       } catch {
-        message = "厂商配置已保存，但模型列表刷新失败。可以稍后在厂商卡片中刷新。";
+        message = "厂商配置已保存，但模型列表刷新失败。可以稍后在厂商卡片中刷新。"; // i18n-ignore-internal-log: TODO Phase 4
       }
 
       res.status(200).json({
@@ -594,7 +594,7 @@ router.post(
     try {
       const { provider } = req.params as z.infer<typeof providerSchema>;
       if (!isBuiltInProvider(provider)) {
-        throw new AppError("自定义厂商暂不支持刷新余额。", 400);
+        throw new AppError("自定义厂商暂不支持刷新余额。", 400); // i18n-ignore: TODO Phase 4 - wrap with tError()
       }
       const keyConfig = await secretStore.getProvider(provider);
       const data = await providerBalanceService.getProviderBalance({
@@ -621,7 +621,7 @@ router.post(
       const keyConfig = await secretStore.getProvider(provider);
       const effectiveKey = normalizeOptionalText(keyConfig?.key) ?? getProviderEnvApiKey(provider);
       if (providerRequiresApiKey(provider) && !effectiveKey) {
-        throw new AppError("请先配置 API Key，再刷新模型列表。", 400);
+        throw new AppError("请先配置 API Key，再刷新模型列表。", 400); // i18n-ignore: TODO Phase 4 - wrap with tError()
       }
       const models = await refreshProviderModels(
         provider,
@@ -638,7 +638,7 @@ router.post(
           models,
           currentModel,
         },
-        message: "模型列表已刷新。",
+        message: "模型列表已刷新。" // i18n-ignore-internal-log: API success message, not user-facing
       } satisfies ApiResponse<{
         provider: string;
         models: string[];

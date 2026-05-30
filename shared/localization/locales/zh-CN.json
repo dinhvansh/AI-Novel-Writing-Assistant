@@ -7672,7 +7672,8 @@
       "tooBigNumber": "不能大于 {maximum}。",
       "tooBigGeneric": "内容过长。",
       "formatGeneric": "格式不正确。"
-    }
+    },
+    "astrologyNotImplemented": "占星模块暂未实现。"
   },
   "serverLogs": {},
   "workflow": {

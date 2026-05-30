@@ -12,7 +12,7 @@ router.get("/", (_req, res) => {
   res.status(200).json({
     success: true,
     data,
-    message: "能力目录加载成功。",
+    message: "能力目录加载成功。", // i18n-ignore-internal-log: API success message, not user-facing
   } satisfies ApiResponse<typeof data>);
 });
 

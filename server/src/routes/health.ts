@@ -13,7 +13,7 @@ router.get("/", (_req, res) => {
       status: "ok",
       timestamp: new Date().toISOString(),
     },
-    message: "服务运行正常。",
+    message: "服务运行正常。", // i18n-ignore-internal-log: health check message, not user-facing
   };
   res.status(200).json(response);
 });
