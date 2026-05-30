@@ -17,6 +17,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 import type { TFunction } from "i18next";
 import { getI18nClientHandle } from "@/i18n";
+import { translateDirectorLabel } from "@/lib/directorRuntimeI18n";
 import {
   getDirectorTaskSnapshot,
 } from "@/api/novelDirector";
@@ -380,10 +381,10 @@ export default function NovelAutoDirectorProgressPanel({
   const visualMode: DirectorExecutionViewMode = mode === "execution_failed" && !chapterTitleWarning && dashboardView?.mode !== "running"
     ? "execution_failed"
     : "execution_progress";
-  const currentAction = dashboardView?.currentAction
+  const currentAction = translateDirectorLabel(dashboardView?.currentAction
     || displayState?.currentAction
     || runtimeProjectionForDisplay?.currentLabel?.trim()
-    || task?.currentItemLabel?.trim()
+    || task?.currentItemLabel?.trim())
     || (visualMode === "execution_failed"
       ? t("autoDirector:progressPanel.title.executionFailed")
       : (chapterTitleWarning ? t("autoDirector:progressPanel.title.chapterTitleWarning") : t("autoDirector:progressPanel.title.preparing")));
@@ -436,8 +437,8 @@ export default function NovelAutoDirectorProgressPanel({
         : t("autoDirector:progressPanel.description.candidateGenerating")
     )
     : (
-      dashboardView?.description
-      || displayState?.description
+      translateDirectorLabel(dashboardView?.description
+      || displayState?.description)
       || (visualMode === "execution_failed"
         ? t("autoDirector:progressPanel.description.stoppedAtLastStep")
         : chapterTitleWarning

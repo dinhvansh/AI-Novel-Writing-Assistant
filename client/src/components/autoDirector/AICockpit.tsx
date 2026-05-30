@@ -4,6 +4,7 @@ import type {
   DirectorBookAutomationProjection,
 } from "@ai-novel/shared/types/directorRuntime";
 import { getDirectorNodeDisplayLabel } from "@ai-novel/shared/types/directorRuntime";
+import { translateDirectorLabel } from "@/lib/directorRuntimeI18n";
 import {
   Activity,
   AlertTriangle,
@@ -340,7 +341,7 @@ export default function AICockpit(props: AICockpitProps) {
             <div className="min-w-0">
               <div className="text-sm font-semibold text-foreground">{t("autoDirector:cockpit.title")}</div>
               <div className="mt-1 line-clamp-1 text-xs leading-5 text-muted-foreground">
-                {focusProjection.userHeadline || focusProjection.headline || reason}
+              {translateDirectorLabel(focusProjection.userHeadline || focusProjection.headline) || reason}
               </div>
             </div>
           </div>
@@ -366,7 +367,7 @@ export default function AICockpit(props: AICockpitProps) {
               <div className="mt-1 truncate text-xs font-medium text-foreground">{focusProjection.focusNovel.title}</div>
             ) : null}
             <div className="mt-1 line-clamp-2 text-xs leading-5 text-muted-foreground">
-              {focusProjection.userHeadline || focusProjection.headline}
+              {translateDirectorLabel(focusProjection.userHeadline || focusProjection.headline)}
             </div>
           </div>
         </div>

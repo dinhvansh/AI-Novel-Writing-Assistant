@@ -5514,6 +5514,40 @@
         "label": "重写清理",
         "description": "重新生成或重写会清理目标范围资产，需谨慎授权。"
       }
+    },
+    "dashboard": {
+      "status": {
+        "waiting": "等待执行",
+        "running": "AI 接管中",
+        "waitingConfirm": "等待确认",
+        "waitingRecovery": "等待恢复",
+        "failed": "执行异常",
+        "completed": "已完成",
+        "idle": "暂未启动",
+        "waitingDirector": "等待自动导演",
+        "blocked": "执行受阻",
+        "directorCompleted": "导演已完成",
+        "queued": "排队中",
+        "executing": "执行中",
+        "cancelled": "已取消",
+        "needsRecovery": "需要恢复"
+      },
+      "actions": {
+        "confirmDirection": "确认开书方向",
+        "continueChapterExecution": "继续自动执行章节",
+        "confirmAndContinue": "确认并继续",
+        "resumeFromCheckpoint": "从进度点继续",
+        "viewDetails": "查看执行详情",
+        "viewStatus": "查看推进状态",
+        "enterChapterExecution": "进入章节执行",
+        "openNovel": "打开小说",
+        "pause": "暂停推进",
+        "retry": "重试",
+        "backgroundContinue": "后台继续",
+        "repairChapterTitles": "修复章节标题",
+        "cancel": "取消自动导演",
+        "openQualityRepair": "打开质量修复"
+      }
     }
   },
   "creativeHub": {

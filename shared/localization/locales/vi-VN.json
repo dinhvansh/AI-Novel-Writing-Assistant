@@ -5675,6 +5675,40 @@
         "label": "Dọn dẹp viết lại",
         "description": "Tạo lại hoặc viết lại sẽ dọn dẹp tài sản phạm vi mục tiêu, cần ủy quyền cẩn thận."
       }
+    },
+    "dashboard": {
+      "status": {
+        "waiting": "Chờ thực thi",
+        "running": "AI đang tiếp quản",
+        "waitingConfirm": "Chờ xác nhận",
+        "waitingRecovery": "Chờ phục hồi",
+        "failed": "Thực thi bất thường",
+        "completed": "Đã hoàn thành",
+        "idle": "Chưa khởi động",
+        "waitingDirector": "Chờ Đạo diễn tự động",
+        "blocked": "Thực thi bị chặn",
+        "directorCompleted": "Đạo diễn đã hoàn thành",
+        "queued": "Đang xếp hàng",
+        "executing": "Đang thực thi",
+        "cancelled": "Đã hủy",
+        "needsRecovery": "Cần phục hồi"
+      },
+      "actions": {
+        "confirmDirection": "Xác nhận hướng mở truyện",
+        "continueChapterExecution": "Tiếp tục thực thi chương tự động",
+        "confirmAndContinue": "Xác nhận và tiếp tục",
+        "resumeFromCheckpoint": "Tiếp tục từ điểm kiểm tra",
+        "viewDetails": "Xem chi tiết thực thi",
+        "viewStatus": "Xem trạng thái tiến triển",
+        "enterChapterExecution": "Vào Thực thi chương",
+        "openNovel": "Mở tiểu thuyết",
+        "pause": "Tạm dừng tiến triển",
+        "retry": "Thử lại",
+        "backgroundContinue": "Tiếp tục nền",
+        "repairChapterTitles": "Sửa tiêu đề chương",
+        "cancel": "Hủy Đạo diễn tự động",
+        "openQualityRepair": "Mở sửa chất lượng"
+      }
     }
   },
   "creativeHub": {
