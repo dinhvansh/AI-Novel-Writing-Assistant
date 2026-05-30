@@ -1,4 +1,5 @@
 import { RefreshCw } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import type { CharacterResourceLedgerItem } from "@ai-novel/shared/types/characterResource";
 import type { ChapterExecutionInsightsSidebarProps } from "./chapterInsights.types";
 import { getTimelineCheckLabel } from "./TimelinePanel";
@@ -34,6 +35,7 @@ function ResourceGroup(props: {
 }
 
 export default function ResourceRiskPanel(props: ChapterExecutionInsightsSidebarProps) {
+  const { t } = useTranslation();
   const {
     selectedChapter,
     chapterResourceContext,
@@ -104,7 +106,7 @@ export default function ResourceRiskPanel(props: ChapterExecutionInsightsSidebar
             </div>
             <div className="flex items-center justify-between gap-2">
               <span>时间线</span>
-              <span className="font-medium text-foreground">{timelineCheck ? getTimelineCheckLabel(timelineCheck.status) : "未检测"}</span>
+              <span className="font-medium text-foreground">{timelineCheck ? getTimelineCheckLabel(timelineCheck.status, t) : "未检测"}</span>
             </div>
           </div>
         </div>

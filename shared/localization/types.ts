@@ -41,11 +41,14 @@ export type NamespaceKey =
   | "novel"
   | "autoDirector"
   | "creativeHub"
+  | "antiAiRules"
   | "knowledge"
   | "settings"
   | "serverErrors"
   | "serverLogs"
-  | "seedData";
+  | "seedData"
+  | "world"
+  | "characters";
 
 /** All supported namespaces, in deterministic order. */
 export const NAMESPACE_KEYS: readonly NamespaceKey[] = [
@@ -53,11 +56,14 @@ export const NAMESPACE_KEYS: readonly NamespaceKey[] = [
   "novel",
   "autoDirector",
   "creativeHub",
+  "antiAiRules",
   "knowledge",
   "settings",
   "serverErrors",
   "serverLogs",
   "seedData",
+  "world",
+  "characters",
 ] as const;
 
 /**

@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import type {
   ChapterEditorCandidate,
   ChapterEditorDiagnosticCard,
@@ -38,6 +39,7 @@ function LoadingBar(props: { widthClassName?: string; heightClassName?: string }
 }
 
 export default function ChapterEditorDirectorPanel(props: ChapterEditorDirectorPanelProps) {
+  const { t } = useTranslation("novel");
   const {
     workspace,
     workspaceStatus,
@@ -67,20 +69,20 @@ export default function ChapterEditorDirectorPanel(props: ChapterEditorDirectorP
   const isWorkspaceLoading = workspaceStatus === "loading";
   const statusText = isIdle
     ? isWorkspaceLoading
-      ? "AI 正在分析本章宏观定位与优先修正任务。"
-      : "AI 会先结合本章在本卷中的位置，再决定如何修。"
+      ? t("chapter.editorDirector.statusAnalyzing")
+      : t("chapter.editorDirector.statusIdle")
     : session.status === "loading"
-      ? session.requestLabel || "正在生成候选版本"
+      ? session.requestLabel || t("chapter.editorDirector.statusGenerating")
       : session.status === "error"
-        ? session.errorMessage || "生成失败"
-        : session.resolvedIntent?.reasoningSummary || "查看待确认改写";
+        ? session.errorMessage || t("chapter.editorDirector.statusError")
+        : session.resolvedIntent?.reasoningSummary || t("chapter.editorDirector.statusReview");
 
   return (
     <div className="flex h-full min-h-[420px] flex-col overflow-hidden rounded-3xl border border-border/70 bg-background shadow-sm xl:min-h-0">
       <div className="shrink-0 space-y-3 border-b border-border/70 px-4 py-4">
         <div className="flex items-center justify-between gap-3">
           <div>
-            <div className="text-sm font-medium text-foreground">AI 修正导演面板</div>
+            <div className="text-sm font-medium text-foreground">{t("chapter.editorDirector.panelTitle")}</div>
             <div className="text-xs text-muted-foreground">{statusText}</div>
           </div>
           <div className="flex items-center gap-2">
@@ -90,7 +92,7 @@ export default function ChapterEditorDirectorPanel(props: ChapterEditorDirectorP
               onClick={() => onChangeViewMode("block")}
               disabled={isIdle}
             >
-              段落对比
+              {t("chapter.editorDirector.viewBlock")}
             </Button>
             <Button
               size="sm"
@@ -98,7 +100,7 @@ export default function ChapterEditorDirectorPanel(props: ChapterEditorDirectorP
               onClick={() => onChangeViewMode("inline")}
               disabled={isIdle}
             >
-              细节标记
+              {t("chapter.editorDirector.viewInline")}
             </Button>
           </div>
         </div>
@@ -109,14 +111,14 @@ export default function ChapterEditorDirectorPanel(props: ChapterEditorDirectorP
             variant={revisionScope === "selection" ? "default" : "outline"}
             onClick={() => onScopeChange("selection")}
           >
-            片段模式
+            {t("chapter.editorDirector.scopeSelection")}
           </Button>
           <Button
             size="sm"
             variant={revisionScope === "chapter" ? "default" : "outline"}
             onClick={() => onScopeChange("chapter")}
           >
-            整章模式
+            {t("chapter.editorDirector.scopeChapter")}
           </Button>
         </div>
       </div>
@@ -126,9 +128,9 @@ export default function ChapterEditorDirectorPanel(props: ChapterEditorDirectorP
           <>
             {isWorkspaceLoading ? (
               <div className="rounded-2xl border border-dashed border-border/70 bg-muted/10 p-4">
-                <div className="text-sm font-medium text-foreground">AI 正在梳理当前章节</div>
+                <div className="text-sm font-medium text-foreground">{t("chapter.editorDirector.loadingTitle")}</div>
                 <div className="mt-2 text-sm leading-6 text-muted-foreground">
-                  正在分析本章在卷中的位置、优先修正任务和可直接处理的片段，你可以稍等几秒再开始。
+                  {t("chapter.editorDirector.loadingDesc")}
                 </div>
                 <div className="mt-4 space-y-3">
                   <LoadingBar widthClassName="w-2/3" />
