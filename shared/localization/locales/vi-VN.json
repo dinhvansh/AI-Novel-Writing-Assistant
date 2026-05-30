@@ -51,6 +51,13 @@
       "previewLabel": "Xem trước tối ưu",
       "applyPreview": "Áp dụng xem trước",
       "cancelPreview": "Hủy xem trước"
+    },
+    "streamOutput": {
+      "defaultTitle": "Đầu ra AI",
+      "defaultEmptyText": "Đang chờ đầu ra luồng...",
+      "generating": "Đang tạo...",
+      "wordCount": "Số chữ: {{count}}",
+      "stopButton": "Dừng tạo"
     }
   },
   "novel": {
@@ -4908,6 +4915,22 @@
         "description": "Bên cạnh trường tiêu đề phía trên có thể chọn nhanh tiêu đề. Dùng để xác nhận cách viết và sắp xếp ranh giới thế giới của sách trước khi bắt đầu viết.",
         "meta": "Gợi ý cách viết / Sử dụng thế giới"
       }
+    },
+    "autoDirector": {
+      "ideaInspiration": {
+        "title": "5 ý tưởng khởi đầu có thể tham khảo",
+        "hint": "Đây chỉ là cảm hứng tạm thời, sẽ không tự động lưu và không tự động tham gia tạo. Sau khi chọn sử dụng sẽ điền vào ô nhập phía trên.",
+        "generating": "Đang tạo...",
+        "regenerate": "Đổi nhóm khác",
+        "generate": "Tạo cảm hứng",
+        "useThis": "Sử dụng cái này"
+      }
+    },
+    "directorRepair": {
+      "noRepairableWarning": "Tác vụ hiện tại không có lời nhắc tiêu đề chương nào có thể sửa chữa bằng AI.",
+      "startedSuccess": "Đã bắt đầu sửa chữa tiêu đề chương bằng AI, hệ thống đang viết lại việc chia chương của tập hiện tại.",
+      "failed": "Sửa chữa tiêu đề chương bằng AI thất bại.",
+      "noTask": "Hiện không có tác vụ Đạo diễn tự động nào có thể sửa chữa."
     }
   },
   "autoDirector": {
@@ -7193,6 +7216,13 @@
         "addButton": "Thêm một mục",
         "saving": "Đang lưu...",
         "saveButton": "Lưu quy tắc cốt lõi"
+      },
+      "overview": {
+        "titleWithVis": "Tổng quan và trực quan hóa",
+        "title": "Tổng quan thế giới",
+        "summaryLabel": "Tóm tắt một câu",
+        "noSummary": "Chưa có",
+        "visDisabled": "Chức năng trực quan hóa đã tắt (`VITE_WORLD_VIS_ENABLED=false`)."
       }
     },
     "propertySelector": {
@@ -8330,6 +8360,21 @@
       "copy": "Sao chép",
       "saving": "Đang lưu...",
       "saveToLibrary": "Thêm vào kho tiêu đề"
+    },
+    "studio": {
+      "title": "Xưởng tiêu đề",
+      "description": "Hợp nhất 'Tạo tiêu đề' và 'Lắng đọng tiêu đề' thành mô-đun tài sản chính thức. Xưởng chịu trách nhiệm sản xuất ứng viên, thư viện tiêu đề chịu trách nhiệm tái sử dụng và thống kê.",
+      "tabs": {
+        "factory": "Xưởng tiêu đề",
+        "library": "Thư viện tiêu đề"
+      },
+      "styleLabels": {
+        "literary": "Cảm giác tự sự",
+        "conflict": "Mâu thuẫn chốt",
+        "suspense": "Cảm giác hồi hộp",
+        "highConcept": "Khái niệm cao",
+        "default": "Chiến lược tiêu đề"
+      }
     }
   },
   "storyModes": {
@@ -8619,6 +8664,24 @@
       "noGlobalRules": "Không có quy tắc mặc định toàn cục.",
       "styleSpecificRulesTitle": "Quy tắc riêng theo cách viết",
       "noStyleRules": "Ngữ cảnh xem trước không có quy tắc riêng theo cách viết nào được chồng lên."
+    },
+    "stats": {
+      "total": {
+        "label": "Tổng số quy tắc",
+        "hint": "Tất cả các quy tắc có thể xem và chỉnh sửa trong Kho quy tắc."
+      },
+      "enabled": {
+        "label": "Quy tắc đã bật",
+        "hint": "Các quy tắc tham gia phân tích toàn cục hoặc ràng buộc văn phong."
+      },
+      "global": {
+        "label": "Mặc định toàn cục",
+        "hint": "Sẽ được đưa vào sinh nội dung chính ngay cả khi không ràng buộc văn phong."
+      },
+      "autoRewrite": {
+        "label": "Tự động viết lại",
+        "hint": "Sau khi phát hiện trúng, có thể vào chuỗi gợi ý viết lại."
+      }
     }
   },
   "genre": {

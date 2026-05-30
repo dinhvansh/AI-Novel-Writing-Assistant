@@ -51,6 +51,13 @@
       "previewLabel": "优化预览",
       "applyPreview": "应用预览",
       "cancelPreview": "取消预览"
+    },
+    "streamOutput": {
+      "defaultTitle": "AI 输出",
+      "defaultEmptyText": "等待流式输出...",
+      "generating": "正在生成...",
+      "wordCount": "字数：{{count}}",
+      "stopButton": "停止生成"
     }
   },
   "novel": {
@@ -4750,6 +4757,22 @@
         "medium": "中情绪浓度",
         "high": "高情绪浓度"
       }
+    },
+    "autoDirector": {
+      "ideaInspiration": {
+        "title": "可以参考的 5 个起始想法",
+        "hint": "这些只是临时灵感，不会自动保存，也不会自动参与生成。选择使用后会填入上方输入框。",
+        "generating": "生成中...",
+        "regenerate": "换一组",
+        "generate": "生成灵感",
+        "useThis": "使用这个"
+      }
+    },
+    "directorRepair": {
+      "noRepairableWarning": "当前任务没有可直接 AI 修复的章节标题提醒。",
+      "startedSuccess": "已开始 AI 修复章节标题，系统正在重写当前卷拆章。",
+      "failed": "AI 修复章节标题失败。",
+      "noTask": "当前没有可修复的自动导演任务。"
     }
   },
   "autoDirector": {
@@ -6632,6 +6655,21 @@
       "copy": "复制",
       "saving": "保存中...",
       "saveToLibrary": "加入标题库"
+    },
+    "studio": {
+      "title": "标题工坊",
+      "description": "把“标题生成”和“标题沉淀”统一成正式资产模块。工坊负责产出候选，标题库负责复用和统计。",
+      "tabs": {
+        "factory": "标题工坊",
+        "library": "标题库"
+      },
+      "styleLabels": {
+        "literary": "叙事感",
+        "conflict": "冲突钉子",
+        "suspense": "悬念感",
+        "highConcept": "高概念",
+        "default": "标题策略"
+      }
     }
   },
   "knowledge": {
@@ -7745,6 +7783,13 @@
         "addButton": "新增一条",
         "saving": "保存中...",
         "saveButton": "保存核心规则"
+      },
+      "overview": {
+        "titleWithVis": "总览与可视化",
+        "title": "世界总览",
+        "summaryLabel": "一句话概括",
+        "noSummary": "暂无",
+        "visDisabled": "可视化功能已关闭（`VITE_WORLD_VIS_ENABLED=false`）。"
       }
     },
     "generator": {
@@ -8146,6 +8191,24 @@
         "removeFromTest": "移出测试",
         "addToTest": "加入测试",
         "edit": "编辑"
+      }
+    },
+    "stats": {
+      "total": {
+        "label": "规则总数",
+        "hint": "规则库中可查看和编辑的全部规则。"
+      },
+      "enabled": {
+        "label": "启用规则",
+        "hint": "会参与全局或写法绑定解析的规则。"
+      },
+      "global": {
+        "label": "全局默认",
+        "hint": "不绑定写法时也会进入正文生成。"
+      },
+      "autoRewrite": {
+        "label": "自动改写",
+        "hint": "检测命中后可进入改写建议链路。"
       }
     }
   },

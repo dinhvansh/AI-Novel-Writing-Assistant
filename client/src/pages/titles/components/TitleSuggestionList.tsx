@@ -53,7 +53,7 @@ export default function TitleSuggestionList({
                   <Badge className={getClickRateBadgeClass(suggestion.clickRate)}>
                     {t("suggestionList.clickRateBadge", { rate: suggestion.clickRate })}
                   </Badge>
-                  <Badge variant="secondary">{getTitleStyleLabel(suggestion.style)}</Badge>
+                  <Badge variant="secondary">{getTitleStyleLabel(suggestion.style, t)}</Badge>
                   {suggestion.angle ? <Badge variant="outline">{suggestion.angle}</Badge> : null}
                   {isSelected ? <Badge variant="outline">{t("suggestionList.selected")}</Badge> : null}
                 </div>

@@ -15,18 +15,21 @@ interface NovelProductionStarterCardProps {
 
 // Internal enum values — kept in Chinese to match DB/API contracts
 // i18n-ignore: these are internal enum keys, not UI display text
+// i18n-ignore: internal enum values used for API/DB mapping — not UI display text
 const POV_VALUES = {
   first_person: "第一人称",
   third_person: "第三人称",
   mixed: "混合视角",
 } as const;
 
+// i18n-ignore: internal enum values used for API/DB mapping — not UI display text
 const PACE_VALUES = {
   slow: "慢节奏",
   balanced: "均衡节奏",
   fast: "快节奏",
 } as const;
 
+// i18n-ignore: internal enum values used for API/DB mapping — not UI display text
 const PROJECT_MODE_VALUES = {
   ai_led: "AI 主导",
   co_pilot: "人机协作",
@@ -34,6 +37,7 @@ const PROJECT_MODE_VALUES = {
   auto_pipeline: "自动流水线",
 } as const;
 
+// i18n-ignore: internal enum values used for API/DB mapping — not UI display text
 const LEVEL_VALUES = {
   low: "低",
   medium: "中",
@@ -104,31 +108,33 @@ function buildProductionPrompt(input: {
   const worldType = input.worldType.trim();
   const targetChapterCount = Math.max(1, Math.min(200, Math.floor(input.targetChapterCount || 20)));
   if (input.currentNovelId) {
+    // i18n-ignore: AI prompt content — these strings are sent to the AI model in Chinese
     const segments = [`继续生成当前小说。目标章节数：${targetChapterCount}。`];
-    if (description) segments.push(`补充设定：${description}。`);
-    if (genre) segments.push(`题材偏好：${genre}。`);
-    if (styleTone) segments.push(`风格基调：${styleTone}。`);
-    if (narrativePov) segments.push(`叙事视角：${narrativePov}。`);
-    if (pacePreference) segments.push(`推进节奏：${pacePreference}。`);
-    if (projectMode) segments.push(`协作模式：${projectMode}。`);
-    if (emotionIntensity) segments.push(`情绪强度：${emotionIntensity}。`);
-    if (aiFreedom) segments.push(`AI 自由度：${aiFreedom}。`);
-    if (defaultChapterLength) segments.push(`默认章长：约 ${defaultChapterLength} 字。`);
-    if (worldType) segments.push(`世界观类型偏好：${worldType}。`);
+    if (description) segments.push(`补充设定：${description}。`); // i18n-ignore: AI prompt
+    if (genre) segments.push(`题材偏好：${genre}。`); // i18n-ignore: AI prompt
+    if (styleTone) segments.push(`风格基调：${styleTone}。`); // i18n-ignore: AI prompt
+    if (narrativePov) segments.push(`叙事视角：${narrativePov}。`); // i18n-ignore: AI prompt
+    if (pacePreference) segments.push(`推进节奏：${pacePreference}。`); // i18n-ignore: AI prompt
+    if (projectMode) segments.push(`协作模式：${projectMode}。`); // i18n-ignore: AI prompt
+    if (emotionIntensity) segments.push(`情绪强度：${emotionIntensity}。`); // i18n-ignore: AI prompt
+    if (aiFreedom) segments.push(`AI 自由度：${aiFreedom}。`); // i18n-ignore: AI prompt
+    if (defaultChapterLength) segments.push(`默认章长：约 ${defaultChapterLength} 字。`); // i18n-ignore: AI prompt
+    if (worldType) segments.push(`世界观类型偏好：${worldType}。`); // i18n-ignore: AI prompt
     return segments.join("");
   }
   const title = input.title.trim();
+  // i18n-ignore: AI prompt content — these strings are sent to the AI model in Chinese
   const segments = [`创建一本${targetChapterCount}章小说《${title}》，并开始整本生成。`];
-  if (description) segments.push(`简介：${description}。`);
-  if (genre) segments.push(`题材：${genre}。`);
-  if (styleTone) segments.push(`风格基调：${styleTone}。`);
-  if (narrativePov) segments.push(`叙事视角：${narrativePov}。`);
-  if (pacePreference) segments.push(`推进节奏：${pacePreference}。`);
-  if (projectMode) segments.push(`协作模式：${projectMode}。`);
-  if (emotionIntensity) segments.push(`情绪强度：${emotionIntensity}。`);
-  if (aiFreedom) segments.push(`AI 自由度：${aiFreedom}。`);
-  if (defaultChapterLength) segments.push(`默认章长：约 ${defaultChapterLength} 字。`);
-  if (worldType) segments.push(`世界观类型：${worldType}。`);
+  if (description) segments.push(`简介：${description}。`); // i18n-ignore: AI prompt
+  if (genre) segments.push(`题材：${genre}。`); // i18n-ignore: AI prompt
+  if (styleTone) segments.push(`风格基调：${styleTone}。`); // i18n-ignore: AI prompt
+  if (narrativePov) segments.push(`叙事视角：${narrativePov}。`); // i18n-ignore: AI prompt
+  if (pacePreference) segments.push(`推进节奏：${pacePreference}。`); // i18n-ignore: AI prompt
+  if (projectMode) segments.push(`协作模式：${projectMode}。`); // i18n-ignore: AI prompt
+  if (emotionIntensity) segments.push(`情绪强度：${emotionIntensity}。`); // i18n-ignore: AI prompt
+  if (aiFreedom) segments.push(`AI 自由度：${aiFreedom}。`); // i18n-ignore: AI prompt
+  if (defaultChapterLength) segments.push(`默认章长：约 ${defaultChapterLength} 字。`); // i18n-ignore: AI prompt
+  if (worldType) segments.push(`世界观类型：${worldType}。`); // i18n-ignore: AI prompt
   return segments.join("");
 }
 

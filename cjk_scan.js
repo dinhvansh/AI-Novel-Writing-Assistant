@@ -58,6 +58,9 @@ function scanFile(filePath) {
     // Already wrapped: condition ? t("key") : "CJK"
     if (/\?\s*t\s*\(/.test(line) && /:\s*['"`]/.test(line)) continue;
 
+    // JSX option value="CJK" — these are DB/API values, not UI text
+    if (/value=["'][^"']*[\u4E00-\u9FFF][^"']*["']/.test(line)) continue;
+
     if (CJK.test(line)) {
       hits.push({ lineNo: i + 1, text: trimmed.slice(0, 100) });
     }
