@@ -1,6 +1,7 @@
 import { Router } from "express";
 import { z } from "zod";
 import type { ApiResponse } from "@ai-novel/shared/types/api";
+import type { LocaleCode } from "@ai-novel/shared/localization";
 import type {
   DirectorBookAutomationProjectionResponse,
   DirectorCommandAcceptedResponse,
@@ -11,6 +12,7 @@ import type {
   DirectorTaskSnapshotResponse,
   DirectorWorkspaceAnalysisResponse,
 } from "@ai-novel/shared/types/directorRuntime";
+import { localizeDirectorString } from "../../../../services/localization/DirectorPayloadLocalizer";
 import {
   DIRECTOR_AUTO_EXECUTION_MODES,
   DIRECTOR_CORRECTION_PRESETS,
@@ -388,6 +390,59 @@ router.get("/tasks/:taskId", validate({ params: taskParamsSchema }), async (req,
   try {
     const { taskId } = req.params as z.infer<typeof taskParamsSchema>;
     const data = await snapshotService.getTaskSnapshot(taskId) as DirectorTaskSnapshotResponse;
+    const locale = (res.locals as { locale?: LocaleCode }).locale ?? "vi-VN";
+
+    // Localize user-facing strings in the snapshot
+    if (data?.snapshot) {
+      const snap = data.snapshot as unknown as Record<string, unknown>;
+      // Localize displayState fields
+      if (snap.displayState && typeof snap.displayState === "object") {
+        const ds = snap.displayState as Record<string, unknown>;
+        if (typeof ds.currentAction === "string") ds.currentAction = localizeDirectorString(ds.currentAction, locale) ?? ds.currentAction;
+        if (typeof ds.stageLabel === "string") ds.stageLabel = localizeDirectorString(ds.stageLabel, locale) ?? ds.stageLabel;
+        if (typeof ds.checkpointLabel === "string") ds.checkpointLabel = localizeDirectorString(ds.checkpointLabel, locale) ?? ds.checkpointLabel;
+      }
+      // Localize projection fields
+      if (snap.projection && typeof snap.projection === "object") {
+        const proj = snap.projection as Record<string, unknown>;
+        if (typeof proj.currentLabel === "string") proj.currentLabel = localizeDirectorString(proj.currentLabel, locale) ?? proj.currentLabel;
+        if (typeof proj.headline === "string") proj.headline = localizeDirectorString(proj.headline, locale) ?? proj.headline;
+        if (typeof proj.detail === "string") proj.detail = localizeDirectorString(proj.detail, locale) ?? proj.detail;
+        if (typeof proj.nextActionLabel === "string") proj.nextActionLabel = localizeDirectorString(proj.nextActionLabel, locale) ?? proj.nextActionLabel;
+        if (typeof proj.lastEventSummary === "string") proj.lastEventSummary = localizeDirectorString(proj.lastEventSummary, locale) ?? proj.lastEventSummary;
+      }
+      // Localize dashboardView fields
+      if (snap.dashboardView && typeof snap.dashboardView === "object") {
+        const dv = snap.dashboardView as Record<string, unknown>;
+        if (typeof dv.currentAction === "string") dv.currentAction = localizeDirectorString(dv.currentAction, locale) ?? dv.currentAction;
+        if (typeof dv.headline === "string") dv.headline = localizeDirectorString(dv.headline, locale) ?? dv.headline;
+        if (typeof dv.description === "string") dv.description = localizeDirectorString(dv.description, locale) ?? dv.description;
+        if (typeof dv.stageLabel === "string") dv.stageLabel = localizeDirectorString(dv.stageLabel, locale) ?? dv.stageLabel;
+        // Localize step labels in dashboardView.steps
+        if (Array.isArray(dv.steps)) {
+          dv.steps = dv.steps.map((step: unknown) => {
+            if (!step || typeof step !== "object") return step;
+            const s = step as Record<string, unknown>;
+            return {
+              ...s,
+              label: typeof s.label === "string" ? (localizeDirectorString(s.label, locale) ?? s.label) : s.label,
+            };
+          });
+        }
+      }
+      // Localize recentEvents summaries
+      if (Array.isArray(snap.recentEvents)) {
+        snap.recentEvents = snap.recentEvents.map((event: unknown) => {
+          if (!event || typeof event !== "object") return event;
+          const e = event as Record<string, unknown>;
+          return {
+            ...e,
+            summary: typeof e.summary === "string" ? (localizeDirectorString(e.summary, locale) ?? e.summary) : e.summary,
+          };
+        });
+      }
+    }
+
     res.status(200).json(accepted(data, "Director task snapshot loaded."));
   } catch (error) {
     next(error);
@@ -437,6 +492,31 @@ router.get("/book-automation/:novelId", validate({ params: takeoverParamsSchema 
   try {
     const { novelId } = req.params as z.infer<typeof takeoverParamsSchema>;
     const projection = await projectionService.getProjection(novelId);
+    const locale = (res.locals as { locale?: LocaleCode }).locale ?? "vi-VN";
+
+    // Localize user-facing strings in the projection
+    if (projection) {
+      const p = projection as unknown as Record<string, unknown>;
+      if (typeof p.headline === "string") p.headline = localizeDirectorString(p.headline, locale) ?? p.headline;
+      if (typeof p.userHeadline === "string") p.userHeadline = localizeDirectorString(p.userHeadline, locale) ?? p.userHeadline;
+      if (typeof p.detail === "string") p.detail = localizeDirectorString(p.detail, locale) ?? p.detail;
+      if (typeof p.automationSummary === "string") p.automationSummary = localizeDirectorString(p.automationSummary, locale) ?? p.automationSummary;
+      if (typeof p.nextActionLabel === "string") p.nextActionLabel = localizeDirectorString(p.nextActionLabel, locale) ?? p.nextActionLabel;
+      if (typeof p.userReason === "string") p.userReason = localizeDirectorString(p.userReason, locale) ?? p.userReason;
+      if (typeof p.blockedReason === "string") p.blockedReason = localizeDirectorString(p.blockedReason, locale) ?? p.blockedReason;
+      // Localize timeline items
+      if (Array.isArray(p.timeline)) {
+        p.timeline = p.timeline.map((item: unknown) => {
+          if (!item || typeof item !== "object") return item;
+          const t = item as Record<string, unknown>;
+          return {
+            ...t,
+            title: typeof t.title === "string" ? (localizeDirectorString(t.title, locale) ?? t.title) : t.title,
+          };
+        });
+      }
+    }
+
     const data: DirectorBookAutomationProjectionResponse = { projection };
     res.status(200).json(accepted(data, "Director book automation projection loaded."));
   } catch (error) {

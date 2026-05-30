@@ -11,6 +11,7 @@ import { AutoDirectorFollowUpActionExecutor } from "../services/task/autoDirecto
 import { AutoDirectorFollowUpService } from "../services/task/autoDirectorFollowUps/AutoDirectorFollowUpService";
 import { taskCenterService } from "../services/task/TaskCenterService";
 import { getI18nServerHandle } from "../i18n";
+import { localizeTaskPayload } from "../services/localization/DirectorPayloadLocalizer";
 
 function localizeStepLabel(key: string, fallback: string, locale: LocaleCode): string {
   const handle = getI18nServerHandle();
@@ -21,14 +22,18 @@ function localizeStepLabel(key: string, fallback: string, locale: LocaleCode): s
 }
 
 function localizeTaskDetail(data: UnifiedTaskDetail, locale: LocaleCode): UnifiedTaskDetail {
-  if (!data.steps || data.steps.length === 0) return data;
-  return {
-    ...data,
-    steps: data.steps.map((step) => ({
-      ...step,
-      label: localizeStepLabel(step.key, step.label, locale),
-    })),
-  };
+  // Localize step labels
+  const withSteps = data.steps && data.steps.length > 0
+    ? {
+        ...data,
+        steps: data.steps.map((step) => ({
+          ...step,
+          label: localizeStepLabel(step.key, step.label, locale),
+        })),
+      }
+    : data;
+  // Localize user-facing payload fields
+  return localizeTaskPayload(withSteps as unknown as Record<string, unknown>, locale) as unknown as UnifiedTaskDetail;
 }
 
 const router = Router();
