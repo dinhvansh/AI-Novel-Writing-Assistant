@@ -177,7 +177,7 @@ export function buildLandingProfileItems(params: BuildLandingProfileItemsParams)
       return {
         id: profile.id,
         name: profile.name,
-        originLabel: getStyleProfileOriginLabel(profile),
+        originLabel: getStyleProfileOriginLabel(t, profile),
         summaryLine: detailLines[0] ?? profile.description ?? t("writingFormula.landingItems.noSummary"),
         detailLines,
         description: firstNonEmptyText(profile.description, profileSummary?.readingFeel, t("writingFormula.landingItems.noDescription")),

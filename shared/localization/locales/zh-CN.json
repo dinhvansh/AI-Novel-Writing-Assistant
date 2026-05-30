@@ -236,7 +236,12 @@
         "macroSaved": "故事宏观规划已保存。",
         "constraintsBuilt": "故事宏观规划与约束引擎已具备进入下一步的条件。",
         "macroSavedItemLabel": "故事宏观规划已保存",
-        "constraintsBuiltItemLabel": "约束引擎已构建"
+        "constraintsBuiltItemLabel": "约束引擎已构建",
+        "engineGenerated": "故事引擎原型已生成。",
+        "engineGeneratedItemLabel": "故事引擎原型已生成",
+        "constraintsBuiltCheckpoint": "故事宏观规划与约束引擎已具备进入下一步的条件。",
+        "stateSaved": "故事宏观状态已保存。",
+        "fieldRegenerated": "字段已重生成。"
       },
       "expansionFields": {
         "expandedPremise": "强化前提",
@@ -403,6 +408,17 @@
             "answer": "这表示系统先把普通质量问题记录下来，优先把整本书继续写完，后续再集中修复这些章节。"
           }
         }
+      }
+    },
+    "basicInfoTab": {
+      "takeoverTitle": "让 AI 从当前项目继续接管",
+      "takeoverDescription": "如果你已经填过基础信息，可以直接从当前步骤开始自动接管，并选择继续已有进度或重跑当前步。",
+      "cardTitle": "书级定位与基本信息",
+      "submitLabel": "保存基本信息",
+      "styleSection": {
+        "title": "写法与世界补强",
+        "description": "在上方标题字段旁可以快速选填标题。这里用于开写前确认写法和整理本书世界边界。",
+        "meta": "写法建议 / 世界使用"
       }
     },
     "create": {
@@ -3678,6 +3694,15 @@
         "saveButton": "4. 保存为写法资产",
         "savingButton": "正在保存写法...",
         "noPreviewHint": "还没有可预览的特征。先完成特征提取，再决定保存方式。"
+      },
+      "originLabel": {
+        "preset": "预置",
+        "aiGenerated": "AI生成",
+        "fromText": "文本提取",
+        "fromBookAnalysis": "拆书生成",
+        "fromKnowledge": "知识库原文",
+        "fromCurrentWork": "当前作品",
+        "manual": "手动创建"
       }
     },
     "world": {
@@ -3892,6 +3917,15 @@
       "skipCompleted": "跳过已完成章节",
       "currentSettings": "当前设置：{runMode} | 阈值 {threshold} | {repairMode}",
       "stageVisualizationTitle": "阶段可视化",
+      "stages": {
+        "assembleContext": "装配上下文",
+        "generateTaskSheet": "生成任务单",
+        "generateSceneCards": "生成场景拍点",
+        "generateContent": "生成正文",
+        "qualityCheck": "质量检测",
+        "autoRepair": "自动修复",
+        "updateMemory": "更新剧情记忆"
+      },
       "stageStatus": {
         "pending": "待执行",
         "active": "进行中",
@@ -4192,6 +4226,21 @@
         "blocked": "上游事实还没补齐，所以这一步暂时不能开始。",
         "current": "这是系统根据现有事实判断出的下一段主处理步骤。",
         "working": "这一步已经具备执行条件，但事实还没有完全闭环。"
+      }
+    },
+    "directorCandidate": {
+      "errors": {
+        "noBatchReturned": "自动导演没有返回可用方案。",
+        "generateFailed": "导演候选方案生成失败。",
+        "patchNoBatchReturned": "定向修正失败，未返回更新后的方案。",
+        "patchFailed": "定向修正方案失败。",
+        "titlePatchNoBatchReturned": "标题组修正失败，未返回更新后的书名组。",
+        "titlePatchFailed": "标题组修正失败。"
+      },
+      "success": {
+        "batchGenerated": "{roundLabel} 已生成 {count} 套方案。",
+        "patchApplied": "已按你的意见修正这套方案。",
+        "titlePatchApplied": "已重做这套方案的标题组。"
       }
     },
     "cover": {
@@ -6608,6 +6657,15 @@
     }
   },
   "knowledge": {
+    "picker": {
+      "auto": "自动",
+      "custom": "自定义",
+      "autoHint": "当前使用自动规则：若有实体绑定文档则优先使用绑定文档，否则回退到全部启用文档。",
+      "searchPlaceholder": "搜索知识文档",
+      "loading": "加载中...",
+      "empty": "没有可选文档。",
+      "selectedCount": "已选择 {{count}} 个文档。保持为空会显式关闭知识库检索。"
+    },
     "documentsTab": {
       "statusAll": "全部未归档",
       "statusEnabled": "仅启用",
@@ -7595,6 +7653,16 @@
       "volumeReward": "卷末奖励",
       "mandatorySignals": "必须出现的信号",
       "antiSignals": "必须避免的跑偏信号"
+    },
+    "treeCard": {
+      "novelCount": "小说 {count}",
+      "childCount": "子类 {count}",
+      "coreDriveLabel": "核心驱动：{value}",
+      "addChild": "新增子类",
+      "edit": "编辑",
+      "delete": "删除",
+      "deleting": "删除中...",
+      "deleteDisabledTitle": "请先解绑当前推进模式或其子类下引用的小说后再删除。"
     }
   },
   "world": {
@@ -7740,6 +7808,17 @@
       "defaultWorldType": "自定义",
       "libraryItemDescription": "{name} 的素材库设定。",
       "libraryItemReason": "来自素材库的可复用设定。",
+      "quickPick": {
+        "title": "素材库前置引入",
+        "description": "在正式生成前从素材库选择可复用设定，引入到当前蓝图结构。",
+        "searchPlaceholder": "搜索素材库条目，可按名称或关键词过滤",
+        "loading": "正在加载素材库…",
+        "empty": "当前没有匹配的素材库条目。",
+        "noDescription": "暂无描述",
+        "usageCount": "使用次数：{{count}}",
+        "add": "加入蓝图",
+        "added": "已加入蓝图"
+      },
       "createDraftError": "创建世界草稿失败。",
       "finalizeError": "世界草稿不存在。",
       "analysisConceptError": "世界观分析结果缺少概念卡。",
@@ -8113,6 +8192,18 @@
       "descriptionLabel": "描述",
       "descriptionPlaceholder": "描述这个类型的题材核心、爽点、常见主线或读者期待。",
       "deleteNode": "删除当前节点"
+    },
+    "treeItem": {
+      "expand": "展开",
+      "collapse": "折叠",
+      "novelCount": "小说 {count}",
+      "childCount": "子类 {count}",
+      "noDescription": "暂无描述。",
+      "addChild": "新增子类",
+      "edit": "编辑",
+      "delete": "删除",
+      "deleting": "删除中...",
+      "deleteDisabledTitle": "请先解绑当前分类或其子分类下的小说后再删除。"
     }
   },
   "genres": {
@@ -8128,6 +8219,17 @@
       "deleteSuccess": "题材基底已删除。",
       "deleteConfirm": "确认删除题材基底「{name}」？此操作不可恢复。",
       "deleteConfirmWithChildren": "确认删除题材基底「{name}」？这会同时删除其下 {count} 个子分类，此操作不可恢复。"
+    }
+  },
+  "writingFormula": {
+    "originLabel": {
+      "preset": "预设模板",
+      "aiGenerated": "AI 生成",
+      "fromText": "从文本提取",
+      "fromBookAnalysis": "从拆书结果",
+      "fromKnowledge": "从知识库文档",
+      "fromCurrentWork": "从当前作品",
+      "manual": "手动创建"
     }
   }
 }

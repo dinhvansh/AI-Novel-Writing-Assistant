@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import type {
   StoryConflictLayers,
   StoryDecomposition,
@@ -87,6 +88,7 @@ export function useNovelStoryMacro(input: UseNovelStoryMacroInput): {
   ready: boolean;
 } {
   const { novelId, llm, enabled = true } = input;
+  const { t } = useTranslation();
   const queryClient = useQueryClient();
   const [storyInput, setStoryInput] = useState("");
   const [expansion, setExpansion] = useState<StoryExpansion | null>(EMPTY_EXPANSION);
@@ -135,7 +137,7 @@ export function useNovelStoryMacro(input: UseNovelStoryMacroInput): {
       temperature: llm.temperature,
     }),
     onSuccess: async (response) => {
-      setMessage(response.message ?? "故事引擎原型已生成。");
+      setMessage(response.message ?? t("novel:storyMacro.feedback.engineGenerated"));
       setExpansion(normalizeExpansion(response.data?.expansion));
       setDecomposition(response.data?.decomposition ?? EMPTY_DECOMPOSITION);
       setConstraints(response.data?.constraints ?? []);
@@ -144,7 +146,7 @@ export function useNovelStoryMacro(input: UseNovelStoryMacroInput): {
       await syncNovelWorkflowStageSilently({
         novelId,
         stage: "story_macro",
-        itemLabel: "故事引擎原型已生成",
+        itemLabel: t("novel:storyMacro.feedback.engineGeneratedItemLabel"),
         status: "waiting_approval",
       });
       await invalidatePlan();
@@ -158,13 +160,13 @@ export function useNovelStoryMacro(input: UseNovelStoryMacroInput): {
       temperature: llm.temperature,
     }),
     onSuccess: async (response) => {
-      setMessage(response.message ?? "约束引擎已构建。");
+      setMessage(response.message ?? t("novel:storyMacro.feedback.constraintsBuilt"));
       await syncNovelWorkflowStageSilently({
         novelId,
         stage: "story_macro",
-        itemLabel: "约束引擎已构建",
+        itemLabel: t("novel:storyMacro.feedback.constraintsBuiltItemLabel"),
         checkpointType: "book_contract_ready",
-        checkpointSummary: "故事宏观规划与约束引擎已具备进入下一步的条件。",
+        checkpointSummary: t("novel:storyMacro.feedback.constraintsBuiltCheckpoint"),
         status: "waiting_approval",
       });
       await invalidatePlan();
@@ -180,11 +182,11 @@ export function useNovelStoryMacro(input: UseNovelStoryMacroInput): {
       lockedFields,
     }),
     onSuccess: async (response) => {
-      setMessage(response.message ?? "故事宏观规划已保存。");
+      setMessage(response.message ?? t("novel:storyMacro.feedback.macroSaved"));
       await syncNovelWorkflowStageSilently({
         novelId,
         stage: "story_macro",
-        itemLabel: "故事宏观规划已保存",
+        itemLabel: t("novel:storyMacro.feedback.macroSavedItemLabel"),
         status: "waiting_approval",
       });
       await invalidatePlan();
@@ -194,8 +196,7 @@ export function useNovelStoryMacro(input: UseNovelStoryMacroInput): {
   const saveStateMutation = useMutation({
     mutationFn: () => updateNovelStoryMacroState(novelId, storyState),
     onSuccess: async () => {
-      setMessage("故事宏观状态已保存。");
-      await invalidatePlan();
+      setMessage(t("novel:storyMacro.feedback.stateSaved"));
     },
   });
 
@@ -209,7 +210,7 @@ export function useNovelStoryMacro(input: UseNovelStoryMacroInput): {
       });
     },
     onSuccess: async (response) => {
-      setMessage(response.message ?? "字段已重生成。");
+      setMessage(response.message ?? t("novel:storyMacro.feedback.fieldRegenerated"));
       await invalidatePlan();
     },
     onSettled: () => {

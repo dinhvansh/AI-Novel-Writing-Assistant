@@ -134,7 +134,7 @@ export default function WritingFormulaSidebar(props: WritingFormulaSidebarProps)
                       <div className="truncate font-medium text-foreground">{profile.name}</div>
                     </div>
                     <Badge variant="secondary" className="shrink-0">
-                      {getStyleProfileOriginLabel(profile)}
+                      {getStyleProfileOriginLabel(t, profile)}
                     </Badge>
                   </div>
                 </button>

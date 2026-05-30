@@ -10,7 +10,7 @@ import LLMSelector from "@/components/common/LLMSelector";
 import StreamOutput from "@/components/common/StreamOutput";
 import CollapsibleSummary from "./CollapsibleSummary";
 import WorldInjectionHint from "./WorldInjectionHint";
-import { getLowScoreChapterRange, getPipelineStageState, PIPELINE_STAGE_ITEMS } from "./pipelineTab.utils";
+import { getLowScoreChapterRange, getPipelineStageItems, getPipelineStageState } from "./pipelineTab.utils";
 import DirectorTakeoverEntryPanel from "./DirectorTakeoverEntryPanel";
 
 interface PipelineTabProps {
@@ -124,6 +124,7 @@ export default function PipelineTab(props: PipelineTabProps) {
   } = props;
 
   const lowScoreRange = getLowScoreChapterRange(chapters, chapterReports, pipelineForm.qualityThreshold);
+  const pipelineStageItems = getPipelineStageItems(t);
   const lowScoreReports = chapterReports
     .filter((item) => item.chapterId && item.overall < pipelineForm.qualityThreshold)
     .slice(0, 12);
@@ -366,8 +367,8 @@ export default function PipelineTab(props: PipelineTabProps) {
                 <CardTitle>{t("pipeline.stageVisualizationTitle")}</CardTitle>
               </CardHeader>
               <CardContent className="space-y-2">
-                {PIPELINE_STAGE_ITEMS.map((stage) => {
-                  const state = getPipelineStageState(stage.key, pipelineJob, PIPELINE_STAGE_ITEMS);
+                {pipelineStageItems.map((stage) => {
+                  const state = getPipelineStageState(stage.key, pipelineJob, pipelineStageItems);
                   return (
                     <div
                       key={stage.key}

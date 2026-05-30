@@ -471,7 +471,12 @@
         "macroSaved": "Đã lưu quy hoạch tổng thể của truyện.",
         "constraintsBuilt": "Quy hoạch tổng thể của truyện và bộ máy ràng buộc đã sẵn sàng để sang bước tiếp theo.",
         "macroSavedItemLabel": "Đã lưu kế hoạch tổng thể của câu chuyện",
-        "constraintsBuiltItemLabel": "Công cụ ràng buộc đã được xây dựng"
+        "constraintsBuiltItemLabel": "Công cụ ràng buộc đã được xây dựng",
+        "engineGenerated": "Nguyên mẫu công cụ câu chuyện đã được tạo.",
+        "engineGeneratedItemLabel": "Nguyên mẫu công cụ câu chuyện đã được tạo",
+        "constraintsBuiltCheckpoint": "Công cụ lập kế hoạch vĩ mô và ràng buộc câu chuyện đã sẵn sàng cho bước tiếp theo.",
+        "stateSaved": "Trạng thái vĩ mô câu chuyện đã được lưu.",
+        "fieldRegenerated": "Trường đã được tạo lại."
       },
       "expansionFields": {
         "expandedPremise": "Tiền đề đã được củng cố",
@@ -3643,6 +3648,15 @@
         "taskQueuedNoDetail": "Tác vụ trích xuất công thức viết đã gửi thành công nhưng không lấy được chi tiết tác vụ.",
         "profileFromBookAnalysis": "Công thức viết \"{name}\" đến từ kết quả phân tích sách, bạn có thể tiếp tục kiểm tra quy tắc, viết thử hoặc gắn vào mục tiêu.",
         "defaultProfileName": "Công thức viết mới"
+      },
+      "originLabel": {
+        "preset": "Cài sẵn",
+        "aiGenerated": "AI tạo",
+        "fromText": "Trích xuất văn bản",
+        "fromBookAnalysis": "Phân tích sách tạo",
+        "fromKnowledge": "Nguyên văn Kho tri thức",
+        "fromCurrentWork": "Tác phẩm hiện tại",
+        "manual": "Tạo thủ công"
       }
     },
     "world": {
@@ -3949,7 +3963,16 @@
       "savedBeatsTitle": "Nhịp đã lưu",
       "beatChapterLabel": "Chương {order} · {title}",
       "beatType": "Thể loại",
-      "noBeats": "Chưa có nhịp tình tiết."
+      "noBeats": "Chưa có nhịp tình tiết.",
+      "stages": {
+        "assembleContext": "Lắp ráp ngữ cảnh",
+        "generateTaskSheet": "Tạo phiếu tác vụ",
+        "generateSceneCards": "Tạo thẻ cảnh",
+        "generateContent": "Tạo nội dung chính",
+        "qualityCheck": "Kiểm tra chất lượng",
+        "autoRepair": "Tự động sửa chữa",
+        "updateMemory": "Cập nhật bộ nhớ cốt truyện"
+      }
     },
     "basicInfoForm": {
       "fillSuggestionTitle": "Gợi ý điền",
@@ -4833,6 +4856,32 @@
         "low": "Cường độ cảm xúc thấp",
         "medium": "Cường độ cảm xúc trung bình",
         "high": "Cường độ cảm xúc cao"
+      }
+    },
+    "directorCandidate": {
+      "errors": {
+        "noBatchReturned": "Đạo diễn tự động không trả về phương án khả dụng nào.",
+        "generateFailed": "Tạo phương án đạo diễn thất bại.",
+        "patchNoBatchReturned": "Sửa định hướng thất bại, không trả về phương án cập nhật.",
+        "patchFailed": "Sửa định hướng phương án thất bại.",
+        "titlePatchNoBatchReturned": "Sửa nhóm tiêu đề thất bại, không trả về nhóm tên sách cập nhật.",
+        "titlePatchFailed": "Sửa nhóm tiêu đề thất bại."
+      },
+      "success": {
+        "batchGenerated": "{roundLabel} đã tạo {count} bộ phương án.",
+        "patchApplied": "Đã sửa bộ phương án này theo ý kiến của bạn.",
+        "titlePatchApplied": "Đã làm lại nhóm tiêu đề của bộ phương án này."
+      }
+    },
+    "basicInfoTab": {
+      "takeoverTitle": "Để AI tiếp tục tiếp quản từ dự án hiện tại",
+      "takeoverDescription": "Nếu bạn đã điền thông tin cơ bản, có thể bắt đầu tự động tiếp quản từ bước hiện tại và chọn tiếp tục tiến độ đã có hoặc chạy lại bước hiện tại.",
+      "cardTitle": "Định vị sách và thông tin cơ bản",
+      "submitLabel": "Lưu thông tin cơ bản",
+      "styleSection": {
+        "title": "Cách viết và bổ sung thế giới quan",
+        "description": "Bên cạnh trường tiêu đề phía trên có thể chọn nhanh tiêu đề. Dùng để xác nhận cách viết và sắp xếp ranh giới thế giới của sách trước khi bắt đầu viết.",
+        "meta": "Gợi ý cách viết / Sử dụng thế giới"
       }
     }
   },
@@ -6142,6 +6191,15 @@
       "attempts": "Lần thử {current}/{max}",
       "chunks": "{count} khối",
       "documents": "{count} tài liệu"
+    },
+    "picker": {
+      "auto": "Tự động",
+      "custom": "Tùy chỉnh",
+      "autoHint": "Hiện đang sử dụng quy tắc tự động: nếu có thực thể ràng buộc tài liệu thì ưu tiên dùng tài liệu ràng buộc, nếu không thì quay lại dùng tất cả tài liệu đã bật.",
+      "searchPlaceholder": "Tìm kiếm tài liệu tri thức",
+      "loading": "Đang tải...",
+      "empty": "Không có tài liệu nào để chọn.",
+      "selectedCount": "Đã chọn {{count}} tài liệu. Để trống sẽ tắt rõ ràng việc tra cứu Kho tri thức."
     }
   },
   "settings": {
@@ -6742,6 +6800,15 @@
         "true": "Hành động trước giải thích",
         "false": "Giải thích quan trọng hơn hành động"
       }
+    },
+    "originLabel": {
+      "preset": "Mẫu cài sẵn",
+      "aiGenerated": "AI tạo",
+      "fromText": "Trích xuất từ văn bản",
+      "fromBookAnalysis": "Từ kết quả phân tích sách",
+      "fromKnowledge": "Từ tài liệu Kho tri thức",
+      "fromCurrentWork": "Từ tác phẩm hiện tại",
+      "manual": "Tạo thủ công"
     }
   },
   "world": {
@@ -6952,6 +7019,17 @@
             "description": "Các bối cảnh như thành phố, khu phố, công ty, nơi ở có thể sử dụng trực tiếp."
           }
         }
+      },
+      "quickPick": {
+        "title": "Nhập trước từ kho tài liệu",
+        "description": "Trước khi tạo chính thức, chọn thiết định có thể tái sử dụng từ Kho tri thức và đưa vào cấu trúc bản thiết kế hiện tại.",
+        "searchPlaceholder": "Tìm kiếm mục trong Kho tri thức, có thể lọc theo tên hoặc từ khóa",
+        "loading": "Đang tải Kho tri thức…",
+        "empty": "Hiện không có mục nào trong Kho tri thức phù hợp.",
+        "noDescription": "Chưa có mô tả",
+        "usageCount": "Số lần sử dụng: {{count}}",
+        "add": "Thêm vào bản thiết kế",
+        "added": "Đã thêm vào bản thiết kế"
       }
     },
     "assets": {
@@ -8274,6 +8352,16 @@
       "volumeReward": "Phần thưởng cuối tập",
       "mandatorySignals": "Tín hiệu bắt buộc xuất hiện",
       "antiSignals": "Tín hiệu lệch hướng phải tránh"
+    },
+    "treeCard": {
+      "novelCount": "Tiểu thuyết {count}",
+      "childCount": "Phân loại con {count}",
+      "coreDriveLabel": "Động lực cốt lõi: {value}",
+      "addChild": "Thêm phân loại con",
+      "edit": "Sửa",
+      "delete": "Xóa",
+      "deleting": "Đang xóa...",
+      "deleteDisabledTitle": "Vui lòng hủy liên kết tiểu thuyết đang tham chiếu trong chế độ đẩy hiện tại hoặc phân loại con của nó trước khi xóa."
     }
   },
   "characters": {
@@ -8520,6 +8608,18 @@
       "descriptionLabel": "Mô tả",
       "descriptionPlaceholder": "Mô tả cốt lõi thể loại, điểm sướng, mạch chính thường gặp hoặc kỳ vọng của độc giả.",
       "deleteNode": "Xóa nút hiện tại"
+    },
+    "treeItem": {
+      "expand": "Mở rộng",
+      "collapse": "Thu gọn",
+      "novelCount": "Tiểu thuyết {count}",
+      "childCount": "Phân loại con {count}",
+      "noDescription": "Chưa có mô tả.",
+      "addChild": "Thêm phân loại con",
+      "edit": "Chỉnh sửa",
+      "delete": "Xóa",
+      "deleting": "Đang xóa...",
+      "deleteDisabledTitle": "Vui lòng hủy liên kết các tiểu thuyết thuộc phân loại hiện tại hoặc phân loại con trước khi xóa."
     }
   },
   "genres": {
