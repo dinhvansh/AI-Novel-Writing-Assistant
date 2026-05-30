@@ -436,9 +436,9 @@ export default function StructuredOutlineWorkspace(props: StructuredTabViewProps
                   </div>
                   <div className="flex items-center gap-2">
                     <Badge variant={hasMissingChapterLinks ? "outline" : "secondary"}>
-                      {linkedChapterCount}/{Math.max(allPlannedChapters.length, 1)} 已连接
+                      {t("novel:structured.sync.linkedCount", { linked: linkedChapterCount, total: Math.max(allPlannedChapters.length, 1) })}
                     </Badge>
-                    <Badge variant="outline">执行区 {executionChapterCount} 章</Badge>
+                    <Badge variant="outline">{t("novel:structured.sync.executionChapterCount", { count: executionChapterCount })}</Badge>
                     <Badge variant="outline">{t("novel:structured.sync.diffCount", { count: syncPreview.items.length })}</Badge>
                     <Button
                       size="sm"

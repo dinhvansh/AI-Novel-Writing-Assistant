@@ -318,7 +318,7 @@ export default function NovelPreview() {
                     </div>
                     <div className="mt-2 flex flex-wrap gap-x-3 gap-y-1 text-xs text-muted-foreground">
                       <span>{formatChapterStatus(chapter.chapterStatus)}</span>
-                      <span>{formatCount(countWords(chapter.content))} 字</span>
+                      <span>{formatCount(countWords(chapter.content))} {t("preview.wordUnit")}</span>
                     </div>
                   </button>
                 );
@@ -340,7 +340,7 @@ export default function NovelPreview() {
                   </CardTitle>
                   {activeChapter ? (
                     <CardDescription className="mt-2">
-                      {formatChapterStatus(activeChapter.chapterStatus)} · {formatCount(countWords(activeChapter.content))} 字
+                      {formatChapterStatus(activeChapter.chapterStatus)} · {formatCount(countWords(activeChapter.content))} {t("preview.wordUnit")}
                     </CardDescription>
                   ) : null}
                 </div>

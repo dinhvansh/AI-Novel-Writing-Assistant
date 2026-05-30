@@ -116,12 +116,12 @@ export default function NovelTitleWorkshop({
       <TitleSuggestionList
         suggestions={suggestions}
         selectedTitle={selectedTitle}
-        primaryActionLabel="应用到项目"
+        primaryActionLabel={t("titleWorkshop.applyToProject")}
         onPrimaryAction={handleApply}
         onCopy={handleCopy}
         onSave={(suggestion) => saveMutation.mutate(suggestion)}
         savingTitle={saveMutation.isPending ? saveMutation.variables?.title ?? "" : ""}
-        emptyMessage="点一次生成，就能得到一批基于当前项目设定的标题候选。"
+        emptyMessage={t("titleWorkshop.emptyMessage")}
       />
     </div>
   );

@@ -58,6 +58,29 @@
       "generating": "Đang tạo...",
       "wordCount": "Số chữ: {{count}}",
       "stopButton": "Dừng tạo"
+    },
+    "searchableSelect": {
+      "placeholder": "Vui lòng chọn",
+      "searchPlaceholder": "Tìm kiếm",
+      "emptyText": "Không có lựa chọn"
+    },
+    "selectField": {
+      "placeholder": "Vui lòng chọn",
+      "emptyText": "Hiện không có lựa chọn"
+    },
+    "serverStartup": {
+      "title": "Đang kết nối dịch vụ sáng tác cục bộ",
+      "description": "Trang đã sẵn sàng, hệ thống sẽ tự động vào bàn làm việc sau khi dịch vụ khả dụng.",
+      "retryButton": "Kiểm tra lại"
+    },
+    "astrology": {
+      "title": "Cảm hứng chiêm tinh",
+      "description": "Trang giữ chỗ cho mô-đun chiêm tinh.",
+      "content": "Sau này sẽ tích hợp khả năng tạo cảm hứng theo chủ đề và mở rộng thiết định tại đây."
+    },
+    "collapsibleSummary": {
+      "collapsed": "Mở rộng để xem",
+      "expanded": "Thu gọn nội dung"
     }
   },
   "novel": {
@@ -897,7 +920,9 @@
           "keep": "Giữ nguyên",
           "delete": "Xoá",
           "deleteCandidate": "Đề cử xoá"
-        }
+        },
+        "linkedCount": "{{linked}}/{{total}} đã kết nối",
+        "executionChapterCount": "Khu vực thực thi {{count}} chương"
       },
       "beatSheet": {
         "title": "Nhịp độ tập hiện tại",
@@ -1850,7 +1875,10 @@
       "chapterTarget": {
         "actionLabel": "Tiến tới chương thứ {order}",
         "summaryFrom": "Tiếp tục từ chương {start}.",
-        "summaryRange": "Từ chương {start}, tiến liên tục đến chương {end}."
+        "summaryRange": "Từ chương {start}, tiến liên tục đến chương {end}.",
+        "label": "Tiến tới",
+        "ariaLabel": "Tiến tới chương",
+        "rangeHint": "Có thể nhập phạm vi: chương {{start}}-{{end}}."
       },
       "error": {
         "chapterRangeNotReady": "Phạm vi chương chỉ có thể bắt đầu từ nhịp độ tách chương, thực thi chương hoặc sửa chất lượng, vui lòng hoàn thành bước trước.",
@@ -1862,6 +1890,14 @@
         "enterCurrentTask": "Vào tác vụ hiện tại",
         "starting": "Đang khởi động...",
         "preserveHint": "Mặc định giữ lại tài sản hiện có, chỉ khi chọn chạy lại trong cài đặt nâng cao mới xây dựng lại bước tương ứng."
+      },
+      "contextSummary": {
+        "title": "Thông tin dự án hiện tại sẽ được dùng làm đầu vào cho Đạo diễn tự động",
+        "emptyHint": "Hiện có ít thông tin, nên bổ sung ít nhất một câu tóm tắt cốt truyện hoặc điểm bán hàng cấp sách trước khi tiếp quản."
+      },
+      "progressInspection": {
+        "loading": "Đang đọc tiến độ chi tiết của tác vụ hiện tại...",
+        "snapshotError": "Đọc tiến độ chi tiết của tác vụ hiện tại thất bại, đã hiển thị kiểm tra tài sản dự án trước."
       }
     },
     "taskDrawer": {
@@ -2581,6 +2617,10 @@
         "importBaseSuccess": "Nhân vật cơ sở đã được nhập vào tiểu thuyết hiện tại.",
         "applySupplementalSuccess": "Nhân vật bổ sung đã được tạo và đồng bộ {count} mối quan hệ có cấu trúc.",
         "applySupplementalSuccessNoRelation": "Nhân vật bổ sung đã được tạo."
+      },
+      "diagnostics": {
+        "title": "Chẩn đoán đội hình và mối quan hệ nhân vật",
+        "description": "Nội dung này phù hợp hơn khi cần bổ sung, kiểm tra lỗ hổng hoặc sắp xếp mối quan hệ. Khi chỉnh sửa hàng ngày, hãy xem bàn làm việc tài sản nhân vật bên dưới."
       }
     },
     "chapter": {
@@ -4484,7 +4524,9 @@
       "savedToLibrary": "Tiêu đề đã được thêm vào thư viện tiêu đề.",
       "currentSavedToLibrary": "Tiêu đề hiện tại đã được thêm vào thư viện tiêu đề.",
       "copiedToClipboard": "Tiêu đề đã được sao chép vào clipboard.",
-      "appliedToForm": "Tiêu đề đã được ghi vào biểu mẫu thông tin cơ bản, nhớ lưu lại."
+      "appliedToForm": "Tiêu đề đã được ghi vào biểu mẫu thông tin cơ bản, nhớ lưu lại.",
+      "applyToProject": "Áp dụng vào dự án",
+      "emptyMessage": "Nhấn tạo một lần, bạn sẽ nhận được một loạt đề xuất tiêu đề dựa trên thiết định dự án hiện tại."
     },
     "preview": {
       "title": "Xem trước tiểu thuyết",
@@ -4523,7 +4565,8 @@
       "selectChapter": "Chọn chương",
       "chapterWithTitle": "Chương {order}: {title}",
       "noContentTitle": "Chương này chưa có nội dung",
-      "noContentDescription": "Sau khi vào trang chỉnh sửa chương để tạo hoặc viết thêm nội dung, nội dung đầy đủ sẽ hiển thị ở đây."
+      "noContentDescription": "Sau khi vào trang chỉnh sửa chương để tạo hoặc viết thêm nội dung, nội dung đầy đủ sẽ hiển thị ở đây.",
+      "wordUnit": "chữ"
     },
     "chapterInsights": {
       "noSelectionHint": "Sau khi chọn chương, ở đây sẽ hiển thị tác vụ, phân tích cảnh, phản hồi chất lượng, bản ghi sửa chữa và thông tin chẩn đoán.",
@@ -4931,6 +4974,21 @@
       "startedSuccess": "Đã bắt đầu sửa chữa tiêu đề chương bằng AI, hệ thống đang viết lại việc chia chương của tập hiện tại.",
       "failed": "Sửa chữa tiêu đề chương bằng AI thất bại.",
       "noTask": "Hiện không có tác vụ Đạo diễn tự động nào có thể sửa chữa."
+    },
+    "chapterExecution": {
+      "statusFlow": {
+        "currentStage": "Giai đoạn hiện tại:",
+        "notStarted": "Chưa bắt đầu"
+      }
+    },
+    "chapterEdit": {
+      "loading": "Đang tải trình chỉnh sửa chương...",
+      "loadError": "Tải dữ liệu chương thất bại, vui lòng làm mới và thử lại.",
+      "notFound": "Không tìm thấy chương tương ứng, có thể đã bị xóa hoặc liên kết hiện tại không đầy đủ."
+    },
+    "worldInjection": {
+      "injectedTitle": "Đã tiêm ngữ cảnh quy tắc thế giới",
+      "noWorldHint": "Hiện chưa gắn thế giới quan, quá trình tạo sẽ không tiêm quy tắc thế giới."
     }
   },
   "autoDirector": {
@@ -6248,6 +6306,12 @@
       "loading": "Đang tải...",
       "empty": "Không có tài liệu nào để chọn.",
       "selectedCount": "Đã chọn {{count}} tài liệu. Để trống sẽ tắt rõ ràng việc tra cứu Kho tri thức."
+    },
+    "bindingPanel": {
+      "defaultTitle": "Kiến thức tham khảo",
+      "description": "Sau khi gắn sẽ trở thành nguồn tài liệu kiến thức mặc định của thực thể này.",
+      "saving": "Đang lưu...",
+      "saveButton": "Lưu gắn kết"
     }
   },
   "settings": {

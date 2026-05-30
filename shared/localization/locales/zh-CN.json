@@ -58,6 +58,29 @@
       "generating": "正在生成...",
       "wordCount": "字数：{{count}}",
       "stopButton": "停止生成"
+    },
+    "searchableSelect": {
+      "placeholder": "请选择",
+      "searchPlaceholder": "搜索",
+      "emptyText": "没有可选项"
+    },
+    "selectField": {
+      "placeholder": "请选择",
+      "emptyText": "暂无可选项"
+    },
+    "serverStartup": {
+      "title": "正在连接本地创作服务",
+      "description": "页面已准备好，系统会在服务可用后自动进入工作台。",
+      "retryButton": "重新检查"
+    },
+    "astrology": {
+      "title": "占星灵感",
+      "description": "占星模块占位页。",
+      "content": "后续将在此接入题材化灵感生成与设定扩展能力。"
+    },
+    "collapsibleSummary": {
+      "collapsed": "展开查看",
+      "expanded": "收起内容"
     }
   },
   "novel": {
@@ -882,7 +905,9 @@
           "keep": "保留",
           "delete": "删除",
           "deleteCandidate": "待删候选"
-        }
+        },
+        "linkedCount": "{{linked}}/{{total}} 已连接",
+        "executionChapterCount": "执行区 {{count}} 章"
       },
       "beatSheet": {
         "title": "当前卷节奏",
@@ -2861,6 +2886,10 @@
         "importBaseSuccess": "基础角色已导入到当前小说。",
         "applySupplementalSuccess": "补充角色已创建，并同步 {count} 条结构化关系。",
         "applySupplementalSuccessNoRelation": "补充角色已创建。"
+      },
+      "diagnostics": {
+        "title": "角色阵容与关系诊断",
+        "description": "这些内容更适合在需要补位、查缺口或梳理关系时再展开。日常编辑先看下方角色资产工作台。"
       }
     },
     "takeover": {
@@ -3049,9 +3078,9 @@
         "assetSummary": "以下为当前项目已检测到的资产进度。"
       },
       "chapterTarget": {
-        "actionLabel": "推进至第 {order} 章",
-        "summaryFrom": "从第 {start} 章继续推进。",
-        "summaryRange": "从第 {start} 章开始，连续推进到第 {end} 章。"
+        "label": "推进至",
+        "ariaLabel": "推进至章节",
+        "rangeHint": "可输入范围：第 {{start}}-{{end}} 章。"
       },
       "error": {
         "chapterRangeNotReady": "章节范围只能从节奏拆章、章节执行或质量修复开始，请先完成前置步骤。",
@@ -3063,6 +3092,14 @@
         "enterCurrentTask": "进入当前任务",
         "starting": "启动中...",
         "preserveHint": "默认保留已有资产，仅在高级设置选择重跑时才会重建对应步骤。"
+      },
+      "contextSummary": {
+        "title": "当前项目信息会作为自动导演输入",
+        "emptyHint": "当前信息较少，建议至少补一句故事概述或书级卖点后再接管。"
+      },
+      "progressInspection": {
+        "loading": "正在读取当前任务的详细进度...",
+        "snapshotError": "当前任务详细进度读取失败，已先显示项目资产体检。"
       }
     },
     "writingFormula": {
@@ -4493,7 +4530,9 @@
         "currentlySelected": "当前选中",
         "keywordsPrefix": "关键词：{keywords}",
         "defaultDescription": "暂无描述"
-      }
+      },
+      "applyToProject": "应用到项目",
+      "emptyMessage": "点一次生成，就能得到一批基于当前项目设定的标题候选。"
     },
     "preview": {
       "title": "小说预览",
@@ -4532,7 +4571,8 @@
       "selectChapter": "选择章节",
       "chapterWithTitle": "第 {order} 章：{title}",
       "noContentTitle": "本章还没有正文",
-      "noContentDescription": "进入章节编辑页生成或补写正文后，这里会显示完整内容。"
+      "noContentDescription": "进入章节编辑页生成或补写正文后，这里会显示完整内容。",
+      "wordUnit": "字"
     },
     "chapterInsights": {
       "sidebarTitle": "章节侧栏",
@@ -4773,6 +4813,21 @@
       "startedSuccess": "已开始 AI 修复章节标题，系统正在重写当前卷拆章。",
       "failed": "AI 修复章节标题失败。",
       "noTask": "当前没有可修复的自动导演任务。"
+    },
+    "chapterExecution": {
+      "statusFlow": {
+        "currentStage": "当前阶段：",
+        "notStarted": "未开始"
+      }
+    },
+    "chapterEdit": {
+      "loading": "正在加载章节编辑器...",
+      "loadError": "章节数据加载失败，请刷新后重试。",
+      "notFound": "没有找到对应章节，可能已被删除或当前链接不完整。"
+    },
+    "worldInjection": {
+      "injectedTitle": "已注入世界规则上下文",
+      "noWorldHint": "当前未绑定世界观，生成过程不会注入世界规则。"
     }
   },
   "autoDirector": {
@@ -6838,6 +6893,12 @@
       "attempts": "尝试 {current}/{max}",
       "chunks": "{count} 分块",
       "documents": "{count} 文档"
+    },
+    "bindingPanel": {
+      "defaultTitle": "参考知识",
+      "description": "绑定后会成为该实体的默认知识文档来源。",
+      "saving": "保存中...",
+      "saveButton": "保存绑定"
     }
   },
   "settings": {

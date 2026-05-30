@@ -1,4 +1,5 @@
 import { useId } from "react";
+import { useTranslation } from "react-i18next";
 import {
   Select,
   SelectContent,
@@ -37,18 +38,21 @@ export default function SelectField({
   value,
   onValueChange,
   options,
-  placeholder = "请选择",
+  placeholder,
   label,
   description,
   helperText,
   error,
   required = false,
   disabled = false,
-  emptyText = "暂无可选项",
+  emptyText,
   className,
   triggerClassName,
   contentClassName,
 }: SelectFieldProps) {
+  const { t } = useTranslation("common");
+  const resolvedPlaceholder = placeholder ?? t("selectField.placeholder");
+  const resolvedEmptyText = emptyText ?? t("selectField.emptyText");
   const fieldId = useId();
   const normalizedValue = value === "" ? EMPTY_OPTION_VALUE : value;
 
@@ -68,8 +72,8 @@ export default function SelectField({
         onValueChange={(nextValue) => onValueChange(nextValue === EMPTY_OPTION_VALUE ? "" : nextValue)}
         disabled={disabled}
       >
-        <SelectTrigger id={fieldId} className={triggerClassName} aria-label={label ?? placeholder}>
-          <SelectValue placeholder={placeholder} />
+        <SelectTrigger id={fieldId} className={triggerClassName} aria-label={label ?? resolvedPlaceholder}>
+          <SelectValue placeholder={resolvedPlaceholder} />
         </SelectTrigger>
         <SelectContent className={contentClassName}>
           {options.length > 0 ? (
@@ -84,7 +88,7 @@ export default function SelectField({
             ))
           ) : (
             <SelectItem value="__empty__" disabled>
-              {emptyText}
+              {resolvedEmptyText}
             </SelectItem>
           )}
         </SelectContent>
