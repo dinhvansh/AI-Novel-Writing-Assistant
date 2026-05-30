@@ -27,5 +27,5 @@ export function isProtagonistCharacter(character?: Character | null): boolean {
     return true;
   }
   const roleText = `${character.role ?? ""} ${character.castRole ?? ""}`;
-  return /主角|男主|女主|主人公/.test(roleText);
+  return /主角|男主|女主|主人公/.test(roleText); // i18n-ignore: matching against DB role values
 }

@@ -4,6 +4,7 @@ import type { BaseCharacter } from "@ai-novel/shared/types/novel";
 import { apiClient } from "./client";
 
 export interface CharacterGenerateConstraints {
+  // i18n-ignore: type definition — these are DB/API enum values, not UI display text
   storyFunction?: "主角" | "反派" | "导师" | "对照组" | "配角";
   externalGoal?: string;
   internalNeed?: string;
@@ -12,6 +13,7 @@ export interface CharacterGenerateConstraints {
   secret?: string;
   coreFlaw?: string;
   relationshipHooks?: string;
+  // i18n-ignore: type definition — these are DB/API enum values, not UI display text
   growthStage?: "起点" | "受挫" | "转折" | "觉醒" | "收束";
   toneStyle?: string;
 }

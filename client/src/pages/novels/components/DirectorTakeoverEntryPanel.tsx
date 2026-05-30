@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { useTranslation } from "react-i18next";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 interface DirectorTakeoverEntryPanelProps {
@@ -12,6 +13,7 @@ export default function DirectorTakeoverEntryPanel({
   description,
   entry,
 }: DirectorTakeoverEntryPanelProps) {
+  const { t } = useTranslation("novel");
   if (!entry) {
     return null;
   }
@@ -26,7 +28,7 @@ export default function DirectorTakeoverEntryPanel({
         <div className="shrink-0">{entry}</div>
       </CardHeader>
       <CardContent className="pt-0 text-xs leading-5 text-muted-foreground">
-        接管前会先读取当前项目真实进度，并明确告诉你这次会跳过、继续还是重跑哪些步骤。
+        {t("takeover.entryPanel.hint")}
       </CardContent>
     </Card>
   );

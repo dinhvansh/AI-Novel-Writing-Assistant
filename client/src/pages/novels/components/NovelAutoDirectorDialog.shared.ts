@@ -33,10 +33,11 @@ export interface AutoDirectorRequestLlmOptions {
 }
 
 export function buildInitialIdea(basicForm: NovelBasicFormState): string {
+  // i18n-ignore: AI prompt content — these strings are sent to the AI model in Chinese
   const lines = [
     basicForm.description.trim(),
-    basicForm.title.trim() ? `我想写一本暂名为《${basicForm.title.trim()}》的小说。` : "",
-    basicForm.styleTone.trim() ? `文风希望偏 ${basicForm.styleTone.trim()}。` : "",
+    basicForm.title.trim() ? `我想写一本暂名为《${basicForm.title.trim()}》的小说。` : "", // i18n-ignore: AI prompt
+    basicForm.styleTone.trim() ? `文风希望偏 ${basicForm.styleTone.trim()}。` : "", // i18n-ignore: AI prompt
   ].filter(Boolean);
   return lines.join("\n");
 }

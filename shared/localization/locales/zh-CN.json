@@ -3100,6 +3100,9 @@
       "progressInspection": {
         "loading": "正在读取当前任务的详细进度...",
         "snapshotError": "当前任务详细进度读取失败，已先显示项目资产体检。"
+      },
+      "entryPanel": {
+        "hint": "接管前会先读取当前项目真实进度，并明确告诉你这次会跳过、继续还是重跑哪些步骤。"
       }
     },
     "writingFormula": {
@@ -7572,6 +7575,9 @@
           "error": "版本检查失败，可以稍后重试。"
         }
       }
+    },
+    "modelSetupGate": {
+      "viewGettingStarted": "查看新手上路"
     }
   },
   "mobile": {
@@ -7972,6 +7978,12 @@
             "description": "城市、街区、公司、住处等可以直接拿来用的场景。"
           }
         }
+      },
+      "stepThree": {
+        "hint": "这些是系统先整理出的核心规则。你可以直接改字，也可以保持不动后进入编辑页继续细化。",
+        "addAxiom": "新增公理",
+        "saving": "保存中...",
+        "enterWorkspace": "进入世界工作台"
       }
     },
     "assets": {
@@ -8271,6 +8283,11 @@
         "label": "自动改写",
         "hint": "检测命中后可进入改写建议链路。"
       }
+    },
+    "effectiveRuleList": {
+      "globalDefault": "全局默认",
+      "styleRule": "写法规则",
+      "weightSuffix": "，强度 {{weight}}"
     }
   },
   "genre": {
@@ -8358,6 +8375,12 @@
       "fromKnowledge": "从知识库文档",
       "fromCurrentWork": "从当前作品",
       "manual": "手动创建"
+    },
+    "rulesPanel": {
+      "title": "反 AI 规则",
+      "enabledCount": "启用 {{enabled}} / {{total}} 条规则",
+      "description": "在规则中心查看、创建和调整反 AI 规则；写法编辑区继续负责选择哪些规则绑定到当前写法。",
+      "enterRuleCenter": "进入规则中心"
     }
   }
 }

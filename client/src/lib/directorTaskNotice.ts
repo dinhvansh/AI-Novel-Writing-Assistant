@@ -43,8 +43,8 @@ export function isChapterTitleDiversitySummary(value: string | null | undefined)
   }
   // i18n-ignore: matching against server-emitted Chinese strings
   return normalized.includes("章节标题结构过于集中")
-    || normalized.includes("相邻章节标题结构过于重复")
-    || normalized.includes("章节标题出现重复");
+    || normalized.includes("相邻章节标题结构过于重复") // i18n-ignore: server string
+    || normalized.includes("章节标题出现重复"); // i18n-ignore: server string
 }
 
 export function buildStructuredOutlineRoute(

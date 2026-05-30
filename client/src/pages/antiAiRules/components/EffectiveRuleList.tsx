@@ -23,12 +23,12 @@ export default function EffectiveRuleList(props: EffectiveRuleListProps) {
               <div className="flex flex-wrap items-center gap-2">
                 <div className="font-medium text-foreground">{item.rule.name}</div>
                 <Badge variant={item.source === "global_baseline" ? "default" : "secondary"}>
-                  {item.source === "global_baseline" ? "全局默认" : "写法规则"}
+                  {item.source === "global_baseline" ? t("antiAiRules:effectiveRuleList.globalDefault") : t("antiAiRules:effectiveRuleList.styleRule")}
                 </Badge>
                 <Badge variant="outline">{typeLabels[item.rule.type]} / {severityLabels[item.rule.severity]}</Badge>
               </div>
               <div className="mt-2 text-xs leading-5 text-muted-foreground">
-                {item.sourceLabel}{item.weight !== 1 ? `，强度 ${item.weight}` : ""}
+                {item.sourceLabel}{item.weight !== 1 ? t("antiAiRules:effectiveRuleList.weightSuffix", { weight: item.weight }) : ""}
               </div>
               {item.rule.promptInstruction ? (
                 <div className="mt-2 text-sm leading-6 text-muted-foreground">{item.rule.promptInstruction}</div>

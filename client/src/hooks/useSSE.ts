@@ -116,7 +116,7 @@ export function useSSE(options?: UseSSEOptions) {
         });
 
         if (!response.ok || !response.body) {
-          throw new Error(`请求失败，状态码 ${response.status}`);
+          throw new Error(`请求失败，状态码 ${response.status}`); // i18n-ignore: internal error
         }
 
         const reader = response.body.getReader();
@@ -150,7 +150,7 @@ export function useSSE(options?: UseSSEOptions) {
         }
       } catch (streamError) {
         if ((streamError as Error).name !== "AbortError") {
-          setError(streamError instanceof Error ? streamError.message : "流式请求失败。");
+          setError(streamError instanceof Error ? streamError.message : "流式请求失败。"); // i18n-ignore: internal error
           setIsStreaming(false);
         }
       } finally {

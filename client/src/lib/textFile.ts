@@ -1,4 +1,5 @@
 const TEXT_FILE_ENCODING_CANDIDATES = ["utf-8", "gb18030", "gbk", "big5", "utf-16le", "utf-16be"] as const;
+// i18n-ignore: mojibake detection tokens — these are garbled Chinese characters used to detect encoding errors
 const SUSPICIOUS_MOJIBAKE_TOKENS = ["銆€", "锛", "鏈功", "涓€", "鍥犱负"] as const;
 
 function detectTxtBomEncoding(bytes: Uint8Array): string | null {
@@ -38,7 +39,8 @@ function scoreDecodedTxt(text: string): number {
   const cjkChars = text.match(/[\u3400-\u9fff]/g)?.length ?? 0;
   const replacementChars = text.match(/\uFFFD/g)?.length ?? 0;
   const controlChars = text.match(/[\u0000-\u0008\u000B\u000C\u000E-\u001F]/g)?.length ?? 0;
-  const privateUseChars = text.match(/[\uE000-\uF8FF]/g)?.length ?? 0;
+  const privateUseChars = text.match(/[\uE000-\uF8FF]/g)?.length ?? 0;  // i18n-ignore: mojibake detection regex
+
   const mojibakeChars = text.match(/[鑴欒剹闄囧▌鎼傜瘬鍗על┐闄哴]/g)?.length ?? 0;
   const suspiciousTokenCount = SUSPICIOUS_MOJIBAKE_TOKENS.reduce(
     (total, token) => total + countOccurrences(text, token),

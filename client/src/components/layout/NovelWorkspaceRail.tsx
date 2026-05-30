@@ -130,7 +130,7 @@ function resolveDirectorContinueMode(task: Pick<
     task?.checkpointType === "replan_required"
     || task?.currentItemKey === "quality_repair"
     || task?.currentStage?.includes("quality")
-    || task?.currentStage?.includes("质量")
+    || task?.currentStage?.includes("质量") // i18n-ignore: matching against server-emitted stage name
   ) {
     return "skip_quality_repair";
   }

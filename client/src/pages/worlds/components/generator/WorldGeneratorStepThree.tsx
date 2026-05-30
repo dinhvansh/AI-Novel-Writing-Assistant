@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
@@ -11,11 +12,12 @@ interface WorldGeneratorStepThreeProps {
 
 export default function WorldGeneratorStepThree(props: WorldGeneratorStepThreeProps) {
   const { axioms, finalizePending, onAxiomChange, onAddAxiom, onFinalize } = props;
+  const { t } = useTranslation("world");
 
   return (
     <div className="space-y-3">
       <div className="rounded-md border p-3 text-sm text-muted-foreground">
-        这些是系统先整理出的核心规则。你可以直接改字，也可以保持不动后进入编辑页继续细化。
+        {t("generator.stepThree.hint")}
       </div>
       {axioms.map((axiom, index) => (
         <Input
@@ -25,10 +27,10 @@ export default function WorldGeneratorStepThree(props: WorldGeneratorStepThreePr
         />
       ))}
       <Button variant="secondary" onClick={onAddAxiom}>
-        新增公理
+        {t("generator.stepThree.addAxiom")}
       </Button>
       <Button onClick={onFinalize} disabled={finalizePending}>
-        {finalizePending ? "保存中..." : "进入世界工作台"}
+        {finalizePending ? t("generator.stepThree.saving") : t("generator.stepThree.enterWorkspace")}
       </Button>
     </div>
   );

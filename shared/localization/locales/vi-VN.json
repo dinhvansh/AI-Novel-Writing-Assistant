@@ -1898,6 +1898,9 @@
       "progressInspection": {
         "loading": "Đang đọc tiến độ chi tiết của tác vụ hiện tại...",
         "snapshotError": "Đọc tiến độ chi tiết của tác vụ hiện tại thất bại, đã hiển thị kiểm tra tài sản dự án trước."
+      },
+      "entryPanel": {
+        "hint": "Trước khi tiếp quản, hệ thống sẽ đọc tiến độ thực tế của dự án hiện tại và cho bạn biết rõ ràng bước nào sẽ bỏ qua, tiếp tục hay chạy lại."
       }
     },
     "taskDrawer": {
@@ -6921,6 +6924,12 @@
       "fromKnowledge": "Từ tài liệu Kho tri thức",
       "fromCurrentWork": "Từ tác phẩm hiện tại",
       "manual": "Tạo thủ công"
+    },
+    "rulesPanel": {
+      "title": "Quy tắc Chống AI",
+      "enabledCount": "Đã bật {{enabled}} / {{total}} quy tắc",
+      "description": "Xem, tạo và điều chỉnh quy tắc Chống AI tại trung tâm quy tắc; khu vực chỉnh sửa văn phong tiếp tục chịu trách nhiệm chọn quy tắc nào gắn với văn phong hiện tại.",
+      "enterRuleCenter": "Vào trung tâm quy tắc"
     }
   },
   "world": {
@@ -7142,6 +7151,12 @@
         "usageCount": "Số lần sử dụng: {{count}}",
         "add": "Thêm vào bản thiết kế",
         "added": "Đã thêm vào bản thiết kế"
+      },
+      "stepThree": {
+        "hint": "Đây là các quy tắc cốt lõi được hệ thống sắp xếp trước. Bạn có thể sửa trực tiếp chữ, hoặc giữ nguyên và vào trang chỉnh sửa để tiếp tục chi tiết hóa.",
+        "addAxiom": "Thêm tiên đề mới",
+        "saving": "Đang lưu...",
+        "enterWorkspace": "Vào bàn làm việc thế giới"
       }
     },
     "assets": {
@@ -7473,6 +7488,9 @@
         "styleExtraction": "Trích xuất lối viết",
         "imageTask": "Tác vụ hình ảnh"
       }
+    },
+    "modelSetupGate": {
+      "viewGettingStarted": "Xem hướng dẫn cho người mới"
     }
   },
   "chat": {
@@ -8746,6 +8764,11 @@
         "label": "Tự động viết lại",
         "hint": "Sau khi phát hiện trúng, có thể vào chuỗi gợi ý viết lại."
       }
+    },
+    "effectiveRuleList": {
+      "globalDefault": "Mặc định toàn cục",
+      "styleRule": "Quy tắc văn phong",
+      "weightSuffix": "，cường độ {{weight}}"
     }
   },
   "genre": {

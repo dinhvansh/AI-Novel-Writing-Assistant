@@ -26,9 +26,9 @@ function tCommonError(key: "network" | "server" | "request"): string {
   if (!handle) {
     // Pre-init fallback: keep the original Chinese strings to match the
     // canonical bundle.
-    if (key === "network") return "网络连接失败，请检查网络后重试。";
-    if (key === "server") return "服务器错误，请稍后重试。";
-    return "请求失败。";
+    if (key === "network") return "网络连接失败，请检查网络后重试。"; // i18n-ignore: pre-init fallback
+    if (key === "server") return "服务器错误，请稍后重试。"; // i18n-ignore: pre-init fallback
+    return "请求失败。"; // i18n-ignore: pre-init fallback
   }
   return handle.i18n.t(`common:errors.${key}`);
 }
