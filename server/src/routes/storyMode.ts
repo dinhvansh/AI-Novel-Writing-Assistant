@@ -1,6 +1,7 @@
 import { Router } from "express";
 import type { ApiResponse } from "@ai-novel/shared/types/api";
 import { z } from "zod";
+import type { LocaleCode } from "@ai-novel/shared/localization";
 import { llmProviderSchema } from "../llm/providerSchema";
 import { authMiddleware } from "../middleware/auth";
 import { validate } from "../middleware/validate";
@@ -10,6 +11,7 @@ import {
   generateStoryModeTreeDraft,
 } from "../services/storyMode/storyModeGenerate";
 import { storyModeProfileSchema } from "../services/storyMode/storyModeProfile";
+import { localizeStoryMode } from "../services/localization/SeedTranslator";
 
 const router = Router();
 const storyModeService = new StoryModeService();
@@ -83,11 +85,16 @@ router.use(authMiddleware);
 router.get("/", async (_req, res, next) => {
   try {
     const data = await storyModeService.listStoryModeTree();
+    const locale = (res.locals as { locale?: LocaleCode }).locale ?? "vi-VN";
+    const localizedData = data.map((node: { id: string; name: string; description?: string | null; children?: unknown[] }) => ({
+      ...node,
+      ...localizeStoryMode(node, locale),
+    }));
     res.status(200).json({
       success: true,
-      data,
+      data: localizedData,
       message: "获取流派模式树成功。" // i18n-ignore-internal-log: API success message, not user-facing
-    } satisfies ApiResponse<typeof data>);
+    } satisfies ApiResponse<typeof localizedData>);
   } catch (error) {
     next(error);
   }

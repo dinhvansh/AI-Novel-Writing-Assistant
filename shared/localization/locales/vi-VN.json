@@ -6810,10 +6810,338 @@
   },
   "serverLogs": {},
   "seedData": {
-    "genres": {},
-    "storyModes": {},
-    "styleTemplates": {},
-    "antiAiRules": {}
+    "genres": {
+      "genre_fantasy_root": {
+        "name": "Kỳ ảo",
+        "description": "Bao gồm các thể loại kỳ ảo như huyền huyễn phương Đông, ma huyễn phương Tây."
+      },
+      "genre_fantasy_eastern": {
+        "name": "Huyền huyễn phương Đông",
+        "description": "Chú trọng cả hệ thống tu luyện, thế lực tông môn và câu chuyện gia quốc."
+      },
+      "genre_fantasy_western": {
+        "name": "Ma huyễn phương Tây",
+        "description": "Các yếu tố kinh điển như kỵ sĩ, pháp sư, sinh vật thần thoại."
+      },
+      "genre_fantasy_xianxia": {
+        "name": "Tiên hiệp tu chân",
+        "description": "Lấy hệ thống tu chân, nhân quả đạo thống, phi thăng trường sinh làm mô thức cốt lõi."
+      },
+      "genre_fantasy_high_martial": {
+        "name": "Võ hiệp cấp cao",
+        "description": "Chú trọng cả hệ thống sức mạnh cường độ cao, chiến đấu trưởng thành và sự thăng cấp tầng lớp thế giới."
+      },
+      "genre_urban_root": {
+        "name": "Đô thị",
+        "description": "Lấy thành phố hiện đại làm bối cảnh chính, nhấn mạnh xung đột thực tế và mối quan hệ nhân vật."
+      },
+      "genre_urban_superpower": {
+        "name": "Đô thị dị năng",
+        "description": "Kết hợp khung cảnh đô thị hiện đại với năng lực siêu phàm, quy tắc ẩn giấu hoặc nghề nghiệp đặc biệt."
+      },
+      "genre_urban_workplace": {
+        "name": "Đô thị công sở",
+        "description": "Xoay quanh sự nghiệp trưởng thành, quan hệ tổ chức và lợi ích thực tế để thúc đẩy cốt truyện."
+      },
+      "genre_urban_life": {
+        "name": "Đô thị sinh hoạt",
+        "description": "Lấy cuộc sống thực tế, quan hệ láng giềng, gia đình và sinh hoạt hàng ngày làm bối cảnh chính."
+      },
+      "genre_history_root": {
+        "name": "Lịch sử",
+        "description": "Lấy cấu trúc xã hội cổ đại hoặc lịch sử làm bối cảnh, nhấn mạnh ràng buộc thời đại và biến đổi tình thế."
+      },
+      "genre_history_alt": {
+        "name": "Lịch sử hư cấu",
+        "description": "Mượn chất liệu lịch sử và logic chế độ, nhưng cho phép tái cấu trúc các thế lực và diễn biến sự kiện then chốt."
+      },
+      "genre_history_power": {
+        "name": "Triều đình quyền mưu",
+        "description": "Xoay quanh cục diện triều đình, phe phái, sinh tồn quan trường và lựa chọn chính trị."
+      },
+      "genre_history_war": {
+        "name": "Vương triều tranh bá",
+        "description": "Xoay quanh việc mở rộng thế lực, tiến triển chiến tranh và tái tổ chức cục diện lớn."
+      },
+      "genre_scifi_root": {
+        "name": "Khoa học viễn tưởng",
+        "description": "Lấy biến đổi công nghệ, trật tự tương lai, khám phá vũ trụ hoặc sinh tồn tận thế làm động lực cốt lõi."
+      },
+      "genre_scifi_near_future": {
+        "name": "Khoa học viễn tưởng cận tương lai",
+        "description": "Dựa trên xã hội, công nghệ và xung đột hàng ngày của tương lai gần mở rộng từ thực tế."
+      },
+      "genre_scifi_cyberpunk": {
+        "name": "Cyberpunk",
+        "description": "Công nghệ cao, cuộc sống thấp, độc quyền tư bản, cải tạo cơ thể và dị hóa nhân dạng cùng tồn tại."
+      },
+      "genre_scifi_apocalypse": {
+        "name": "Khoa học viễn tưởng tận thế",
+        "description": "Thảm họa, khủng hoảng tài nguyên và tái thiết trật tự cùng thúc đẩy lựa chọn của nhân vật."
+      },
+      "genre_scifi_space": {
+        "name": "Phiêu lưu liên sao",
+        "description": "Thúc đẩy cốt truyện qua hành trình xa xôi, nền văn minh chưa biết, hoạt động hạm đội hoặc nhiệm vụ liên sao."
+      },
+      "genre_suspense_root": {
+        "name": "Huyền bí kinh dị",
+        "description": "Thúc đẩy đọc liên tục bằng bí ẩn, dị thường, nguy hiểm cận kề và tiết lộ sự thật."
+      },
+      "genre_suspense_detective": {
+        "name": "Hình sự suy luận",
+        "description": "Tiến triển liên tục xoay quanh điều tra vụ án, chuỗi chứng cứ và suy luận logic."
+      },
+      "genre_suspense_thriller": {
+        "name": "Kinh dị huyền bí",
+        "description": "Nguy hiểm liên tục cận kề, kết hợp giữa mối đe dọa chưa biết và áp lực tâm lý."
+      },
+      "genre_suspense_weird_rules": {
+        "name": "Quy tắc quái dị",
+        "description": "Tổ chức câu chuyện xoay quanh quy tắc, điều cấm kỵ, logic dị thường và hậu quả của sai lầm."
+      },
+      "genre_suspense_infinite": {
+        "name": "Bản sao vô hạn",
+        "description": "Thúc đẩy sinh tồn và phá giải qua từng bản sao, cấp độ hoặc không gian vòng lặp."
+      },
+      "genre_romance_root": {
+        "name": "Ngôn tình",
+        "description": "Động lực đọc chính là sự tiến triển quan hệ, cảm xúc được đền đáp và sự đồng hành của nhân vật."
+      },
+      "genre_romance_modern": {
+        "name": "Ngôn tình hiện đại",
+        "description": "Tiến triển quan hệ, giằng xé cảm xúc và lựa chọn thực tế trong bối cảnh cuộc sống hiện đại."
+      },
+      "genre_romance_ancient": {
+        "name": "Ngôn tình cổ đại",
+        "description": "Lễ giáo cổ đại, ràng buộc thân phận và mối ràng buộc số phận cùng tác động đến sự phát triển quan hệ."
+      },
+      "genre_romance_campus": {
+        "name": "Thanh xuân học đường",
+        "description": "Xoay quanh sự trưởng thành, quan hệ bạn bè, tiến lại gần và bầu không khí thanh xuân."
+      },
+      "genre_game_root": {
+        "name": "Game thể thao điện tử",
+        "description": "Tiến triển liên tục xoay quanh thi đấu, hệ thống nghề nghiệp, tăng trưởng chỉ số hoặc nhiệm vụ hệ thống hóa."
+      },
+      "genre_game_esports": {
+        "name": "Thể thao điện tử",
+        "description": "Mạch chính là đối kháng giải đấu, phối hợp đội nhóm, rèn luyện trưởng thành và đột phá thành tích."
+      },
+      "genre_game_online": {
+        "name": "Game online ảo",
+        "description": "Xoay quanh hệ thống nghề nghiệp, bản sao, quan hệ công hội và trưởng thành trong thế giới game."
+      }
+    },
+    "storyModes": {
+      "story_mode_power_root": {
+        "name": "Thúc đẩy cảm giác sảng khoái",
+        "description": "Chế độ đọc lấy việc hiện thực hóa ưu thế, lập uy, tương phản và áp chế theo giai đoạn làm động lực chính."
+      },
+      "story_mode_invincible": {
+        "name": "Vô địch lưu",
+        "description": "Ưu thế của nhân vật chính rất rõ ràng, sự hồi hộp đến từ cách thể hiện và thay đổi trật tự, chứ không phải nguy cơ sinh tồn."
+      },
+      "story_mode_face_slap": {
+        "name": "Đánh mặt lưu",
+        "description": "Lấy sự đánh giá sai, coi thường và lật ngược sỉ nhục để tạo ra điểm sảng khoái tần suất cao."
+      },
+      "story_mode_misread": {
+        "name": "Địch hóa lưu",
+        "description": "Xoay quanh việc người khác hiểu sai nhân vật chính, tự động suy diễn và phóng đại mất kiểm soát để tạo ra thú vị và cảm giác sảng khoái."
+      },
+      "story_mode_secret_identity": {
+        "name": "Mã giả lưu",
+        "description": "Dùng nhiều thân phận, tầng lớp ẩn giấu và rủi ro lộ diện để thúc đẩy ham muốn đọc."
+      },
+      "story_mode_build_root": {
+        "name": "Xây dựng kinh doanh",
+        "description": "Chế độ đọc lấy tích lũy, xây dựng, kinh doanh và thu hoạch theo giai đoạn làm phương thức thúc đẩy chính."
+      },
+      "story_mode_farming": {
+        "name": "Trồng trọt lưu",
+        "description": "Chế độ xây dựng coi trọng sản xuất, tích lũy, trật tự cuộc sống và cảm giác ấm áp lâu dài."
+      },
+      "story_mode_management": {
+        "name": "Kinh doanh lưu",
+        "description": "Lấy thương mại, tổ chức, thương hiệu hoặc vận hành hệ thống để thúc đẩy cốt truyện."
+      },
+      "story_mode_territory_building": {
+        "name": "Xây dựng lãnh thổ",
+        "description": "Xoay quanh căn cứ, thị trấn, bản đồ thế lực và xây dựng trật tự để liên tục tiến triển."
+      },
+      "story_mode_family_management": {
+        "name": "Kinh doanh gia tộc",
+        "description": "Lấy sự nghiệp gia tộc, quan hệ gia tộc và trách nhiệm thế hệ để thúc đẩy đọc liên tục."
+      },
+      "story_mode_healing_root": {
+        "name": "Chữa lành hàng ngày",
+        "description": "Lấy sự đồng hành, sửa chữa, cuộc sống ấm áp và cảm giác đồng hành cường độ thấp làm động lực cốt lõi."
+      },
+      "story_mode_healing_daily": {
+        "name": "Chữa lành hàng ngày",
+        "description": "Chế độ chữa lành lấy tương tác hàng ngày, đồng hành và cảm xúc ấm áp làm điểm nhấn chính."
+      },
+      "story_mode_shop_daily": {
+        "name": "Nhật ký tiệm nhỏ",
+        "description": "Lấy việc kinh doanh cửa hàng và giao lưu giữa người với người để tạo nên nhịp đọc ổn định, chữa lành."
+      },
+      "story_mode_slow_life": {
+        "name": "Sống chậm",
+        "description": "Lấy nhịp độ chậm lại, chi tiết cuộc sống và sửa chữa trật tự hàng ngày để tạo sức hút đọc."
+      },
+      "story_mode_companion_healing": {
+        "name": "Đồng hành chữa lành",
+        "description": "Lấy sự đồng hành ổn định, chăm sóc và cùng phục hồi giữa người với người làm động lực chính."
+      },
+      "story_mode_comedy_root": {
+        "name": "Hài kịch chọc cười",
+        "description": "Dùng sự tương phản, gây cười, hiểu lầm và thu hồi mất kiểm soát làm động lực chính để đọc tiếp."
+      },
+      "story_mode_comedy": {
+        "name": "Dòng hài hước",
+        "description": "Cao trào hài hước tần suất cao, tương phản và thu hồi nhẹ nhàng là cốt lõi đọc."
+      },
+      "story_mode_misunderstanding_comedy": {
+        "name": "Hài kịch hiểu lầm",
+        "description": "Dựa vào chênh lệch thông tin và lan tỏa hiểu lầm giữa nhiều bên để tạo hiệu ứng hài liên tục."
+      },
+      "story_mode_absurd_subversion": {
+        "name": "Phản bộ quy tắc ngớ ngẩn",
+        "description": "Dùng tình tiết phi lý, thu hồi phản bộ quy tắc và chuyển nhịp đột ngột để tạo cảm giác nhẹ nhàng mạnh mẽ."
+      },
+      "story_mode_mystery_root": {
+        "name": "Đấu trí hồi hộp",
+        "description": "Dùng chênh lệch thông tin, suy luận, bố cục và thỏa mãn trí tuệ đối kháng để thúc đẩy đọc tiếp."
+      },
+      "story_mode_mystery_inference": {
+        "name": "Suy luận huyền bí",
+        "description": "Dùng manh mối, suy luận và nhịp độ tiết lộ sự thật làm cốt lõi đọc."
+      },
+      "story_mode_mind_game": {
+        "name": "Dòng đấu trí",
+        "description": "Nhấn mạnh bố cục, đấu trí, tư duy đối thủ và nhịp độ phản chế."
+      },
+      "story_mode_survival_game": {
+        "name": "Đấu trí sinh tồn",
+        "description": "Tạo căng thẳng liên tục trong môi trường tài nguyên hạn chế, áp lực cao và cạnh tranh quy tắc."
+      },
+      "story_mode_relationship_root": {
+        "name": "Quan hệ tình cảm",
+        "description": "Dùng tiến triển quan hệ, thực hiện cảm xúc và sự giằng co thay đổi giữa các nhân vật làm động lực chính."
+      },
+      "story_mode_romantic_tension": {
+        "name": "Giằng co tình cảm",
+        "description": "Dùng mập mờ, tiến lại gần, lùi bước và thăm dò quan hệ để tạo sức hút liên tục."
+      },
+      "story_mode_chasing_wife": {
+        "name": "Truy vợ hỏa táng trường",
+        "description": "Lấy tổn thương hoặc mất mát giai đoạn đầu làm tiền đề, dựa vào truy đòi, hối hận và xây dựng lại quan hệ sau đó để tiến triển."
+      },
+      "story_mode_ensemble_bond": {
+        "name": "Ràng buộc quần tượng",
+        "description": "Thông qua mạng lưới quan hệ nhiều người, trải nghiệm chung và tiến hóa ràng buộc để tạo độ dính đọc."
+      },
+      "story_mode_growth_root": {
+        "name": "Phiêu lưu trưởng thành",
+        "description": "Dùng thăng cấp, khám phá, vượt ải và đột phá theo giai đoạn làm động lực chính để đọc tiếp."
+      },
+      "story_mode_growth_leveling": {
+        "name": "Trưởng thành thăng cấp",
+        "description": "Xoay quanh năng lực nhân vật, nhận thức và đột phá ngưỡng giai đoạn để xây dựng khoái cảm đọc."
+      },
+      "story_mode_adventure_exploration": {
+        "name": "Phiêu lưu khám phá",
+        "description": "Dùng bản đồ mới, văn minh mới và rủi ro chưa biết để thúc đẩy cảm giác mới mẻ khi đọc."
+      },
+      "story_mode_dungeon_challenge": {
+        "name": "Vượt ải phó bản",
+        "description": "Dùng các màn chơi theo giai đoạn, phá giải quy tắc và phản hồi vượt ải để tạo nhịp độ mạnh."
+      }
+    },
+    "styleTemplates": {
+      "bottom-loop-reality": {
+        "name": "Dòng hiện thực vòng lặp đáy",
+        "description": "Thể hiện tình cảnh khó khăn của nhân vật qua cuộc sống vụn vặt và những lần hụt hẫng lặp đi lặp lại."
+      },
+      "power-up-escalation": {
+        "name": "Dòng tăng cấp sảng văn",
+        "description": "Liên tục nâng cấp xung đột và điểm lợi, củng cố mục tiêu và hiện thực hóa điểm sảng."
+      },
+      "suspense-pressure": {
+        "name": "Dòng tăng áp hồi hộp",
+        "description": "Tạo cảm giác bất an qua che giấu thông tin, chi tiết bất thường và chồng chất áp lực."
+      },
+      "emotional-tension": {
+        "name": "Dòng kéo căng cảm xúc",
+        "description": "Tạo căng thẳng quan hệ qua biểu đạt lệch pha, ngừng nghỉ và hiểu lầm."
+      },
+      "ensemble-weave": {
+        "name": "Dòng đan xen quần tượng",
+        "description": "Đan xen thúc đẩy sự kiện qua nhiều tuyến hành động nhân vật và góc nhìn khác nhau."
+      },
+      "immersive-daily": {
+        "name": "Dòng đắm chìm đời thường",
+        "description": "Xây dựng cảm giác đắm chìm liên tục qua chi tiết đời sống và biến đổi cảm xúc tinh tế."
+      },
+      "cold-professional": {
+        "name": "Dòng chuyên nghiệp lạnh lùng",
+        "description": "Dùng sự thật chuyên môn và chi tiết ngành để nén cảm xúc, tạo áp lực kiềm chế."
+      },
+      "absurd-dark-humor": {
+        "name": "Dòng hài đen hoang đường",
+        "description": "Tạo hài đen qua tương phản, quan sát lạnh và chi tiết hoang đường."
+      }
+    },
+    "antiAiRules": {
+      "forbid-explicit-psychology": {
+        "name": "Cấm miêu tả tâm lý giải thích",
+        "description": "Cấm dùng trực tiếp các cấu trúc như 'anh ấy cảm thấy', 'anh ấy nhận ra' để giải thích tâm lý nhân vật."
+      },
+      "forbid-ending-elevation": {
+        "name": "Cấm thăng hoa cuối đoạn",
+        "description": "Cấm dùng câu tổng kết để thăng hoa chủ đề ở cuối đoạn hoặc cuối bài."
+      },
+      "forbid-theme-summary": {
+        "name": "Cấm tổng kết chủ đề",
+        "description": "Cấm viết đoạn văn thành tổng kết ý chính hoặc rút ra đạo lý cuộc sống."
+      },
+      "forbid-direct-preaching": {
+        "name": "Cấm thuyết giáo trực tiếp",
+        "description": "Cấm tác giả thay nhân vật hoặc người đọc đưa ra phán xét giá trị và thuyết giáo trực tiếp."
+      },
+      "risk-even-paragraph-length": {
+        "name": "Độ dài đoạn văn quá đều",
+        "description": "Độ dài và nhịp điệu đoạn văn quá đồng đều, dễ tạo cảm giác bài viết AI."
+      },
+      "risk-three-paragraphs-exposition": {
+        "name": "Ba đoạn tường thuật giải thích liên tiếp",
+        "description": "Nhiều đoạn liên tiếp chỉ có giải thích không có hành động, sẽ làm yếu cảm giác hiện trường."
+      },
+      "risk-dialogue-too-functional": {
+        "name": "Đối thoại chỉ thúc đẩy chức năng",
+        "description": "Đối thoại chỉ có thông tin thúc đẩy, không có giọng điệu nhân vật và tiếng ồn đời thường."
+      },
+      "risk-repeated-sentence-structure": {
+        "name": "Tỷ lệ lặp cấu trúc câu quá cao",
+        "description": "Cấu trúc câu liên tiếp quá đều đặn, dễ trông máy móc."
+      },
+      "encourage-useless-action": {
+        "name": "Khuyến khích hành động nhỏ vô nghĩa",
+        "description": "Khuyến khích thêm các hành động nhỏ chân thực nhưng không thúc đẩy mạch chính để tăng tính người."
+      },
+      "encourage-reality-gap": {
+        "name": "Khuyến khích chênh lệch thực tế",
+        "description": "Tạo ra sự chênh lệch giữa kỳ vọng của nhân vật và kết quả thực tế."
+      },
+      "encourage-hard-mouth-compensation": {
+        "name": "Khuyến khích bù đắp bằng cứng miệng",
+        "description": "Nhân vật sau khi thất bại dùng cứng miệng, chuyển hướng hoặc bù đắp để giữ thể diện."
+      },
+      "encourage-life-noise": {
+        "name": "Khuyến khích tiếng ồn đời thường",
+        "description": "Thêm vào một cách phù hợp những tiếng ồn đời thường không hoàn toàn liên quan đến mạch chính để tăng cảm giác hiện trường."
+      }
+    }
   },
   "writingFormula": {
     "fields": {
