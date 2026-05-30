@@ -10,11 +10,13 @@ import type {
 import {
   DIRECTOR_CANDIDATE_SETUP_STEPS,
   extractDirectorTaskSeedPayloadFromMeta,
+  useDirectorCandidateSetupSteps,
 } from "@ai-novel/shared/types/novelDirector";
 import type { UnifiedTaskDetail } from "@ai-novel/shared/types/task";
 import { useQuery } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 import type { TFunction } from "i18next";
+import { getI18nClientHandle } from "@/i18n";
 import {
   getDirectorTaskSnapshot,
 } from "@/api/novelDirector";
@@ -335,6 +337,7 @@ export default function NovelAutoDirectorProgressPanel({
   onOpenTaskCenter,
 }: NovelAutoDirectorProgressPanelProps) {
   const { t } = useTranslation();
+  const localizedCandidateSetupSteps = useDirectorCandidateSetupSteps(t);
   const taskChapterTitleWarning = resolveChapterTitleWarning(task);
   const chapterTitleRepairMutation = useDirectorChapterTitleRepair();
   const runtimeTaskId = task?.id ?? taskId;
@@ -399,8 +402,20 @@ export default function NovelAutoDirectorProgressPanel({
   const candidateSetupFlow = isCandidateSetupFlow(task);
   const displaySteps = dashboardView?.steps ?? displayState?.steps ?? [];
   const stepDefinitions = candidateSetupFlow
-    ? DIRECTOR_CANDIDATE_SETUP_STEPS
-    : displaySteps.map((step) => ({ key: step.key, label: step.label }));
+    ? localizedCandidateSetupSteps
+    : displaySteps.map((step) => ({
+        key: step.key,
+        label: (() => {
+          const handle = getI18nClientHandle();
+          if (handle) {
+            const result = handle.i18n.t(`autoDirector:progressPanel.steps.${step.key}`, { defaultValue: "" });
+            if (result) return result;
+            const stageResult = handle.i18n.t(`serverLogs:workflowStages.${step.key}`, { defaultValue: "" });
+            if (stageResult) return stageResult;
+          }
+          return step.label;
+        })(),
+      }));
   const steps = candidateSetupFlow
     ? resolveDirectorStepStatuses(task, visualMode, stepDefinitions)
     : displaySteps.map((step) => mapDisplayStepStatus(step.status));
