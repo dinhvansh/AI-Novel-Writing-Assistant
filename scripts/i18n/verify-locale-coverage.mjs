@@ -466,6 +466,48 @@ function runP6() {
   }
 }
 
+// ---------------------------------------------------------------------------
+// P7 implementation (Phase 5.4): no Vietnamese diacritics in prompt asset source files.
+// Protects against accidentally translating prompt instructions.
+
+const PROMPT_ASSETS_ROOT = path.join(REPO_ROOT, "server", "src", "prompting", "prompts");
+// Vietnamese-specific diacritics that don't appear in other Latin scripts
+const VI_DIACRITIC_REGEX = /[ăâêôơưđĂÂÊÔƠƯĐ]|[àáảãạÀÁẢÃẠ]|[ầấẩẫậẦẤẨẪẬ]|[ằắẳẵặẰẮẲẴẶ]|[ềếểễệỀẾỂỄỆ]|[ồốổỗộỒỐỔỖỘ]|[ờớởỡợỜỚỞỠỢ]|[ừứửữựỪỨỬỮỰ]|[ỳýỷỹỵỲÝỶỸỴ]/;
+
+function findVietnameseInPromptFiles() {
+  const offenders = [];
+  if (!fs.existsSync(PROMPT_ASSETS_ROOT)) return offenders;
+  for (const file of walkSourceFiles(PROMPT_ASSETS_ROOT, () => false)) {
+    const source = fs.readFileSync(file, "utf8");
+    const lines = source.split(/\r?\n/);
+    for (let i = 0; i < lines.length; i += 1) {
+      const line = lines[i];
+      if (VI_DIACRITIC_REGEX.test(line) && !line.includes("i18n-ignore")) {
+        offenders.push({
+          file: path.relative(REPO_ROOT, file).replace(/\\/g, "/"),
+          line: i + 1,
+          sample: line.trim().slice(0, 100),
+        });
+      }
+    }
+  }
+  return offenders;
+}
+
+function runP7() {
+  const offenders = findVietnameseInPromptFiles();
+  if (offenders.length > 0) {
+    failures.push({
+      property: "P7",
+      message: `${offenders.length} Vietnamese diacritic(s) found in prompt asset source files — prompts must stay in Chinese`,
+      sample: offenders.slice(0, 5),
+    });
+    process.stdout.write(`P7: ${offenders.length} Vietnamese diacritic(s) in prompt files (FAIL)\n`);
+  } else {
+    process.stdout.write("P7: no Vietnamese diacritics in prompt asset source files\n");
+  }
+}
+
 async function main() {
   const viBundle = readJson(VI_BUNDLE_PATH);
   const zhBundle = readJson(ZH_BUNDLE_PATH);
@@ -477,6 +519,7 @@ async function main() {
   runP4(glossary);
   runP5();
   runP6();
+  runP7();
 
   if (failures.length > 0) {
     process.stderr.write("\nCoverage gate FAILED:\n");
