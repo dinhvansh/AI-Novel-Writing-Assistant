@@ -367,7 +367,7 @@ export function buildTakeoverProgressInspection(
         ? _t("novel:takeover.progress.volumeDetail", {
             volumeCount: snapshot.volumeCount,
             firstVolumeChapterCount: snapshot.firstVolumeChapterCount,
-            ranges: volumeRanges.map((range) => `第${range.startOrder}-${range.endOrder}章`).join("、") || "暂无",
+            ranges: volumeRanges.map((range) => `第${range.startOrder}-${range.endOrder}章`).join("、") || "暂无", // i18n-ignore: t() fallback
           })
         : _t("novel:takeover.progress.loadingVolume"),
     },

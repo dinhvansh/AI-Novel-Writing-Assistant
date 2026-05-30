@@ -168,7 +168,7 @@ export default function KnowledgeEmbeddingSettingsCard({
                 className={modelQuery.isLoading || modelOptions.length > 0 ? "hidden" : undefined}
                 value={form.embeddingModel}
                 onChange={(event) => setForm((prev) => ({ ...prev, embeddingModel: event.target.value }))}
-                placeholder="例如：text-embedding-3-small"
+                placeholder={t("knowledge:embedding.vectorModel.modelPlaceholder")}
               />
               {modelQuery.data ? (
                 <div className="text-xs text-muted-foreground">
@@ -283,7 +283,7 @@ export default function KnowledgeEmbeddingSettingsCard({
                   <Input
                     value={form.collectionTag}
                     onChange={(event) => setForm((prev) => ({ ...prev, collectionTag: event.target.value }))}
-                    placeholder="例如：kb / prod / novel"
+                    placeholder={t("knowledge:embedding.collection.tagPlaceholder")}
                   />
                   <div className="text-xs text-muted-foreground">
                     {t("knowledge:embedding.collection.tagHint")}
@@ -303,7 +303,7 @@ export default function KnowledgeEmbeddingSettingsCard({
                   <Input
                     value={form.collectionName}
                     onChange={(event) => setForm((prev) => ({ ...prev, collectionName: event.target.value }))}
-                    placeholder="例如：ai_novel_rag_openai_text_embedding_3_small_kb_v1"
+                    placeholder={t("knowledge:embedding.collection.manualNamePlaceholder")}
                   />
                 )}
               </div>

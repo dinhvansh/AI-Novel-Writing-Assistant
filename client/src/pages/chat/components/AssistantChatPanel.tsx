@@ -391,7 +391,7 @@ export default function AssistantChatPanel({
               <div className="mt-8 grid gap-3 md:grid-cols-2">
                 {/* i18n-ignore: AI prompt */}
                 <ThreadPrimitive.Suggestion
-                  prompt="帮我梳理《遥远的救世主V2》的世界观硬约束，并指出当前大纲冲突点。"
+                  prompt="帮我梳理《遥远的救世主V2》的世界观硬约束，并指出当前大纲冲突点。" // i18n-ignore: AI prompt example
                   send={false}
                   asChild
                 >
@@ -405,7 +405,7 @@ export default function AssistantChatPanel({
                 </ThreadPrimitive.Suggestion>
                 {/* i18n-ignore: AI prompt */}
                 <ThreadPrimitive.Suggestion
-                  prompt="重写第3章结尾，增强戏剧张力，并保持角色口吻一致。"
+                  prompt="重写第3章结尾，增强戏剧张力，并保持角色口吻一致。" // i18n-ignore: AI prompt example
                   send={false}
                   asChild
                 >

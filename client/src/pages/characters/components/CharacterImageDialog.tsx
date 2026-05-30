@@ -42,8 +42,8 @@ export function CharacterImageDialog({
   const [directPromptSource, setDirectPromptSource] = useState<DirectPromptSource | null>(null);
   const [optimizedPromptLanguage, setOptimizedPromptLanguage] = useState<ImagePromptOutputLanguage>("zh");
   const [imageForm, setImageForm] = useState({
-    stylePreset: "写实人像",
-    negativePrompt: "低清晰度，畸形，多余肢体，文字水印",
+    stylePreset: "写实人像", // i18n-ignore: AI image generation default — sent to image model
+    negativePrompt: "低清晰度，畸形，多余肢体，文字水印", // i18n-ignore: AI image generation default
     provider: "" as LLMProvider,
     size: "1024x1024" as "512x512" | "768x768" | "1024x1024" | "1024x1536" | "1536x1024",
     count: 2,

@@ -1411,7 +1411,8 @@
       "noProtagonist": "当前阵容还没有标记主角，可在角色定位中补充主角信息。",
       "supportingTitle": "配角与关系角色",
       "noCharacters": "当前小说还没有角色，先在上方向导里创建或导入角色。",
-      "onlyProtagonist": "当前阵容只有主角，后续可补充对手、同盟或关系压力角色。"
+      "onlyProtagonist": "当前阵容只有主角，后续可补充对手、同盟或关系压力角色。",
+      "deleteConfirm": "确认删除角色“{{name}}”？此操作不可恢复。"
     },
     "mutations": {
       "saveBasic": {
@@ -1662,7 +1663,8 @@
           "label": "泛读者 / 不限定",
           "summary": "不限定频道倾向，让 AI 优先按故事本身和目标读者描述来规划。"
         }
-      }
+      },
+      "recommended": "推荐"
     },
     "novelList": {
       "deleteSuccess": "小说已删除。",
@@ -2446,7 +2448,8 @@
           "hiddenTension": "隐藏张力",
           "conflictSource": "冲突来源",
           "nextTurnPoint": "下一反转点"
-        }
+        },
+        "backgroundHint": "外显资料和角色动态会在后台补齐，稍后刷新角色资产即可查看。"
       },
       "panel": {
         "takeoverTitle": "从角色准备接管",
@@ -4831,6 +4834,20 @@
     "worldInjection": {
       "injectedTitle": "已注入世界规则上下文",
       "noWorldHint": "当前未绑定世界观，生成过程不会注入世界规则。"
+    },
+    "chapterDetail": {
+      "modes": {
+        "purpose": "章节目标",
+        "boundary": "执行边界",
+        "taskSheet": "任务单"
+      }
+    },
+    "worldSlice": {
+      "refreshSuccess": "已重新整理这本书会用到的世界设定。",
+      "saveSuccess": "已保存这本书的世界设定保留项。"
+    },
+    "workflowRunning": {
+      "defaultLabel": "AI 正在后台持续推进"
     }
   },
   "autoDirector": {
@@ -4858,7 +4875,8 @@
         "continueFailed": "继续自动导演失败。",
         "createdToast": "自动导演创建小说项目，并继续推进规划。",
         "createTaskFailed": "创建导演主任务失败。",
-        "backgroundContinueToast": "导演任务会继续在后台运行，可在 AI 驾驶舱查看进度。"
+        "backgroundContinueToast": "导演任务会继续在后台运行，可在 AI 驾驶舱查看进度。",
+        "generateIdeaFailed": "生成起始想法失败，请稍后重试。"
       }
     },
     "progressPanel": {
@@ -5439,6 +5457,9 @@
     },
     "directorNotice": {
       "quickFixChapterTitle": "快速修复章节标题"
+    },
+    "bookAutomationCard": {
+      "projectNav": "项目导航"
     }
   },
   "creativeHub": {
@@ -5839,7 +5860,8 @@
         "title": "工具调用：{toolName}",
         "expandArgs": "查看参数",
         "collapseArgs": "收起参数",
-        "defaultResult": "工具已返回结果。"
+        "defaultResult": "工具已返回结果。",
+        "argsCollapsedHint": "请求参数默认已收起，点击“查看参数”展开。"
       }
     },
     "messagePrimitives": {
@@ -5980,6 +6002,9 @@
         "title": "检查点已写回",
         "summary": "Checkpoint {id} 已写回线程历史。"
       }
+    },
+    "openButton": {
+      "defaultLabel": "在创作中枢中继续"
     }
   },
   "promptWorkbench": {
@@ -6788,7 +6813,8 @@
         "searchModelPlaceholder": "搜索模型",
         "noMatchingModel": "没有匹配的模型",
         "remoteModelCount": "远程模型 {count} 个",
-        "useRecommendedHint": "建议使用厂商推荐的嵌入模型。"
+        "useRecommendedHint": "建议使用厂商推荐的嵌入模型。",
+        "modelPlaceholder": "例如：text-embedding-3-small"
       },
       "vectorStore": {
         "title": "向量数据库",
@@ -6821,7 +6847,9 @@
         "autoReindexLabel": "模型变更时自动重建索引",
         "reindexOn": "自动重建",
         "reindexOff": "不自动重建",
-        "targetCollection": "目标集合"
+        "targetCollection": "目标集合",
+        "tagPlaceholder": "例如：kb / prod / novel",
+        "manualNamePlaceholder": "例如：ai_novel_rag_openai_text_embedding_3_small_kb_v1"
       },
       "connectionParams": {
         "title": "连接参数",
@@ -8381,6 +8409,10 @@
       "enabledCount": "启用 {{enabled}} / {{total}} 条规则",
       "description": "在规则中心查看、创建和调整反 AI 规则；写法编辑区继续负责选择哪些规则绑定到当前写法。",
       "enterRuleCenter": "进入规则中心"
+    },
+    "advancedWorkspace": {
+      "editingHint": "当前正在维护「{{name}}」这套写法的设定说明。应用测试和去 AI 味已经拆到独立入口，这里只负责把写法本身整理清楚。",
+      "noProfileHint": "当前还没有可编辑的写法。请先回到写法页列表，选中或新建一套写法。"
     }
   }
 }

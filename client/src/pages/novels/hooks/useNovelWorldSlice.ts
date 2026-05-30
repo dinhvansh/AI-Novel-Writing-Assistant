@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useMutation, useQuery, type QueryClient } from "@tanstack/react-query";
+import { useTranslation } from "react-i18next";
 import type { StoryWorldSliceOverrides } from "@ai-novel/shared/types/storyWorldSlice";
 import type { LLMProvider } from "@ai-novel/shared/types/llm";
 import { queryKeys } from "@/api/queryKeys";
@@ -22,6 +23,7 @@ interface UseNovelWorldSliceOptions {
 
 export function useNovelWorldSlice({ novelId, enabled = true, llm, queryClient }: UseNovelWorldSliceOptions) {
   const [worldSliceMessage, setWorldSliceMessage] = useState("");
+  const { t } = useTranslation("novel");
 
   const worldSliceQuery = useQuery({
     queryKey: queryKeys.novels.worldSlice(novelId),
@@ -37,7 +39,7 @@ export function useNovelWorldSlice({ novelId, enabled = true, llm, queryClient }
       temperature: llm.temperature,
     }),
     onSuccess: async () => {
-      setWorldSliceMessage("已重新整理这本书会用到的世界设定。");
+      setWorldSliceMessage(t("worldSlice.refreshSuccess"));
       await queryClient.invalidateQueries({ queryKey: queryKeys.novels.worldSlice(novelId) });
       await queryClient.invalidateQueries({ queryKey: queryKeys.novels.detail(novelId) });
     },
@@ -46,7 +48,7 @@ export function useNovelWorldSlice({ novelId, enabled = true, llm, queryClient }
   const saveWorldSliceOverridesMutation = useMutation({
     mutationFn: (payload: StoryWorldSliceOverrides) => updateNovelWorldSliceOverrides(novelId, payload),
     onSuccess: async () => {
-      setWorldSliceMessage("已保存这本书的世界设定保留项。");
+      setWorldSliceMessage(t("worldSlice.saveSuccess"));
       await queryClient.invalidateQueries({ queryKey: queryKeys.novels.worldSlice(novelId) });
     },
   });

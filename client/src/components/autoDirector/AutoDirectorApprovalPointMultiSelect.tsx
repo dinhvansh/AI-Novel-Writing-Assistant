@@ -52,7 +52,7 @@ export function summarizeDirectorAutoApprovalPoints(codes: string[], t?: ReturnT
   }
   return t
     ? t("autoDirector:approvalPoints.summarySuffix", { first: labels.slice(0, 2).join("、"), count: labels.length })
-    : `${labels.slice(0, 2).join("、")} 等 ${labels.length} 项`;
+    : `${labels.slice(0, 2).join("、")} 等 ${labels.length} 项`; // i18n-ignore: t() fallback
 }
 
 export default function AutoDirectorApprovalPointMultiSelect({

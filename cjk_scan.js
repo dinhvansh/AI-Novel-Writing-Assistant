@@ -47,6 +47,7 @@ function scanFile(filePath) {
     if (hasPrevLineIgnore) continue;
     if (trimmed.startsWith('//')) continue;
     if (trimmed.startsWith('*')) continue;
+    if (trimmed.startsWith('/*')) continue;
 
     // Already wrapped: t("key", "fallback") or t('key', 'fallback')
     if (/\bt\s*\(\s*['"`][^'"`]*['"`]\s*,\s*['"`]/.test(line)) continue;

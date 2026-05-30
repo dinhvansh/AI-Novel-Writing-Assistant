@@ -150,7 +150,7 @@ export default function CreativeHubInlineToolCall(props: ToolCallMessagePartProp
           {argsText}
         </pre>
       ) : argsText ? (
-        <div className="mt-2 text-xs text-slate-500">请求参数默认已收起，点击“查看参数”展开。</div>
+        <div className="mt-2 text-xs text-slate-500">{t("creativeHub:inlineToolCall.toolCall.argsCollapsedHint")}</div>
       ) : null}
       {(resultText || artifact.summary) ? (
         <div className="mt-3">

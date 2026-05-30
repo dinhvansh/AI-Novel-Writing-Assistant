@@ -26,13 +26,13 @@ interface AddendumFormState {
 }
 
 const EMPTY_GLOBAL_FORM: AddendumFormState = {
-  title: "全局补充要求",
+  title: "全局补充要求", // i18n-ignore: default form value — overridden by actual addendum data
   content: "",
   enabled: true,
 };
 
 const EMPTY_NOVEL_FORM: AddendumFormState = {
-  title: "本书补充要求",
+  title: "本书补充要求", // i18n-ignore: default form value — overridden by actual addendum data
   content: "",
   enabled: true,
 };

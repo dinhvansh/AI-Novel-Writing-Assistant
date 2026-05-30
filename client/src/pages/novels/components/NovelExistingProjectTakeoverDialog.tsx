@@ -608,7 +608,7 @@ export default function NovelExistingProjectTakeoverDialog({
                                 <div className="flex items-center justify-between gap-2">
                                   <div className="break-words text-sm font-medium text-foreground [overflow-wrap:anywhere]">{entry.label}</div>
                                   <div className="flex shrink-0 flex-wrap items-center gap-2">
-                                    {entry.recommended ? <Badge>推荐</Badge> : null}
+                                    {entry.recommended ? <Badge>{t("novel:takeover.recommended")}</Badge> : null}
                                     <Badge variant="outline">{entry.status}</Badge>
                                   </div>
                                 </div>

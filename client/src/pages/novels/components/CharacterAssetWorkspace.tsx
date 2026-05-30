@@ -93,7 +93,8 @@ function getEmotionSignal(selectedCharacter: Character | undefined, t: TFunction
   const runtimeSignal = `${selectedCharacter?.currentState ?? ""} ${selectedCharacter?.currentGoal ?? ""}`;
   // i18n-ignore: regex matches against AI-generated content in Chinese
   if (/愤|怒|焦虑|崩溃|绝望/.test(runtimeSignal)) return t("novel:character.workspace.emotion.highStress");
-  if (/平静|稳|冷静|从容/.test(runtimeSignal)) return t("novel:character.workspace.emotion.stable");
+  // i18n-ignore: regex matches against AI-generated content in Chinese
+  if (/平静|稳|冷静|从容/.test(runtimeSignal)) return t("novel:character.workspace.emotion.stable"); // i18n-ignore: regex matching
   return t("novel:character.workspace.emotion.observe");
 }
 

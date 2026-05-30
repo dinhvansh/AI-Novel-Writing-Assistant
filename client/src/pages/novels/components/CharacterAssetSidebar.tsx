@@ -26,7 +26,7 @@ function getCharacterCardClass(isSelected: boolean, isProtagonist: boolean): str
 }
 
 function confirmDeleteCharacter(character: Character, onDeleteCharacter: (characterId: string) => void, t: (key: string, opts?: Record<string, unknown>) => string) {
-  const confirmed = window.confirm(`确认删除角色“${character.name}”？此操作不可恢复。`);
+  const confirmed = window.confirm(t("characterSidebar.deleteConfirm", { name: character.name }));
   if (!confirmed) {
     return;
   }

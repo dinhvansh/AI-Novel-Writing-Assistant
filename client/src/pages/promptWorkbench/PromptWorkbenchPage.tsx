@@ -29,17 +29,17 @@ const ENTRYPOINT_OPTIONS = [
 
 const MANAGEMENT_STATUS_LABELS: Record<PromptCatalogItem["managementStatus"], string> = {
   // i18n-ignore: these are fallback labels used before t() is available; runtime uses t() in components
-  complete: "元数据完整",
-  missing_context_requirements: "缺上下文需求",
-  missing_editable_slots: "缺编辑槽位",
+  complete: "元数据完整", // i18n-ignore: fallback
+  missing_context_requirements: "缺上下文需求", // i18n-ignore: fallback
+  missing_editable_slots: "缺编辑槽位", // i18n-ignore: fallback
 };
 
 const MATERIAL_IMPORTANCE_LABELS: Record<NovelMaterialImportance, string> = {
   // i18n-ignore: these are fallback labels used before t() is available; runtime uses t() in components
-  must: "必需",
-  high: "重要",
-  medium: "辅助",
-  low: "参考",
+  must: "必需", // i18n-ignore: fallback
+  high: "重要", // i18n-ignore: fallback
+  medium: "辅助", // i18n-ignore: fallback
+  low: "参考", // i18n-ignore: fallback
 };
 
 function buildPreviewPromptInput(prompt: PromptCatalogItem): Record<string, unknown> {

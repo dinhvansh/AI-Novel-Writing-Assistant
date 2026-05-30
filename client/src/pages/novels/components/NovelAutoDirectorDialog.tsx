@@ -232,7 +232,7 @@ export default function NovelAutoDirectorDialog({
       setIdeaInspirations(response.data?.ideas ?? []);
     },
     onError: (error) => {
-      toast.error(error instanceof Error ? error.message : "生成起始想法失败，请稍后重试。");
+      toast.error(error instanceof Error ? error.message : t("autoDirector:dialog.feedback.generateIdeaFailed"));
     },
   });
   const directorTaskQuery = useQuery({

@@ -179,7 +179,7 @@ export default function CharacterCastOptionsSection(props: CharacterCastOptionsS
       }
       const createdCount = response.data?.createdCount ?? 0;
       const updatedCount = response.data?.updatedCount ?? 0;
-      const backgroundHint = "外显资料和角色动态会在后台补齐，稍后刷新角色资产即可查看。";
+      const backgroundHint = t("novel:character.cast.backgroundHint");
       setStatusMessage(
         response.data?.qualityOverrideApplied
           ? t("novel:character.cast.appliedWithOverride", { created: createdCount, updated: updatedCount })

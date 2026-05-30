@@ -480,7 +480,7 @@ export default function NovelAutoDirectorProgressPanel({
     : (dashboardActions.length > 0
       ? dashboardActions
       : [{
-        label: "查看执行详情",
+        label: t("autoDirector:progressPanel.actions.viewDetails"),
         onClick: onOpenTaskCenter,
         variant: "default" as const,
       }]);

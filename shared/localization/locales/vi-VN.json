@@ -1685,7 +1685,8 @@
           "label": "Độc giả đại chúng / Không giới hạn",
           "summary": "Không giới hạn xu hướng kênh."
         }
-      }
+      },
+      "recommended": "Đề xuất"
     },
     "takeover": {
       "checkpoint": {
@@ -2484,7 +2485,8 @@
           "hiddenTension": "Căng thẳng ẩn",
           "conflictSource": "Nguồn gốc xung đột",
           "nextTurnPoint": "Điểm ngoặt tiếp theo"
-        }
+        },
+        "backgroundHint": "Thông tin bên ngoài và động thái nhân vật sẽ được bổ sung trong nền, sau đó làm mới tài sản nhân vật để xem."
       },
       "create": {
         "triggerBtn": "Tạo nhân vật",
@@ -4837,7 +4839,8 @@
       "noProtagonist": "Đội hình hiện tại chưa đánh dấu nhân vật chính, có thể bổ sung thông tin nhân vật chính trong vai trò nhân vật.",
       "supportingTitle": "Nhân vật phụ và nhân vật quan hệ",
       "noCharacters": "Tiểu thuyết hiện tại chưa có nhân vật, hãy tạo hoặc nhập nhân vật trong hướng dẫn phía trên.",
-      "onlyProtagonist": "Đội hình hiện tại chỉ có nhân vật chính, sau này có thể bổ sung đối thủ, đồng minh hoặc nhân vật gây áp lực quan hệ."
+      "onlyProtagonist": "Đội hình hiện tại chỉ có nhân vật chính, sau này có thể bổ sung đối thủ, đồng minh hoặc nhân vật gây áp lực quan hệ.",
+      "deleteConfirm": "Xác nhận xóa nhân vật “{{name}}”? Hành động này không thể khôi phục."
     },
     "mutations": {
       "saveBasic": {
@@ -4992,6 +4995,20 @@
     "worldInjection": {
       "injectedTitle": "Đã tiêm ngữ cảnh quy tắc thế giới",
       "noWorldHint": "Hiện chưa gắn thế giới quan, quá trình tạo sẽ không tiêm quy tắc thế giới."
+    },
+    "chapterDetail": {
+      "modes": {
+        "purpose": "Mục tiêu chương",
+        "boundary": "Ranh giới thực thi",
+        "taskSheet": "Phiếu tác vụ"
+      }
+    },
+    "worldSlice": {
+      "refreshSuccess": "Đã làm mới thiết định thế giới quan được sử dụng trong cuốn sách này.",
+      "saveSuccess": "Đã lưu các mục giữ lại của thiết định thế giới quan cho cuốn sách này."
+    },
+    "workflowRunning": {
+      "defaultLabel": "AI đang tiếp tục trong nền"
     }
   },
   "autoDirector": {
@@ -5285,7 +5302,8 @@
         "continueFailed": "Không thể tiếp tục Đạo diễn tự động.",
         "createdToast": "Đạo diễn tự động đã tạo dự án tiểu thuyết và sẽ tiếp tục lập kế hoạch.",
         "createTaskFailed": "Không thể tạo tác vụ chính của Đạo diễn tự động.",
-        "backgroundContinueToast": "Tác vụ Đạo diễn tự động sẽ tiếp tục chạy ở nền; bạn có thể xem tiến độ trong Bảng điều khiển AI."
+        "backgroundContinueToast": "Tác vụ Đạo diễn tự động sẽ tiếp tục chạy ở nền; bạn có thể xem tiến độ trong Bảng điều khiển AI.",
+        "generateIdeaFailed": "Tạo ý tưởng khởi đầu thất bại, vui lòng thử lại sau."
       }
     },
     "progressPanel": {
@@ -5600,6 +5618,9 @@
     },
     "directorNotice": {
       "quickFixChapterTitle": "Sửa nhanh tiêu đề chương"
+    },
+    "bookAutomationCard": {
+      "projectNav": "Điều hướng dự án"
     }
   },
   "creativeHub": {
@@ -6000,7 +6021,8 @@
         "title": "Gọi công cụ: {toolName}",
         "expandArgs": "Xem tham số",
         "collapseArgs": "Thu gọn tham số",
-        "defaultResult": "Công cụ đã trả về kết quả."
+        "defaultResult": "Công cụ đã trả về kết quả.",
+        "argsCollapsedHint": "Tham số yêu cầu đã được thu gọn mặc định, nhấp “Xem tham số” để mở rộng."
       }
     },
     "messagePrimitives": {
@@ -6141,6 +6163,9 @@
         "title": "Điểm kiểm tra đã ghi lại",
         "summary": "Checkpoint {id} đã được ghi lại vào lịch sử luồng."
       }
+    },
+    "openButton": {
+      "defaultLabel": "Tiếp tục trong Trung tâm sáng tạo"
     }
   },
   "knowledge": {
@@ -6166,7 +6191,8 @@
         "searchModelPlaceholder": "Tìm kiếm mô hình",
         "noMatchingModel": "Không có mô hình phù hợp",
         "remoteModelCount": "{count} mô hình từ xa",
-        "useRecommendedHint": "Nên dùng mô hình nhúng được nhà cung cấp khuyến nghị."
+        "useRecommendedHint": "Nên dùng mô hình nhúng được nhà cung cấp khuyến nghị.",
+        "modelPlaceholder": "Ví dụ: text-embedding-3-small"
       },
       "vectorStore": {
         "title": "Cơ sở dữ liệu vector",
@@ -6199,7 +6225,9 @@
         "autoReindexLabel": "Tự động xây dựng lại chỉ mục khi mô hình thay đổi",
         "reindexOn": "Tự động xây dựng lại",
         "reindexOff": "Không tự động xây dựng lại",
-        "targetCollection": "Collection mục tiêu"
+        "targetCollection": "Collection mục tiêu",
+        "tagPlaceholder": "Ví dụ: kb / prod / novel",
+        "manualNamePlaceholder": "Ví dụ: ai_novel_rag_openai_text_embedding_3_small_kb_v1"
       },
       "connectionParams": {
         "title": "Tham số kết nối",
@@ -6930,6 +6958,10 @@
       "enabledCount": "Đã bật {{enabled}} / {{total}} quy tắc",
       "description": "Xem, tạo và điều chỉnh quy tắc Chống AI tại trung tâm quy tắc; khu vực chỉnh sửa văn phong tiếp tục chịu trách nhiệm chọn quy tắc nào gắn với văn phong hiện tại.",
       "enterRuleCenter": "Vào trung tâm quy tắc"
+    },
+    "advancedWorkspace": {
+      "editingHint": "Hiện đang duy trì mô tả thiết định của công thức viết “{{name}}”. Kiểm thử ứng dụng và khử mùi AI đã được tách ra thành cổng riêng, ở đây chỉ chịu trách nhiệm sắp xếp rõ ràng bản thân công thức viết.",
+      "noProfileHint": "Hiện chưa có công thức viết nào có thể chỉnh sửa. Vui lòng quay lại danh sách công thức viết, chọn hoặc tạo một công thức viết mới."
     }
   },
   "world": {

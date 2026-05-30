@@ -139,13 +139,13 @@ export function getWorkflowDescription(task?: NovelAutoDirectorTaskSummary | nul
     const percent = Math.round(task.progress * 100);
     return t
       ? t("autoDirector:taskUi.description.autoExecutionProgress", { scope, percent })
-      : `AI 正在后台继续执行${scope}，当前进度 ${percent}%。`;
+      : `AI 正在后台继续执行${scope}，当前进度 ${percent}%。`; // i18n-ignore: t() fallback
   }
   if ((task.status === "failed" || task.status === "cancelled") && task.checkpointType === "chapter_batch_ready") {
     const scope = getExecutionScopeLabel(task.executionScopeLabel, t);
     return t
       ? t("autoDirector:taskUi.description.autoExecutionPausedBatch", { scope })
-      : `${scope}自动执行在批量阶段暂停了，建议先查看任务，再决定是否继续自动执行。`;
+      : `${scope}自动执行在批量阶段暂停了，建议先查看任务，再决定是否继续自动执行。`; // i18n-ignore: t() fallback
   }
   if (task.blockingReason?.trim()) {
     return task.blockingReason.trim();
@@ -159,12 +159,12 @@ export function getWorkflowDescription(task?: NovelAutoDirectorTaskSummary | nul
   if (task.resumeAction?.trim()) {
     return t
       ? t("autoDirector:taskUi.description.recommendContinue", { action: task.resumeAction.trim() })
-      : `推荐继续：${task.resumeAction.trim()}`;
+      : `推荐继续：${task.resumeAction.trim()}`; // i18n-ignore: t() fallback
   }
   if (task.nextActionLabel?.trim()) {
     return t
       ? t("autoDirector:taskUi.description.nextStep", { label: task.nextActionLabel.trim() })
-      : `下一步：${task.nextActionLabel.trim()}`;
+      : `下一步：${task.nextActionLabel.trim()}`; // i18n-ignore: t() fallback
   }
   return null;
 }
