@@ -46,7 +46,7 @@ interface WorldLayersTabProps {
 }
 
 export default function WorldLayersTab(props: WorldLayersTabProps) {
-  const { t } = useTranslation();
+  const { t } = useTranslation("world");
   const refineAttributeOptions = getRefineAttributeOptions(t);
   const {
     world,
@@ -82,17 +82,21 @@ export default function WorldLayersTab(props: WorldLayersTabProps) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>分层构建</CardTitle>
+        <CardTitle>{t("layers.title")}</CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="flex flex-wrap items-center gap-2 rounded-md border p-3">
           <Button onClick={onGenerateAll} disabled={generateAllPending || !world}>
-            {generateAllPending ? "六层生成中..." : isInitialLayerGeneration ? "首次 AI 生成六层" : "一键重建六层"}
+            {generateAllPending
+              ? t("layers.generatingAll")
+              : isInitialLayerGeneration
+                ? t("layers.generateAllFirst")
+                : t("layers.regenerateAll")}
           </Button>
           <div className="text-xs text-muted-foreground">
             {isInitialLayerGeneration
-              ? "首次 AI 生成会并发构建 6 层。"
-              : "首次生成已完成，支持单层 AI 重写。"}
+              ? t("layers.generateAllFirstHint")
+              : t("layers.regenerateAllHint")}
           </div>
         </div>
 
@@ -115,7 +119,7 @@ export default function WorldLayersTab(props: WorldLayersTabProps) {
                 <div className="flex flex-wrap items-center justify-between gap-2">
                   <div className="font-medium">{getLayerLabel(t, layer.key)}</div>
                   <div className="text-xs text-muted-foreground">
-                    状态：{getLayerStatusLabel(t, layerStatus)}
+                    {t("layers.statusLabel", { status: getLayerStatusLabel(t, layerStatus) })}
                   </div>
                 </div>
                 <textarea
@@ -143,25 +147,25 @@ export default function WorldLayersTab(props: WorldLayersTabProps) {
                   >
                     {isInitialLayerGeneration
                       ? generateAllPending
-                        ? "六层生成中..."
-                        : "首次 AI 生成六层"
+                        ? t("layers.generatingAll")
+                        : t("layers.generateAllFirst")
                       : isGeneratingCurrentLayer
-                        ? "重写中..."
-                        : "AI 重写本层"}
+                        ? t("layers.rewritingLayer")
+                        : t("layers.rewriteLayer")}
                   </Button>
                   <Button
                     variant="secondary"
                     onClick={() => onSaveLayer({ layerKey: layer.key, content: layerValue })}
                     disabled={saveLayerPending || generateAllPending || !layerValue.trim()}
                   >
-                    {isSavingCurrentLayer ? "保存中..." : "手动保存本层"}
+                    {isSavingCurrentLayer ? t("layers.savingLayer") : t("layers.saveLayer")}
                   </Button>
                   <Button
                     variant="outline"
                     onClick={() => onConfirmLayer(layer.key)}
                     disabled={confirmLayerPending || generateAllPending}
                   >
-                    {isConfirmingCurrentLayer ? "确认中..." : "确认本层"}
+                    {isConfirmingCurrentLayer ? t("layers.confirmingLayer") : t("layers.confirmLayer")}
                   </Button>
                 </div>
               </div>
@@ -170,7 +174,7 @@ export default function WorldLayersTab(props: WorldLayersTabProps) {
         </div>
 
         <div className="rounded-md border p-3">
-          <div className="mb-2 text-sm font-medium">精炼</div>
+          <div className="mb-2 text-sm font-medium">{t("layers.refineTitle")}</div>
           <div className="grid gap-2 md:grid-cols-4">
             <select
               className="rounded-md border bg-background p-2 text-sm"
@@ -188,19 +192,19 @@ export default function WorldLayersTab(props: WorldLayersTabProps) {
               value={refineMode}
               onChange={(event) => setRefineMode(event.target.value as "replace" | "alternatives")}
             >
-              <option value="replace">替换优化</option>
-              <option value="alternatives">提供备选方案</option>
+              <option value="replace">{t("layers.refineModeReplace")}</option>
+              <option value="alternatives">{t("layers.refineModeAlternatives")}</option>
             </select>
             <select
               className="rounded-md border bg-background p-2 text-sm"
               value={refineLevel}
               onChange={(event) => setRefineLevel(event.target.value as "light" | "deep")}
             >
-              <option value="light">轻度</option>
-              <option value="deep">深度</option>
+              <option value="light">{t("layers.refineLevelLight")}</option>
+              <option value="deep">{t("layers.refineLevelDeep")}</option>
             </select>
             <Button onClick={onStartRefine} disabled={refineStreaming}>
-              {refineStreaming ? "精炼中..." : `开始精炼 ${selectedLayer === "foundation" ? "当前世界" : ""}`.trim()}
+              {refineStreaming ? t("layers.refining") : `${t("layers.startRefine")} ${selectedLayer === "foundation" ? t("layers.currentWorld") : ""}`.trim()}
             </Button>
           </div>
           <StreamOutput content={refineContent} isStreaming={refineStreaming} onAbort={onAbortRefine} />

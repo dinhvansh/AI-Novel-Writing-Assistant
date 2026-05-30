@@ -161,11 +161,14 @@ export default function ChapterExecutionResultPanel(props: ChapterExecutionResul
                 <div>
                   <div className="text-base font-semibold text-foreground">{chapterTitle}</div>
                   <div className="mt-1 text-xs leading-6 text-muted-foreground">
-                    {contentPanelTitle}。{isSelectedChapterFinalizing
-                      ? (chapterRunStatus?.message ?? t("chapter.resultPanel.finalizingDefault"))
-                      : isSelectedChapterStreaming
-                        ? t("chapter.resultPanel.streamingHint")
-                        : chapterObjective}
+                    {t("chapter.resultPanel.contentPanelDesc", {
+                      title: contentPanelTitle,
+                      detail: isSelectedChapterFinalizing
+                        ? (chapterRunStatus?.message ?? t("chapter.resultPanel.finalizingDefault"))
+                        : isSelectedChapterStreaming
+                          ? t("chapter.resultPanel.streamingHint")
+                          : chapterObjective,
+                    })}
                   </div>
                 </div>
               </div>

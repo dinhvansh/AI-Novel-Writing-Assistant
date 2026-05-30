@@ -174,6 +174,7 @@ export function buildTakeoverGuidance(
 }
 
 function formatRatio(done: number, total: number, t?: TranslateFn): string {
+  // i18n-ignore: t() fallback strings — used only when t is not provided (non-React contexts)
   const _t = t ?? ((key: string, opts?: Record<string, unknown>) => {
     if (key === "novel:takeover.progress.ratioItems") return `${done} 项`;
     if (key === "novel:takeover.progress.ratioNone") return "暂无";
@@ -276,6 +277,7 @@ export function buildTakeoverChapterTarget(
     autoReview: true,
     autoRepair: true,
   };
+  // i18n-ignore: t() fallback strings — used only when t is not provided (non-React contexts)
   const _t = t ?? ((key: string, opts?: Record<string, unknown>) => {
     if (key === "novel:takeover.chapterTarget.actionLabel") return `推进至第 ${opts?.order} 章`;
     if (key === "novel:takeover.chapterTarget.summaryFrom") return `从第 ${opts?.start} 章继续推进。`;
@@ -299,6 +301,7 @@ export function buildTakeoverProgressInspection(
   taskSnapshot?: DirectorTaskSnapshot | null,
   t?: TranslateFn,
 ): TakeoverProgressInspectionViewModel {
+  // i18n-ignore: t() fallback strings — used only when t is not provided (non-React contexts)
   const _t = t ?? ((key: string, opts?: Record<string, unknown>) => {
     const fallbacks: Record<string, string> = {
       "novel:takeover.progress.hasVolumeStrategy": "已具备卷战略",
@@ -411,10 +414,10 @@ export function buildTakeoverProgressInspection(
 export function formatTakeoverStartError(error: unknown, t?: TranslateFn): string {
   const _t = t ?? ((key: string) => key);
   const message = error instanceof Error ? error.message : String(error || "");
-  if (message.includes("章节范围只能从节奏拆章、章节执行或质量修复开始")) {
+  if (message.includes("章节范围只能从节奏拆章、章节执行或质量修复开始")) { // i18n-ignore: AI parsing keyword — matches server error message
     return _t("novel:takeover.error.chapterRangeNotReady");
   }
-  if (message.includes("当前已有自动导演任务")) {
+  if (message.includes("当前已有自动导演任务")) { // i18n-ignore: AI parsing keyword — matches server error message
     return _t("novel:takeover.error.alreadyHasTask");
   }
   return message || _t("novel:takeover.startTakeoverFailed");

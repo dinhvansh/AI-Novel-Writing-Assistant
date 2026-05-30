@@ -227,7 +227,30 @@
     "create": {
       "title": "Tạo dự án tiểu thuyết",
       "description": "Trước tiên hãy xác định rõ cuốn sách này viết cho ai, dựa vào điều gì để thu hút độc giả theo dõi, và 30 chương đầu cần mang lại điều gì. Các thiết lập ở đây sẽ ảnh hưởng trực tiếp đến việc lập kế hoạch mạch chính, ranh giới thế giới, gợi ý cách viết và hành vi tạo nội dung của AI sau này. Bạn vẫn có thể tiếp tục điều chỉnh sau khi tạo.",
-      "submitLabel": "Tạo và vào dự án"
+      "submitLabel": "Tạo và vào dự án",
+      "resourceRecommendation": {
+        "title": "Để AI đề xuất bộ khung mở đầu sách",
+        "description": "Bạn không cần hiểu trước về kho chất liệu thể loại và kho mô thức đẩy. Hãy viết một câu cảm hứng, điểm bán hoặc cam kết 30 chương đầu, hệ thống sẽ đề xuất cho bạn một tổ hợp mặc định phù hợp hơn cho người mới bắt đầu.",
+        "noContextHint": "Hãy bổ sung một trong các mục: cảm hứng, tổng quan, độc giả mục tiêu, điểm bán hoặc cam kết 30 chương đầu, AI mới có thể đánh giá chính xác hơn bạn nên bắt đầu từ thể loại và mô thức đẩy nào.",
+        "staleWarning": "Bạn vừa thay đổi thông tin mở đầu sách, nên đề xuất lại một lần để thể loại và mô thức đẩy theo kịp hướng mới nhất.",
+        "genreLabel": "Chất liệu thể loại được đề xuất",
+        "primaryStoryModeLabel": "Mô thức đẩy chính được đề xuất",
+        "secondaryStoryModeLabel": "Mô thức đẩy phụ được đề xuất",
+        "noSecondaryStoryMode": "Hiện tại nên tập trung chạy ổn mô thức đẩy chính trước, không nên chồng quá nhiều hương vị ngay từ đầu.",
+        "cautionPrefix": "Lưu ý: {caution}",
+        "appliedBadge": "Đã điền vào biểu mẫu hiện tại",
+        "applySuccessMessage": "Đã điền chất liệu thể loại và mô thức đẩy do AI đề xuất vào biểu mẫu hiện tại. Bạn có thể tiếp tục tinh chỉnh, hoặc vào thẳng Đạo diễn tự động.",
+        "actions": {
+          "recommend": "AI đề xuất tổ hợp tài nguyên",
+          "reRecommend": "Đề xuất lại",
+          "recommending": "Đang đề xuất...",
+          "apply": "Áp dụng vào biểu mẫu hiện tại",
+          "applied": "Đã áp dụng"
+        },
+        "error": {
+          "recommendFailed": "AI đề xuất tổ hợp tài nguyên thất bại, vui lòng thử lại sau."
+        }
+      }
     },
     "bookFraming": {
       "title": "Framing cấp sách",
@@ -336,6 +359,25 @@
         "viewProgressShort": "Xem tiến độ đạo diễn",
         "progressDialogTitle": "Tiến độ Đạo diễn tự động AI",
         "progressDialogDescription": "Xem các bước tiến triển, tiến độ gần đây và mức sử dụng AI của cuốn sách này."
+      },
+      "mobile": {
+        "resourceCount": "{{count}} tài nguyên đang chờ xử lý",
+        "taskException": "Tác vụ bất thường",
+        "taskPendingApproval": "Chờ phê duyệt",
+        "taskRunning": "Đang tiến hành",
+        "recentTask": "Tác vụ gần đây",
+        "openTools": "Mở bảng công cụ",
+        "toolsTitle": "Công cụ dự án",
+        "toolsDescription": "Nơi lưu trữ thông tin hỗ trợ như xuất bản, trạng thái tác vụ và tiến độ chương.",
+        "chaptersLabel": "Tiến độ chương",
+        "pendingRepairsLabel": "Chờ sửa",
+        "tasksLabel": "Trạng thái tác vụ",
+        "noTask": "Không có tác vụ",
+        "viewTaskProgress": "Xem tiến độ tác vụ",
+        "exportCurrentStep": "Xuất bước hiện tại",
+        "exporting": "Đang xuất...",
+        "exportFullBook": "Xuất toàn bộ sách",
+        "directorTakeover": "Đạo diễn tự động AI tiếp quản"
       }
     },
     "storyMacro": {
@@ -2762,7 +2804,8 @@
         "otherChapterStreamingDesc": "{label} vẫn đang được tạo. Khi chuyển sang chương này, nội dung trực tiếp của chương kia sẽ không được mang theo, quay lại chương tương ứng để tiếp tục xem đầu ra trực tiếp.",
         "anotherChapter": "Chương khác",
         "noContentHint": "Chương hiện tại chưa có nội dung. Nên bổ sung kế hoạch chương hoặc danh sách tác vụ, sau đó thực thi 'Viết chương này' từ bên phải.",
-        "finalizingDefault": "Nội dung có thể đọc, hệ thống đang lưu bản nháp và cập nhật tài sản chương."
+        "finalizingDefault": "Nội dung có thể đọc, hệ thống đang lưu bản nháp và cập nhật tài sản chương.",
+        "contentPanelDesc": "{title}. {detail}"
       },
       "editorSidebar": {
         "backButton": "Quay lại trang thực thi chương",
@@ -2870,6 +2913,34 @@
         "regenerate": "Tái tạo",
         "applying": "Đang áp dụng...",
         "acceptAll": "Chấp nhận tất cả"
+      },
+      "chapterEditor": {
+        "errors": {
+          "noChapterSelected": "Vui lòng chọn một chương trước.",
+          "saveFailed": "Lưu chương thất bại, vui lòng thử lại sau.",
+          "noRevisionResult": "AI không trả về kết quả sửa đổi khả dụng, vui lòng thử lại.",
+          "revisionFailed": "AI tạo sửa đổi thất bại, vui lòng thử lại.",
+          "noApplicableCandidate": "Hiện không có phiên bản ứng cử nào có thể áp dụng.",
+          "noSelectionForRevision": "Vui lòng chọn đoạn văn bản chính trước, hoặc định vị đoạn tương ứng từ thẻ vấn đề."
+        },
+        "feedback": {
+          "chapterSaved": "Chương đã được lưu.",
+          "candidateApplied": "Đã áp dụng phiên bản ứng cử và tạo ảnh chụp nhanh trước khi AI sửa đổi.",
+          "candidateApplyFailed": "Áp dụng phiên bản ứng cử thất bại."
+        },
+        "revision": {
+          "generatingChapterFreeform": "Đang sửa đổi tự do toàn chương...",
+          "generatingSelectionFreeform": "Đang sửa đổi tự do đoạn...",
+          "generatingPreset": "Đang {operation}...",
+          "generating": "Đang tạo phiên bản sửa đổi ứng cử..."
+        },
+        "target": {
+          "fullChapter": "Toàn bộ nội dung chương",
+          "manualSelection": "Đoạn văn bạn chọn thủ công",
+          "noSelection": "Chưa chọn đoạn văn",
+          "paragraphFragment": "{label} đoạn tương ứng"
+        },
+        "noChapterHint": "Vui lòng chọn một chương để bắt đầu chỉnh sửa nội dung."
       }
     },
     "writingFormula": {
@@ -3447,6 +3518,79 @@
         "sourceTextPlaceholder": "Dán văn bản bạn muốn viết lại bằng công thức viết này",
         "runTestWriteButton": "Thực hiện viết thử",
         "testWriteOutputHint": "Kết quả viết thử sẽ hiển thị ở đây. Bạn có thể dùng nó để đánh giá cảm giác tiến triển, chất lượng đối thoại và giọng văn tổng thể đã đạt yêu cầu chưa."
+      },
+      "cleanFlow": {
+        "title": "Khử mùi AI cho đoạn văn này",
+        "description": "Đầu tiên, công cụ sẽ phát hiện và chỉ ra đoạn nào viết giống văn mẫu, sau đó đưa ra bản sửa đổi để bạn có thể so sánh trực tiếp. Các vấn đề lặp lại sẽ được tôi tổng hợp thành gợi ý quy tắc, giúp bạn mang về trình soạn thảo văn phong hiện tại để xử lý tiếp.",
+        "originalInputLabel": "Nhập bản gốc",
+        "detectPlaceholder": "Dán một đoạn văn bạn muốn khử mùi AI.",
+        "detectButton": "Phát hiện trước",
+        "detectingButton": "Đang phát hiện...",
+        "rewriteButton": "Tạo bản sửa đổi một chạm",
+        "rewritingButton": "Đang tạo bản sửa đổi...",
+        "issueCardTitle": "Thẻ vấn đề & điểm rủi ro",
+        "riskScoreLabel": "Điểm rủi ro",
+        "noDetectionHint": "Chạy phát hiện trước, ở đây sẽ cho bạn biết đoạn nào giống AI nói nhất và tại sao chúng khiến người đọc mất tập trung.",
+        "diffTitle": "So sánh trước và sau sửa đổi",
+        "diffDescription": "So sánh nhẹ theo từng dòng đoạn văn, giúp bạn nhanh chóng đánh giá lần sửa này đang giảm cảm giác văn mẫu hay vô tình làm mất giọng văn gốc.",
+        "originalLabel": "Bản gốc {index}",
+        "revisedLabel": "Bản sửa đổi {index}",
+        "noRewriteHint": "Sau khi sửa đổi một chạm, ở đây sẽ hiển thị đối chiếu trước sau.",
+        "suggestionTitle": "Vấn đề lặp lại có thể kết tinh thành quy tắc",
+        "suggestionDescription": "Phiên bản này sẽ không tự động lưu vào kho, nhưng sẽ tổng hợp các vấn đề lặp lại thành gợi ý, giúp bạn mang về trình soạn thảo văn phong hiện tại để quyết định có cố định hay không.",
+        "viewEditorButton": "Xem trình soạn thảo văn phong hiện tại",
+        "noSuggestionHint": "Sau khi phát hiện vấn đề, ở đây mới xuất hiện gợi ý quy tắc có thể kết tinh."
+      },
+      "cleanPanel": {
+        "title": "Khử mùi AI",
+        "profileActiveHint": "Hiện đang dùng văn phong \"{name}\" để phát hiện và sửa lỗi. Ở đây chỉ xử lý mùi AI của nội dung, không thay đổi các trường văn phong.",
+        "noProfileHint": "Chọn một văn phong từ danh sách, sau đó mới phát hiện nội dung.",
+        "antiAiRulesTitle": "Ràng buộc chống AI được ưu tiên tham khảo hiện tại",
+        "antiAiRulesDescription": "Nếu văn phong này có gắn quy tắc chống AI, việc phát hiện và sửa lỗi sẽ ưu tiên đánh giá vấn đề theo các ràng buộc này.",
+        "noAntiAiRulesHint": "Văn phong này chưa có quy tắc chống AI rõ ràng. Việc phát hiện hiện tại sẽ dựa nhiều hơn vào đánh giá rủi ro chung, kết quả có thể không sát với kỳ vọng của bạn.",
+        "detectSectionTitle": "Phát hiện nội dung",
+        "detectSectionDescription": "Dán nội dung bạn muốn kiểm tra. Nên dán một cảnh hoàn chỉnh để dễ nhận ra vấn đề về giọng kể, giọng đối thoại và giọng giải thích.",
+        "detectPlaceholder": "Dán nội dung cần phát hiện",
+        "detectButton": "Thực hiện phát hiện",
+        "rewriteButton": "Viết lại một lần",
+        "riskScoreLabel": "Điểm rủi ro: {score}",
+        "noDetectionHint": "Kết quả phát hiện sẽ hiển thị ở đây, tập trung cho bạn biết những câu nào giống AI nhất, tại sao bị đánh giá là rủi ro, và có thể sửa theo hướng nào.",
+        "rewriteResultTitle": "Kết quả viết lại"
+      },
+      "imitateFlow": {
+        "title": "Bắt chước một cách viết",
+        "description": "Trước tiên bạn đưa cho tôi một đoạn văn tham khảo rõ ràng, tôi sẽ phân tích nó thành các cách viết có thể thực thi, sau đó quyết định là bắt chước sát, giữ lại khung xương, hay chỉ chuyển những phần có thể tái sử dụng.",
+        "inputSectionTitle": "1. Nhập văn bản tham khảo",
+        "namePlaceholder": "Tên cách viết, ví dụ: Dòng hội thoại thực tế lạnh lùng",
+        "categoryPlaceholder": "Phân loại (tùy chọn)",
+        "sourceTextPlaceholder": "Dán văn bản tham khảo bạn muốn bắt chước. Khuyến nghị ít nhất một cảnh hoàn chỉnh để hệ thống có thể nhận ra khoảng cách kể chuyện, cảm giác đối thoại và nhịp điệu câu.",
+        "extractButton": "2. Trích xuất đặc trưng",
+        "extractingButton": "Đang trích xuất đặc trưng...",
+        "retentionSectionTitle": "2. Chọn mức độ giữ lại",
+        "currentPresetBadge": "Phương án hiện tại",
+        "presetNoteImitate": "`imitate` phù hợp hơn cho việc tập viết, `balanced` phù hợp với hầu hết các dự án, `transfer` phù hợp hơn cho việc gắn kết toàn bộ sách, có thể chủ động tránh rủi ro dấu vân tay cao.",
+        "noExtractionHint": "Hoàn thành trích xuất đặc trưng trước, ở đây mới xuất hiện ba chiến lược giữ lại và giải thích cảm giác đọc tương ứng.",
+        "previewSectionTitle": "3. Xem trước khung xương cách viết sắp lưu",
+        "previewSectionDescription": "Sau khi lưu sẽ tự động vào chỉnh sửa cách viết hiện tại, bạn có thể tiếp tục điều chỉnh quy tắc, gắn kết với mục tiêu, hoặc trực tiếp dùng để tập viết.",
+        "saveButton": "4. Lưu thành tài sản cách viết",
+        "savingButton": "Đang lưu cách viết...",
+        "noPreviewHint": "Chưa có đặc trưng để xem trước. Hoàn thành trích xuất đặc trưng trước, sau đó quyết định cách lưu."
+      },
+      "bookStyleFlow": {
+        "title": "Thiết lập cách viết mặc định của sách từ thông tin cơ bản tiểu thuyết",
+        "description": "Công thức viết chịu trách nhiệm tạo, kiểm tra và sắp xếp tài sản cách viết. Để xác định bộ cách viết mặc định nào sẽ được sử dụng cho tiểu thuyết hiện tại, vui lòng quay lại trang thông tin cơ bản của tiểu thuyết để xác nhận, sau đó đưa vào quy trình đạo diễn và nội dung chính.",
+        "entryTitle": "Nên vào từ đâu bây giờ",
+        "novelActiveHint": "\"Cách viết mặc định\" của tiểu thuyết hiện tại {title} đã được đặt trong trang thông tin cơ bản của tiểu thuyết.",
+        "novelActiveHintNoTitle": "\"Cách viết mặc định\" của tiểu thuyết hiện tại đã được đặt trong trang thông tin cơ bản của tiểu thuyết.",
+        "novelInactiveHint": "Vui lòng vào trang thông tin cơ bản của một tiểu thuyết, tại đó xác nhận cách viết mặc định của sách.",
+        "twoEntriesTitle": "Hai cổng vào chịu trách nhiệm gì",
+        "novelPageEntry": "Trang tiểu thuyết: Chọn cách viết mặc định cho tiểu thuyết hiện tại, kích hoạt đề xuất, so sánh các ứng viên, và quyết định khi nào đưa vào Đạo diễn tự động.",
+        "engineEntry": "Công thức viết: Tiếp tục chịu trách nhiệm sắp xếp tài sản cách viết, viết thử, khử AI và quản lý quy tắc.",
+        "nextStepTitle": "Bước tiếp theo",
+        "nextStepHint": "Trước tiên hãy đến trang tiểu thuyết để xác nhận cách viết mặc định của cuốn sách này. Nếu kho tài sản hiện tại chưa có cách viết phù hợp, hãy quay lại Công thức viết để tạo hoặc sắp xếp tài sản.",
+        "goToNovelButton": "Đến trang tiểu thuyết để đặt cách viết mặc định",
+        "editCurrentButton": "Chỉnh sửa cách viết hiện tại",
+        "createNewButton": "Tạo một bộ cách viết mới"
       }
     },
     "world": {
@@ -3815,7 +3959,9 @@
       "outlineStatusLabel": "Trạng thái đại cương",
       "publicationStatusLabel": "Trạng thái xuất bản",
       "continuationSourceMissingWarning": "Ở chế độ viết tiếp, cần chọn nguồn gốc rõ ràng trước khi lưu thông tin cơ bản.",
-      "continuationAnalysisSectionMissingWarning": "Bạn đã chọn kết quả phân tích sách, nhưng chưa chọn chương phân tích để đưa vào."
+      "continuationAnalysisSectionMissingWarning": "Bạn đã chọn kết quả phân tích sách, nhưng chưa chọn chương phân tích để đưa vào.",
+      "coreDriveLabel": "Động lực cốt lõi: {value}",
+      "readerRewardLabel": "Phần thưởng bổ sung cho độc giả: {value}"
     },
     "chapterRuntime": {
       "lengthCardTitle": "Kiểm soát độ dài và phát lại thực thi",
@@ -4246,7 +4392,11 @@
         "sceneCards": "Cảnh",
         "quality": "Chất lượng",
         "repair": "Sửa chữa",
-        "contextDiagnosis": "Chẩn đoán ngữ cảnh"
+        "contextDiagnosis": "Chẩn đoán ngữ cảnh",
+        "overview": "Tổng quan chương",
+        "timeline": "Dòng thời gian",
+        "character": "Động thái nhân vật",
+        "resources": "Rủi ro tài nguyên"
       },
       "taskSheet": {
         "title": "Tác vụ chương này",
@@ -4289,6 +4439,20 @@
         "waitingHint": "Đang chờ đầu ra sửa chữa...",
         "historyTitle": "Lịch sử sửa chữa",
         "noHistory": "Chưa có lịch sử sửa chữa."
+      },
+      "sidebarTitle": "Thanh bên chương",
+      "sidebarDescription": "Xem tổng quan chương trước, sau đó xem dòng thời gian, động thái nhân vật và rủi ro tài nguyên.",
+      "chapterBadge": "Chương {order}",
+      "noChapterBadge": "Chưa chọn chương",
+      "mobile": {
+        "overviewTitle": "Tổng quan chương",
+        "overviewBadge": "Xem ưu tiên",
+        "timelineTitle": "Dòng thời gian",
+        "timelineBadge": "Mặc định",
+        "characterTitle": "Động thái nhân vật",
+        "characterBadge": "Mở rộng xem",
+        "resourceTitle": "Tài nguyên & rủi ro",
+        "resourceBadge": "Mở rộng xem"
       }
     },
     "styleRecommendation": {
@@ -4341,6 +4505,143 @@
         "wordCount": "{count} chữ",
         "hasOutline": "Có đại cương",
         "hasStructuredOutline": "Có chia chương"
+      },
+      "latestChapterLabel": "Chương {order} · {title}",
+      "unnamedChapter": "Chương chưa đặt tên"
+    },
+    "chapterEditor": {
+      "errors": {
+        "noChapterSelected": "Vui lòng chọn một chương trước.",
+        "saveFailed": "Lưu chương thất bại.",
+        "noRevisionResult": "AI không trả về kết quả chỉnh sửa khả dụng.",
+        "revisionFailed": "AI chỉnh sửa thất bại.",
+        "noApplicableCandidate": "Hiện tại không có phiên bản ứng cử nào có thể áp dụng.",
+        "noSelectionForRevision": "Vui lòng chọn đoạn văn bản chính, hoặc định vị đoạn tương ứng từ thẻ vấn đề."
+      },
+      "feedback": {
+        "chapterSaved": "Chương đã được lưu.",
+        "candidateApplied": "Đã áp dụng phiên bản ứng cử và tạo ảnh chụp nhanh trước khi AI sửa đổi.",
+        "candidateApplyFailed": "Áp dụng phiên bản ứng cử thất bại."
+      },
+      "revision": {
+        "generatingChapterFreeform": "Đang tạo chỉnh sửa toàn chương...",
+        "generatingSelectionFreeform": "Đang tạo chỉnh sửa đoạn văn...",
+        "generatingPreset": "Đang thực hiện «{operation}»...",
+        "generating": "Đang tạo chỉnh sửa..."
+      },
+      "noChapterHint": "Vui lòng chọn một chương để bắt đầu chỉnh sửa văn bản chính.",
+      "target": {
+        "fullChapter": "Toàn bộ nội dung chương",
+        "manualSelection": "Đoạn nội dung bạn chọn thủ công",
+        "paragraphFragment": "Đoạn tương ứng với {label}",
+        "noSelection": "Chưa chọn đoạn nào"
+      }
+    },
+    "characterDynamics": {
+      "panelTitle": "Động thái nhân vật",
+      "panelSubtitle": "Trạng thái nhân vật, mối quan hệ và phục bút sẽ ảnh hưởng đến viết tiếp",
+      "panelHint": "Ở đây chỉ xem thông tin ảnh hưởng đến bước tiếp theo, không chỉnh sửa tại đây.",
+      "noSnapshotHint": "Sau khi chọn chương, ở đây hiển thị thay đổi trạng thái nhân vật, thay đổi mối quan hệ và phục bút quan trọng.",
+      "afterChapterTitle": "Trạng thái sau chương",
+      "latestTitle": "Trạng thái mới nhất",
+      "afterChapterEmpty": "Trạng thái sau chương chưa có nội dung để hiển thị.",
+      "latestEmpty": "Trạng thái mới nhất chưa có nội dung để hiển thị.",
+      "sourceChapterBadge": "Chương nguồn",
+      "characterStatesLabel": "Động thái nhân vật",
+      "relationStatesLabel": "Thay đổi mối quan hệ",
+      "foreshadowsLabel": "Phục bút",
+      "noSummary": "Chưa có tóm tắt",
+      "noRelationSummary": "Chưa có tóm tắt mối quan hệ",
+      "noForeshadowSummary": "Chưa có mô tả"
+    },
+    "chapterManagement": {
+      "title": "Thực thi chương",
+      "description": "Biến nơi này thành bàn làm việc chính thực sự: bên trái chỉ chuyển chương, giữa tiếp nhận nội dung chính, bên phải tập trung đặt hành động và chiến lược AI.",
+      "createChapterButton": "Tạo chương mới",
+      "creatingChapterButton": "Đang tạo...",
+      "noCharactersWarning": "Vui lòng thêm ít nhất 1 nhân vật trước khi tạo nội dung chương. Như vậy AI dễ nhận diện người xuất hiện, thay đổi quan hệ và tiếp nối tình tiết.",
+      "goToCharactersButton": "Đến quản lý nhân vật",
+      "queueFilters": {
+        "all": "Tất cả",
+        "setup": "Chờ chuẩn bị",
+        "draft": "Chờ viết",
+        "review": "Chờ chỉnh sửa",
+        "completed": "Đã hoàn thành"
+      },
+      "rightRailTabs": {
+        "insights": "Thanh động thái",
+        "reference": "Chẩn đoán tư liệu",
+        "agent": "Bàn thực thi AI"
+      },
+      "directorTakeoverTitle": "Tiếp quản từ Thực thi chương",
+      "directorTakeoverDescription": "AI sẽ xác định xem hiện có đợt hoạt động, điểm kiểm tra hay phạm vi chương có thể thực thi không, rồi quyết định tiếp tục đợt hiện tại hay mở đợt mới theo lựa chọn của bạn."
+    },
+    "characterAsset": {
+      "castRoles": {
+        "protagonist": "Nhân vật chính",
+        "antagonist": "Đối thủ chính",
+        "ally": "Đồng minh",
+        "foil": "Nhân vật tương phản",
+        "mentor": "Người hướng dẫn",
+        "love_interest": "Mối quan tâm tình cảm",
+        "pressure_source": "Nguồn áp lực",
+        "catalyst": "Chất xúc tác"
+      },
+      "genders": {
+        "male": "Nam",
+        "female": "Nữ",
+        "other": "Khác",
+        "unknown": "Không rõ"
+      },
+      "undefinedRole": "Chưa xác định",
+      "unknownGender": "Không xác định"
+    },
+    "characterSidebar": {
+      "confirmDelete": "Xác nhận xóa nhân vật \"{{name}}\"? Thao tác này không thể khôi phục.",
+      "protagonistBadge": "Nhân vật chính",
+      "pendingProtagonistGoal": "Chờ bổ sung mục tiêu nhân vật chính",
+      "pendingCharacterRole": "Chờ bổ sung vai trò nhân vật",
+      "relationLabel": "Quan hệ với nhân vật chính",
+      "roleLabel": "Vai trò",
+      "identityLabel": "Danh tính: {{role}}",
+      "pending": "Chờ bổ sung",
+      "currentGoalLabel": "Mục tiêu hiện tại:",
+      "deleting": "Đang xóa...",
+      "delete": "Xóa",
+      "noProtagonist": "Đội hình hiện tại chưa đánh dấu nhân vật chính, có thể bổ sung thông tin nhân vật chính trong vai trò nhân vật.",
+      "supportingTitle": "Nhân vật phụ và nhân vật quan hệ",
+      "noCharacters": "Tiểu thuyết hiện tại chưa có nhân vật, hãy tạo hoặc nhập nhân vật trong hướng dẫn phía trên.",
+      "onlyProtagonist": "Đội hình hiện tại chỉ có nhân vật chính, sau này có thể bổ sung đối thủ, đồng minh hoặc nhân vật gây áp lực quan hệ."
+    },
+    "mutations": {
+      "saveBasic": {
+        "itemLabel": "Thiết định dự án đã lưu"
+      },
+      "saveOutline": {
+        "itemLabel": "Chiến lược tập / Khung tập đã lưu",
+        "checkpointSummary": "Chiến lược tập và khung tập hiện tại đã được lưu vào không gian làm việc."
+      },
+      "saveStructured": {
+        "itemLabel": "Nhịp độ / Tách chương đã lưu",
+        "message": "Nhịp độ tách chương đã lưu, khu vực Thực thi chương sẽ sử dụng trực tiếp cùng một loạt chương."
+      },
+      "syncStructured": {
+        "itemLabel": "Tách chương cấp tập đã kết nối với Thực thi chương",
+        "checkpointSummary": "Danh sách chương, tác vụ và điểm vào thực thi đã sẵn sàng, có thể tiếp tục vào Thực thi chương.",
+        "message": "Sửa kết nối hoàn tất: thêm {{createCount}}, cập nhật {{updateCount}}, xóa {{deleteCount}}.",
+        "errorFallback": "Đồng bộ chương thất bại."
+      },
+      "createChapter": {
+        "itemLabel": "Đã tạo mục Thực thi chương mới"
+      },
+      "runPipeline": {
+        "itemLabel": "Pipeline chương đang chạy"
+      },
+      "review": {
+        "itemLabel": "Đánh giá chương đã hoàn tất"
+      },
+      "hook": {
+        "itemLabel": "Móc chương đã được tạo"
       }
     }
   },
@@ -6384,7 +6685,70 @@
       "conceptKeywordsLabel": "Từ khóa: {keywords}",
       "conceptPropertyOptionsLabel": "Tùy chọn thuộc tính tiền đề: {count}",
       "referenceAnchorsTitle": "Điểm neo thế giới gốc",
-      "referenceAnchorItem": "{label}: {content}"
+      "referenceAnchorItem": "{label}: {content}",
+      "wizardTitle": "Hướng dẫn thế giới quan (Giai đoạn 1-3)",
+      "step1Label": "1. Thu thập cảm hứng",
+      "step2Label": "2. Mẫu và bản thiết kế",
+      "step3Label": "3. Tiên đề cốt lõi",
+      "analyzingButton": "Đang phân tích...",
+      "analyzeReferenceButton": "Trích xuất điểm neo tác phẩm gốc và hướng hư cấu",
+      "analyzeFreeButton": "Tạo thẻ khái niệm và tùy chọn thuộc tính",
+      "defaultWorldName": "Thế giới chưa đặt tên",
+      "defaultWorldType": "Tùy chỉnh",
+      "libraryItemDescription": "Thiết định kho tư liệu của {name}.",
+      "libraryItemReason": "Thiết định có thể tái sử dụng từ kho tư liệu.",
+      "createDraftError": "Tạo bản nháp thế giới thất bại.",
+      "finalizeError": "Bản nháp thế giới không tồn tại.",
+      "analysisConceptError": "Kết quả phân tích thế giới quan thiếu thẻ khái niệm.",
+      "analysisParseError": "Phân tích kết quả phân tích thế giới quan thất bại.",
+      "referenceModes": {
+        "adapt_world": {
+          "label": "Cải tạo hư cấu dựa trên tác phẩm gốc",
+          "description": "Giữ nguyên nền tảng thế giới gốc, sau đó quyết định quy tắc, thế lực và cấu trúc địa điểm nào có thể cải tạo."
+        },
+        "extract_base": {
+          "label": "Trích xuất nền tảng thế giới gốc",
+          "description": "Trước tiên ổn định rút ra khung xương thế giới gốc, các mở rộng sau đó cố gắng xoay quanh sự thật của tác phẩm gốc."
+        },
+        "tone_rebuild": {
+          "label": "Chỉ mượn khí chất và cấu trúc của tác phẩm gốc để xây dựng lại",
+          "description": "Giữ lại bầu không khí, cấu trúc quan hệ và cảm giác đời sống, nhưng cho phép xây dựng lại sự thật thế giới ở mức độ lớn."
+        }
+      },
+      "dimensions": {
+        "foundation": "Tầng cơ sở",
+        "power": "Tầng sức mạnh",
+        "society": "Tầng xã hội",
+        "culture": "Tầng văn hóa",
+        "history": "Tầng lịch sử",
+        "conflict": "Tầng xung đột"
+      },
+      "referenceSeed": {
+        "emptyHint": "Lần này không trích xuất ổn định được tổ chức, địa điểm hoặc quy tắc nào có thể sử dụng trực tiếp từ tác phẩm tham khảo, sau đó sẽ tiếp tục tạo theo hướng cải tạo của bạn.",
+        "sectionTitle": "Sử dụng trực tiếp thiết định tác phẩm gốc",
+        "sectionDescription": "Hệ thống đã trích xuất một loạt thiết định có sẵn từ tác phẩm tham khảo, mặc định được chọn. Giữ lại chúng có thể giảm đáng kể việc bạn phải điền thủ công sau này.",
+        "selectAllButton": "Giữ lại tất cả",
+        "deselectAllButton": "Bỏ chọn tất cả",
+        "fallbackDescription": "Đã xác định là thiết định tác phẩm gốc có thể sử dụng trực tiếp.",
+        "groups": {
+          "rules": {
+            "title": "Quy tắc tác phẩm gốc",
+            "description": "Thế giới này vận hành mặc định như thế nào, các lần tạo sau sẽ tham khảo các quy tắc nền tảng này."
+          },
+          "factions": {
+            "title": "Lập trường phe phái",
+            "description": "Ai đứng về phe nào, tin gì, muốn thúc đẩy điều gì. Phù hợp để giữ lại hướng đi chính của tác phẩm gốc."
+          },
+          "forces": {
+            "title": "Tổ chức và thế lực",
+            "description": "Các tổ chức cụ thể như công ty, bộ phận, băng đảng, mạng lưới quan hệ có thể sử dụng trực tiếp."
+          },
+          "locations": {
+            "title": "Địa điểm và bối cảnh",
+            "description": "Các bối cảnh như thành phố, khu phố, công ty, nơi ở có thể sử dụng trực tiếp."
+          }
+        }
+      }
     },
     "assets": {
       "title": "Kho tư liệu + Phiên bản chụp nhanh + Xuất nhập",
@@ -6467,6 +6831,43 @@
         "conflicts": "Xung đột cốt lõi",
         "description": "Tổng quan thế giới",
         "factions": "Quan hệ thế lực"
+      },
+      "title": "Bàn làm việc thế giới quan: {name}",
+      "titleLoading": "Đang tải...",
+      "deleteButton": "Xóa thế giới quan",
+      "deletingButton": "Đang xóa...",
+      "deleteConfirm": "Xác nhận xóa thế giới quan「{name}」? Thao tác này không thể khôi phục.",
+      "deleteSuccess": "Đã xóa thế giới quan.",
+      "deleteError": "Xóa thế giới quan thất bại.",
+      "referenceTitle": "Tài liệu tham khảo",
+      "knowledgeBindingTitle": "Tài liệu tham khảo đã liên kết",
+      "tabs": {
+        "structure": "Thiết định có cấu trúc",
+        "layers": "Xây dựng theo lớp",
+        "deepening": "Đào sâu qua hỏi đáp",
+        "consistency": "Tính nhất quán",
+        "overview": "Tổng quan",
+        "overviewWithVis": "Tổng quan/Trực quan hóa",
+        "assets": "Tài nguyên/Phiên bản/Xuất nhập"
+      },
+      "consistency": {
+        "title": "Kiểm tra tính nhất quán",
+        "checkButton": "Chạy kiểm tra tính nhất quán",
+        "checkingButton": "Đang kiểm tra...",
+        "statusLabel": "Trạng thái kiểm tra",
+        "scoreLabel": "Điểm nhất quán",
+        "summaryLabel": "Tóm tắt kiểm tra",
+        "generatedAt": "Thời gian tạo: {time}",
+        "generatedAtUnknown": "Không xác định",
+        "noReport": "Chưa có báo cáo nhất quán.",
+        "noDetail": "Chưa có giải thích bổ sung",
+        "sourcePrefix": "Nguồn: ",
+        "fieldPrefix": "Trường ảnh hưởng: ",
+        "statusPrefix": "Trạng thái hiện tại: ",
+        "separator": " | ",
+        "resolveButton": "Đánh dấu đã giải quyết",
+        "ignoreButton": "Bỏ qua",
+        "noIssues": "Chưa có bản ghi vấn đề nhất quán nào, kết quả sẽ được hiển thị ở đây sau khi chạy kiểm tra."
       }
     }
   },
@@ -7668,7 +8069,33 @@
       "previewDialogFallback": "Xem trước ảnh",
       "previewImageAlt": "{name}-Ảnh xem trước",
       "confirmDeleteAsset": "Xác nhận xóa ảnh nhân vật này? Hành động này không thể hoàn tác.",
-      "deleteAssetError": "Xóa ảnh thất bại, vui lòng thử lại sau."
+      "deleteAssetError": "Xóa ảnh thất bại, vui lòng thử lại sau.",
+      "personalityLabel": "Tính cách:",
+      "appearanceLabel": "Ngoại hình/Thể trạng:",
+      "weaknessesLabel": "Điểm yếu và cái giá:",
+      "interestsLabel": "Thói quen và sở trường:",
+      "keyEventsLabel": "Sự kiện quan trọng:",
+      "localPathLabel": "Đường dẫn cục bộ: {path}"
+    },
+    "editDialog": {
+      "title": "Chỉnh sửa nhân vật",
+      "titleWithName": "Chỉnh sửa nhân vật: {{name}}",
+      "fields": {
+        "name": "Tên nhân vật",
+        "role": "Vai trò nhân vật",
+        "category": "Loại nhân vật",
+        "tags": "Thẻ (phân cách bằng dấu phẩy)",
+        "personality": "Tính cách",
+        "background": "Câu chuyện nền",
+        "development": "Quỹ đạo phát triển",
+        "appearance": "Ngoại hình/Dáng vẻ",
+        "weaknesses": "Điểm yếu và cái giá",
+        "interests": "Thói quen và sở trường",
+        "keyEvents": "Sự kiện quan trọng"
+      },
+      "cancel": "Hủy",
+      "save": "Lưu thay đổi",
+      "saving": "Đang lưu..."
     }
   },
   "antiAiRules": {
@@ -7744,6 +8171,42 @@
         "addToTest": "Thêm vào thử nghiệm",
         "edit": "Chỉnh sửa"
       }
+    },
+    "page": {
+      "title": "Quy tắc Chống AI",
+      "description": "Quản lý các quy tắc Chống AI mà nội dung chính sẽ tham chiếu, kiểm soát quy tắc nào vào mặc định toàn cục, quy tắc nào chỉ dành riêng cho tài sản viết.",
+      "newRule": "Quy tắc mới",
+      "createSuccess": "Quy tắc Chống AI đã được tạo.",
+      "createError": "Tạo quy tắc thất bại.",
+      "updateSuccess": "Quy tắc Chống AI đã được lưu.",
+      "updateError": "Lưu quy tắc thất bại.",
+      "aiNoDraft": "AI không trả về bản nháp khả dụng.",
+      "aiDraftFilled": "Bản nháp đã được điền vào biểu mẫu, vui lòng kiểm tra và lưu.",
+      "aiDraftError": "AI tạo bản nháp thất bại.",
+      "detectError": "Phát hiện thất bại.",
+      "rewriteError": "Sửa lỗi thất bại.",
+      "validationError": "Vui lòng điền mã quy tắc, tên và mô tả."
+    }
+  },
+  "genre": {
+    "createDialog": {
+      "title": "Tạo cây nền thể loại mới",
+      "description": "Trước tiên xác định vị trí cha, sau đó tự điền cấu trúc hoặc để AI tạo bản nháp trước. Ở đây duy trì nền thể loại của tác phẩm, tức là đây là sách gì.",
+      "aiGenerate": {
+        "title": "AI tạo",
+        "hint": "Phù hợp để đánh ra các lớp lớn, lớp con và nền tảng thể loại cấp dưới cùng một lúc, sau đó tinh chỉnh thủ công.",
+        "placeholder": "Ví dụ: Tôi muốn tạo một tuyến tăng trưởng siêu nhiên đô thị thiên về nữ giới, điểm bán chính là đảo ngược thân phận, quản lý thế lực và kéo căng quan hệ cảm xúc cao.",
+        "generating": "Đang tạo...",
+        "generate": "Tạo cây nền tảng thể loại",
+        "reset": "Đặt lại bản nháp"
+      },
+      "parentLabel": "Nền tảng thể loại cha",
+      "noParent": "Không có cha, tạo làm nền tảng thể loại gốc",
+      "cancel": "Hủy",
+      "save": "Lưu cây nền tảng thể loại",
+      "saving": "Đang lưu...",
+      "createSuccess": "Cây nền tảng thể loại đã được tạo.",
+      "generateSuccess": "Cây nền tảng thể loại AI đã được tạo."
     }
   }
 }

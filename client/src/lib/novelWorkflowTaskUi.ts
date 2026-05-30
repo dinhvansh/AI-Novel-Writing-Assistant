@@ -16,6 +16,7 @@ type WorkflowTaskLike = {
 export const LIVE_TASK_STATUSES = new Set<TaskStatus>(["queued", "running", "waiting_approval"]);
 export const BACKGROUND_RUNNING_TASK_STATUSES = new Set<TaskStatus>(["running"]);
 
+// i18n-ignore: t() fallback strings — used only when t is not provided (non-React contexts)
 function getExecutionScopeLabel(scopeLabel?: string | null, t?: TFunction): string {
   return scopeLabel?.trim() || (t ? t("autoDirector:taskUi.defaultScopeLabel") : "第 1-10 章");
 }
@@ -36,6 +37,7 @@ function buildAutoExecutionCancelledLabel(scopeLabel?: string | null, t?: TFunct
 }
 
 export function formatWorkflowCheckpoint(checkpoint?: NovelWorkflowCheckpoint | null, scopeLabel?: string | null, t?: TFunction): string {
+  // i18n-ignore: t() fallback strings — used only when t is not provided
   if (checkpoint === "candidate_selection_required") {
     return t ? t("autoDirector:taskUi.checkpoints.candidateSelection") : "等待确认书级方向";
   }
@@ -64,6 +66,7 @@ export function getWorkflowBadge(task?: NovelAutoDirectorTaskSummary | null, t?:
   label: string;
   variant: WorkflowBadgeVariant;
 } | null {
+  // i18n-ignore: t() fallback strings — used only when t is not provided
   if (!task) {
     return null;
   }
@@ -124,6 +127,7 @@ export function getWorkflowBadge(task?: NovelAutoDirectorTaskSummary | null, t?:
 }
 
 export function getWorkflowDescription(task?: NovelAutoDirectorTaskSummary | null, t?: TFunction): string | null {
+  // i18n-ignore: t() fallback strings — used only when t is not provided
   if (!task) {
     return null;
   }

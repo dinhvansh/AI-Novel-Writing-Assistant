@@ -73,11 +73,11 @@ export function CharacterCard({
       </div>
 
       <div className="space-y-1 text-sm">
-        <div><span className="text-muted-foreground">{t("card.personality")}：</span>{character.personality || t("card.empty")}</div>
-        <div><span className="text-muted-foreground">{t("card.appearance")}：</span>{character.appearance || t("card.empty")}</div>
-        <div><span className="text-muted-foreground">{t("card.weaknesses")}：</span>{character.weaknesses || t("card.empty")}</div>
-        <div><span className="text-muted-foreground">{t("card.interests")}：</span>{character.interests || t("card.empty")}</div>
-        <div><span className="text-muted-foreground">{t("card.keyEvents")}：</span>{character.keyEvents || t("card.empty")}</div>
+        <div><span className="text-muted-foreground">{t("card.personalityLabel")}</span>{character.personality || t("card.empty")}</div>
+        <div><span className="text-muted-foreground">{t("card.appearanceLabel")}</span>{character.appearance || t("card.empty")}</div>
+        <div><span className="text-muted-foreground">{t("card.weaknessesLabel")}</span>{character.weaknesses || t("card.empty")}</div>
+        <div><span className="text-muted-foreground">{t("card.interestsLabel")}</span>{character.interests || t("card.empty")}</div>
+        <div><span className="text-muted-foreground">{t("card.keyEventsLabel")}</span>{character.keyEvents || t("card.empty")}</div>
       </div>
 
       <div className="space-y-2">
@@ -104,7 +104,7 @@ export function CharacterCard({
                   />
                 </button>
                 <div className="text-[11px] leading-4 text-muted-foreground break-all">
-                  {t("card.localPath")}：{asset.localPath ?? t("card.noLocalFile")}
+                  {t("card.localPathLabel", { path: asset.localPath ?? t("card.noLocalFile") })}
                 </div>
                 <div className="flex items-center justify-between gap-2">
                   <div className="text-xs text-muted-foreground">{asset.isPrimary ? t("card.primaryImage") : t("card.candidateImage")}</div>
@@ -178,7 +178,7 @@ export function CharacterCard({
               </div>
               {previewAsset.localPath ? (
                 <div className="text-xs text-muted-foreground break-all">
-                  {t("card.localPath")}：{previewAsset.localPath}
+                  {t("card.localPathLabel", { path: previewAsset.localPath })}
                 </div>
               ) : null}
             </>

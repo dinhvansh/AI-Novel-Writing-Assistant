@@ -309,7 +309,7 @@ export default function NovelBasicInfoForm(props: NovelBasicInfoFormProps) {
                 <div className="mt-1 text-xs leading-5 text-muted-foreground">
                   {primaryStoryMode.description || primaryStoryMode.profile.coreDrive}
                 </div>
-                <div className="mt-2 text-xs text-muted-foreground">{t("basicInfoForm.coreDrive")}：{primaryStoryMode.profile.coreDrive}</div>
+                <div className="mt-2 text-xs text-muted-foreground">{t("basicInfoForm.coreDriveLabel", { value: primaryStoryMode.profile.coreDrive })}</div>
               </div>
             ) : null}
             {secondaryStoryMode ? (
@@ -319,7 +319,7 @@ export default function NovelBasicInfoForm(props: NovelBasicInfoFormProps) {
                 <div className="mt-1 text-xs leading-5 text-muted-foreground">
                   {secondaryStoryMode.description || secondaryStoryMode.profile.coreDrive}
                 </div>
-                <div className="mt-2 text-xs text-muted-foreground">{t("basicInfoForm.readerReward")}：{secondaryStoryMode.profile.readerReward}</div>
+                <div className="mt-2 text-xs text-muted-foreground">{t("basicInfoForm.readerRewardLabel", { value: secondaryStoryMode.profile.readerReward })}</div>
               </div>
             ) : null}
           </div>

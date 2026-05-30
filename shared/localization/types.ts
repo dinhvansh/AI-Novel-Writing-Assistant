@@ -49,7 +49,9 @@ export type NamespaceKey =
   | "serverLogs"
   | "seedData"
   | "world"
-  | "characters";
+  | "characters"
+  | "genre"
+  | "writingFormula";
 
 /** All supported namespaces, in deterministic order. */
 export const NAMESPACE_KEYS: readonly NamespaceKey[] = [
@@ -66,6 +68,8 @@ export const NAMESPACE_KEYS: readonly NamespaceKey[] = [
   "seedData",
   "world",
   "characters",
+  "genre",
+  "writingFormula",
 ] as const;
 
 /**

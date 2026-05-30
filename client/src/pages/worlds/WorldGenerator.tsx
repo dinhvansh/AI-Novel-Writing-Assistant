@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useTranslation } from "react-i18next";
 import {
   createEmptyWorldReferenceSeedBundle,
   createEmptyWorldReferenceSeedSelection,
@@ -45,6 +46,7 @@ export default function WorldGenerator() {
   const llm = useLLMStore();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
+  const { t } = useTranslation("world");
   const [step, setStep] = useState<1 | 2 | 3>(1);
   const [worldName, setWorldName] = useState("");
   const [selectedGenreId, setSelectedGenreId] = useState("");
@@ -130,7 +132,7 @@ export default function WorldGenerator() {
         const defaultPropertySelection = buildDefaultPropertySelectionState(nextPropertyOptions);
 
         if (!nextConcept) {
-          throw new Error("世界观分析结果缺少概念卡。");
+          throw new Error(t("generator.analysisConceptError"));
         }
 
         setConcept(nextConcept);
@@ -147,7 +149,7 @@ export default function WorldGenerator() {
         setAxioms([]);
         setStep(2);
       } catch (error) {
-        const message = error instanceof Error ? error.message : "世界观分析结果解析失败。";
+        const message = error instanceof Error ? error.message : t("generator.analysisParseError");
         toast.error(message);
       }
     },
@@ -209,9 +211,9 @@ export default function WorldGenerator() {
         .filter((item): item is NonNullable<typeof item> => Boolean(item));
 
       const createResp = await createWorld({
-        name: worldName.trim() || "未命名世界",
+        name: worldName.trim() || t("generator.defaultWorldName"),
         description: concept?.summary ?? inspirationText,
-        worldType: selectedGenre?.path || concept?.worldType || matchedTemplateWorldType || selectedTemplate?.worldType || "自定义",
+        worldType: selectedGenre?.path || concept?.worldType || matchedTemplateWorldType || selectedTemplate?.worldType || t("generator.defaultWorldType"),
         templateKey: selectedTemplate?.key ?? "custom",
         selectedDimensions: JSON.stringify(selectedDimensions),
         selectedElements: serializeWorldGenerationBlueprint({
@@ -234,7 +236,7 @@ export default function WorldGenerator() {
       });
       const createdId = createResp.data?.id;
       if (!createdId) {
-        throw new Error("创建世界草稿失败。");
+        throw new Error(t("generator.createDraftError"));
       }
       const axiomResp = await suggestWorldAxioms(createdId, {
         provider: llm.provider,
@@ -255,7 +257,7 @@ export default function WorldGenerator() {
   const finalizeMutation = useMutation({
     mutationFn: async () => {
       if (!worldId) {
-        throw new Error("世界草稿不存在。");
+        throw new Error(t("generator.finalizeError"));
       }
       return updateWorldAxioms(worldId, axioms.filter((item) => item.trim()));
     },
@@ -329,9 +331,9 @@ export default function WorldGenerator() {
         {
           id: item.id,
           name: item.name,
-          description: item.description?.trim() || `${item.name} 的素材库设定。`,
+          description: item.description?.trim() || t("generator.libraryItemDescription", { name: item.name }),
           targetLayer: mapWorldLibraryCategoryToLayer(item.category),
-          reason: "来自素材库的可复用设定。",
+          reason: t("generator.libraryItemReason"),
           source: "library",
           libraryItemId: item.id,
           sourceCategory: item.category,
@@ -344,19 +346,19 @@ export default function WorldGenerator() {
     <div className="space-y-4">
       <Card>
         <CardHeader className="flex flex-row items-center justify-between">
-          <CardTitle>世界观向导（阶段 1-3）</CardTitle>
+          <CardTitle>{t("generator.wizardTitle")}</CardTitle>
           <LLMSelector />
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="flex gap-2">
             <Button variant={step === 1 ? "default" : "secondary"} onClick={() => setStep(1)}>
-              1. 灵感捕获
+              {t("generator.step1Label")}
             </Button>
             <Button variant={step === 2 ? "default" : "secondary"} onClick={() => setStep(2)} disabled={!concept}>
-              2. 模板与蓝图
+              {t("generator.step2Label")}
             </Button>
             <Button variant={step === 3 ? "default" : "secondary"} onClick={() => setStep(3)} disabled={!worldId}>
-              3. 核心公理
+              {t("generator.step3Label")}
             </Button>
           </div>
 
@@ -380,8 +382,8 @@ export default function WorldGenerator() {
               analyzeStreaming={analyzeStream.isStreaming}
               analyzeButtonLabel={
                 analyzeStream.isStreaming
-                  ? (analyzeStream.latestRun?.message ?? "分析中...")
-                  : (isReferenceMode ? "提取原作锚点与架空方向" : "生成概念卡与属性选项")
+                  ? (analyzeStream.latestRun?.message ?? t("generator.analyzingButton"))
+                  : (isReferenceMode ? t("generator.analyzeReferenceButton") : t("generator.analyzeFreeButton"))
               }
               analyzeProgressMessage={analyzeStream.latestRun?.message}
               inspirationSourceMeta={inspirationSourceMeta}

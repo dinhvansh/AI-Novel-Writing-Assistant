@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import OpenInCreativeHubButton from "@/components/creativeHub/OpenInCreativeHubButton";
@@ -104,6 +105,7 @@ function buildStructuredWorldPreview(structureJson: string | null | undefined): 
 }
 
 export default function WorldList() {
+  const { t } = useTranslation("world");
   const queryClient = useQueryClient();
   const worldListQuery = useQuery({
     queryKey: queryKeys.worlds.all,
@@ -114,17 +116,17 @@ export default function WorldList() {
     mutationFn: (id: string) => deleteWorld(id),
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: queryKeys.worlds.all });
-      toast.success("世界观已删除。");
+      toast.success(t("list.deleteSuccess"));
     },
     onError: (error) => {
-      toast.error(error instanceof Error ? error.message : "删除世界观失败。");
+      toast.error(error instanceof Error ? error.message : t("list.deleteError"));
     },
   });
 
   const worlds = worldListQuery.data?.data ?? [];
 
   const handleDelete = (worldId: string, worldName: string) => {
-    const confirmed = window.confirm(`确认删除世界观「${worldName}」？此操作不可恢复。`);
+    const confirmed = window.confirm(t("list.deleteConfirm", { name: worldName }));
     if (!confirmed) {
       return;
     }
@@ -134,10 +136,10 @@ export default function WorldList() {
   return (
     <div className="space-y-4">
       <div className="flex flex-wrap justify-end gap-2">
-        <OpenInCreativeHubButton bindings={{}} label="创作中枢总览" />
+        <OpenInCreativeHubButton bindings={{}} label={t("list.creativeHubOverview")} />
         {featureFlags.worldWizardEnabled ? (
           <Button asChild>
-            <Link to="/worlds/generator">生成新世界观</Link>
+            <Link to="/worlds/generator">{t("list.generateNew")}</Link>
           </Button>
         ) : null}
       </div>

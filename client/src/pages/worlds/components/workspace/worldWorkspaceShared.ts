@@ -1,13 +1,14 @@
 import type { TFunction } from "i18next";
 import type { World } from "@ai-novel/shared/types/world";
 
+// i18n-ignore: deprecated fallback label fields — use getLayerLabel(t, key) for i18n-aware labels
 export const LAYERS = [
-  { key: "foundation", label: "L1 基础层", labelKey: "workspace.layers.foundation", primaryField: "background" },
-  { key: "power", label: "L2 力量层", labelKey: "workspace.layers.power", primaryField: "magicSystem" },
-  { key: "society", label: "L3 社会层", labelKey: "workspace.layers.society", primaryField: "politics" },
-  { key: "culture", label: "L4 文化层", labelKey: "workspace.layers.culture", primaryField: "cultures" },
-  { key: "history", label: "L5 历史层", labelKey: "workspace.layers.history", primaryField: "history" },
-  { key: "conflict", label: "L6 冲突层", labelKey: "workspace.layers.conflict", primaryField: "conflicts" },
+  { key: "foundation", label: "L1 基础层", labelKey: "workspace.layers.foundation", primaryField: "background" }, // i18n-ignore: deprecated fallback
+  { key: "power", label: "L2 力量层", labelKey: "workspace.layers.power", primaryField: "magicSystem" }, // i18n-ignore: deprecated fallback
+  { key: "society", label: "L3 社会层", labelKey: "workspace.layers.society", primaryField: "politics" }, // i18n-ignore: deprecated fallback
+  { key: "culture", label: "L4 文化层", labelKey: "workspace.layers.culture", primaryField: "cultures" }, // i18n-ignore: deprecated fallback
+  { key: "history", label: "L5 历史层", labelKey: "workspace.layers.history", primaryField: "history" }, // i18n-ignore: deprecated fallback
+  { key: "conflict", label: "L6 冲突层", labelKey: "workspace.layers.conflict", primaryField: "conflicts" }, // i18n-ignore: deprecated fallback
 ] as const;
 
 /** Resolve translated layer labels at runtime. */
@@ -33,11 +34,12 @@ export type LayerField =
   | "factions";
 
 /** @deprecated Use getLayerStatusLabel(t, status) for i18n-aware labels. */
+// i18n-ignore: deprecated fallback constants — use getLayerStatusLabel(t, status) instead
 export const LAYER_STATUS_LABELS: Record<string, string> = {
-  pending: "待生成",
-  generated: "已生成",
-  confirmed: "已确认",
-  stale: "待重建",
+  pending: "待生成", // i18n-ignore: deprecated fallback
+  generated: "已生成", // i18n-ignore: deprecated fallback
+  confirmed: "已确认", // i18n-ignore: deprecated fallback
+  stale: "待重建", // i18n-ignore: deprecated fallback
 };
 
 export const LAYER_STATUS_KEYS: Record<string, string> = {
@@ -78,20 +80,21 @@ export type RefineAttribute =
   | "factions";
 
 /** @deprecated Use getRefineAttributeOptions(t) for i18n-aware options. */
+// i18n-ignore: deprecated fallback constants — use getRefineAttributeOptions(t) instead
 export const REFINE_ATTRIBUTE_OPTIONS: Array<{ value: RefineAttribute; label: string }> = [
-  { value: "background", label: "基础背景" },
-  { value: "geography", label: "地理环境" },
-  { value: "cultures", label: "文化习俗" },
-  { value: "magicSystem", label: "力量体系" },
-  { value: "politics", label: "政治结构" },
-  { value: "races", label: "种族设定" },
-  { value: "religions", label: "宗教信仰" },
-  { value: "technology", label: "技术体系" },
-  { value: "history", label: "历史脉络" },
-  { value: "economy", label: "经济系统" },
-  { value: "conflicts", label: "核心冲突" },
-  { value: "description", label: "世界概述" },
-  { value: "factions", label: "势力关系" },
+  { value: "background", label: "基础背景" }, // i18n-ignore: deprecated fallback
+  { value: "geography", label: "地理环境" }, // i18n-ignore: deprecated fallback
+  { value: "cultures", label: "文化习俗" }, // i18n-ignore: deprecated fallback
+  { value: "magicSystem", label: "力量体系" }, // i18n-ignore: deprecated fallback
+  { value: "politics", label: "政治结构" }, // i18n-ignore: deprecated fallback
+  { value: "races", label: "种族设定" }, // i18n-ignore: deprecated fallback
+  { value: "religions", label: "宗教信仰" }, // i18n-ignore: deprecated fallback
+  { value: "technology", label: "技术体系" }, // i18n-ignore: deprecated fallback
+  { value: "history", label: "历史脉络" }, // i18n-ignore: deprecated fallback
+  { value: "economy", label: "经济系统" }, // i18n-ignore: deprecated fallback
+  { value: "conflicts", label: "核心冲突" }, // i18n-ignore: deprecated fallback
+  { value: "description", label: "世界概述" }, // i18n-ignore: deprecated fallback
+  { value: "factions", label: "势力关系" }, // i18n-ignore: deprecated fallback
 ];
 
 export const REFINE_ATTRIBUTE_OPTION_KEYS: Array<{ value: RefineAttribute; labelKey: string }> = [

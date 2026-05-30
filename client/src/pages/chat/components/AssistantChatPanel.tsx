@@ -389,8 +389,9 @@ export default function AssistantChatPanel({
               <h3 className="text-4xl font-semibold tracking-tight text-slate-900">{t("assistantPanel.greeting")}</h3>
               <p className="mt-2 text-2xl text-slate-500">{t("assistantPanel.greetingSubtitle")}</p>
               <div className="mt-8 grid gap-3 md:grid-cols-2">
+                {/* i18n-ignore: AI prompt */}
                 <ThreadPrimitive.Suggestion
-prompt="帮我梳理《遥远的救世主V2》的世界观硬约束，并指出当前大纲冲突点。"
+                  prompt="帮我梳理《遥远的救世主V2》的世界观硬约束，并指出当前大纲冲突点。"
                   send={false}
                   asChild
                 >
@@ -402,8 +403,9 @@ prompt="帮我梳理《遥远的救世主V2》的世界观硬约束，并指出�
                     <div className="mt-1 text-xs text-slate-500">{t("assistantPanel.suggestion1Desc")}</div>
                   </button>
                 </ThreadPrimitive.Suggestion>
+                {/* i18n-ignore: AI prompt */}
                 <ThreadPrimitive.Suggestion
-prompt="重写第3章结尾，增强戏剧张力，并保持角色口吻一致。"
+                  prompt="重写第3章结尾，增强戏剧张力，并保持角色口吻一致。"
                   send={false}
                   asChild
                 >

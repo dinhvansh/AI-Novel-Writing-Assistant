@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useTranslation } from "react-i18next";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -62,6 +63,7 @@ export default function WorldWorkspace() {
   const { id = "" } = useParams();
   const llm = useLLMStore();
   const queryClient = useQueryClient();
+  const { t } = useTranslation("world");
 
   const [selectedLayer, setSelectedLayer] = useState<LayerKey>("foundation");
   const [layerDrafts, setLayerDrafts] = useState<Partial<Record<LayerKey, string>>>({});
@@ -271,11 +273,11 @@ export default function WorldWorkspace() {
     mutationFn: (worldId: string) => deleteWorld(worldId),
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: queryKeys.worlds.all });
-      toast.success("世界观已删除。");
+      toast.success(t("workspace.deleteSuccess"));
       navigate("/worlds", { replace: true });
     },
     onError: (error) => {
-      toast.error(error instanceof Error ? error.message : "删除世界观失败。");
+      toast.error(error instanceof Error ? error.message : t("workspace.deleteError"));
     },
   });
 
@@ -292,7 +294,7 @@ export default function WorldWorkspace() {
     if (!id || !world) {
       return;
     }
-    const confirmed = window.confirm(`确认删除世界观「${world.name}」？此操作不可恢复。`);
+    const confirmed = window.confirm(t("workspace.deleteConfirm", { name: world.name }));
     if (!confirmed) {
       return;
     }
@@ -303,7 +305,7 @@ export default function WorldWorkspace() {
     <div className="space-y-4">
       <Card>
         <CardHeader className="flex flex-row items-center justify-between">
-          <CardTitle>世界工作台：{world?.name ?? "加载中..."} {world?.version ? `(v${world.version})` : ""}</CardTitle>
+          <CardTitle>{t("workspace.title", { name: world?.name ?? t("workspace.titleLoading") })} {world?.version ? `(v${world.version})` : ""}</CardTitle>
           <div className="flex flex-wrap items-center justify-end gap-2">
             <LLMSelector />
             <Button
@@ -312,7 +314,7 @@ export default function WorldWorkspace() {
               onClick={handleDelete}
               disabled={!id || !world || deleteWorldMutation.isPending}
             >
-              {deleteWorldMutation.isPending ? "删除中..." : "删除世界观"}
+              {deleteWorldMutation.isPending ? t("workspace.deletingButton") : t("workspace.deleteButton")}
             </Button>
           </div>
         </CardHeader>
@@ -321,10 +323,10 @@ export default function WorldWorkspace() {
       {id ? (
         <Card>
           <CardHeader>
-            <CardTitle>参考资料</CardTitle>
+            <CardTitle>{t("workspace.referenceTitle")}</CardTitle>
           </CardHeader>
           <CardContent>
-            <KnowledgeBindingPanel targetType="world" targetId={id} title="已绑定的参考资料" />
+            <KnowledgeBindingPanel targetType="world" targetId={id} title={t("workspace.knowledgeBindingTitle")} />
           </CardContent>
         </Card>
       ) : null}
@@ -339,12 +341,12 @@ export default function WorldWorkspace() {
 
       <Tabs defaultValue="layers" className="space-y-4">
         <TabsList className="flex flex-wrap">
-          <TabsTrigger value="structure">结构化设定</TabsTrigger>
-          <TabsTrigger value="layers">分层构建</TabsTrigger>
-          <TabsTrigger value="deepening">问答深化</TabsTrigger>
-          <TabsTrigger value="consistency">一致性</TabsTrigger>
-          <TabsTrigger value="overview">总览{featureFlags.worldVisEnabled ? "/可视化" : ""}</TabsTrigger>
-          <TabsTrigger value="assets">素材/版本/导入导出</TabsTrigger>
+          <TabsTrigger value="structure">{t("workspace.tabs.structure")}</TabsTrigger>
+          <TabsTrigger value="layers">{t("workspace.tabs.layers")}</TabsTrigger>
+          <TabsTrigger value="deepening">{t("workspace.tabs.deepening")}</TabsTrigger>
+          <TabsTrigger value="consistency">{t("workspace.tabs.consistency")}</TabsTrigger>
+          <TabsTrigger value="overview">{featureFlags.worldVisEnabled ? t("workspace.tabs.overviewWithVis") : t("workspace.tabs.overview")}</TabsTrigger>
+          <TabsTrigger value="assets">{t("workspace.tabs.assets")}</TabsTrigger>
         </TabsList>
 
         <TabsContent value="structure">

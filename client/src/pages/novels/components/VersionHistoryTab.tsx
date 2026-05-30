@@ -26,7 +26,8 @@ function summarizeSnapshot(snapshotData: string): {
   chapterCount: number;
   writtenChapterCount: number;
   totalWordCount: number;
-  latestChapterLabel: string;
+  latestChapterOrder: number | null | undefined;
+  latestChapterTitle: string;
   hasOutline: boolean;
   hasStructuredOutline: boolean;
   recentChapterTitles: string[];
@@ -47,9 +48,8 @@ function summarizeSnapshot(snapshotData: string): {
       chapterCount: chapters.length,
       writtenChapterCount: writtenChapters.length,
       totalWordCount,
-      latestChapterLabel: latestChapter
-        ? `第 ${latestChapter.order ?? "?"} 章 · ${latestChapter.title?.trim() || "未命名章节"}`
-        : "",
+      latestChapterOrder: latestChapter?.order,
+      latestChapterTitle: latestChapter?.title?.trim() ?? "",
       hasOutline: Boolean(parsed.outline?.trim()),
       hasStructuredOutline: Boolean(parsed.structuredOutline?.trim()),
       recentChapterTitles: chapters
@@ -131,7 +131,14 @@ export default function VersionHistoryTab({ novelId }: VersionHistoryTabProps) {
 
                   <div className="text-sm leading-6 text-muted-foreground">
                     {summary
-                      ? t("novel:versionHistory.summaryWithChapter", { chapterLabel: summary.latestChapterLabel })
+                      ? t("novel:versionHistory.summaryWithChapter", {
+                          chapterLabel: summary.latestChapterOrder != null
+                            ? t("novel:versionHistory.latestChapterLabel", {
+                                order: summary.latestChapterOrder,
+                                title: summary.latestChapterTitle || t("novel:versionHistory.unnamedChapter"),
+                              })
+                            : "",
+                        })
                       : t("novel:versionHistory.summaryUnparseable")}
                   </div>
 

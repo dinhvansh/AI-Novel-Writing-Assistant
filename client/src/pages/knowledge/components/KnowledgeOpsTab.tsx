@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import { Trash2 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -45,22 +46,23 @@ export default function KnowledgeOpsTab({
   onClearFinishedJobs,
   onDeleteJob,
 }: KnowledgeOpsTabProps) {
+  const { t } = useTranslation("knowledge");
   const finishedJobCount = jobs.filter((job) => canDeleteRagJob(job)).length;
 
   return (
     <div className="grid gap-4 lg:grid-cols-[360px_1fr]">
       <Card>
         <CardHeader>
-          <CardTitle>基础统计</CardTitle>
+          <CardTitle>{t("opsTab.statsTitle")}</CardTitle>
         </CardHeader>
         <CardContent className="space-y-2 text-sm">
-          <div>当前列表文档数：{visibleDocumentsCount}</div>
-          <div>启用文档数：{enabledCount}</div>
-          <div>停用文档数：{disabledCount}</div>
+          <div>{t("opsTab.docCount", { count: visibleDocumentsCount })}</div>
+          <div>{t("opsTab.enabledCount", { count: enabledCount })}</div>
+          <div>{t("opsTab.disabledCount", { count: disabledCount })}</div>
           <div>
-            RAG 健康：
+            {t("opsTab.ragHealth")}
             <Badge variant="outline" className="ml-2">
-              {ragHealth?.ok ? "正常" : "异常"}
+              {ragHealth?.ok ? t("opsTab.ragHealthOk") : t("opsTab.ragHealthFail")}
             </Badge>
           </div>
         </CardContent>
@@ -69,7 +71,7 @@ export default function KnowledgeOpsTab({
       <div className="space-y-4">
         <Card>
           <CardHeader>
-            <CardTitle>健康状态</CardTitle>
+            <CardTitle>{t("opsTab.healthTitle")}</CardTitle>
           </CardHeader>
           <CardContent className="space-y-2 text-sm">
             {ragHealthNotice ? (
@@ -94,9 +96,9 @@ export default function KnowledgeOpsTab({
         <Card>
           <CardHeader className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
             <div className="min-w-0 space-y-1">
-              <CardTitle>最近任务</CardTitle>
+              <CardTitle>{t("opsTab.recentJobsTitle")}</CardTitle>
               <div className="text-xs text-muted-foreground">
-                清理已结束的索引记录，排队中和执行中的任务会保留。
+                {t("opsTab.recentJobsHint")}
               </div>
             </div>
             <Button
@@ -108,7 +110,7 @@ export default function KnowledgeOpsTab({
               disabled={isClearingJobs || finishedJobCount === 0}
             >
               <Trash2 className="h-4 w-4" />
-              {isClearingJobs ? "清理中..." : `清理已结束 ${finishedJobCount}`}
+              {isClearingJobs ? t("opsTab.clearing") : t("opsTab.clearFinished", { count: finishedJobCount })}
             </Button>
           </CardHeader>
           <CardContent className="space-y-2">
@@ -118,7 +120,7 @@ export default function KnowledgeOpsTab({
               </div>
             ) : null}
             {jobs.length === 0 ? (
-              <div className="text-sm text-muted-foreground">当前还没有 RAG 任务。</div>
+              <div className="text-sm text-muted-foreground">{t("opsTab.noJobs")}</div>
             ) : null}
             {jobs.map((job) => (
               <div key={job.id} className="rounded-md border p-2 text-sm">
@@ -136,16 +138,16 @@ export default function KnowledgeOpsTab({
                         className="h-8 px-2"
                         onClick={() => onDeleteJob(job.id)}
                         disabled={deletingJobId === job.id}
-                        aria-label="删除任务记录"
+                        aria-label={t("opsTab.deleteJobAriaLabel")}
                       >
                         <Trash2 className="h-4 w-4" />
-                        {deletingJobId === job.id ? "删除中..." : "删除"}
+                        {deletingJobId === job.id ? t("opsTab.deleting") : t("opsTab.delete")}
                       </Button>
                     ) : null}
                   </div>
                 </div>
                 <div className="text-xs text-muted-foreground">
-                  {job.jobType} | 尝试 {job.attempts}/{job.maxAttempts}
+                  {job.jobType} | {t("opsTab.attempts", { current: job.attempts, max: job.maxAttempts })}
                 </div>
                 {job.progress ? (
                   <div className="mt-2 space-y-2">
@@ -173,11 +175,11 @@ export default function KnowledgeOpsTab({
 
         <Card>
           <CardHeader>
-            <CardTitle>最近失败任务</CardTitle>
+            <CardTitle>{t("opsTab.failedJobsTitle")}</CardTitle>
           </CardHeader>
           <CardContent className="space-y-2">
             {failedJobs.length === 0 ? (
-              <div className="text-sm text-muted-foreground">没有失败任务。</div>
+              <div className="text-sm text-muted-foreground">{t("opsTab.noFailedJobs")}</div>
             ) : null}
             {failedJobs.map((job) => (
               <div key={job.id} className="rounded-md border p-2 text-sm">

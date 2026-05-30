@@ -28,12 +28,14 @@ const ENTRYPOINT_OPTIONS = [
 ];
 
 const MANAGEMENT_STATUS_LABELS: Record<PromptCatalogItem["managementStatus"], string> = {
+  // i18n-ignore: these are fallback labels used before t() is available; runtime uses t() in components
   complete: "元数据完整",
   missing_context_requirements: "缺上下文需求",
   missing_editable_slots: "缺编辑槽位",
 };
 
 const MATERIAL_IMPORTANCE_LABELS: Record<NovelMaterialImportance, string> = {
+  // i18n-ignore: these are fallback labels used before t() is available; runtime uses t() in components
   must: "必需",
   high: "重要",
   medium: "辅助",
@@ -42,24 +44,36 @@ const MATERIAL_IMPORTANCE_LABELS: Record<NovelMaterialImportance, string> = {
 
 function buildPreviewPromptInput(prompt: PromptCatalogItem): Record<string, unknown> {
   const base = {
+    // i18n-ignore: AI prompt content — these are sample inputs for AI prompt preview, not UI labels
     goal: "查看提示词预览",
     messages: [],
     contextMode: "novel",
     novelId: "novel-1",
+    // i18n-ignore: AI prompt content
     chapterTitle: "示例章节",
+    // i18n-ignore: AI prompt content
     chapterMission: "让主角发现关键线索。",
   };
 
   if (prompt.id === "novel.chapter_editor.workspace_diagnosis") {
     return {
+      // i18n-ignore: AI prompt content — sample data for workspace diagnosis preview
       chapterTitle: "示例章节",
+      // i18n-ignore: AI prompt content
       chapterMission: "让主角发现关键线索。",
+      // i18n-ignore: AI prompt content
       volumePositionLabel: "第一卷中段",
+      // i18n-ignore: AI prompt content
       volumePhaseLabel: "冲突展开",
+      // i18n-ignore: AI prompt content
       paceDirective: "加快推进",
+      // i18n-ignore: AI prompt content
       previousChapterBridge: "上一章留下追踪线索。",
+      // i18n-ignore: AI prompt content
       nextChapterBridge: "下一章进入正面对抗。",
+      // i18n-ignore: AI prompt content
       activePlotThreads: ["追踪档案站"],
+      // i18n-ignore: AI prompt content
       paragraphs: [{ index: 1, text: "主角走进旧仓库。" }],
       openIssues: [],
     };
@@ -267,6 +281,7 @@ export default function PromptWorkbenchPage() {
         entrypoint,
         novelId: "novel-1",
         chapterId: "chapter-1",
+        // i18n-ignore: AI prompt content — sample execution context for prompt preview
         userGoal: "查看提示词预览",
         resourceBindings: {
           novelId: "novel-1",
