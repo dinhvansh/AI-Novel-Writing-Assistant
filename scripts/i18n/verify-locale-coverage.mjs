@@ -272,30 +272,64 @@ function multisetEqual(a, b) {
 
 // ---------------------------------------------------------------------------
 // P6 implementation: scan client/src for naked CJK literals.
+// Uses the same ignore logic as cjk_scan.js to avoid false positives.
 
 const CJK_REGEX = /[\u4e00-\u9fff]/;
 const CLIENT_SRC = path.join(REPO_ROOT, "client", "src");
+
+function isIgnoredCjkLine(line, prevLine) {
+  const trimmed = line.trim();
+  // Full-line comment
+  if (trimmed.startsWith("//") || trimmed.startsWith("*") || trimmed.startsWith("/*")) return true;
+  // Explicit ignore on same line or previous line
+  if (line.includes("i18n-ignore")) return true;
+  if (prevLine && prevLine.includes("i18n-ignore")) return true;
+  // Already wrapped: t("key", "fallback") or t('key', 'fallback')
+  if (/\bt\s*\(\s*['"`][^'"`]*['"`]\s*,\s*['"`]/.test(line)) return true;
+  if (/\bt\s*\(\s*['"`][^'"`]*['"`]\s*,\s*`/.test(line)) return true;
+  // Already wrapped: t ? t("key") : "CJK"
+  if (/\bt\s*\?\s*t\s*\(/.test(line)) return true;
+  // Already wrapped: condition ? t("key") : "CJK"
+  if (/\?\s*t\s*\(/.test(line) && /:\s*['"`]/.test(line)) return true;
+  // JSX option value="CJK" — DB/API values
+  if (/value=["'][^"']*[\u4e00-\u9fff][^"']*["']/.test(line)) return true;
+  return false;
+}
 
 function findNakedCjkLiterals(isIgnored) {
   const offenders = [];
   for (const file of walkSourceFiles(CLIENT_SRC, isIgnored)) {
     const source = fs.readFileSync(file, "utf8");
     const lines = source.split(/\r?\n/);
+    let ignoreBlock = false;
+    let braceDepth = 0;
+    let ignoreBlockStartDepth = 0;
+
     for (let i = 0; i < lines.length; i += 1) {
       const line = lines[i];
-      if (CJK_REGEX.test(line) && !line.trim().startsWith("//")) {
-        // Skip lines whose only CJK is inside a t() call or comment.
-        const stripped = line
-          .replace(/\bt\(\s*['"`][^'"`]*['"`]\s*[\),]/g, "")
-          .replace(/\/\*[^*]*\*\//g, "");
-        if (CJK_REGEX.test(stripped)) {
-          offenders.push({
-            file: path.relative(REPO_ROOT, file).replace(/\\/g, "/"),
-            line: i + 1,
-            sample: line.trim().slice(0, 100),
-          });
-        }
+      const prevLine = i > 0 ? lines[i - 1].trim() : "";
+      const openBraces = (line.match(/[{[]/g) || []).length;
+      const closeBraces = (line.match(/[}\]]/g) || []).length;
+
+      // If previous line has i18n-ignore and opens a block, start ignoring
+      if (prevLine.includes("i18n-ignore") && (line.includes("{") || line.includes("["))) {
+        ignoreBlock = true;
+        ignoreBlockStartDepth = braceDepth;
       }
+      braceDepth += openBraces - closeBraces;
+      if (ignoreBlock && braceDepth <= ignoreBlockStartDepth) {
+        ignoreBlock = false;
+      }
+
+      if (ignoreBlock) continue;
+      if (!CJK_REGEX.test(line)) continue;
+      if (isIgnoredCjkLine(line, prevLine)) continue;
+
+      offenders.push({
+        file: path.relative(REPO_ROOT, file).replace(/\\/g, "/"),
+        line: i + 1,
+        sample: line.trim().slice(0, 100),
+      });
     }
   }
   return offenders;
@@ -419,11 +453,13 @@ function runP6() {
   const ignore = buildIgnoreMatcher(loadIgnore());
   const offenders = findNakedCjkLiterals(ignore);
   if (offenders.length > 0) {
-    // In Phase 1 we expect many offenders (no translation has happened
-    // yet). The gate is informational at this phase; later phases will
-    // turn it into a hard failure once `client/src` has been wrapped.
+    failures.push({
+      property: "P6",
+      message: `${offenders.length} naked CJK literal(s) remain in client/src — wrap with t() or add // i18n-ignore`,
+      sample: offenders.slice(0, 5),
+    });
     process.stdout.write(
-      `P6: ${offenders.length} naked CJK literal(s) remain in client/src (will be cleaned up in Phases 2-3).\n`,
+      `P6: ${offenders.length} naked CJK literal(s) remain in client/src (FAIL)\n`,
     );
   } else {
     process.stdout.write("P6: no naked CJK literals in client/src\n");
