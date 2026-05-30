@@ -54,7 +54,14 @@ export type NamespaceKey =
   | "genres"
   | "storyModes"
   | "writingFormula"
-  | "chat";
+  | "chat"
+  | "tasks"
+  | "promptWorkbench"
+  | "autoDirectorFollowUps"
+  | "titles"
+  | "desktop"
+  | "mobile"
+  | "workflow";
 
 /** All supported namespaces, in deterministic order. */
 export const NAMESPACE_KEYS: readonly NamespaceKey[] = [
@@ -76,6 +83,13 @@ export const NAMESPACE_KEYS: readonly NamespaceKey[] = [
   "storyModes",
   "writingFormula",
   "chat",
+  "tasks",
+  "promptWorkbench",
+  "autoDirectorFollowUps",
+  "titles",
+  "desktop",
+  "mobile",
+  "workflow",
 ] as const;
 
 /**

@@ -7694,7 +7694,26 @@
     "knowledgeDocumentEmptyContent": "知识库文档活动版本内容为空，不能用于创建写法。",
     "writingFormulaNotFound": "写作公式不存在。"
   },
-  "serverLogs": {},
+  "serverLogs": {
+    "workflowStages": {
+      "project_setup": "项目设定",
+      "auto_director": "AI 自动导演",
+      "story_macro": "故事宏观规划",
+      "character_setup": "角色准备",
+      "volume_strategy": "卷战略 / 卷骨架",
+      "structured_outline": "节奏 / 拆章",
+      "chapter_execution": "章节执行",
+      "quality_repair": "质量修复"
+    },
+    "taskTitles": {
+      "autoDirectorDefault": "AI 自动导演小说",
+      "manualDefault": "小说流程任务",
+      "workspaceAnalysis": "AI 自动导演工作区分析",
+      "editImpactAnalysis": "AI 自动导演编辑影响分析",
+      "takeover": "执行 AI 自动导演接管",
+      "candidateDirection": "AI 自动导演候选方向"
+    }
+  },
   "workflow": {
     "activityTags": {
       "assetBackfill": "资产回灌中",

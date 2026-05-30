@@ -6,6 +6,9 @@ import type {
   NovelWorkflowResumeTarget,
   NovelWorkflowStage,
 } from "@ai-novel/shared/types/novelWorkflow";
+import type { LocaleCode } from "@ai-novel/shared/localization";
+import { DEFAULT_LOCALE } from "@ai-novel/shared/localization";
+import { getI18nServerHandle } from "../../../i18n";
 
 export const NOVEL_WORKFLOW_STAGE_LABELS: Record<NovelWorkflowStage, string> = {
   project_setup: "项目设定",
@@ -17,6 +20,21 @@ export const NOVEL_WORKFLOW_STAGE_LABELS: Record<NovelWorkflowStage, string> = {
   chapter_execution: "章节执行",
   quality_repair: "质量修复",
 };
+
+/**
+ * Get a localized stage label. Falls back to the Chinese canonical label
+ * when the i18n handle is not available or the key is missing.
+ */
+export function getWorkflowStageLabel(stage: NovelWorkflowStage, locale: LocaleCode = DEFAULT_LOCALE): string {
+  const handle = getI18nServerHandle();
+  if (handle) {
+    const result = handle.t("serverLogs", `workflowStages.${stage}`, { lng: locale });
+    if (typeof result === "string" && result !== `serverLogs:workflowStages.${stage}`) {
+      return result;
+    }
+  }
+  return NOVEL_WORKFLOW_STAGE_LABELS[stage] ?? stage;
+}
 
 export const NOVEL_WORKFLOW_STAGE_PROGRESS: Record<NovelWorkflowStage, number> = {
   project_setup: 0.08,

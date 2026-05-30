@@ -6808,7 +6808,26 @@
     "knowledgeDocumentEmptyContent": "Nội dung phiên bản hoạt động của tài liệu Kho tri thức trống, không thể dùng để tạo văn phong.",
     "writingFormulaNotFound": "Công thức viết không tồn tại."
   },
-  "serverLogs": {},
+  "serverLogs": {
+    "workflowStages": {
+      "project_setup": "Thiết lập dự án",
+      "auto_director": "Đạo diễn tự động AI",
+      "story_macro": "Hoạch định vĩ mô câu chuyện",
+      "character_setup": "Chuẩn bị nhân vật",
+      "volume_strategy": "Chiến lược tập / Khung tập",
+      "structured_outline": "Nhịp độ / Chia chương",
+      "chapter_execution": "Thực thi chương",
+      "quality_repair": "Sửa chữa chất lượng"
+    },
+    "taskTitles": {
+      "autoDirectorDefault": "Đạo diễn tự động AI viết tiểu thuyết",
+      "manualDefault": "Tác vụ quy trình tiểu thuyết",
+      "workspaceAnalysis": "Phân tích không gian làm việc của Đạo diễn tự động AI",
+      "editImpactAnalysis": "Phân tích tác động chỉnh sửa của Đạo diễn tự động AI",
+      "takeover": "Thực hiện tiếp quản Đạo diễn tự động AI",
+      "candidateDirection": "Hướng ứng cử của Đạo diễn tự động AI"
+    }
+  },
   "seedData": {
     "genres": {
       "genre_fantasy_root": {

@@ -1,6 +1,7 @@
 import { Router } from "express";
 import type { ApiResponse } from "@ai-novel/shared/types/api";
-import type { TaskKind, TaskStatus } from "@ai-novel/shared/types/task";
+import type { TaskKind, TaskStatus, UnifiedTaskDetail } from "@ai-novel/shared/types/task";
+import type { LocaleCode } from "@ai-novel/shared/localization";
 import { z } from "zod";
 import { llmProviderSchema } from "../llm/providerSchema";
 import { authMiddleware } from "../middleware/auth";
@@ -9,6 +10,26 @@ import { recoveryTaskService } from "../services/task/RecoveryTaskService";
 import { AutoDirectorFollowUpActionExecutor } from "../services/task/autoDirectorFollowUps/AutoDirectorFollowUpActionExecutor";
 import { AutoDirectorFollowUpService } from "../services/task/autoDirectorFollowUps/AutoDirectorFollowUpService";
 import { taskCenterService } from "../services/task/TaskCenterService";
+import { getI18nServerHandle } from "../i18n";
+
+function localizeStepLabel(key: string, fallback: string, locale: LocaleCode): string {
+  const handle = getI18nServerHandle();
+  if (!handle) return fallback;
+  const result = handle.t("serverLogs", `workflowStages.${key}`, { lng: locale });
+  if (typeof result === "string" && result !== `serverLogs:workflowStages.${key}`) return result;
+  return fallback;
+}
+
+function localizeTaskDetail(data: UnifiedTaskDetail, locale: LocaleCode): UnifiedTaskDetail {
+  if (!data.steps || data.steps.length === 0) return data;
+  return {
+    ...data,
+    steps: data.steps.map((step) => ({
+      ...step,
+      label: localizeStepLabel(step.key, step.label, locale),
+    })),
+  };
+}
 
 const router = Router();
 const autoDirectorFollowUpService = new AutoDirectorFollowUpService();
@@ -197,11 +218,13 @@ router.get("/:kind/:id", validate({ params: taskParamsSchema }), async (req, res
       } satisfies ApiResponse<null>);
       return;
     }
+    const locale = (res.locals as { locale?: LocaleCode }).locale ?? "vi-VN";
+    const localizedData = localizeTaskDetail(data, locale);
     res.status(200).json({
       success: true,
-      data,
+      data: localizedData,
       message: "Task loaded.",
-    } satisfies ApiResponse<typeof data>);
+    } satisfies ApiResponse<typeof localizedData>);
   } catch (error) {
     next(error);
   }
