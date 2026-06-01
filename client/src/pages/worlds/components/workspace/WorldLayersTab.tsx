@@ -47,6 +47,7 @@ interface WorldLayersTabProps {
 
 export default function WorldLayersTab(props: WorldLayersTabProps) {
   const { t } = useTranslation("world");
+  const tw = (key: string, options?: Record<string, unknown>) => t(`workspace.${key}`, options);
   const refineAttributeOptions = getRefineAttributeOptions(t);
   const {
     world,
@@ -82,21 +83,21 @@ export default function WorldLayersTab(props: WorldLayersTabProps) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>{t("layers.title")}</CardTitle>
+        <CardTitle>{tw("tabs.layers")}</CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="flex flex-wrap items-center gap-2 rounded-md border p-3">
           <Button onClick={onGenerateAll} disabled={generateAllPending || !world}>
             {generateAllPending
-              ? t("layers.generatingAll")
+              ? tw("layers.generatingAll")
               : isInitialLayerGeneration
-                ? t("layers.generateAllFirst")
-                : t("layers.regenerateAll")}
+                ? tw("layers.generateAllFirst")
+                : tw("layers.regenerateAll")}
           </Button>
           <div className="text-xs text-muted-foreground">
             {isInitialLayerGeneration
-              ? t("layers.generateAllFirstHint")
-              : t("layers.regenerateAllHint")}
+              ? tw("layers.generateAllFirstHint")
+              : tw("layers.regenerateAllHint")}
           </div>
         </div>
 
@@ -119,7 +120,7 @@ export default function WorldLayersTab(props: WorldLayersTabProps) {
                 <div className="flex flex-wrap items-center justify-between gap-2">
                   <div className="font-medium">{getLayerLabel(t, layer.key)}</div>
                   <div className="text-xs text-muted-foreground">
-                    {t("layers.statusLabel", { status: getLayerStatusLabel(t, layerStatus) })}
+                    {tw("layers.statusLabel", { status: getLayerStatusLabel(t, layerStatus) })}
                   </div>
                 </div>
                 <textarea
@@ -147,25 +148,25 @@ export default function WorldLayersTab(props: WorldLayersTabProps) {
                   >
                     {isInitialLayerGeneration
                       ? generateAllPending
-                        ? t("layers.generatingAll")
-                        : t("layers.generateAllFirst")
+                        ? tw("layers.generatingAll")
+                        : tw("layers.generateAllFirst")
                       : isGeneratingCurrentLayer
-                        ? t("layers.rewritingLayer")
-                        : t("layers.rewriteLayer")}
+                        ? tw("layers.rewritingLayer")
+                        : tw("layers.rewriteLayer")}
                   </Button>
                   <Button
                     variant="secondary"
                     onClick={() => onSaveLayer({ layerKey: layer.key, content: layerValue })}
                     disabled={saveLayerPending || generateAllPending || !layerValue.trim()}
                   >
-                    {isSavingCurrentLayer ? t("layers.savingLayer") : t("layers.saveLayer")}
+                    {isSavingCurrentLayer ? tw("layers.savingLayer") : tw("layers.saveLayer")}
                   </Button>
                   <Button
                     variant="outline"
                     onClick={() => onConfirmLayer(layer.key)}
                     disabled={confirmLayerPending || generateAllPending}
                   >
-                    {isConfirmingCurrentLayer ? t("layers.confirmingLayer") : t("layers.confirmLayer")}
+                    {isConfirmingCurrentLayer ? tw("layers.confirmingLayer") : tw("layers.confirmLayer")}
                   </Button>
                 </div>
               </div>
@@ -174,7 +175,7 @@ export default function WorldLayersTab(props: WorldLayersTabProps) {
         </div>
 
         <div className="rounded-md border p-3">
-          <div className="mb-2 text-sm font-medium">{t("layers.refineTitle")}</div>
+          <div className="mb-2 text-sm font-medium">{tw("layers.refineTitle")}</div>
           <div className="grid gap-2 md:grid-cols-4">
             <select
               className="rounded-md border bg-background p-2 text-sm"
@@ -192,19 +193,19 @@ export default function WorldLayersTab(props: WorldLayersTabProps) {
               value={refineMode}
               onChange={(event) => setRefineMode(event.target.value as "replace" | "alternatives")}
             >
-              <option value="replace">{t("layers.refineModeReplace")}</option>
-              <option value="alternatives">{t("layers.refineModeAlternatives")}</option>
+              <option value="replace">{tw("layers.refineModeReplace")}</option>
+              <option value="alternatives">{tw("layers.refineModeAlternatives")}</option>
             </select>
             <select
               className="rounded-md border bg-background p-2 text-sm"
               value={refineLevel}
               onChange={(event) => setRefineLevel(event.target.value as "light" | "deep")}
             >
-              <option value="light">{t("layers.refineLevelLight")}</option>
-              <option value="deep">{t("layers.refineLevelDeep")}</option>
+              <option value="light">{tw("layers.refineLevelLight")}</option>
+              <option value="deep">{tw("layers.refineLevelDeep")}</option>
             </select>
             <Button onClick={onStartRefine} disabled={refineStreaming}>
-              {refineStreaming ? t("layers.refining") : `${t("layers.startRefine")} ${selectedLayer === "foundation" ? t("layers.currentWorld") : ""}`.trim()}
+              {refineStreaming ? tw("layers.refining") : `${tw("layers.startRefine")} ${selectedLayer === "foundation" ? tw("layers.currentWorld") : ""}`.trim()}
             </Button>
           </div>
           <StreamOutput content={refineContent} isStreaming={refineStreaming} onAbort={onAbortRefine} />

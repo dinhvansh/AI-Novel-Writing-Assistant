@@ -125,8 +125,8 @@ export default function WorldWorkspace() {
   const world = worldDetailQuery.data?.data;
   const consistencyIssues = useMemo(() => world?.consistencyIssues ?? [], [world?.consistencyIssues]);
   const consistencyReport = useMemo(
-    () => parseConsistencyReport(world?.consistencyReport, consistencyIssues),
-    [consistencyIssues, world?.consistencyReport],
+    () => parseConsistencyReport(world?.consistencyReport, consistencyIssues, t),
+    [consistencyIssues, t, world?.consistencyReport],
   );
   const selectedLayerMeta = useMemo(
     () => LAYERS.find((item) => item.key === selectedLayer) ?? LAYERS[0],

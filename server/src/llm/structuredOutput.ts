@@ -233,6 +233,13 @@ export function resolveStructuredOutputProfile(input: {
       safeStructuredMaxTokens: 8192,
     });
   }
+  if (input.provider === "openai" && host && !OPENAI_HOST_PATTERN.test(host)) {
+    return buildProfile({
+      family: "openai_compatible",
+      preferredStructuredStrategy: "prompt_json",
+      safeStructuredMaxTokens: 8192,
+    });
+  }
   if (input.provider === "openai" || OPENAI_HOST_PATTERN.test(host)) {
     return buildProfile({
       family: "openai",

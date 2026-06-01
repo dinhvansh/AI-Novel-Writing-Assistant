@@ -37,6 +37,8 @@ export interface ServerTranslateOptions {
   lng?: LocaleCode;
   /** Variables to interpolate into the localized string. */
   values?: Record<string, unknown>;
+  /** Fallback string used when the locale bundle does not define the key. */
+  defaultValue?: string | null;
 }
 
 /** The handle returned by {@link createI18nServer}. */
@@ -146,7 +148,11 @@ export async function createI18nServer(): Promise<I18nServerHandle> {
     ): string {
       const lng = options?.lng ?? DEFAULT_LOCALE;
       const fullKey = key.includes(":") ? key : `${namespace}:${key}`;
-      return instance.t(fullKey, { lng, ...(options?.values ?? {}) }) as string;
+      return instance.t(fullKey, {
+        lng,
+        defaultValue: options?.defaultValue ?? undefined,
+        ...(options?.values ?? {}),
+      }) as string;
     },
     resolveLocale(req: { headers?: Record<string, unknown> | undefined }): LocaleCode {
       const raw = req.headers?.["accept-language"] ?? req.headers?.["Accept-Language"];

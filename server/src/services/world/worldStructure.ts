@@ -134,7 +134,7 @@ function buildRuleFromText(text: string, index: number): WorldRule {
   const [name, summary] = normalized.split(/[：:]/, 2);
   return {
     id: makeId("rule", index, name || normalized),
-    name: (summary ? name : `规则 ${index + 1}`).trim(),
+    name: (summary ? name : `Quy tắc ${index + 1}`).trim(),
     summary: (summary ?? normalized).trim(),
     cost: "",
     boundary: "",
@@ -234,7 +234,7 @@ function normalizeRules(raw: unknown, fallback: WorldRules): WorldRules {
       }
       return {
         id,
-        name: name || `规则 ${index + 1}`,
+        name: name || `Quy tắc ${index + 1}`,
         summary: summary || name,
         cost: normalizeText(row.cost),
         boundary: normalizeText(row.boundary ?? row.limit),
@@ -368,7 +368,7 @@ function normalizeForceRelation(raw: unknown, index: number): WorldForceRelation
     id: normalizeText(record.id) || makeId("force-relation", index, `${sourceForceId}-${targetForceId}`),
     sourceForceId,
     targetForceId,
-    relation: normalizeText(record.relation ?? record.type, "关联"),
+    relation: normalizeText(record.relation ?? record.type, "liên quan"),
     tension: normalizeText(record.tension ?? record.pressure),
     detail: normalizeText(record.detail ?? record.summary ?? record.description),
   };
@@ -385,7 +385,7 @@ function normalizeLocationControl(raw: unknown, index: number): WorldLocationCon
     id: normalizeText(record.id) || makeId("location-control", index, `${forceId}-${locationId}`),
     forceId,
     locationId,
-    relation: normalizeText(record.relation ?? record.type, "控制"),
+    relation: normalizeText(record.relation ?? record.type, "kiểm soát"),
     detail: normalizeText(record.detail ?? record.summary ?? record.description),
   };
 }
@@ -571,7 +571,7 @@ export function buildWorldStructureFromLegacySource(source: WorldStructureSource
     {
       profile: {
         summary: source.description ?? source.overviewSummary ?? "",
-        identity: source.worldType ? `${source.worldType} 世界` : "",
+        identity: source.worldType ? `Thế giới ${source.worldType}` : "",
         tone: "",
         themes: parseListText(source.cultures).slice(0, 6),
         coreConflict: source.conflicts ?? "",
@@ -719,9 +719,9 @@ export function parseWorldStructurePayload(
 }
 
 function formatRuleText(rule: WorldRule): string {
-  const parts = [rule.summary, rule.cost && `代价：${rule.cost}`, rule.boundary && `边界：${rule.boundary}`, rule.enforcement && `约束：${rule.enforcement}`]
+  const parts = [rule.summary, rule.cost && `Cái giá: ${rule.cost}`, rule.boundary && `Ranh giới: ${rule.boundary}`, rule.enforcement && `Ràng buộc: ${rule.enforcement}`]
     .filter(Boolean);
-  return `${rule.name}${parts.length > 0 ? `：${parts.join("；")}` : ""}`;
+  return `${rule.name}${parts.length > 0 ? `: ${parts.join("; ")}` : ""}`;
 }
 
 function buildFactionLegacyText(structure: WorldStructuredData): string | null {
@@ -730,12 +730,12 @@ function buildFactionLegacyText(structure: WorldStructuredData): string | null {
     ...structure.factions.map((item) =>
       [
         item.name,
-        item.position && `立场：${item.position}`,
-        item.doctrine && `主张：${item.doctrine}`,
-        item.goals.length > 0 && `目标：${item.goals.join("、")}`,
-        item.methods.length > 0 && `手段：${item.methods.join("、")}`,
+        item.position && `Lập trường: ${item.position}`,
+        item.doctrine && `Chủ trương: ${item.doctrine}`,
+        item.goals.length > 0 && `Mục tiêu: ${item.goals.join(", ")}`,
+        item.methods.length > 0 && `Phương thức: ${item.methods.join(", ")}`,
         item.representativeForceIds.length > 0
-          && `代表势力：${item.representativeForceIds.map((id) => forceNameById.get(id) ?? id).join("、")}`,
+          && `Thế lực đại diện: ${item.representativeForceIds.map((id) => forceNameById.get(id) ?? id).join(", ")}`,
       ]
         .filter(Boolean)
         .join(" | "),
@@ -743,9 +743,9 @@ function buildFactionLegacyText(structure: WorldStructuredData): string | null {
     ...structure.forces.map((item) =>
       [
         item.name,
-        item.type && `类型：${item.type}`,
-        item.summary && `概述：${item.summary}`,
-        item.leader && `核心人物：${item.leader}`,
+        item.type && `Loại: ${item.type}`,
+        item.summary && `Tóm tắt: ${item.summary}`,
+        item.leader && `Nhân vật nòng cốt: ${item.leader}`,
       ]
         .filter(Boolean)
         .join(" | "),
@@ -760,9 +760,9 @@ function buildPoliticsLegacyText(structure: WorldStructuredData): string | null 
     ...structure.factions.map((item) =>
       [
         item.name,
-        item.position && `立场：${item.position}`,
-        item.goals.length > 0 && `目标：${item.goals.join("、")}`,
-        item.methods.length > 0 && `手段：${item.methods.join("、")}`,
+        item.position && `Lập trường: ${item.position}`,
+        item.goals.length > 0 && `Mục tiêu: ${item.goals.join(", ")}`,
+        item.methods.length > 0 && `Phương thức: ${item.methods.join(", ")}`,
       ]
         .filter(Boolean)
         .join(" | "),
@@ -770,9 +770,9 @@ function buildPoliticsLegacyText(structure: WorldStructuredData): string | null 
     ...structure.forces.map((item) =>
       [
         item.name,
-        item.currentObjective && `当前目标：${item.currentObjective}`,
-        item.pressure && `施压方式：${item.pressure}`,
-        item.baseOfPower && `权力基础：${item.baseOfPower}`,
+        item.currentObjective && `Mục tiêu hiện tại: ${item.currentObjective}`,
+        item.pressure && `Cách gây áp lực: ${item.pressure}`,
+        item.baseOfPower && `Nền tảng quyền lực: ${item.baseOfPower}`,
       ]
         .filter(Boolean)
         .join(" | "),
@@ -796,10 +796,10 @@ function buildGeographyLegacyText(structure: WorldStructuredData): string | null
     .map((item) =>
       [
         item.name,
-        item.terrain && `地形：${item.terrain}`,
-        item.summary && `概述：${item.summary}`,
-        item.narrativeFunction && `叙事功能：${item.narrativeFunction}`,
-        item.risk && `风险：${item.risk}`,
+        item.terrain && `Địa hình: ${item.terrain}`,
+        item.summary && `Tóm tắt: ${item.summary}`,
+        item.narrativeFunction && `Chức năng tự sự: ${item.narrativeFunction}`,
+        item.risk && `Rủi ro: ${item.risk}`,
       ]
         .filter(Boolean)
         .join(" | "),
@@ -839,25 +839,25 @@ export function buildWorldBindingSupport(structure: WorldStructuredData): WorldB
         ...structure.locations
           .filter((item) => item.narrativeFunction || item.summary)
           .slice(0, 3)
-          .map((item) => `${item.name}${item.narrativeFunction ? `：${item.narrativeFunction}` : ""}`),
+          .map((item) => `${item.name}${item.narrativeFunction ? `: ${item.narrativeFunction}` : ""}`),
         ...structure.forces
           .filter((item) => item.narrativeRole || item.summary)
           .slice(0, 3)
-          .map((item) => `${item.name}${item.narrativeRole ? `：${item.narrativeRole}` : ""}`),
+          .map((item) => `${item.name}${item.narrativeRole ? `: ${item.narrativeRole}` : ""}`),
       ].filter(Boolean),
     ),
   ).slice(0, 6);
 
   const highPressureForces = structure.forces
     .filter((item) => item.pressure)
-    .map((item) => `${item.name}：${item.pressure}`)
+    .map((item) => `${item.name}: ${item.pressure}`)
     .slice(0, 6);
 
   const suggestedLocationClusters = structure.locations
     .slice(0, 3)
     .map((item, index) => ({
       id: makeId("cluster", index, item.name),
-      label: `${item.name} 场景群`,
+      label: `Cụm bối cảnh ${item.name}`,
       locationIds: [item.id],
       reason: item.narrativeFunction || item.summary || item.risk,
     }));
@@ -872,7 +872,7 @@ export function buildWorldBindingSupport(structure: WorldStructuredData): WorldB
 
   const forbiddenCombinations = [
     ...structure.rules.taboo,
-    ...structure.rules.sharedConsequences.map((item) => `避免忽略：${item}`),
+    ...structure.rules.sharedConsequences.map((item) => `Tránh bỏ sót: ${item}`),
   ].slice(0, 8);
 
   return {
@@ -922,42 +922,42 @@ export function buildWorldStructureOverview(structure: WorldStructuredData, bind
     sections: [
       {
         key: "profile",
-        title: "世界概要",
+        title: "Tổng quan thế giới",
         content: [
-          structure.profile.identity && `世界身份：${structure.profile.identity}`,
-          structure.profile.tone && `整体调性：${structure.profile.tone}`,
-          structure.profile.summary && `摘要：${structure.profile.summary}`,
-          structure.profile.coreConflict && `核心冲突：${structure.profile.coreConflict}`,
-          structure.profile.themes.length > 0 && `主题：${structure.profile.themes.join("、")}`,
+          structure.profile.identity && `Danh tính thế giới: ${structure.profile.identity}`,
+          structure.profile.tone && `Tông tổng thể: ${structure.profile.tone}`,
+          structure.profile.summary && `Tóm tắt: ${structure.profile.summary}`,
+          structure.profile.coreConflict && `Xung đột cốt lõi: ${structure.profile.coreConflict}`,
+          structure.profile.themes.length > 0 && `Chủ đề: ${structure.profile.themes.join(", ")}`,
         ]
           .filter(Boolean)
           .join("\n"),
       },
       {
         key: "rules",
-        title: "规则中心",
+        title: "Trung tâm quy tắc",
         content: [
           structure.rules.summary,
           ...structure.rules.axioms.map(formatRuleText),
-          ...structure.rules.taboo.map((item) => `禁忌：${item}`),
-          ...structure.rules.sharedConsequences.map((item) => `共通后果：${item}`),
+          ...structure.rules.taboo.map((item) => `Điều cấm kỵ: ${item}`),
+          ...structure.rules.sharedConsequences.map((item) => `Hậu quả chung: ${item}`),
         ]
           .filter(Boolean)
           .join("\n"),
       },
       {
         key: "factions",
-        title: "阵营与势力",
+        title: "Phe phái và thế lực",
         content: [buildFactionLegacyText(structure), buildPoliticsLegacyText(structure)].filter(Boolean).join("\n\n"),
       },
       {
         key: "locations",
-        title: "地点与地形",
+        title: "Địa điểm và địa hình",
         content: buildGeographyLegacyText(structure) ?? "",
       },
       {
         key: "relations",
-        title: "关系网络",
+        title: "Mạng quan hệ",
         content: [
           ...structure.relations.forceRelations.map((item) =>
             [item.sourceForceId, item.relation, item.targetForceId, item.tension, item.detail]
@@ -967,7 +967,7 @@ export function buildWorldStructureOverview(structure: WorldStructuredData, bind
           ...structure.relations.locationControls.map((item) =>
             [item.forceId, item.relation, item.locationId, item.detail].filter(Boolean).join(" | "),
           ),
-          ...bindingSupport.compatibleConflicts.map((item) => `可兼容冲突：${item}`),
+          ...bindingSupport.compatibleConflicts.map((item) => `Xung đột tương thích: ${item}`),
         ]
           .filter(Boolean)
           .join("\n"),
