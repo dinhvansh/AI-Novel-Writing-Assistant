@@ -1,4 +1,4 @@
-CREATE TABLE "StoryTimelineEvent" (
+CREATE TABLE IF NOT EXISTS "StoryTimelineEvent" (
   "id" TEXT NOT NULL,
   "novelId" TEXT NOT NULL,
   "chapterId" TEXT,
@@ -25,7 +25,7 @@ CREATE TABLE "StoryTimelineEvent" (
   CONSTRAINT "StoryTimelineEvent_pkey" PRIMARY KEY ("id")
 );
 
-CREATE TABLE "ChapterTimeAnchor" (
+CREATE TABLE IF NOT EXISTS "ChapterTimeAnchor" (
   "id" TEXT NOT NULL,
   "novelId" TEXT NOT NULL,
   "chapterId" TEXT NOT NULL,
@@ -43,7 +43,7 @@ CREATE TABLE "ChapterTimeAnchor" (
   CONSTRAINT "ChapterTimeAnchor_pkey" PRIMARY KEY ("id")
 );
 
-CREATE TABLE "TimelineHook" (
+CREATE TABLE IF NOT EXISTS "TimelineHook" (
   "id" TEXT NOT NULL,
   "novelId" TEXT NOT NULL,
   "createdInChapterId" TEXT NOT NULL,
@@ -62,7 +62,7 @@ CREATE TABLE "TimelineHook" (
   CONSTRAINT "TimelineHook_pkey" PRIMARY KEY ("id")
 );
 
-CREATE TABLE "TimelineConstraint" (
+CREATE TABLE IF NOT EXISTS "TimelineConstraint" (
   "id" TEXT NOT NULL,
   "novelId" TEXT NOT NULL,
   "chapterId" TEXT,
@@ -79,7 +79,7 @@ CREATE TABLE "TimelineConstraint" (
   CONSTRAINT "TimelineConstraint_pkey" PRIMARY KEY ("id")
 );
 
-CREATE TABLE "TimelineCheckReport" (
+CREATE TABLE IF NOT EXISTS "TimelineCheckReport" (
   "id" TEXT NOT NULL,
   "novelId" TEXT NOT NULL,
   "chapterId" TEXT NOT NULL,
@@ -91,20 +91,22 @@ CREATE TABLE "TimelineCheckReport" (
   CONSTRAINT "TimelineCheckReport_pkey" PRIMARY KEY ("id")
 );
 
-CREATE INDEX "StoryTimelineEvent_novelId_chapterIndex_idx" ON "StoryTimelineEvent"("novelId", "chapterIndex");
-CREATE INDEX "StoryTimelineEvent_novelId_eventOrder_idx" ON "StoryTimelineEvent"("novelId", "eventOrder");
-CREATE INDEX "StoryTimelineEvent_novelId_status_idx" ON "StoryTimelineEvent"("novelId", "status");
-CREATE INDEX "StoryTimelineEvent_novelId_eventKey_idx" ON "StoryTimelineEvent"("novelId", "eventKey");
+CREATE INDEX IF NOT EXISTS "StoryTimelineEvent_novelId_chapterIndex_idx" ON "StoryTimelineEvent"("novelId", "chapterIndex");
+CREATE INDEX IF NOT EXISTS "StoryTimelineEvent_novelId_eventOrder_idx" ON "StoryTimelineEvent"("novelId", "eventOrder");
+CREATE INDEX IF NOT EXISTS "StoryTimelineEvent_novelId_status_idx" ON "StoryTimelineEvent"("novelId", "status");
+CREATE INDEX IF NOT EXISTS "StoryTimelineEvent_novelId_eventKey_idx" ON "StoryTimelineEvent"("novelId", "eventKey");
 
-CREATE UNIQUE INDEX "ChapterTimeAnchor_novelId_chapterId_key" ON "ChapterTimeAnchor"("novelId", "chapterId");
-CREATE INDEX "ChapterTimeAnchor_novelId_chapterIndex_idx" ON "ChapterTimeAnchor"("novelId", "chapterIndex");
+CREATE UNIQUE INDEX IF NOT EXISTS "ChapterTimeAnchor_novelId_chapterId_key" ON "ChapterTimeAnchor"("novelId", "chapterId");
+CREATE INDEX IF NOT EXISTS "ChapterTimeAnchor_novelId_chapterIndex_idx" ON "ChapterTimeAnchor"("novelId", "chapterIndex");
 
-CREATE INDEX "TimelineHook_novelId_status_idx" ON "TimelineHook"("novelId", "status");
-CREATE INDEX "TimelineHook_novelId_createdInChapterIndex_idx" ON "TimelineHook"("novelId", "createdInChapterIndex");
-CREATE INDEX "TimelineHook_novelId_expectedResolveByChapterIndex_idx" ON "TimelineHook"("novelId", "expectedResolveByChapterIndex");
+CREATE INDEX IF NOT EXISTS "TimelineHook_novelId_status_idx" ON "TimelineHook"("novelId", "status");
+CREATE INDEX IF NOT EXISTS "TimelineHook_novelId_createdInChapterIndex_idx" ON "TimelineHook"("novelId", "createdInChapterIndex");
+CREATE INDEX IF NOT EXISTS "TimelineHook_novelId_expectedResolveByChapterIndex_idx" ON "TimelineHook"("novelId", "expectedResolveByChapterIndex");
 
-CREATE INDEX "TimelineConstraint_novelId_chapterIndex_idx" ON "TimelineConstraint"("novelId", "chapterIndex");
-CREATE INDEX "TimelineConstraint_novelId_active_idx" ON "TimelineConstraint"("novelId", "active");
+CREATE INDEX IF NOT EXISTS "TimelineConstraint_novelId_chapterIndex_idx" ON "TimelineConstraint"("novelId", "chapterIndex");
+CREATE INDEX IF NOT EXISTS "TimelineConstraint_novelId_active_idx" ON "TimelineConstraint"("novelId", "active");
 
-CREATE INDEX "TimelineCheckReport_novelId_chapterIndex_idx" ON "TimelineCheckReport"("novelId", "chapterIndex");
-CREATE INDEX "TimelineCheckReport_novelId_status_idx" ON "TimelineCheckReport"("novelId", "status");
+CREATE INDEX IF NOT EXISTS "TimelineCheckReport_novelId_chapterIndex_idx" ON "TimelineCheckReport"("novelId", "chapterIndex");
+CREATE INDEX IF NOT EXISTS "TimelineCheckReport_novelId_status_idx" ON "TimelineCheckReport"("novelId", "status");
+
+

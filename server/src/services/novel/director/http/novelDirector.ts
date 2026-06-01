@@ -401,6 +401,8 @@ router.get("/tasks/:taskId", validate({ params: taskParamsSchema }), async (req,
         if (typeof ds.currentAction === "string") ds.currentAction = localizeDirectorString(ds.currentAction, locale) ?? ds.currentAction;
         if (typeof ds.stageLabel === "string") ds.stageLabel = localizeDirectorString(ds.stageLabel, locale) ?? ds.stageLabel;
         if (typeof ds.checkpointLabel === "string") ds.checkpointLabel = localizeDirectorString(ds.checkpointLabel, locale) ?? ds.checkpointLabel;
+        if (typeof ds.headline === "string") ds.headline = localizeDirectorString(ds.headline, locale) ?? ds.headline;
+        if (typeof ds.description === "string") ds.description = localizeDirectorString(ds.description, locale) ?? ds.description;
       }
       // Localize projection fields
       if (snap.projection && typeof snap.projection === "object") {
@@ -426,6 +428,21 @@ router.get("/tasks/:taskId", validate({ params: taskParamsSchema }), async (req,
             return {
               ...s,
               label: typeof s.label === "string" ? (localizeDirectorString(s.label, locale) ?? s.label) : s.label,
+            };
+          });
+        }
+        // Localize action labels
+        if (dv.primaryAction && typeof dv.primaryAction === "object") {
+          const pa = dv.primaryAction as Record<string, unknown>;
+          if (typeof pa.label === "string") pa.label = localizeDirectorString(pa.label, locale) ?? pa.label;
+        }
+        if (Array.isArray(dv.secondaryActions)) {
+          dv.secondaryActions = dv.secondaryActions.map((action: unknown) => {
+            if (!action || typeof action !== "object") return action;
+            const a = action as Record<string, unknown>;
+            return {
+              ...a,
+              label: typeof a.label === "string" ? (localizeDirectorString(a.label, locale) ?? a.label) : a.label,
             };
           });
         }
@@ -504,6 +521,21 @@ router.get("/book-automation/:novelId", validate({ params: takeoverParamsSchema 
       if (typeof p.nextActionLabel === "string") p.nextActionLabel = localizeDirectorString(p.nextActionLabel, locale) ?? p.nextActionLabel;
       if (typeof p.userReason === "string") p.userReason = localizeDirectorString(p.userReason, locale) ?? p.userReason;
       if (typeof p.blockedReason === "string") p.blockedReason = localizeDirectorString(p.blockedReason, locale) ?? p.blockedReason;
+      // Localize primary and secondary action labels
+      if (p.primaryAction && typeof p.primaryAction === "object") {
+        const pa = p.primaryAction as Record<string, unknown>;
+        if (typeof pa.label === "string") pa.label = localizeDirectorString(pa.label, locale) ?? pa.label;
+      }
+      if (Array.isArray(p.secondaryActions)) {
+        p.secondaryActions = p.secondaryActions.map((action: unknown) => {
+          if (!action || typeof action !== "object") return action;
+          const a = action as Record<string, unknown>;
+          return {
+            ...a,
+            label: typeof a.label === "string" ? (localizeDirectorString(a.label, locale) ?? a.label) : a.label,
+          };
+        });
+      }
       // Localize timeline items
       if (Array.isArray(p.timeline)) {
         p.timeline = p.timeline.map((item: unknown) => {

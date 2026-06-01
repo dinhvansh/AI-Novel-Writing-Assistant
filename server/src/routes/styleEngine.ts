@@ -3,6 +3,7 @@ import type { ApiResponse } from "@ai-novel/shared/types/api";
 import { z } from "zod";
 import { llmProviderSchema } from "../llm/providerSchema";
 import { authMiddleware } from "../middleware/auth";
+import { tError } from "../middleware/errorHandler";
 import { validate } from "../middleware/validate";
 import { AntiAiPolicyResolver } from "../services/styleEngine/AntiAiPolicyResolver";
 import { AntiAiRuleService } from "../services/styleEngine/AntiAiRuleService";
@@ -12,6 +13,8 @@ import { StyleGenerationService } from "../services/styleEngine/StyleGenerationS
 import { StyleProfileService } from "../services/styleEngine/StyleProfileService";
 import { styleRecommendationService } from "../services/styleEngine/StyleRecommendationService";
 import { StyleRewriteService } from "../services/styleEngine/StyleRewriteService";
+import { localizeStyleTemplate } from "../services/localization/SeedTranslator";
+import type { LocaleCode } from "@ai-novel/shared/localization";
 
 const router = Router();
 const styleProfileService = new StyleProfileService();
@@ -267,7 +270,7 @@ router.get("/style-profiles/:id", validate({ params: idSchema }), async (req, re
     if (!data) {
       res.status(404).json({
         success: false,
-        error: "写法资产不存在。", // i18n-ignore-internal-log: Zod validation - wrap with tError()
+        error: tError(res, "styleProfileNotFound", undefined, "\u5199\u6cd5\u8d44\u4ea7\u4e0d\u5b58\u5728\u3002"), // i18n-ignore: tError fallback
       } satisfies ApiResponse<null>);
       return;
     }
@@ -328,11 +331,16 @@ router.post("/style-profiles/:id/test-write", validate({ params: idSchema, body:
 router.get("/style-templates", async (_req, res, next) => {
   try {
     const data = await styleProfileService.listTemplates();
+    const locale = (res.locals as { locale?: LocaleCode }).locale ?? "vi-VN";
+    const localizedData = data.map((template) => ({
+      ...template,
+      ...localizeStyleTemplate(template, locale),
+    }));
     res.status(200).json({
       success: true,
-      data,
+      data: localizedData,
       message: "获取模板成功。" // i18n-ignore-internal-log: API success message, not user-facing
-    } satisfies ApiResponse<typeof data>);
+    } satisfies ApiResponse<typeof localizedData>);
   } catch (error) {
     next(error);
   }

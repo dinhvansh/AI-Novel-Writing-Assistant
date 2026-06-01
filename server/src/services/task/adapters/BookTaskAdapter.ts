@@ -1,4 +1,4 @@
-import type {
+﻿import type {
   TaskStatus,
   UnifiedTaskDetail,
   UnifiedTaskSummary,
@@ -18,6 +18,16 @@ import {
   getArchivedTaskIds,
   isTaskArchived,
 } from "../taskArchive";
+import { DEFAULT_LOCALE, type LocaleCode } from "@ai-novel/shared/localization";
+import { getI18nServerHandle } from "../../../i18n";
+import { getCurrentRequestLocale } from "../../../runtime/requestLocaleContext";
+
+function t(key: string): string {
+  const handle = getI18nServerHandle();
+  if (!handle) return key;
+  const locale: LocaleCode = getCurrentRequestLocale() ?? DEFAULT_LOCALE;
+  return handle.t("serverLogs", key, { lng: locale });
+}
 import {
   BOOK_ANALYSIS_STEPS,
   buildSteps,
@@ -100,7 +110,7 @@ export class BookTaskAdapter {
           ? (structuredFailure.failureCode ?? "BOOK_ANALYSIS_FAILED")
           : null,
         failureSummary: normalizedStatus === "failed"
-          ? (structuredFailure.failureSummary ?? normalizeFailureSummary(row.lastError, "拆书任务失败，但没有记录明确错误。"))
+          ? (structuredFailure.failureSummary ?? normalizeFailureSummary(row.lastError, "æ‹†ä¹¦ä»»åŠ¡å¤±è´¥ï¼Œä½†æ²¡æœ‰è®°å½•æ˜Žç¡®é”™è¯¯ã€‚"))
           : row.lastError,
         recoveryHint: buildTaskRecoveryHint("book_analysis", mappedStatus),
         sourceResource: {
@@ -170,7 +180,7 @@ export class BookTaskAdapter {
         ? (structuredFailure.failureCode ?? "BOOK_ANALYSIS_FAILED")
         : null,
       failureSummary: normalizedStatus === "failed"
-        ? (structuredFailure.failureSummary ?? normalizeFailureSummary(row.lastError, "拆书任务失败，但没有记录明确错误。"))
+        ? (structuredFailure.failureSummary ?? normalizeFailureSummary(row.lastError, "æ‹†ä¹¦ä»»åŠ¡å¤±è´¥ï¼Œä½†æ²¡æœ‰è®°å½•æ˜Žç¡®é”™è¯¯ã€‚"))
         : row.lastError,
       recoveryHint: buildTaskRecoveryHint("book_analysis", status),
       sourceResource: {
@@ -261,3 +271,4 @@ export class BookTaskAdapter {
     return null;
   }
 }
+

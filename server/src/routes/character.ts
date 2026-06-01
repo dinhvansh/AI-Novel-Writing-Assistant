@@ -4,6 +4,7 @@ import { z } from "zod";
 import { prisma } from "../db/prisma";
 import { llmProviderSchema } from "../llm/providerSchema";
 import { authMiddleware } from "../middleware/auth";
+import { tError } from "../middleware/errorHandler";
 import { validate } from "../middleware/validate";
 import { characterLibrarySyncService } from "../services/character/CharacterLibrarySyncService";
 import { characterGenerateConstraintsSchema, generateBaseCharacterFromAI } from "../services/character/characterGenerate";
@@ -110,7 +111,7 @@ router.get("/:id", validate({ params: idSchema }), async (req, res, next) => {
     if (!data) {
       res.status(404).json({
         success: false,
-        error: "角色不存在。", // i18n-ignore-internal-log: API success message - wrap with tError()
+        error: tError(res, "characterNotFound", undefined, "\u89d2\u8272\u4e0d\u5b58\u5728\u3002"), // i18n-ignore: tError fallback
       } satisfies ApiResponse<null>);
       return;
     }

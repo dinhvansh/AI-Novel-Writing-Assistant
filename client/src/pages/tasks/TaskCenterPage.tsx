@@ -18,6 +18,7 @@ import { resolveWorkflowContinuationFeedback } from "@/lib/novelWorkflowContinua
 import { useDirectorChapterTitleRepair } from "@/hooks/useDirectorChapterTitleRepair";
 import { syncKnownTaskCaches } from "@/lib/taskQueryCache";
 import { buildTaskNoticeRoute, isChapterTitleDiversitySummary, parseDirectorTaskNotice, resolveChapterTitleWarning } from "@/lib/directorTaskNotice";
+import { translateDirectorLabel } from "@/lib/directorRuntimeI18n";
 import { canCancelDirectorTask, canContinueChapterBatchAutoExecution, getCandidateSelectionLink, requiresCandidateSelection } from "@/lib/novelWorkflowTaskUi";
 import { useLLMStore } from "@/store/llmStore";
 import TaskCenterFilterPanel from "./components/TaskCenterFilterPanel";
@@ -593,7 +594,7 @@ export default function TaskCenterPage() {
                     <div className="rounded-md border border-dashed p-2 text-muted-foreground">{t("tasks:page.noSteps")}</div>
                   ) : selectedTaskSteps.map((step) => (
                     <div key={step.key} className="flex items-center justify-between rounded-md border p-2">
-                      <div>{step.label}</div>
+                      <div>{translateDirectorLabel(step.label) ?? step.label}</div>
                       <Badge variant="outline">{step.status}</Badge>
                     </div>
                   ))}

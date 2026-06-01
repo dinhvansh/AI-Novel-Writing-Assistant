@@ -17,6 +17,7 @@ import { isChapterTitleDiversityIssue } from "../volume/chapterTitleDiversity";
 import { NovelWorkflowStoreService } from "./NovelWorkflowStoreService";
 import {
   buildChapterTitleDiversityTaskNotice,
+  checkpointItemLabel,
   defaultProgressForStage,
   isChapterBatchCheckpointRow,
   isCandidateSelectionItemKey,
@@ -189,11 +190,11 @@ export class NovelWorkflowHealingService {
         currentStage: shouldRestoreCandidateSelection ? stageLabel("auto_director") : undefined,
         currentItemKey: shouldRestoreCandidateSelection ? "auto_director" : undefined,
         currentItemLabel: shouldRestoreCandidateSelection
-          ? "等待确认书级方向"
+          ? checkpointItemLabel("candidate_selection_required")
           : undefined,
         checkpointType: shouldRestoreCandidateSelection ? "candidate_selection_required" : undefined,
         checkpointSummary: shouldRestoreCandidateSelection
-          ? (candidate.checkpointSummary ?? "候选方案已恢复，请重新确认或继续微调。")
+          ? (candidate.checkpointSummary ?? checkpointItemLabel("candidate_selection_required"))
           : undefined,
         resumeTargetJson: shouldRestoreCandidateSelection
           ? stringifyResumeTarget(buildNovelCreateResumeTarget(taskId, "director"))
@@ -599,7 +600,12 @@ export class NovelWorkflowHealingService {
         status: "waiting_approval",
         currentStage: stageLabel("structured_outline"),
         currentItemKey: existing.currentItemKey ?? "chapter_list",
-        currentItemLabel: "章节列表已生成，但标题结构仍需分散",
+        currentItemLabel: (() => {
+          // i18n-ignore: worker context, uses DEFAULT_LOCALE
+          const { getI18nServerHandle } = require("../../../i18n") as { getI18nServerHandle: () => { t: (ns: string, key: string, opts?: Record<string, unknown>) => string } | null };
+          const handle = getI18nServerHandle();
+          return handle ? handle.t("serverLogs", "directorCommand.chapterTitleDiversityLabel", { lng: "zh-CN" }) : "章节列表已生成，但标题结构仍需分散";
+        })(),
         checkpointType: null,
         checkpointSummary: null,
         resumeTargetJson: stringifyResumeTarget(nextResumeTarget),

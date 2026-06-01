@@ -1,4 +1,4 @@
-import type {
+﻿import type {
   DirectorAutoExecutionState,
   DirectorConfirmRequest,
 } from "@ai-novel/shared/types/novelDirector";
@@ -48,6 +48,16 @@ import {
 import type { ChapterRuntimeRequestInput } from "../../runtime/chapterRuntimeSchema";
 import type { RepairOptions } from "../../novelCoreShared";
 import type { DirectorCoreStepModuleRuntime } from "./DirectorCoreStepModuleRuntime";
+import { DEFAULT_LOCALE, type LocaleCode } from "@ai-novel/shared/localization";
+import { getI18nServerHandle } from "../../../../i18n";
+import { getCurrentRequestLocale } from "../../../../runtime/requestLocaleContext";
+
+function tStep(key: string): string {
+  const handle = getI18nServerHandle();
+  if (!handle) return key;
+  const locale: LocaleCode = getCurrentRequestLocale() ?? DEFAULT_LOCALE;
+  return handle.t("serverLogs", key, { lng: locale });
+}
 
 type ChapterDraftStepInput =
   | {
@@ -593,7 +603,7 @@ export const DIRECTOR_EXECUTION_STEP_MODULES: Record<
       return {
         readiness: draftedCount > 0
           ? readyState({ evidence })
-          : blockedState("Draft chapters are required before quality review.", {
+          : blockedState(tStep("directorStep.missingDraftsForReview"), {
             code: "missing_chapter_drafts",
             nextAction: "continue_chapter_execution",
           }),
@@ -644,7 +654,7 @@ export const DIRECTOR_EXECUTION_STEP_MODULES: Record<
       };
       return {
         readiness: draftedChapterCount === 0
-          ? blockedState("Draft chapters are required before chapter repair.", {
+          ? blockedState(tStep("directorStep.missingDraftsForRepair"), {
             code: "missing_chapter_drafts",
             nextAction: "continue_chapter_execution",
           })
@@ -768,7 +778,7 @@ export const DIRECTOR_EXECUTION_STEP_MODULES: Record<
       };
       return {
         readiness: draftedChapterCount === 0
-          ? blockedState("Draft chapters are required before quality repair.", {
+          ? blockedState(tStep("directorStep.missingDraftsForQualityRepair"), {
             code: "missing_chapter_drafts",
             nextAction: "continue_chapter_execution",
           })
@@ -796,3 +806,4 @@ export const DIRECTOR_EXECUTION_STEP_MODULES: Record<
     },
   }),
 };
+

@@ -1,6 +1,6 @@
 -- Additive runtime tables for multi-novel background director execution.
 
-CREATE TABLE "DirectorRuntimeInstance" (
+CREATE TABLE IF NOT EXISTS "DirectorRuntimeInstance" (
   "id" TEXT NOT NULL,
   "novelId" TEXT,
   "workflowTaskId" TEXT,
@@ -21,7 +21,7 @@ CREATE TABLE "DirectorRuntimeInstance" (
   CONSTRAINT "DirectorRuntimeInstance_pkey" PRIMARY KEY ("id")
 );
 
-CREATE TABLE "DirectorRuntimeCommand" (
+CREATE TABLE IF NOT EXISTS "DirectorRuntimeCommand" (
   "id" TEXT NOT NULL,
   "runtimeId" TEXT NOT NULL,
   "workflowTaskId" TEXT,
@@ -44,7 +44,7 @@ CREATE TABLE "DirectorRuntimeCommand" (
   CONSTRAINT "DirectorRuntimeCommand_pkey" PRIMARY KEY ("id")
 );
 
-CREATE TABLE "DirectorRuntimeExecution" (
+CREATE TABLE IF NOT EXISTS "DirectorRuntimeExecution" (
   "id" TEXT NOT NULL,
   "runtimeId" TEXT NOT NULL,
   "commandId" TEXT,
@@ -70,7 +70,7 @@ CREATE TABLE "DirectorRuntimeExecution" (
   CONSTRAINT "DirectorRuntimeExecution_pkey" PRIMARY KEY ("id")
 );
 
-CREATE TABLE "DirectorRuntimeCheckpoint" (
+CREATE TABLE IF NOT EXISTS "DirectorRuntimeCheckpoint" (
   "id" TEXT NOT NULL,
   "runtimeId" TEXT NOT NULL,
   "commandId" TEXT,
@@ -87,7 +87,7 @@ CREATE TABLE "DirectorRuntimeCheckpoint" (
   CONSTRAINT "DirectorRuntimeCheckpoint_pkey" PRIMARY KEY ("id")
 );
 
-CREATE TABLE "DirectorRuntimeEvent" (
+CREATE TABLE IF NOT EXISTS "DirectorRuntimeEvent" (
   "id" TEXT NOT NULL,
   "runtimeId" TEXT NOT NULL,
   "commandId" TEXT,
@@ -103,50 +103,53 @@ CREATE TABLE "DirectorRuntimeEvent" (
   CONSTRAINT "DirectorRuntimeEvent_pkey" PRIMARY KEY ("id")
 );
 
-CREATE UNIQUE INDEX "DirectorRuntimeCommand_legacyCommandId_key" ON "DirectorRuntimeCommand"("legacyCommandId");
-CREATE UNIQUE INDEX "DirectorRuntimeCommand_runtimeId_commandType_idempotencyKey_key" ON "DirectorRuntimeCommand"("runtimeId", "commandType", "idempotencyKey");
-CREATE UNIQUE INDEX "DirectorRuntimeExecution_activeLockKey_key" ON "DirectorRuntimeExecution"("activeLockKey");
-CREATE UNIQUE INDEX "DirectorRuntimeCheckpoint_runtimeId_version_key" ON "DirectorRuntimeCheckpoint"("runtimeId", "version");
+CREATE UNIQUE INDEX IF NOT EXISTS "DirectorRuntimeCommand_legacyCommandId_key" ON "DirectorRuntimeCommand"("legacyCommandId");
+CREATE UNIQUE INDEX IF NOT EXISTS "DirectorRuntimeCommand_runtimeId_commandType_idempotencyKey_key" ON "DirectorRuntimeCommand"("runtimeId", "commandType", "idempotencyKey");
+CREATE UNIQUE INDEX IF NOT EXISTS "DirectorRuntimeExecution_activeLockKey_key" ON "DirectorRuntimeExecution"("activeLockKey");
+CREATE UNIQUE INDEX IF NOT EXISTS "DirectorRuntimeCheckpoint_runtimeId_version_key" ON "DirectorRuntimeCheckpoint"("runtimeId", "version");
 
-CREATE INDEX "DirectorRuntimeInstance_novelId_status_updatedAt_idx" ON "DirectorRuntimeInstance"("novelId", "status", "updatedAt");
-CREATE INDEX "DirectorRuntimeInstance_workflowTaskId_idx" ON "DirectorRuntimeInstance"("workflowTaskId");
-CREATE INDEX "DirectorRuntimeInstance_runId_idx" ON "DirectorRuntimeInstance"("runId");
-CREATE INDEX "DirectorRuntimeInstance_status_updatedAt_idx" ON "DirectorRuntimeInstance"("status", "updatedAt");
-CREATE INDEX "DirectorRuntimeCommand_runtimeId_status_updatedAt_idx" ON "DirectorRuntimeCommand"("runtimeId", "status", "updatedAt");
-CREATE INDEX "DirectorRuntimeCommand_status_priority_runAfter_createdAt_idx" ON "DirectorRuntimeCommand"("status", "priority", "runAfter", "createdAt");
-CREATE INDEX "DirectorRuntimeCommand_workflowTaskId_status_updatedAt_idx" ON "DirectorRuntimeCommand"("workflowTaskId", "status", "updatedAt");
-CREATE INDEX "DirectorRuntimeCommand_novelId_status_updatedAt_idx" ON "DirectorRuntimeCommand"("novelId", "status", "updatedAt");
-CREATE INDEX "DirectorRuntimeCommand_leaseOwner_leaseExpiresAt_idx" ON "DirectorRuntimeCommand"("leaseOwner", "leaseExpiresAt");
-CREATE INDEX "DirectorRuntimeExecution_runtimeId_status_updatedAt_idx" ON "DirectorRuntimeExecution"("runtimeId", "status", "updatedAt");
-CREATE INDEX "DirectorRuntimeExecution_status_leaseExpiresAt_idx" ON "DirectorRuntimeExecution"("status", "leaseExpiresAt");
-CREATE INDEX "DirectorRuntimeExecution_workflowTaskId_status_updatedAt_idx" ON "DirectorRuntimeExecution"("workflowTaskId", "status", "updatedAt");
-CREATE INDEX "DirectorRuntimeExecution_novelId_status_updatedAt_idx" ON "DirectorRuntimeExecution"("novelId", "status", "updatedAt");
-CREATE INDEX "DirectorRuntimeExecution_workerId_status_updatedAt_idx" ON "DirectorRuntimeExecution"("workerId", "status", "updatedAt");
-CREATE INDEX "DirectorRuntimeCheckpoint_runtimeId_createdAt_idx" ON "DirectorRuntimeCheckpoint"("runtimeId", "createdAt");
-CREATE INDEX "DirectorRuntimeCheckpoint_commandId_idx" ON "DirectorRuntimeCheckpoint"("commandId");
-CREATE INDEX "DirectorRuntimeCheckpoint_executionId_idx" ON "DirectorRuntimeCheckpoint"("executionId");
-CREATE INDEX "DirectorRuntimeEvent_runtimeId_occurredAt_idx" ON "DirectorRuntimeEvent"("runtimeId", "occurredAt");
-CREATE INDEX "DirectorRuntimeEvent_commandId_occurredAt_idx" ON "DirectorRuntimeEvent"("commandId", "occurredAt");
-CREATE INDEX "DirectorRuntimeEvent_executionId_occurredAt_idx" ON "DirectorRuntimeEvent"("executionId", "occurredAt");
-CREATE INDEX "DirectorRuntimeEvent_workflowTaskId_occurredAt_idx" ON "DirectorRuntimeEvent"("workflowTaskId", "occurredAt");
-CREATE INDEX "DirectorRuntimeEvent_novelId_occurredAt_idx" ON "DirectorRuntimeEvent"("novelId", "occurredAt");
-CREATE INDEX "DirectorRuntimeEvent_type_occurredAt_idx" ON "DirectorRuntimeEvent"("type", "occurredAt");
+CREATE INDEX IF NOT EXISTS "DirectorRuntimeInstance_novelId_status_updatedAt_idx" ON "DirectorRuntimeInstance"("novelId", "status", "updatedAt");
+CREATE INDEX IF NOT EXISTS "DirectorRuntimeInstance_workflowTaskId_idx" ON "DirectorRuntimeInstance"("workflowTaskId");
+CREATE INDEX IF NOT EXISTS "DirectorRuntimeInstance_runId_idx" ON "DirectorRuntimeInstance"("runId");
+CREATE INDEX IF NOT EXISTS "DirectorRuntimeInstance_status_updatedAt_idx" ON "DirectorRuntimeInstance"("status", "updatedAt");
+CREATE INDEX IF NOT EXISTS "DirectorRuntimeCommand_runtimeId_status_updatedAt_idx" ON "DirectorRuntimeCommand"("runtimeId", "status", "updatedAt");
+CREATE INDEX IF NOT EXISTS "DirectorRuntimeCommand_status_priority_runAfter_createdAt_idx" ON "DirectorRuntimeCommand"("status", "priority", "runAfter", "createdAt");
+CREATE INDEX IF NOT EXISTS "DirectorRuntimeCommand_workflowTaskId_status_updatedAt_idx" ON "DirectorRuntimeCommand"("workflowTaskId", "status", "updatedAt");
+CREATE INDEX IF NOT EXISTS "DirectorRuntimeCommand_novelId_status_updatedAt_idx" ON "DirectorRuntimeCommand"("novelId", "status", "updatedAt");
+CREATE INDEX IF NOT EXISTS "DirectorRuntimeCommand_leaseOwner_leaseExpiresAt_idx" ON "DirectorRuntimeCommand"("leaseOwner", "leaseExpiresAt");
+CREATE INDEX IF NOT EXISTS "DirectorRuntimeExecution_runtimeId_status_updatedAt_idx" ON "DirectorRuntimeExecution"("runtimeId", "status", "updatedAt");
+CREATE INDEX IF NOT EXISTS "DirectorRuntimeExecution_status_leaseExpiresAt_idx" ON "DirectorRuntimeExecution"("status", "leaseExpiresAt");
+CREATE INDEX IF NOT EXISTS "DirectorRuntimeExecution_workflowTaskId_status_updatedAt_idx" ON "DirectorRuntimeExecution"("workflowTaskId", "status", "updatedAt");
+CREATE INDEX IF NOT EXISTS "DirectorRuntimeExecution_novelId_status_updatedAt_idx" ON "DirectorRuntimeExecution"("novelId", "status", "updatedAt");
+CREATE INDEX IF NOT EXISTS "DirectorRuntimeExecution_workerId_status_updatedAt_idx" ON "DirectorRuntimeExecution"("workerId", "status", "updatedAt");
+CREATE INDEX IF NOT EXISTS "DirectorRuntimeCheckpoint_runtimeId_createdAt_idx" ON "DirectorRuntimeCheckpoint"("runtimeId", "createdAt");
+CREATE INDEX IF NOT EXISTS "DirectorRuntimeCheckpoint_commandId_idx" ON "DirectorRuntimeCheckpoint"("commandId");
+CREATE INDEX IF NOT EXISTS "DirectorRuntimeCheckpoint_executionId_idx" ON "DirectorRuntimeCheckpoint"("executionId");
+CREATE INDEX IF NOT EXISTS "DirectorRuntimeEvent_runtimeId_occurredAt_idx" ON "DirectorRuntimeEvent"("runtimeId", "occurredAt");
+CREATE INDEX IF NOT EXISTS "DirectorRuntimeEvent_commandId_occurredAt_idx" ON "DirectorRuntimeEvent"("commandId", "occurredAt");
+CREATE INDEX IF NOT EXISTS "DirectorRuntimeEvent_executionId_occurredAt_idx" ON "DirectorRuntimeEvent"("executionId", "occurredAt");
+CREATE INDEX IF NOT EXISTS "DirectorRuntimeEvent_workflowTaskId_occurredAt_idx" ON "DirectorRuntimeEvent"("workflowTaskId", "occurredAt");
+CREATE INDEX IF NOT EXISTS "DirectorRuntimeEvent_novelId_occurredAt_idx" ON "DirectorRuntimeEvent"("novelId", "occurredAt");
+CREATE INDEX IF NOT EXISTS "DirectorRuntimeEvent_type_occurredAt_idx" ON "DirectorRuntimeEvent"("type", "occurredAt");
 
-ALTER TABLE "DirectorRuntimeInstance" ADD CONSTRAINT "DirectorRuntimeInstance_novelId_fkey" FOREIGN KEY ("novelId") REFERENCES "Novel"("id") ON DELETE SET NULL ON UPDATE CASCADE;
-ALTER TABLE "DirectorRuntimeInstance" ADD CONSTRAINT "DirectorRuntimeInstance_workflowTaskId_fkey" FOREIGN KEY ("workflowTaskId") REFERENCES "NovelWorkflowTask"("id") ON DELETE CASCADE ON UPDATE CASCADE;
-ALTER TABLE "DirectorRuntimeInstance" ADD CONSTRAINT "DirectorRuntimeInstance_runId_fkey" FOREIGN KEY ("runId") REFERENCES "DirectorRun"("id") ON DELETE SET NULL ON UPDATE CASCADE;
-ALTER TABLE "DirectorRuntimeCommand" ADD CONSTRAINT "DirectorRuntimeCommand_runtimeId_fkey" FOREIGN KEY ("runtimeId") REFERENCES "DirectorRuntimeInstance"("id") ON DELETE CASCADE ON UPDATE CASCADE;
-ALTER TABLE "DirectorRuntimeCommand" ADD CONSTRAINT "DirectorRuntimeCommand_workflowTaskId_fkey" FOREIGN KEY ("workflowTaskId") REFERENCES "NovelWorkflowTask"("id") ON DELETE CASCADE ON UPDATE CASCADE;
-ALTER TABLE "DirectorRuntimeCommand" ADD CONSTRAINT "DirectorRuntimeCommand_novelId_fkey" FOREIGN KEY ("novelId") REFERENCES "Novel"("id") ON DELETE SET NULL ON UPDATE CASCADE;
-ALTER TABLE "DirectorRuntimeExecution" ADD CONSTRAINT "DirectorRuntimeExecution_runtimeId_fkey" FOREIGN KEY ("runtimeId") REFERENCES "DirectorRuntimeInstance"("id") ON DELETE CASCADE ON UPDATE CASCADE;
-ALTER TABLE "DirectorRuntimeExecution" ADD CONSTRAINT "DirectorRuntimeExecution_commandId_fkey" FOREIGN KEY ("commandId") REFERENCES "DirectorRuntimeCommand"("id") ON DELETE SET NULL ON UPDATE CASCADE;
-ALTER TABLE "DirectorRuntimeExecution" ADD CONSTRAINT "DirectorRuntimeExecution_workflowTaskId_fkey" FOREIGN KEY ("workflowTaskId") REFERENCES "NovelWorkflowTask"("id") ON DELETE CASCADE ON UPDATE CASCADE;
-ALTER TABLE "DirectorRuntimeExecution" ADD CONSTRAINT "DirectorRuntimeExecution_novelId_fkey" FOREIGN KEY ("novelId") REFERENCES "Novel"("id") ON DELETE SET NULL ON UPDATE CASCADE;
-ALTER TABLE "DirectorRuntimeCheckpoint" ADD CONSTRAINT "DirectorRuntimeCheckpoint_runtimeId_fkey" FOREIGN KEY ("runtimeId") REFERENCES "DirectorRuntimeInstance"("id") ON DELETE CASCADE ON UPDATE CASCADE;
-ALTER TABLE "DirectorRuntimeCheckpoint" ADD CONSTRAINT "DirectorRuntimeCheckpoint_commandId_fkey" FOREIGN KEY ("commandId") REFERENCES "DirectorRuntimeCommand"("id") ON DELETE SET NULL ON UPDATE CASCADE;
-ALTER TABLE "DirectorRuntimeCheckpoint" ADD CONSTRAINT "DirectorRuntimeCheckpoint_executionId_fkey" FOREIGN KEY ("executionId") REFERENCES "DirectorRuntimeExecution"("id") ON DELETE SET NULL ON UPDATE CASCADE;
-ALTER TABLE "DirectorRuntimeEvent" ADD CONSTRAINT "DirectorRuntimeEvent_runtimeId_fkey" FOREIGN KEY ("runtimeId") REFERENCES "DirectorRuntimeInstance"("id") ON DELETE CASCADE ON UPDATE CASCADE;
-ALTER TABLE "DirectorRuntimeEvent" ADD CONSTRAINT "DirectorRuntimeEvent_commandId_fkey" FOREIGN KEY ("commandId") REFERENCES "DirectorRuntimeCommand"("id") ON DELETE SET NULL ON UPDATE CASCADE;
-ALTER TABLE "DirectorRuntimeEvent" ADD CONSTRAINT "DirectorRuntimeEvent_executionId_fkey" FOREIGN KEY ("executionId") REFERENCES "DirectorRuntimeExecution"("id") ON DELETE SET NULL ON UPDATE CASCADE;
-ALTER TABLE "DirectorRuntimeEvent" ADD CONSTRAINT "DirectorRuntimeEvent_workflowTaskId_fkey" FOREIGN KEY ("workflowTaskId") REFERENCES "NovelWorkflowTask"("id") ON DELETE CASCADE ON UPDATE CASCADE;
-ALTER TABLE "DirectorRuntimeEvent" ADD CONSTRAINT "DirectorRuntimeEvent_novelId_fkey" FOREIGN KEY ("novelId") REFERENCES "Novel"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "DirectorRuntimeInstance" DROP CONSTRAINT IF EXISTS "DirectorRuntimeInstance_novelId_fkey"; ALTER TABLE "DirectorRuntimeInstance" ADD CONSTRAINT "DirectorRuntimeInstance_novelId_fkey" FOREIGN KEY ("novelId") REFERENCES "Novel"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "DirectorRuntimeInstance" DROP CONSTRAINT IF EXISTS "DirectorRuntimeInstance_workflowTaskId_fkey"; ALTER TABLE "DirectorRuntimeInstance" ADD CONSTRAINT "DirectorRuntimeInstance_workflowTaskId_fkey" FOREIGN KEY ("workflowTaskId") REFERENCES "NovelWorkflowTask"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "DirectorRuntimeInstance" DROP CONSTRAINT IF EXISTS "DirectorRuntimeInstance_runId_fkey"; ALTER TABLE "DirectorRuntimeInstance" ADD CONSTRAINT "DirectorRuntimeInstance_runId_fkey" FOREIGN KEY ("runId") REFERENCES "DirectorRun"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "DirectorRuntimeCommand" DROP CONSTRAINT IF EXISTS "DirectorRuntimeCommand_runtimeId_fkey"; ALTER TABLE "DirectorRuntimeCommand" ADD CONSTRAINT "DirectorRuntimeCommand_runtimeId_fkey" FOREIGN KEY ("runtimeId") REFERENCES "DirectorRuntimeInstance"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "DirectorRuntimeCommand" DROP CONSTRAINT IF EXISTS "DirectorRuntimeCommand_workflowTaskId_fkey"; ALTER TABLE "DirectorRuntimeCommand" ADD CONSTRAINT "DirectorRuntimeCommand_workflowTaskId_fkey" FOREIGN KEY ("workflowTaskId") REFERENCES "NovelWorkflowTask"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "DirectorRuntimeCommand" DROP CONSTRAINT IF EXISTS "DirectorRuntimeCommand_novelId_fkey"; ALTER TABLE "DirectorRuntimeCommand" ADD CONSTRAINT "DirectorRuntimeCommand_novelId_fkey" FOREIGN KEY ("novelId") REFERENCES "Novel"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "DirectorRuntimeExecution" DROP CONSTRAINT IF EXISTS "DirectorRuntimeExecution_runtimeId_fkey"; ALTER TABLE "DirectorRuntimeExecution" ADD CONSTRAINT "DirectorRuntimeExecution_runtimeId_fkey" FOREIGN KEY ("runtimeId") REFERENCES "DirectorRuntimeInstance"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "DirectorRuntimeExecution" DROP CONSTRAINT IF EXISTS "DirectorRuntimeExecution_commandId_fkey"; ALTER TABLE "DirectorRuntimeExecution" ADD CONSTRAINT "DirectorRuntimeExecution_commandId_fkey" FOREIGN KEY ("commandId") REFERENCES "DirectorRuntimeCommand"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "DirectorRuntimeExecution" DROP CONSTRAINT IF EXISTS "DirectorRuntimeExecution_workflowTaskId_fkey"; ALTER TABLE "DirectorRuntimeExecution" ADD CONSTRAINT "DirectorRuntimeExecution_workflowTaskId_fkey" FOREIGN KEY ("workflowTaskId") REFERENCES "NovelWorkflowTask"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "DirectorRuntimeExecution" DROP CONSTRAINT IF EXISTS "DirectorRuntimeExecution_novelId_fkey"; ALTER TABLE "DirectorRuntimeExecution" ADD CONSTRAINT "DirectorRuntimeExecution_novelId_fkey" FOREIGN KEY ("novelId") REFERENCES "Novel"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "DirectorRuntimeCheckpoint" DROP CONSTRAINT IF EXISTS "DirectorRuntimeCheckpoint_runtimeId_fkey"; ALTER TABLE "DirectorRuntimeCheckpoint" ADD CONSTRAINT "DirectorRuntimeCheckpoint_runtimeId_fkey" FOREIGN KEY ("runtimeId") REFERENCES "DirectorRuntimeInstance"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "DirectorRuntimeCheckpoint" DROP CONSTRAINT IF EXISTS "DirectorRuntimeCheckpoint_commandId_fkey"; ALTER TABLE "DirectorRuntimeCheckpoint" ADD CONSTRAINT "DirectorRuntimeCheckpoint_commandId_fkey" FOREIGN KEY ("commandId") REFERENCES "DirectorRuntimeCommand"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "DirectorRuntimeCheckpoint" DROP CONSTRAINT IF EXISTS "DirectorRuntimeCheckpoint_executionId_fkey"; ALTER TABLE "DirectorRuntimeCheckpoint" ADD CONSTRAINT "DirectorRuntimeCheckpoint_executionId_fkey" FOREIGN KEY ("executionId") REFERENCES "DirectorRuntimeExecution"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "DirectorRuntimeEvent" DROP CONSTRAINT IF EXISTS "DirectorRuntimeEvent_runtimeId_fkey"; ALTER TABLE "DirectorRuntimeEvent" ADD CONSTRAINT "DirectorRuntimeEvent_runtimeId_fkey" FOREIGN KEY ("runtimeId") REFERENCES "DirectorRuntimeInstance"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "DirectorRuntimeEvent" DROP CONSTRAINT IF EXISTS "DirectorRuntimeEvent_commandId_fkey"; ALTER TABLE "DirectorRuntimeEvent" ADD CONSTRAINT "DirectorRuntimeEvent_commandId_fkey" FOREIGN KEY ("commandId") REFERENCES "DirectorRuntimeCommand"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "DirectorRuntimeEvent" DROP CONSTRAINT IF EXISTS "DirectorRuntimeEvent_executionId_fkey"; ALTER TABLE "DirectorRuntimeEvent" ADD CONSTRAINT "DirectorRuntimeEvent_executionId_fkey" FOREIGN KEY ("executionId") REFERENCES "DirectorRuntimeExecution"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "DirectorRuntimeEvent" DROP CONSTRAINT IF EXISTS "DirectorRuntimeEvent_workflowTaskId_fkey"; ALTER TABLE "DirectorRuntimeEvent" ADD CONSTRAINT "DirectorRuntimeEvent_workflowTaskId_fkey" FOREIGN KEY ("workflowTaskId") REFERENCES "NovelWorkflowTask"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "DirectorRuntimeEvent" DROP CONSTRAINT IF EXISTS "DirectorRuntimeEvent_novelId_fkey"; ALTER TABLE "DirectorRuntimeEvent" ADD CONSTRAINT "DirectorRuntimeEvent_novelId_fkey" FOREIGN KEY ("novelId") REFERENCES "Novel"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+
+

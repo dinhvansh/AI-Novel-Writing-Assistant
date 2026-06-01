@@ -1,8 +1,8 @@
 import type { NextFunction, Request, Response } from "express";
 import type { ApiResponse } from "@ai-novel/shared/types/api";
 import { ZodError, type ZodIssue } from "zod";
-import { DEFAULT_LOCALE, type LocaleCode } from "@ai-novel/shared/localization";
 import { getI18nServerHandle } from "../i18n";
+import { getRequestLocale } from "./i18nMiddleware";
 
 export class AppError extends Error {
   readonly statusCode: number;
@@ -22,10 +22,6 @@ function joinErrorParts(parts: Array<string | undefined>): string {
   return parts.map((part) => part?.trim() ?? "").filter(Boolean).join(" | ");
 }
 
-function getRequestLocale(res: Response): LocaleCode {
-  const fromLocals = (res.locals as { locale?: LocaleCode }).locale;
-  return fromLocals ?? DEFAULT_LOCALE;
-}
 
 /**
  * Translate a server-error key with the per-request locale. Returns the

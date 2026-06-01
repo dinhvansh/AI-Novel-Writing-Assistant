@@ -8,6 +8,16 @@ import {
   isArchivableTaskStatus,
   normalizeFailureSummary,
 } from "../taskSupport";
+import { DEFAULT_LOCALE, type LocaleCode } from "@ai-novel/shared/localization";
+import { getI18nServerHandle } from "../../../i18n";
+import { getCurrentRequestLocale } from "../../../runtime/requestLocaleContext";
+
+function t(key: string): string {
+  const handle = getI18nServerHandle();
+  if (!handle) return key;
+  const locale: LocaleCode = getCurrentRequestLocale() ?? DEFAULT_LOCALE;
+  return handle.t("serverLogs", key, { lng: locale });
+}
 import { buildAgentRunTaskCenterVisibilityWhere } from "../taskVisibility";
 import {
   archiveTask as recordTaskArchive,
@@ -55,29 +65,29 @@ export class AgentRunTaskAdapter {
       sourceRoute: `/creative-hub?runId=${item.id}${item.novelId ? `&novelId=${item.novelId}` : ""}`,
       failureCode: item.status === "failed" ? "AGENT_RUN_FAILED" : null,
       failureSummary: item.status === "failed"
-        ? normalizeFailureSummary(item.error, "运行失败，但没有记录明确错误。")
+        ? normalizeFailureSummary(item.error, t("taskSupport.agentRunFailed"))
         : item.status === "waiting_approval"
-          ? "当前运行在等待审批。"
+          ? t("taskSupport.agentRunWaitingApproval")
           : item.error,
       recoveryHint: buildTaskRecoveryHint("agent_run", item.status as TaskStatus),
       sourceResource: item.novelId
         ? {
           type: "novel",
           id: item.novelId,
-          label: `小说 ${item.novelId}`,
+          label: `Novel ${item.novelId}`,
           route: `/novels/${item.novelId}/edit`,
         }
         : {
           type: "agent_run",
           id: item.id,
-          label: "全局运行",
+          label: t("taskSupport.globalChat"),
           route: `/creative-hub?runId=${item.id}`,
         },
       targetResources: item.chapterId
         ? [{
           type: "chapter",
           id: item.chapterId,
-          label: item.currentStep ?? "章节目标",
+          label: item.currentStep ?? t("taskSupport.chapterTarget"),
           route: item.novelId ? `/novels/${item.novelId}/edit` : `/creative-hub?runId=${item.id}`,
         }]
         : [],

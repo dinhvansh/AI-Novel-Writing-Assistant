@@ -202,11 +202,18 @@ router.get("/", validate({ query: listQuerySchema }), async (req, res, next) => 
       limit: query.limit,
       cursor: query.cursor,
     });
+    const locale = (res.locals as { locale?: LocaleCode }).locale ?? "vi-VN";
+    const localizedData = {
+      ...data,
+      items: Array.isArray(data.items)
+        ? data.items.map((item: unknown) => localizeTaskPayload(item as Record<string, unknown>, locale))
+        : data.items,
+    };
     res.status(200).json({
       success: true,
-      data,
+      data: localizedData,
       message: "Tasks loaded.",
-    } satisfies ApiResponse<typeof data>);
+    } satisfies ApiResponse<typeof localizedData>);
   } catch (error) {
     next(error);
   }

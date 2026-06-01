@@ -1,4 +1,6 @@
 import { randomUUID } from "node:crypto";
+import { getI18nServerHandle } from "../../../../i18n";
+import { getCurrentRequestLocale } from "../../../../runtime/requestLocaleContext";
 import type {
   DirectorAutoExecutionPlan,
   DirectorAutoExecutionState,
@@ -354,14 +356,25 @@ export function buildRefinementSummary(
     return null;
   }
 
+  const handle = getI18nServerHandle();
+  const locale = getCurrentRequestLocale();
+
+  function t(key: string, values?: Record<string, unknown>): string {
+    if (handle) {
+      const result = handle.t("serverLogs", key, { lng: locale, values });
+      if (result && result !== `serverLogs:${key}`) return result;
+    }
+    return key;
+  }
+
   const presetSummary = presets.map((preset) => (
     DIRECTOR_CORRECTION_PRESETS.find((item) => item.value === preset)?.label ?? preset
   ));
   const fragments = [
-    presetSummary.length > 0 ? `预设修正：${presetSummary.join("、")}` : "",
-    feedback?.trim() ? `补充说明：${feedback.trim()}` : "",
+    presetSummary.length > 0 ? `${t("candidateRound.presetPrefix")}${presetSummary.join("、")}` : "",
+    feedback?.trim() ? `${t("candidateRound.feedbackPrefix")}${feedback.trim()}` : "",
   ].filter(Boolean);
-  return fragments.join("；") || "按上一轮意见重新生成";
+  return fragments.join("；") || t("candidateRound.regenerateDefault");
 }
 
 export function buildStoryInput(input: DirectorConfirmRequest, bookSpec: BookSpec): string {

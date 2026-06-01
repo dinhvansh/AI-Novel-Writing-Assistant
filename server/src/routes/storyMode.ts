@@ -11,7 +11,7 @@ import {
   generateStoryModeTreeDraft,
 } from "../services/storyMode/storyModeGenerate";
 import { storyModeProfileSchema } from "../services/storyMode/storyModeProfile";
-import { localizeStoryMode } from "../services/localization/SeedTranslator";
+import { localizeStoryMode, localizeStoryModeCoreDrive } from "../services/localization/SeedTranslator";
 
 const router = Router();
 const storyModeService = new StoryModeService();
@@ -86,10 +86,22 @@ router.get("/", async (_req, res, next) => {
   try {
     const data = await storyModeService.listStoryModeTree();
     const locale = (res.locals as { locale?: LocaleCode }).locale ?? "vi-VN";
-    const localizedData = data.map((node: { id: string; name: string; description?: string | null; children?: unknown[] }) => ({
-      ...node,
-      ...localizeStoryMode(node, locale),
-    }));
+
+    function localizeNode(node: { id: string; name: string; description?: string | null; profile?: Record<string, unknown>; children?: unknown[] }): typeof node {
+      const localized = localizeStoryMode(node, locale);
+      const localizedCoreDrive = localizeStoryModeCoreDrive(node.id, node.profile?.coreDrive as string | undefined, locale);
+      const children = Array.isArray(node.children)
+        ? node.children.map((child) => localizeNode(child as typeof node))
+        : node.children;
+      return {
+        ...node,
+        ...localized,
+        profile: node.profile ? { ...node.profile, coreDrive: localizedCoreDrive ?? node.profile.coreDrive } : node.profile,
+        children,
+      };
+    }
+
+    const localizedData = data.map((node: { id: string; name: string; description?: string | null; children?: unknown[] }) => localizeNode(node));
     res.status(200).json({
       success: true,
       data: localizedData,

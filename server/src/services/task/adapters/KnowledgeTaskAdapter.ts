@@ -18,6 +18,16 @@ import {
   buildSteps,
   toLegacyTaskStatus,
 } from "../taskCenter.shared";
+import { DEFAULT_LOCALE, type LocaleCode } from "@ai-novel/shared/localization";
+import { getI18nServerHandle } from "../../../i18n";
+import { getCurrentRequestLocale } from "../../../runtime/requestLocaleContext";
+
+function t(key: string, values?: Record<string, unknown>): string {
+  const handle = getI18nServerHandle();
+  if (!handle) return key;
+  const locale: LocaleCode = getCurrentRequestLocale() ?? DEFAULT_LOCALE;
+  return handle.t("serverLogs", key, { lng: locale, ...(values ?? {}) });
+}
 
 interface KnowledgeDocumentRecord {
   id: string;
@@ -56,12 +66,12 @@ function parseJobProgress(payloadJson: string | null): KnowledgeJobProgressPaylo
 
 function getJobTitle(jobType: RagJobType, documentTitle: string): string {
   if (jobType === "delete") {
-    return `知识库删除：${documentTitle}`;
+    return t("taskSupport.knowledge.titleDelete", { title: documentTitle });
   }
   if (jobType === "upsert") {
-    return `知识库更新：${documentTitle}`;
+    return t("taskSupport.knowledge.titleUpsert", { title: documentTitle });
   }
-  return `知识库重建：${documentTitle}`;
+  return t("taskSupport.knowledge.titleRebuild", { title: documentTitle });
 }
 
 function matchesKeyword(
@@ -139,7 +149,7 @@ export class KnowledgeTaskAdapter {
       .map((row) => {
         const progress = parseJobProgress(row.payloadJson);
         const document = documentMap.get(row.ownerId);
-        const documentTitle = document?.title ?? "未命名知识文档";
+        const documentTitle = document?.title ?? t("taskSupport.knowledge.unnamedDocument");
         const statusValue = row.status as TaskStatus;
         const sourceRoute = `/knowledge?id=${row.ownerId}`;
         const updatedAt = row.updatedAt.toISOString();
@@ -165,9 +175,9 @@ export class KnowledgeTaskAdapter {
           sourceRoute,
           failureCode: row.status === "failed" ? "KNOWLEDGE_INDEX_FAILED" : null,
           failureSummary: row.status === "failed"
-            ? normalizeFailureSummary(row.lastError, "知识库索引失败，但没有记录明确错误。")
+            ? normalizeFailureSummary(row.lastError, t("taskSupport.knowledge.indexFailed"))
             : row.status === "cancelled"
-              ? "知识库索引已取消。"
+              ? t("taskSupport.knowledge.indexCancelled")
               : row.lastError,
           recoveryHint: buildTaskRecoveryHint("knowledge_document", statusValue),
           sourceResource: {
@@ -209,7 +219,7 @@ export class KnowledgeTaskAdapter {
       },
     });
     const progress = parseJobProgress(row.payloadJson);
-    const documentTitle = document?.title ?? "未命名知识文档";
+    const documentTitle = document?.title ?? t("taskSupport.knowledge.unnamedDocument");
     const statusValue = row.status as TaskStatus;
     const sourceRoute = `/knowledge?id=${row.ownerId}`;
     const updatedAt = row.updatedAt.toISOString();
@@ -235,9 +245,9 @@ export class KnowledgeTaskAdapter {
       sourceRoute,
       failureCode: row.status === "failed" ? "KNOWLEDGE_INDEX_FAILED" : null,
       failureSummary: row.status === "failed"
-        ? normalizeFailureSummary(row.lastError, "知识库索引失败，但没有记录明确错误。")
+        ? normalizeFailureSummary(row.lastError, t("taskSupport.knowledge.indexFailed"))
         : row.status === "cancelled"
-          ? "知识库索引已取消。"
+          ? t("taskSupport.knowledge.indexCancelled")
           : row.lastError,
       recoveryHint: buildTaskRecoveryHint("knowledge_document", statusValue),
       sourceResource: {

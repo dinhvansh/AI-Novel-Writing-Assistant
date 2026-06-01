@@ -13,6 +13,16 @@ import {
   type PipelinePayload,
   type PipelineRunOptions,
 } from "./novelCoreShared";
+import { DEFAULT_LOCALE, type LocaleCode } from "@ai-novel/shared/localization";
+import { getI18nServerHandle } from "../../i18n";
+import { getCurrentRequestLocale } from "../../runtime/requestLocaleContext";
+
+function tCore(key: string, values?: Record<string, unknown>): string {
+  const handle = getI18nServerHandle();
+  if (!handle) return key;
+  const locale: LocaleCode = getCurrentRequestLocale() ?? DEFAULT_LOCALE;
+  return handle.t("serverLogs", key, { lng: locale, ...(values ?? {}) });
+}
 import { ensureNovelCharacters } from "./novelCoreSupport";
 import { createQualityReport } from "./novelCoreReviewService";
 import { chapterQualityLoopService } from "./quality/ChapterQualityLoopService";
@@ -803,10 +813,14 @@ export class NovelCorePipelineService {
           const replanRecommendation = chapterResult.runtimePackage?.replanRecommendation;
           if (replanRecommendation?.recommended) {
             const impactedOrders = replanRecommendation.affectedChapterOrders?.length
-              ? `影响章节=${replanRecommendation.affectedChapterOrders.join(",")}`
-              : `锚点章节=${replanRecommendation.anchorChapterOrder ?? chapter.order}`;
+              ? tCore("pipeline.replan.impactedChapters", { chapters: replanRecommendation.affectedChapterOrders.join(",") })
+              : tCore("pipeline.replan.anchorChapter", { order: replanRecommendation.anchorChapterOrder ?? chapter.order });
             replanAlertDetails.push(
-              `第${chapter.order}章需要重规划（${impactedOrders}；原因=${replanRecommendation.triggerReason ?? replanRecommendation.reason}）`,
+              tCore("pipeline.replan.chapterNeedsReplan", {
+                order: chapter.order,
+                details: impactedOrders,
+                reason: replanRecommendation.triggerReason ?? replanRecommendation.reason,
+              }),
             );
             shouldStopAfterCurrentChapter = true;
           }

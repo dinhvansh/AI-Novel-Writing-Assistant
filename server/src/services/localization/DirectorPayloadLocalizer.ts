@@ -81,6 +81,109 @@ const ITEM_LABEL_MAP: Record<string, string> = {
 };
 
 // ---------------------------------------------------------------------------
+// Dashboard/display state strings (Chinese → serverLogs.dashboardStatus.*)
+// ---------------------------------------------------------------------------
+const DASHBOARD_STATUS_MAP: Record<string, string> = {
+  // i18n-ignore: lookup map keys
+  // Status labels
+  "\u7b49\u5f85\u6267\u884c": "dashboardStatus.statusQueued",
+  "AI \u63a5\u7ba1\u4e2d": "dashboardStatus.statusRunning",
+  "\u7b49\u5f85\u786e\u8ba4": "dashboardStatus.statusWaiting",
+  "\u7b49\u5f85\u6062\u590d": "dashboardStatus.statusRecovering",
+  "\u6267\u884c\u5f02\u5e38": "dashboardStatus.statusFailed",
+  "\u5df2\u5b8c\u6210": "dashboardStatus.statusCompleted",
+  "\u6682\u672a\u542f\u52a8": "dashboardStatus.statusIdle",
+  // Headline labels
+  "\u7b49\u5f85\u81ea\u52a8\u5bfc\u6f14": "dashboardStatus.headlineQueued",
+  "\u6b63\u5728\u81ea\u52a8\u5bfc\u6f14": "dashboardStatus.headlineRunning",
+  "\u6267\u884c\u53d7\u963b": "dashboardStatus.headlineFailed",
+  "\u5bfc\u6f14\u5df2\u5b8c\u6210": "dashboardStatus.headlineCompleted",
+  // Description strings
+  "\u4efb\u52a1\u5df2\u8fdb\u5165\u540e\u53f0\u961f\u5217\uff0c\u6267\u884c\u5668\u9886\u53d6\u540e\u4f1a\u7ee7\u7eed\u63a8\u8fdb\u3002": "dashboardStatus.descQueued",
+  "AI \u6b63\u5728\u540e\u53f0\u63a5\u7ba1\u8fd9\u672c\u4e66\u7684\u5f00\u4e66\u6d41\u7a0b\u3002\u4f60\u53ef\u4ee5\u7ee7\u7eed\u624b\u52a8\u64cd\u4f5c\u5f53\u524d\u9879\u76ee\uff1b\u5982\u679c\u4e0e\u81ea\u52a8\u5bfc\u6f14\u540c\u65f6\u6539\u540c\u4e00\u5757\u5185\u5bb9\uff0c\u4ee5\u6700\u65b0\u5199\u5165\u7ed3\u679c\u4e3a\u51c6\u3002": "dashboardStatus.descRunning",
+  "\u5f53\u524d\u5bfc\u6f14\u6d41\u7a0b\u505c\u5728\u9700\u8981\u786e\u8ba4\u7684\u4f4d\u7f6e\u3002\u4f60\u53ef\u4ee5\u5148\u67e5\u770b\u7ed3\u679c\uff0c\u518d\u51b3\u5b9a\u662f\u5426\u7ee7\u7eed\u3002": "dashboardStatus.descWaiting",
+  "\u540e\u53f0\u6267\u884c\u5668\u8fde\u63a5\u4e2d\u65ad\u540e\u6b63\u5728\u6062\u590d\uff0c\u7cfb\u7edf\u4f1a\u4f18\u5148\u4ece\u6700\u8fd1\u8fdb\u5ea6\u7ee7\u7eed\u3002": "dashboardStatus.descRecovering",
+  "\u5f53\u524d\u5bfc\u6f14\u6d41\u7a0b\u505c\u5728\u6700\u8fd1\u4e00\u6b65\u3002\u53ef\u4ee5\u5148\u67e5\u770b\u6267\u884c\u8be6\u60c5\uff0c\u518d\u51b3\u5b9a\u662f\u5426\u91cd\u8bd5\u6216\u7ee7\u7eed\u3002": "dashboardStatus.descFailed",
+  "\u672c\u8f6e\u5bfc\u6f14\u6d41\u7a0b\u5df2\u6536\u5c3e\uff0c\u4f60\u53ef\u4ee5\u7ee7\u7eed\u63a8\u8fdb\u7ae0\u8282\u3001\u67e5\u770b\u7ed3\u679c\uff0c\u6216\u53d1\u8d77\u4e0b\u4e00\u8f6e\u81ea\u52a8\u5bfc\u6f14\u3002": "dashboardStatus.descCompleted",
+  "\u5f53\u524d\u6ca1\u6709\u6b63\u5728\u63a8\u8fdb\u7684\u5bfc\u6f14\u4efb\u52a1\u3002": "dashboardStatus.descIdle",
+  // buildHeadline strings from DirectorBookAutomationProjectionModel
+  "\u7b49\u5f85\u6062\u590d\u81ea\u52a8\u5bfc\u6f14": "dashboardStatus.headlineWaitingRecovery",
+  "\u81ea\u52a8\u5bfc\u6f14\u5df2\u53d6\u6d88": "dashboardStatus.headlineCancelled",
+  "AI \u81ea\u52a8\u5bfc\u6f14\u5df2\u6392\u961f": "dashboardStatus.headlineQueuedAlt",
+  "AI \u6b63\u5728\u63a8\u8fdb\u8fd9\u672c\u4e66": "dashboardStatus.headlineRunningBook",
+  "\u7b49\u5f85\u4f60\u7684\u786e\u8ba4": "dashboardStatus.headlineWaitingConfirm",
+  "\u81ea\u52a8\u5bfc\u6f14\u5df2\u6682\u505c": "dashboardStatus.headlineBlocked",
+  "\u81ea\u52a8\u5bfc\u6f14\u9047\u5230\u95ee\u9898": "dashboardStatus.headlineFailedAlt",
+  "\u81ea\u52a8\u5bfc\u6f14\u5b8c\u6210\u6700\u8fd1\u4e00\u6b21\u63a8\u8fdb": "dashboardStatus.headlineCompletedAlt",
+  "\u8fd9\u672c\u4e66\u8fd8\u6ca1\u6709\u81ea\u52a8\u5bfc\u6f14\u8bb0\u5f55": "dashboardStatus.headlineNoRecord",
+  // buildUserHeadline strings
+  "AI \u5df2\u63a5\u5230\u8fd9\u672c\u4e66\u7684\u63a8\u8fdb\u4efb\u52a1": "dashboardStatus.userHeadlineQueued",
+  "\u7b49\u4f60\u786e\u8ba4\u540e\u7ee7\u7eed": "dashboardStatus.userHeadlineWaiting",
+  "AI \u5df2\u6682\u505c\u5728\u53ef\u5904\u7406\u7684\u4f4d\u7f6e": "dashboardStatus.userHeadlineBlocked",
+  "AI \u63a8\u8fdb\u9047\u5230\u95ee\u9898": "dashboardStatus.userHeadlineFailed",
+  "\u8fd9\u6b21\u81ea\u52a8\u63a8\u8fdb\u5df2\u505c\u6b62": "dashboardStatus.userHeadlineCancelled",
+  "AI \u5b8c\u6210\u4e86\u6700\u8fd1\u4e00\u6b21\u63a8\u8fdb": "dashboardStatus.userHeadlineCompleted",
+  "\u8fd9\u672c\u4e66\u8fd8\u6ca1\u6709\u5f00\u542f AI \u81ea\u52a8\u63a8\u8fdb": "dashboardStatus.userHeadlineNoRecord",
+  // buildUserReason strings
+  "\u4efb\u52a1\u5df2\u8fdb\u5165\u540e\u53f0\u961f\u5217\uff0c\u4f60\u53ef\u4ee5\u79bb\u5f00\u5f53\u524d\u9875\u9762\u3002": "dashboardStatus.userReasonQueued",
+  "AI \u6b63\u5728\u6309\u5f53\u524d\u8ba1\u5212\u63a8\u8fdb\u5c0f\u8bf4\u3002": "dashboardStatus.userReasonRunning",
+  "\u7ee7\u7eed\u524d\u9700\u8981\u4f60\u786e\u8ba4\u5f53\u524d\u9636\u6bb5\u7684\u7ed3\u679c\u6216\u5f71\u54cd\u8303\u56f4\u3002": "dashboardStatus.userReasonWaiting",
+  "\u7cfb\u7edf\u4fdd\u7559\u4e86\u6700\u8fd1\u8fdb\u5ea6\uff0c\u786e\u8ba4\u540e\u53ef\u4ee5\u4ece\u5f53\u524d\u4f4d\u7f6e\u7ee7\u7eed\u3002": "dashboardStatus.userReasonRecovery",
+  "\u7ee7\u7eed\u524d\u9700\u8981\u5148\u5904\u7406\u5f53\u524d\u963b\u585e\u539f\u56e0\u3002": "dashboardStatus.userReasonBlocked",
+  "\u67e5\u770b\u539f\u56e0\u540e\u53ef\u4ee5\u91cd\u8bd5\u6216\u56de\u5230\u5c0f\u8bf4\u9875\u9762\u5904\u7406\u3002": "dashboardStatus.userReasonFailed",
+  "\u53ef\u4ee5\u8fdb\u5165\u5c0f\u8bf4\u9875\u9762\u67e5\u770b\u6210\u679c\u6216\u7ee7\u7eed\u4e0b\u4e00\u6bb5\u5199\u4f5c\u3002": "dashboardStatus.userReasonCompleted",
+  "\u53ef\u4ee5\u7ee7\u7eed\u624b\u52a8\u521b\u4f5c\uff0c\u4e5f\u53ef\u4ee5\u8ba9 AI \u63a5\u7ba1\u540e\u7eed\u63a8\u8fdb\u3002": "dashboardStatus.userReasonIdle",
+  // buildDetail strings
+  "\u540e\u53f0\u6267\u884c\u4e2d\u65ad\u540e\u4fdd\u7559\u4e86\u8fdb\u5ea6\u70b9\uff0c\u786e\u8ba4\u6062\u590d\u540e\u4f1a\u4ece\u6700\u8fd1\u8fdb\u5c55\u7ee7\u7eed\u3002": "dashboardStatus.detailRecovery",
+  "\u81ea\u52a8\u5bfc\u6f14\u4efb\u52a1\u5df2\u53d6\u6d88\u3002": "dashboardStatus.detailCancelled",
+  "\u67e5\u770b\u6267\u884c\u8be6\u60c5\u540e\u53ef\u9009\u62e9\u6062\u590d\u6216\u91cd\u8bd5\u3002": "dashboardStatus.detailFailed",
+  "\u53ef\u4ee5\u4ece AI \u81ea\u52a8\u5bfc\u6f14\u5f00\u59cb\uff0c\u8ba9\u7cfb\u7edf\u6839\u636e\u8fd9\u672c\u4e66\u7684\u8d44\u4ea7\u63a8\u8350\u4e0b\u4e00\u6b65\u3002": "dashboardStatus.detailIdle",
+  // buildFocusNovel
+  "\u672a\u547d\u540d\u5c0f\u8bf4": "dashboardStatus.unnamedNovel",
+  // buildAutomationSummary
+  "\u6682\u65e0\u81ea\u52a8\u5316\u52a8\u4f5c": "dashboardStatus.noAutomation",
+  // Action labels
+  "\u6253\u5f00\u5c0f\u8bf4": "dashboardStatus.actionOpenNovel",
+  "\u786e\u8ba4\u4e66\u7ea7\u65b9\u5411": "dashboardStatus.actionConfirmDirection",
+  "\u7ee7\u7eed\u81ea\u52a8\u6267\u884c\u7ae0\u8282": "dashboardStatus.actionContinueChapters",
+  "\u6253\u5f00\u8d28\u91cf\u4fee\u590d": "dashboardStatus.actionOpenQualityRepair",
+  "\u786e\u8ba4\u5e76\u7ee7\u7eed": "dashboardStatus.actionConfirmContinue",
+  "\u4ece\u8fdb\u5ea6\u70b9\u7ee7\u7eed": "dashboardStatus.actionResumeCheckpoint",
+  "\u67e5\u770b\u5931\u8d25\u539f\u56e0": "dashboardStatus.actionViewFailure",
+  "\u67e5\u770b\u6682\u505c\u539f\u56e0": "dashboardStatus.actionViewBlocked",
+  "\u67e5\u770b\u8fdb\u5ea6": "dashboardStatus.actionViewProgress",
+  "\u540e\u53f0\u7ee7\u7eed": "dashboardStatus.actionBackgroundContinue",
+  "\u53d6\u6d88\u81ea\u52a8\u5bfc\u6f14": "dashboardStatus.actionCancel",
+  // commandLabel strings
+  "\u786e\u8ba4\u5f00\u4e66\u65b9\u5411": "dashboardStatus.cmdConfirmCandidate",
+  "\u7ee7\u7eed\u81ea\u52a8\u5bfc\u6f14": "dashboardStatus.cmdContinue",
+  "\u4ece\u8fdb\u5ea6\u70b9\u6062\u590d": "dashboardStatus.cmdResumeCheckpoint",
+  "\u91cd\u8bd5\u81ea\u52a8\u5bfc\u6f14": "dashboardStatus.cmdRetry",
+  "\u63a5\u7ba1\u8fd9\u672c\u4e66": "dashboardStatus.cmdTakeover",
+  "\u4fee\u590d\u7ae0\u8282\u6807\u9898": "dashboardStatus.cmdRepairTitles",
+  // commandStatusLabel strings
+  "\u6392\u961f\u4e2d": "dashboardStatus.cmdStatusQueued",
+  "\u51c6\u5907\u6267\u884c": "dashboardStatus.cmdStatusLeased",
+  "\u6267\u884c\u4e2d": "dashboardStatus.cmdStatusRunning",
+  "\u5b8c\u6210": "dashboardStatus.cmdStatusSucceeded",
+  "\u5931\u8d25": "dashboardStatus.cmdStatusFailed",
+  "\u5df2\u53d6\u6d88": "dashboardStatus.cmdStatusCancelled",
+  "\u9700\u8981\u6062\u590d": "dashboardStatus.cmdStatusStale",
+  // Secondary action labels
+  "\u6267\u884c\u8be6\u60c5": "dashboardStatus.actionExecutionDetails",
+  "\u6682\u505c\u63a8\u8fdb": "dashboardStatus.actionPause",
+  "\u91cd\u8bd5": "dashboardStatus.actionRetry",
+  // Runtime event summaries — unified runtime
+  "\u81ea\u52a8\u5bfc\u6f14\u8fd0\u884c\u5df2\u8fdb\u5165\u7edf\u4e00\u8fd0\u884c\u65f6\u3002": "dashboardStatus.eventEnteredRuntime",
+  "\u81ea\u52a8\u5bfc\u6f14\u5019\u9009\u9636\u6bb5\u5df2\u8fdb\u5165\u7edf\u4e00\u8fd0\u884c\u65f6\u3002": "dashboardStatus.eventCandidateEnteredRuntime",
+  "\u81ea\u52a8\u5bfc\u6f14\u786e\u8ba4\u65b9\u6848\u540e\u8fdb\u5165\u7edf\u4e00\u8fd0\u884c\u65f6\u3002": "dashboardStatus.eventConfirmEnteredRuntime",
+  "\u81ea\u52a8\u5bfc\u6f14\u590d\u7528\u5df2\u521b\u5efa\u7684\u5c0f\u8bf4\u9879\u76ee\u5e76\u8fdb\u5165\u7edf\u4e00\u8fd0\u884c\u65f6\u3002": "dashboardStatus.eventReuseNovelEnteredRuntime",
+  "\u81ea\u52a8\u5bfc\u6f14\u5df2\u521b\u5efa\u5c0f\u8bf4\u9879\u76ee\u5e76\u8fdb\u5165\u7edf\u4e00\u8fd0\u884c\u65f6\u3002": "dashboardStatus.eventCreatedNovelEnteredRuntime",
+  "AI \u81ea\u52a8\u5bfc\u6f14\u63a5\u7ba1\u5df2\u5e76\u5165\u7edf\u4e00\u8fd0\u884c\u65f6\u3002": "dashboardStatus.eventTakeoverEnteredRuntime",
+  "\u81ea\u52a8\u5bfc\u6f14\u4efb\u52a1\u4ece\u7edf\u4e00\u8fd0\u884c\u65f6\u7ee7\u7eed\u3002": "dashboardStatus.eventRuntimeContinued",
+};
+
+// ---------------------------------------------------------------------------
 // Public API
 // ---------------------------------------------------------------------------
 
@@ -112,6 +215,13 @@ export function localizeDirectorString(
     if (result && result !== `serverLogs:${itemKey}`) return result;
   }
 
+  // Dashboard/display state labels (exact match)
+  const dashKey = DASHBOARD_STATUS_MAP[v];
+  if (dashKey) {
+    const result = t(dashKey);
+    if (result && result !== `serverLogs:${dashKey}`) return result;
+  }
+
   // Partial match for dynamic strings with interpolation
   // e.g. "正在整理你的项目设定与起始灵感" → "analyzingWorkspace"
   for (const [pattern, key] of Object.entries(ITEM_LABEL_MAP)) {
@@ -119,6 +229,54 @@ export function localizeDirectorString(
       const result = t(key);
       if (result && result !== `serverLogs:${key}`) return result;
     }
+  }
+
+  // Substring match for runtime event summaries containing 统一运行时
+  // i18n-ignore: pattern matching
+  if (v.includes("\u7edf\u4e00\u8fd0\u884c\u65f6")) {
+    const result = t("dashboardStatus.eventEnteredRuntime");
+    if (result && result !== "serverLogs:dashboardStatus.eventEnteredRuntime") return result;
+  }
+
+  // Pattern match for 第 X 轮 (round label)
+  // i18n-ignore: pattern matching
+  const roundMatch = v.match(/^\u7b2c\s*(\d+)\s*\u8f6e$/);
+  if (roundMatch) {
+    const round = roundMatch[1];
+    const handle = getI18nServerHandle();
+    if (handle) {
+      const result = handle.t("serverLogs", "candidateRound.roundLabel", { lng: locale, values: { round: Number(round) } });
+      if (result && result !== "serverLogs:candidateRound.roundLabel") return result;
+    }
+  }
+
+  // Pattern match for task title defaults
+  // i18n-ignore: pattern matching
+  if (v === "AI \u81ea\u52a8\u5bfc\u6f14\u5c0f\u8bf4") {
+    const result = t("taskTitles.autoDirectorDefault");
+    if (result && result !== "serverLogs:taskTitles.autoDirectorDefault") return result;
+  }
+  if (v === "\u5c0f\u8bf4\u6d41\u7a0b\u4efb\u52a1") {
+    const result = t("taskTitles.manualDefault");
+    if (result && result !== "serverLogs:taskTitles.manualDefault") return result;
+  }
+
+  // Pattern match for next action labels
+  // i18n-ignore: pattern matching
+  const nextActionMap: Record<string, string> = {
+    "\u7ee7\u7eed\u81ea\u52a8\u5bfc\u6f14": "nextActionLabels.continue",
+    "\u7ee7\u7eed\u7ae0\u8282\u6267\u884c": "nextActionLabels.continueChapterExecution",
+    "\u4ece\u6700\u8fd1\u8fdb\u5ea6\u6062\u590d": "nextActionLabels.resumeFromCheckpoint",
+    "\u786e\u8ba4\u5e76\u7ee7\u7eed": "nextActionLabels.approveGate",
+    "\u4fee\u590d\u5f53\u524d\u7ae0\u8282": "nextActionLabels.repairChapter",
+    "\u8fdb\u5165\u8d28\u91cf\u68c0\u67e5": "nextActionLabels.runQualityReview",
+    "\u5f00\u59cb\u7ae0\u8282\u6267\u884c": "nextActionLabels.runChapterExecution",
+    "\u540c\u6b65\u6b63\u5f0f\u7ae0\u8282\u6267\u884c\u4e0a\u4e0b\u6587": "nextActionLabels.syncExecutionContracts",
+  };
+  const nextActionKey = nextActionMap[v];
+  if (nextActionKey) {
+    const result = t(nextActionKey);
+    if (result && result !== `serverLogs:${nextActionKey}`) return result;
   }
 
   return value;
@@ -133,6 +291,7 @@ export function localizeTaskPayload<T extends Record<string, unknown>>(
   locale: LocaleCode = DEFAULT_LOCALE,
 ): T {
   const USER_FACING_FIELDS = [
+    "title",
     "currentItemLabel",
     "currentStage",
     "displayStatus",

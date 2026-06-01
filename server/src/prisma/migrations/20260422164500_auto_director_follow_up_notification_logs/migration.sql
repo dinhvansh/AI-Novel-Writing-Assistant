@@ -1,4 +1,4 @@
-CREATE TABLE "AutoDirectorFollowUpNotificationLog" (
+CREATE TABLE IF NOT EXISTS "AutoDirectorFollowUpNotificationLog" (
     "id" TEXT NOT NULL,
     "eventId" TEXT NOT NULL,
     "eventType" TEXT NOT NULL,
@@ -17,5 +17,7 @@ CREATE TABLE "AutoDirectorFollowUpNotificationLog" (
     CONSTRAINT "AutoDirectorFollowUpNotificationLog_pkey" PRIMARY KEY ("id")
 );
 
-CREATE INDEX "AutoDirectorFollowUpNotificationLog_taskId_createdAt_idx" ON "AutoDirectorFollowUpNotificationLog"("taskId", "createdAt");
-CREATE INDEX "AutoDirectorFollowUpNotificationLog_eventId_channelType_createdAt_idx" ON "AutoDirectorFollowUpNotificationLog"("eventId", "channelType", "createdAt");
+CREATE INDEX IF NOT EXISTS "AutoDirectorFollowUpNotificationLog_taskId_createdAt_idx" ON "AutoDirectorFollowUpNotificationLog"("taskId", "createdAt");
+CREATE INDEX IF NOT EXISTS "AutoDirectorFollowUpNotificationLog_eventId_channelType_createdAt_idx" ON "AutoDirectorFollowUpNotificationLog"("eventId", "channelType", "createdAt");
+
+

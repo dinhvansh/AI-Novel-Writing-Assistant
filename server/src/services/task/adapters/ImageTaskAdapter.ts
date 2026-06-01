@@ -1,4 +1,4 @@
-import type { TaskStatus, UnifiedTaskDetail, UnifiedTaskSummary } from "@ai-novel/shared/types/task";
+﻿import type { TaskStatus, UnifiedTaskDetail, UnifiedTaskSummary } from "@ai-novel/shared/types/task";
 import { prisma } from "../../../db/prisma";
 import { AppError } from "../../../middleware/errorHandler";
 import { imageGenerationService } from "../../image/ImageGenerationService";
@@ -13,6 +13,16 @@ import {
   getArchivedTaskIds,
   isTaskArchived,
 } from "../taskArchive";
+import { DEFAULT_LOCALE, type LocaleCode } from "@ai-novel/shared/localization";
+import { getI18nServerHandle } from "../../../i18n";
+import { getCurrentRequestLocale } from "../../../runtime/requestLocaleContext";
+
+function t(key: string, values?: Record<string, unknown>): string {
+  const handle = getI18nServerHandle();
+  if (!handle) return key;
+  const locale: LocaleCode = getCurrentRequestLocale() ?? DEFAULT_LOCALE;
+  return handle.t("serverLogs", key, { lng: locale, ...(values ?? {}) });
+}
 
 function buildImageTaskPresentation(row: {
   id: string;
@@ -23,10 +33,10 @@ function buildImageTaskPresentation(row: {
   novel?: { id: string; title: string } | null;
 }) {
   if (row.sceneType === "novel_cover" && row.novelId) {
-    const title = row.novel?.title?.trim() || `小说 ${row.novelId.slice(0, 8)}`;
+    const title = row.novel?.title?.trim() || `Novel ${row.novelId.slice(0, 8)}`;
     const route = `/novels/${row.novelId}/edit?stage=basic`;
     return {
-      title: `小说封面：${title}`,
+      title: t("taskSupport.image.novelCover", { title }),
       ownerId: row.novelId,
       ownerLabel: title,
       sourceRoute: route,
@@ -40,10 +50,12 @@ function buildImageTaskPresentation(row: {
   }
 
   const ownerId = row.baseCharacterId ?? row.id;
-  const ownerLabel = row.baseCharacter?.name ?? "未关联角色";
+  const ownerLabel = row.baseCharacter?.name ?? t("taskSupport.image.unlinkedCharacter");
   const sourceRoute = row.baseCharacterId ? `/base-characters?id=${row.baseCharacterId}` : "/base-characters";
   return {
-    title: row.baseCharacter?.name ? `角色图像：${row.baseCharacter.name}` : `图像任务 ${row.id.slice(0, 8)}`,
+    title: row.baseCharacter?.name
+      ? t("taskSupport.image.characterImage", { name: row.baseCharacter.name })
+      : t("taskSupport.image.taskFallback", { id: row.id.slice(0, 8) }),
     ownerId,
     ownerLabel,
     sourceRoute,
@@ -51,13 +63,13 @@ function buildImageTaskPresentation(row: {
       ? {
         type: "base_character" as const,
         id: row.baseCharacterId,
-        label: row.baseCharacter?.name ?? "基础角色",
+        label: row.baseCharacter?.name ?? t("taskSupport.image.baseCharacter"),
         route: sourceRoute,
       }
       : {
         type: "task" as const,
         id: row.id,
-        label: `图像任务 ${row.id.slice(0, 8)}`,
+        label: t("taskSupport.image.taskFallback", { id: row.id.slice(0, 8) }),
         route: "/tasks",
       },
   };
@@ -128,7 +140,7 @@ export class ImageTaskAdapter {
       heartbeatAt: row.heartbeatAt?.toISOString() ?? null,
       failureCode: row.status === "failed" ? "IMAGE_GENERATION_FAILED" : null,
       failureSummary: row.status === "failed"
-        ? normalizeFailureSummary(row.error, "图像任务失败，但没有记录明确错误。")
+        ? normalizeFailureSummary(row.error, "å›¾åƒä»»åŠ¡å¤±è´¥ï¼Œä½†æ²¡æœ‰è®°å½•æ˜Žç¡®é”™è¯¯ã€‚")
         : row.error,
       recoveryHint: buildTaskRecoveryHint("image_generation", row.status as TaskStatus),
       targetResources: [],
@@ -178,7 +190,7 @@ export class ImageTaskAdapter {
       heartbeatAt: row.heartbeatAt?.toISOString() ?? null,
       failureCode: row.status === "failed" ? "IMAGE_GENERATION_FAILED" : null,
       failureSummary: row.status === "failed"
-        ? normalizeFailureSummary(row.error, "图像任务失败，但没有记录明确错误。")
+        ? normalizeFailureSummary(row.error, "å›¾åƒä»»åŠ¡å¤±è´¥ï¼Œä½†æ²¡æœ‰è®°å½•æ˜Žç¡®é”™è¯¯ã€‚")
         : row.error,
       recoveryHint: buildTaskRecoveryHint("image_generation", row.status as TaskStatus),
       targetResources: [],
@@ -257,3 +269,4 @@ export class ImageTaskAdapter {
     return null;
   }
 }
+

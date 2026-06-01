@@ -1,4 +1,4 @@
-CREATE TABLE "DirectorRunCommand" (
+CREATE TABLE IF NOT EXISTS "DirectorRunCommand" (
     "id" TEXT NOT NULL,
     "taskId" TEXT NOT NULL,
     "novelId" TEXT,
@@ -19,11 +19,14 @@ CREATE TABLE "DirectorRunCommand" (
     CONSTRAINT "DirectorRunCommand_pkey" PRIMARY KEY ("id")
 );
 
-CREATE UNIQUE INDEX "DirectorRunCommand_taskId_commandType_idempotencyKey_key" ON "DirectorRunCommand"("taskId", "commandType", "idempotencyKey");
-CREATE INDEX "DirectorRunCommand_status_runAfter_updatedAt_idx" ON "DirectorRunCommand"("status", "runAfter", "updatedAt");
-CREATE INDEX "DirectorRunCommand_taskId_status_updatedAt_idx" ON "DirectorRunCommand"("taskId", "status", "updatedAt");
-CREATE INDEX "DirectorRunCommand_novelId_updatedAt_idx" ON "DirectorRunCommand"("novelId", "updatedAt");
-CREATE INDEX "DirectorRunCommand_leaseOwner_leaseExpiresAt_idx" ON "DirectorRunCommand"("leaseOwner", "leaseExpiresAt");
+CREATE UNIQUE INDEX IF NOT EXISTS "DirectorRunCommand_taskId_commandType_idempotencyKey_key" ON "DirectorRunCommand"("taskId", "commandType", "idempotencyKey");
+CREATE INDEX IF NOT EXISTS "DirectorRunCommand_status_runAfter_updatedAt_idx" ON "DirectorRunCommand"("status", "runAfter", "updatedAt");
+CREATE INDEX IF NOT EXISTS "DirectorRunCommand_taskId_status_updatedAt_idx" ON "DirectorRunCommand"("taskId", "status", "updatedAt");
+CREATE INDEX IF NOT EXISTS "DirectorRunCommand_novelId_updatedAt_idx" ON "DirectorRunCommand"("novelId", "updatedAt");
+CREATE INDEX IF NOT EXISTS "DirectorRunCommand_leaseOwner_leaseExpiresAt_idx" ON "DirectorRunCommand"("leaseOwner", "leaseExpiresAt");
 
-ALTER TABLE "DirectorRunCommand" ADD CONSTRAINT "DirectorRunCommand_taskId_fkey" FOREIGN KEY ("taskId") REFERENCES "NovelWorkflowTask"("id") ON DELETE CASCADE ON UPDATE CASCADE;
-ALTER TABLE "DirectorRunCommand" ADD CONSTRAINT "DirectorRunCommand_novelId_fkey" FOREIGN KEY ("novelId") REFERENCES "Novel"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "DirectorRunCommand" DROP CONSTRAINT IF EXISTS "DirectorRunCommand_taskId_fkey"; ALTER TABLE "DirectorRunCommand" ADD CONSTRAINT "DirectorRunCommand_taskId_fkey" FOREIGN KEY ("taskId") REFERENCES "NovelWorkflowTask"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "DirectorRunCommand" DROP CONSTRAINT IF EXISTS "DirectorRunCommand_novelId_fkey"; ALTER TABLE "DirectorRunCommand" ADD CONSTRAINT "DirectorRunCommand_novelId_fkey" FOREIGN KEY ("novelId") REFERENCES "Novel"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+
+

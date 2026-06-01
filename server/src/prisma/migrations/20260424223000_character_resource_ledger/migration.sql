@@ -65,46 +65,47 @@ CREATE INDEX IF NOT EXISTS "CharacterResourceEvent_fromHolderCharacterId_idx" ON
 CREATE INDEX IF NOT EXISTS "CharacterResourceEvent_toHolderCharacterId_idx" ON "CharacterResourceEvent"("toHolderCharacterId");
 
 DO $$ BEGIN
-  ALTER TABLE "CharacterResourceLedgerItem" ADD CONSTRAINT "CharacterResourceLedgerItem_novelId_fkey" FOREIGN KEY ("novelId") REFERENCES "Novel"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+  ALTER TABLE "CharacterResourceLedgerItem" DROP CONSTRAINT IF EXISTS "CharacterResourceLedgerItem_novelId_fkey"; ALTER TABLE "CharacterResourceLedgerItem" ADD CONSTRAINT "CharacterResourceLedgerItem_novelId_fkey" FOREIGN KEY ("novelId") REFERENCES "Novel"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 EXCEPTION WHEN duplicate_object THEN NULL;
 END $$;
 DO $$ BEGIN
-  ALTER TABLE "CharacterResourceLedgerItem" ADD CONSTRAINT "CharacterResourceLedgerItem_ownerCharacterId_fkey" FOREIGN KEY ("ownerCharacterId") REFERENCES "Character"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+  ALTER TABLE "CharacterResourceLedgerItem" DROP CONSTRAINT IF EXISTS "CharacterResourceLedgerItem_ownerCharacterId_fkey"; ALTER TABLE "CharacterResourceLedgerItem" ADD CONSTRAINT "CharacterResourceLedgerItem_ownerCharacterId_fkey" FOREIGN KEY ("ownerCharacterId") REFERENCES "Character"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 EXCEPTION WHEN duplicate_object THEN NULL;
 END $$;
 DO $$ BEGIN
-  ALTER TABLE "CharacterResourceLedgerItem" ADD CONSTRAINT "CharacterResourceLedgerItem_holderCharacterId_fkey" FOREIGN KEY ("holderCharacterId") REFERENCES "Character"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+  ALTER TABLE "CharacterResourceLedgerItem" DROP CONSTRAINT IF EXISTS "CharacterResourceLedgerItem_holderCharacterId_fkey"; ALTER TABLE "CharacterResourceLedgerItem" ADD CONSTRAINT "CharacterResourceLedgerItem_holderCharacterId_fkey" FOREIGN KEY ("holderCharacterId") REFERENCES "Character"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 EXCEPTION WHEN duplicate_object THEN NULL;
 END $$;
 DO $$ BEGIN
-  ALTER TABLE "CharacterResourceLedgerItem" ADD CONSTRAINT "CharacterResourceLedgerItem_introducedChapterId_fkey" FOREIGN KEY ("introducedChapterId") REFERENCES "Chapter"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+  ALTER TABLE "CharacterResourceLedgerItem" DROP CONSTRAINT IF EXISTS "CharacterResourceLedgerItem_introducedChapterId_fkey"; ALTER TABLE "CharacterResourceLedgerItem" ADD CONSTRAINT "CharacterResourceLedgerItem_introducedChapterId_fkey" FOREIGN KEY ("introducedChapterId") REFERENCES "Chapter"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 EXCEPTION WHEN duplicate_object THEN NULL;
 END $$;
 DO $$ BEGIN
-  ALTER TABLE "CharacterResourceLedgerItem" ADD CONSTRAINT "CharacterResourceLedgerItem_lastTouchedChapterId_fkey" FOREIGN KEY ("lastTouchedChapterId") REFERENCES "Chapter"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+  ALTER TABLE "CharacterResourceLedgerItem" DROP CONSTRAINT IF EXISTS "CharacterResourceLedgerItem_lastTouchedChapterId_fkey"; ALTER TABLE "CharacterResourceLedgerItem" ADD CONSTRAINT "CharacterResourceLedgerItem_lastTouchedChapterId_fkey" FOREIGN KEY ("lastTouchedChapterId") REFERENCES "Chapter"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 EXCEPTION WHEN duplicate_object THEN NULL;
 END $$;
 DO $$ BEGIN
-  ALTER TABLE "CharacterResourceEvent" ADD CONSTRAINT "CharacterResourceEvent_novelId_fkey" FOREIGN KEY ("novelId") REFERENCES "Novel"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+  ALTER TABLE "CharacterResourceEvent" DROP CONSTRAINT IF EXISTS "CharacterResourceEvent_novelId_fkey"; ALTER TABLE "CharacterResourceEvent" ADD CONSTRAINT "CharacterResourceEvent_novelId_fkey" FOREIGN KEY ("novelId") REFERENCES "Novel"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 EXCEPTION WHEN duplicate_object THEN NULL;
 END $$;
 DO $$ BEGIN
-  ALTER TABLE "CharacterResourceEvent" ADD CONSTRAINT "CharacterResourceEvent_resourceId_fkey" FOREIGN KEY ("resourceId") REFERENCES "CharacterResourceLedgerItem"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+  ALTER TABLE "CharacterResourceEvent" DROP CONSTRAINT IF EXISTS "CharacterResourceEvent_resourceId_fkey"; ALTER TABLE "CharacterResourceEvent" ADD CONSTRAINT "CharacterResourceEvent_resourceId_fkey" FOREIGN KEY ("resourceId") REFERENCES "CharacterResourceLedgerItem"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 EXCEPTION WHEN duplicate_object THEN NULL;
 END $$;
 DO $$ BEGIN
-  ALTER TABLE "CharacterResourceEvent" ADD CONSTRAINT "CharacterResourceEvent_chapterId_fkey" FOREIGN KEY ("chapterId") REFERENCES "Chapter"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+  ALTER TABLE "CharacterResourceEvent" DROP CONSTRAINT IF EXISTS "CharacterResourceEvent_chapterId_fkey"; ALTER TABLE "CharacterResourceEvent" ADD CONSTRAINT "CharacterResourceEvent_chapterId_fkey" FOREIGN KEY ("chapterId") REFERENCES "Chapter"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 EXCEPTION WHEN duplicate_object THEN NULL;
 END $$;
 DO $$ BEGIN
-  ALTER TABLE "CharacterResourceEvent" ADD CONSTRAINT "CharacterResourceEvent_actorCharacterId_fkey" FOREIGN KEY ("actorCharacterId") REFERENCES "Character"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+  ALTER TABLE "CharacterResourceEvent" DROP CONSTRAINT IF EXISTS "CharacterResourceEvent_actorCharacterId_fkey"; ALTER TABLE "CharacterResourceEvent" ADD CONSTRAINT "CharacterResourceEvent_actorCharacterId_fkey" FOREIGN KEY ("actorCharacterId") REFERENCES "Character"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 EXCEPTION WHEN duplicate_object THEN NULL;
 END $$;
 DO $$ BEGIN
-  ALTER TABLE "CharacterResourceEvent" ADD CONSTRAINT "CharacterResourceEvent_fromHolderCharacterId_fkey" FOREIGN KEY ("fromHolderCharacterId") REFERENCES "Character"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+  ALTER TABLE "CharacterResourceEvent" DROP CONSTRAINT IF EXISTS "CharacterResourceEvent_fromHolderCharacterId_fkey"; ALTER TABLE "CharacterResourceEvent" ADD CONSTRAINT "CharacterResourceEvent_fromHolderCharacterId_fkey" FOREIGN KEY ("fromHolderCharacterId") REFERENCES "Character"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 EXCEPTION WHEN duplicate_object THEN NULL;
 END $$;
 DO $$ BEGIN
-  ALTER TABLE "CharacterResourceEvent" ADD CONSTRAINT "CharacterResourceEvent_toHolderCharacterId_fkey" FOREIGN KEY ("toHolderCharacterId") REFERENCES "Character"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+  ALTER TABLE "CharacterResourceEvent" DROP CONSTRAINT IF EXISTS "CharacterResourceEvent_toHolderCharacterId_fkey"; ALTER TABLE "CharacterResourceEvent" ADD CONSTRAINT "CharacterResourceEvent_toHolderCharacterId_fkey" FOREIGN KEY ("toHolderCharacterId") REFERENCES "Character"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 EXCEPTION WHEN duplicate_object THEN NULL;
 END $$;
+

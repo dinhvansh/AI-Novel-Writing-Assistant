@@ -11,6 +11,7 @@ import {
   resolveCheckpointItemLabelFromRow,
   resolveCheckpointStageFromRow,
   stageLabel,
+  checkpointItemLabel,
 } from "./novelWorkflow.helpers";
 import { buildRestoreTaskToCheckpointResult } from "./novelWorkflowCheckpoint";
 import { applyDirectorLlmOverride, type DirectorWorkflowSeedPayload } from "../director/runtime/novelDirectorHelpers";
@@ -456,7 +457,7 @@ export class NovelWorkflowApplicationService {
         status: "waiting_approval",
         currentStage: stageLabel("auto_director"),
         currentItemKey: "auto_director",
-        currentItemLabel: "等待确认书级方向",
+        currentItemLabel: checkpointItemLabel("candidate_selection_required"),
         checkpointType: "candidate_selection_required",
         checkpointSummary: input.summary,
         resumeTargetJson: stringifyResumeTarget(buildNovelCreateResumeTarget(taskId, "director")),

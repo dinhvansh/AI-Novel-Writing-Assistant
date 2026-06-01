@@ -19,6 +19,9 @@ import type { NovelWorkflowStage, BookContract } from "@ai-novel/shared/types/no
 import type { StoryMacroPlan } from "@ai-novel/shared/types/storyMacro";
 import { DIRECTOR_TAKEOVER_ENTRY_STEPS } from "@ai-novel/shared/types/novelDirector";
 import { normalizeDirectorTargetChapterCount } from "./novelDirectorHelpers";
+import { DEFAULT_LOCALE } from "@ai-novel/shared/localization";
+import { getI18nServerHandle } from "../../../../i18n";
+import { getCurrentRequestLocale } from "../../../../runtime/requestLocaleContext";
 
 export interface DirectorTakeoverNovelContext extends Omit<DirectorProjectContextInput, "description"> {
   id: string;
@@ -79,64 +82,59 @@ export interface DirectorTakeoverResolvedPlan {
   resumeCheckpointType?: "chapter_batch_ready" | "replan_required" | null;
 }
 
-const DIRECTOR_TAKEOVER_STAGE_META: Record<
-  DirectorTakeoverStartPhase,
-  Pick<DirectorTakeoverStageReadiness, "label" | "description">
-> = {
-  story_macro: {
-    label: "从故事宏观规划开始",
-    description: "先补齐 Story Macro 和 Book Contract，再继续角色、卷战略和拆章。",
-  },
-  character_setup: {
-    label: "从角色准备开始",
-    description: "沿用已有书级方向，只让 AI 接手角色阵容和后续规划。",
-  },
-  volume_strategy: {
-    label: "从卷战略开始",
-    description: "沿用现有书级方向和角色，继续生成卷战略与卷骨架。",
-  },
-  structured_outline: {
-    label: "从节奏 / 拆章开始",
-    description: "沿用现有卷规划，继续生成节奏板、章节列表和章节细化。",
-  },
-};
-
-const TAKEOVER_ENTRY_META: Record<
-  DirectorTakeoverEntryStep,
-  {
-    label: string;
-    description: string;
+function getTakeoverStageMeta(phase: DirectorTakeoverStartPhase): Pick<DirectorTakeoverStageReadiness, "label" | "description"> {
+  const handle = getI18nServerHandle();
+  const locale = getCurrentRequestLocale() ?? DEFAULT_LOCALE;
+  function t(key: string): string {
+    if (handle) {
+      const result = handle.t("serverLogs", key, { lng: locale });
+      if (result && result !== `serverLogs:${key}`) return result;
+    }
+    return key;
   }
-> = {
-  basic: {
-    label: "项目设定",
-    description: "从现有项目基础信息继续接管，优先补最早缺失的导演前置资产。",
-  },
-  story_macro: {
-    label: "故事宏观规划",
-    description: "围绕 Story Macro 和 Book Contract 继续或重跑书级规划。",
-  },
-  character: {
-    label: "角色准备",
-    description: "围绕角色阵容与应用继续或重跑当前步骤。",
-  },
-  outline: {
-    label: "卷战略",
-    description: "围绕卷战略与卷骨架继续或重跑当前步骤。",
-  },
-  structured: {
-    label: "节奏 / 拆章",
-    description: "围绕当前卷节奏板、章节列表和细化资源继续或重跑当前步骤。",
-  },
-  chapter: {
-    label: "章节执行",
-    description: "优先恢复当前章节批次或从已准备范围继续执行。",
-  },
-  pipeline: {
-    label: "质量修复",
-    description: "优先恢复当前修复批次，或承接待修章节继续推进。",
-  },
-};
+  // i18n-ignore: fallback map keys
+  const fallbacks: Record<DirectorTakeoverStartPhase, { label: string; description: string }> = {
+    story_macro: { label: "\u4ece\u6545\u4e8b\u5b8f\u89c2\u89c4\u5212\u5f00\u59cb", description: "\u5148\u8865\u9f50 Story Macro \u548c Book Contract\uff0c\u518d\u7ee7\u7eed\u89d2\u8272\u3001\u5377\u6218\u7565\u548c\u62c6\u7ae0\u3002" },
+    character_setup: { label: "\u4ece\u89d2\u8272\u51c6\u5907\u5f00\u59cb", description: "\u6cbf\u7528\u5df2\u6709\u4e66\u7ea7\u65b9\u5411\uff0c\u53ea\u8ba9 AI \u63a5\u624b\u89d2\u8272\u9635\u5bb9\u548c\u540e\u7eed\u89c4\u5212\u3002" },
+    volume_strategy: { label: "\u4ece\u5377\u6218\u7565\u5f00\u59cb", description: "\u6cbf\u7528\u73b0\u6709\u4e66\u7ea7\u65b9\u5411\u548c\u89d2\u8272\uff0c\u7ee7\u7eed\u751f\u6210\u5377\u6218\u7565\u4e0e\u5377\u9aa8\u67b6\u3002" },
+    structured_outline: { label: "\u4ece\u8282\u594f / \u62c6\u7ae0\u5f00\u59cb", description: "\u6cbf\u7528\u73b0\u6709\u5377\u89c4\u5212\uff0c\u7ee7\u7eed\u751f\u6210\u8282\u594f\u677f\u3001\u7ae0\u8282\u5217\u8868\u548c\u7ae0\u8282\u7ec6\u5316\u3002" },
+  };
+  const labelKey = `takeoverStage.${phase}.label`;
+  const descKey = `takeoverStage.${phase}.description`;
+  const label = t(labelKey) !== labelKey ? t(labelKey) : fallbacks[phase].label;
+  const description = t(descKey) !== descKey ? t(descKey) : fallbacks[phase].description;
+  return { label, description };
+}
+
+function getTakeoverEntryMeta(step: DirectorTakeoverEntryStep): { label: string; description: string } {
+  const handle = getI18nServerHandle();
+  const locale = getCurrentRequestLocale() ?? DEFAULT_LOCALE;
+
+  function t(key: string): string {
+    if (handle) {
+      const result = handle.t("serverLogs", key, { lng: locale });
+      if (result && result !== `serverLogs:${key}`) return result;
+    }
+    return key;
+  }
+
+  // i18n-ignore: fallback map keys
+  const fallbacks: Record<DirectorTakeoverEntryStep, { label: string; description: string }> = {
+    basic: { label: "\u9879\u76ee\u8bbe\u5b9a", description: "\u4ece\u73b0\u6709\u9879\u76ee\u57fa\u7840\u4fe1\u606f\u7ee7\u7eed\u63a5\u7ba1\uff0c\u4f18\u5148\u8865\u6700\u65e9\u7f3a\u5931\u7684\u5bfc\u6f14\u524d\u7f6e\u8d44\u4ea7\u3002" },
+    story_macro: { label: "\u6545\u4e8b\u5b8f\u89c2\u89c4\u5212", description: "\u56f4\u7ed5 Story Macro \u548c Book Contract \u7ee7\u7eed\u6216\u91cd\u8dd1\u4e66\u7ea7\u89c4\u5212\u3002" },
+    character: { label: "\u89d2\u8272\u51c6\u5907", description: "\u56f4\u7ed5\u89d2\u8272\u9635\u5bb9\u4e0e\u5e94\u7528\u7ee7\u7eed\u6216\u91cd\u8dd1\u5f53\u524d\u6b65\u9aa4\u3002" },
+    outline: { label: "\u5377\u6218\u7565", description: "\u56f4\u7ed5\u5377\u6218\u7565\u4e0e\u5377\u9aa8\u67b6\u7ee7\u7eed\u6216\u91cd\u8dd1\u5f53\u524d\u6b65\u9aa4\u3002" },
+    structured: { label: "\u8282\u594f / \u62c6\u7ae0", description: "\u56f4\u7ed5\u5f53\u524d\u5377\u8282\u594f\u677f\u3001\u7ae0\u8282\u5217\u8868\u548c\u7ec6\u5316\u8d44\u6e90\u7ee7\u7eed\u6216\u91cd\u8dd1\u5f53\u524d\u6b65\u9aa4\u3002" },
+    chapter: { label: "\u7ae0\u8282\u6267\u884c", description: "\u4f18\u5148\u6062\u590d\u5f53\u524d\u7ae0\u8282\u6279\u6b21\u6216\u4ece\u5df2\u51c6\u5907\u8303\u56f4\u7ee7\u7eed\u6267\u884c\u3002" },
+    pipeline: { label: "\u8d28\u91cf\u4fee\u590d", description: "\u4f18\u5148\u6062\u590d\u5f53\u524d\u4fee\u590d\u6279\u6b21\uff0c\u6216\u627f\u63a5\u5f85\u4fee\u7ae0\u8282\u7ee7\u7eed\u63a8\u8fdb\u3002" },
+  };
+
+  const labelKey = `takeoverEntry.${step}.label`;
+  const descKey = `takeoverEntry.${step}.description`;
+  const label = t(labelKey) !== labelKey ? t(labelKey) : fallbacks[step].label;
+  const description = t(descKey) !== descKey ? t(descKey) : fallbacks[step].description;
+  return { label, description };
+}
 
 function hasMeaningfulSeedMaterial(novel: DirectorTakeoverNovelContext): boolean {
   return Boolean(
@@ -929,8 +927,8 @@ export function buildDirectorTakeoverReadiness(input: {
     const available = status !== "blocked";
     return {
       step,
-      label: TAKEOVER_ENTRY_META[step].label,
-      description: TAKEOVER_ENTRY_META[step].description,
+      label: getTakeoverEntryMeta(step).label,
+      description: getTakeoverEntryMeta(step).description,
       available,
       recommended: step === recommendedStep || (step === "chapter" && recommendedStep === "structured" && Boolean(input.executableRange)),
       status,
@@ -965,7 +963,14 @@ export function buildDirectorTakeoverReadiness(input: {
 
   return {
     novelId: input.novel.id,
-    novelTitle: input.novel.title.trim() || "当前项目",
+    novelTitle: (() => {
+      const handle = getI18nServerHandle();
+      const locale = getCurrentRequestLocale() ?? DEFAULT_LOCALE;
+      const fallback = handle
+        ? handle.t("serverLogs", "dashboardStatus.unnamedNovel", { lng: locale })
+        : "\u5f53\u524d\u9879\u76ee";
+      return input.novel.title.trim() || fallback;
+    })(),
     hasActiveTask: input.hasActiveTask,
     activeTaskId: input.activeTaskId ?? null,
     snapshot: {
@@ -978,8 +983,8 @@ export function buildDirectorTakeoverReadiness(input: {
       ["structured_outline", structuredOutlineReadiness],
     ] as const).map(([phase, readiness]) => ({
       phase,
-      label: DIRECTOR_TAKEOVER_STAGE_META[phase].label,
-      description: DIRECTOR_TAKEOVER_STAGE_META[phase].description,
+      label: getTakeoverStageMeta(phase).label,
+      description: getTakeoverStageMeta(phase).description,
       available: readiness.available,
       recommended: readiness.available && phase === recommendedPhase,
       reason: readiness.reason,

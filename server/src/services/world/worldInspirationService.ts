@@ -13,6 +13,16 @@ import { getTemplateByKey, WORLD_TEMPLATES } from "./worldTemplates";
 import { generateWorldPropertyOptions } from "./worldPropertyOptions";
 import { generateReferenceInspirationAnalysis } from "./worldReferenceInspiration";
 import { listActiveKnowledgeDocumentContents } from "../knowledge/common";
+import { DEFAULT_LOCALE, type LocaleCode } from "@ai-novel/shared/localization";
+import { getI18nServerHandle } from "../../i18n";
+import { getCurrentRequestLocale } from "../../runtime/requestLocaleContext";
+
+function tWorld(key: string): string {
+  const handle = getI18nServerHandle();
+  if (!handle) return key;
+  const locale: LocaleCode = getCurrentRequestLocale() ?? DEFAULT_LOCALE;
+  return handle.t("serverLogs", key, { lng: locale });
+}
 
 export interface InspirationInput {
   input?: string;
@@ -313,7 +323,7 @@ export async function analyzeWorldInspiration(
   input: InspirationInput,
   onProgress?: (message: string) => void,
 ) {
-  onProgress?.(input.mode === "reference" ? "正在整理参考材料" : "正在整理灵感输入");
+  onProgress?.(input.mode === "reference" ? tWorld("worldInspiration.progress.organizingReference") : tWorld("worldInspiration.progress.organizingInput"));
   let nextInput = input;
   let seededConceptCard: InspirationConceptCard | null = null;
   let inspirationSource = nextInput.input?.trim() || "一个模糊的世界观想法。";
@@ -373,7 +383,7 @@ export async function analyzeWorldInspiration(
   let referenceAnchors: Array<{ id: string; label: string; content: string }> = [];
   let referenceSeeds = createEmptyWorldReferenceSeedBundle();
   if (nextInput.mode === "reference") {
-    onProgress?.("正在提取原作世界锚点");
+    onProgress?.(tWorld("worldInspiration.progress.extractingAnchors"));
     const referenceAnalysis = await generateReferenceInspirationAnalysis({
       sourceText: normalizedSource.promptText,
       worldTypeHint: nextInput.worldType,
@@ -391,7 +401,7 @@ export async function analyzeWorldInspiration(
     referenceAnchors = referenceAnalysis.anchors;
     referenceSeeds = referenceAnalysis.referenceSeeds;
   } else if (!resolvedConceptCard) {
-    onProgress?.("正在生成概念卡");
+    onProgress?.(tWorld("worldInspiration.progress.generatingConceptCard"));
     const conceptResult = await runStructuredPrompt({
       asset: worldInspirationConceptCardPrompt,
       promptInput: {
@@ -436,7 +446,7 @@ export async function analyzeWorldInspiration(
   const resolvedTemplate = getTemplateByKey(resolvedConceptCard.templateKey);
   let generatedPropertyOptions: Awaited<ReturnType<typeof generateWorldPropertyOptions>> = [];
   try {
-    onProgress?.(nextInput.mode === "reference" ? "正在生成架空改造决策" : "正在生成前置属性选项");
+    onProgress?.(nextInput.mode === "reference" ? tWorld("worldInspiration.progress.generatingReferenceDecisions") : tWorld("worldInspiration.progress.generatingPropertyOptions"));
     generatedPropertyOptions = await generateWorldPropertyOptions({
       provider: nextInput.provider,
       model: nextInput.model,

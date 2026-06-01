@@ -1,0 +1,20 @@
+{
+  "extends": "../tsconfig.base.json",
+  "compilerOptions": {
+    "module": "CommonJS",
+    "moduleResolution": "Node",
+    "outDir": "tests-compiled",
+    "rootDir": ".",
+    "baseUrl": ".",
+    "paths": {
+      "@ai-novel/shared/*": ["../shared/dist/*"],
+      "@ai-novel/shared/localization": ["../shared/dist/localization/index.d.ts"]
+    },
+    "types": ["node"],
+    "noEmit": true,
+    "declaration": false,
+    "sourceMap": false
+  },
+  "include": ["tests/**/*.ts", "src/**/*.ts"],
+  "exclude": ["node_modules", "dist", "tests-compiled"]
+}

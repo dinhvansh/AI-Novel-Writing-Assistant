@@ -6,6 +6,16 @@ import type {
   PipelinePayload,
 } from "./novelCoreShared";
 import type { NovelControlPolicy } from "@ai-novel/shared/types/canonicalState";
+import { DEFAULT_LOCALE, type LocaleCode } from "@ai-novel/shared/localization";
+import { getI18nServerHandle } from "../../i18n";
+import { getCurrentRequestLocale } from "../../runtime/requestLocaleContext";
+
+function tPipeline(key: string, values?: Record<string, unknown>): string {
+  const handle = getI18nServerHandle();
+  if (!handle) return key;
+  const locale: LocaleCode = getCurrentRequestLocale() ?? DEFAULT_LOCALE;
+  return handle.t("serverLogs", key, { lng: locale, ...(values ?? {}) });
+}
 
 const PIPELINE_ACTIVE_STAGES = ["queued", "generating_chapters", "reviewing", "repairing", "finalizing"] as const;
 const PIPELINE_STAGE_PROGRESS = {
@@ -337,10 +347,10 @@ export function getPipelineReplanNotice(details: string[] | undefined): Pipeline
   }
   const firstReplanChapterOrder = extractFirstReplanChapterOrder(replanAlertDetails);
   const summaryPrefix = firstReplanChapterOrder
-    ? `已执行至第 ${firstReplanChapterOrder} 章，后续需重规划`
-    : "后续章节需要先处理重规划";
+    ? tPipeline("pipeline.replan.executedToChapter", { order: firstReplanChapterOrder })
+    : tPipeline("pipeline.replan.needsReplanFirst");
   return {
-    displayStatus: "等待重规划处理",
+    displayStatus: tPipeline("pipeline.replan.waitingStatus"),
     noticeCode: PIPELINE_REPLAN_NOTICE_CODE,
     noticeSummary: `${summaryPrefix}：${replanAlertDetails.join("; ")}`,
     qualityAlertDetails: [],

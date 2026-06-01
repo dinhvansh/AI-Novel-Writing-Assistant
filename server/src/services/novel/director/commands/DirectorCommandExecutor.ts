@@ -12,6 +12,8 @@ import {
   type DirectorWorkflowSeedPayload,
 } from "../runtime/novelDirectorHelpers";
 import type { DirectorTakeoverRequest } from "@ai-novel/shared/types/novelDirector";
+import { DEFAULT_LOCALE } from "@ai-novel/shared/localization";
+import { getI18nServerHandle } from "../../../../i18n";
 
 export type DirectorCommandExecutionOutcome = "completed" | "cancelled";
 
@@ -59,7 +61,11 @@ export class DirectorCommandExecutor {
       novelId: pipelineCommand.novelId ?? state.task.novelId,
       runtimeId: state.runtime?.id ?? null,
       commandType: pipelineCommand.intent,
-      summary: "导演任务已进入单轨执行管线。",
+      summary: (() => {
+        const handle = getI18nServerHandle();
+        // i18n-ignore: worker context, uses DEFAULT_LOCALE
+        return handle ? handle.t("serverLogs", "directorCommand.pipelineDispatch", { lng: DEFAULT_LOCALE }) : "Director task entered single-track execution pipeline.";
+      })(),
     });
 
     switch (pipelineCommand.intent) {
@@ -260,15 +266,21 @@ export class DirectorCommandExecutor {
       where: { id: taskId },
       data: {
         ...(candidateSelectionReady
-          ? {
-            status: "waiting_approval",
-            currentStage: "AI 自动导演",
-            currentItemKey: "candidate_selection_required",
-            currentItemLabel: "书级方向已准备好，请选择一套继续",
-            progress: 0.18,
-            checkpointType: "candidate_selection_required",
-            checkpointSummary: "AI 已生成可选的书级方向。",
-          }
+          ? (() => {
+            const handle = getI18nServerHandle();
+            const locale = DEFAULT_LOCALE;
+            // i18n-ignore: worker context has no request locale, uses DEFAULT_LOCALE
+            const tCmd = (key: string) => handle ? handle.t("serverLogs", key, { lng: locale }) : key;
+            return {
+              status: "waiting_approval",
+              currentStage: tCmd("directorCommand.candidateStage"),
+              currentItemKey: "candidate_selection_required",
+              currentItemLabel: tCmd("directorCommand.candidateItemLabel"),
+              progress: 0.18,
+              checkpointType: "candidate_selection_required",
+              checkpointSummary: tCmd("directorCommand.candidateCheckpointSummary"),
+            };
+          })()
           : {}),
         seedPayloadJson: mergeSeedPayload(row.seedPayloadJson, {
           ...seedPatch,

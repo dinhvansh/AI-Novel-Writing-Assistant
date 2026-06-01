@@ -3,9 +3,21 @@ import type {
   NovelWorkflowStage,
 } from "@ai-novel/shared/types/novelWorkflow";
 import type { TaskStatus } from "@ai-novel/shared/types/task";
+import type { LocaleCode } from "@ai-novel/shared/localization";
+import { DEFAULT_LOCALE } from "@ai-novel/shared/localization";
 import { isAutoDirectorRecoveryInProgress } from "../novel/workflow/novelWorkflowRecoveryHeuristics";
 import { normalizeFailureSummary } from "./taskSupport";
 import { NOVEL_WORKFLOW_STAGE_LABELS } from "../novel/workflow/novelWorkflow.shared";
+import { getI18nServerHandle } from "../../i18n";
+import { getCurrentRequestLocale } from "../../runtime/requestLocaleContext";
+
+function t(key: string, values?: Record<string, unknown>): string {
+  const handle = getI18nServerHandle();
+  if (!handle) return key;
+  const locale: LocaleCode = getCurrentRequestLocale() ?? DEFAULT_LOCALE;
+  const result = handle.t("serverLogs", key, { lng: locale, values });
+  return (result && result !== `serverLogs:${key}`) ? result : key;
+}
 
 interface WorkflowExplainabilityInput {
   status: TaskStatus;
@@ -49,23 +61,25 @@ const WORKFLOW_ITEM_STAGE_MAP: Partial<Record<string, NovelWorkflowStage>> = {
 };
 
 const CHECKPOINT_DISPLAY_STATUS: Record<NovelWorkflowCheckpoint, string> = {
-  candidate_selection_required: "等待确认书级方向",
-  book_contract_ready: "Book Contract 已就绪",
-  character_setup_required: "角色准备待审核",
-  volume_strategy_ready: "卷战略待审核",
-  chapter_batch_ready: "已准备章节可进入执行",
-  replan_required: "等待处理重规划",
-  workflow_completed: "自动导演已完成",
+  // i18n-ignore: lookup map keys — translated at runtime via t()
+  candidate_selection_required: "workflowExplainability.checkpointStatus.candidateSelectionRequired",
+  book_contract_ready: "workflowExplainability.checkpointStatus.bookContractReady",
+  character_setup_required: "workflowExplainability.checkpointStatus.characterSetupRequired",
+  volume_strategy_ready: "workflowExplainability.checkpointStatus.volumeStrategyReady",
+  chapter_batch_ready: "workflowExplainability.checkpointStatus.chapterBatchReady",
+  replan_required: "workflowExplainability.checkpointStatus.replanRequired",
+  workflow_completed: "workflowExplainability.checkpointStatus.workflowCompleted",
 };
 
 const CHECKPOINT_BLOCKING_REASON: Record<NovelWorkflowCheckpoint, string> = {
-  candidate_selection_required: "需要先确认书级方向，自动导演才能继续推进后续主链。",
-  book_contract_ready: "Book Contract 已生成，需先确认核心承诺后再继续后续规划。",
-  character_setup_required: "角色准备已生成，需先审核角色阵容后再继续推进。",
-  volume_strategy_ready: "卷战略与卷骨架已就绪，需先确认卷级推进方案后再继续。",
-  chapter_batch_ready: "章节范围的拆章与执行资源已经准备好，可以进入章节执行或继续自动执行当前范围。",
-  replan_required: "审计结果要求先处理重规划，后续章节才能继续推进。",
-  workflow_completed: "默认主流程已跑通，你可以直接进入章节执行继续写作。",
+  // i18n-ignore: lookup map keys — translated at runtime via t()
+  candidate_selection_required: "workflowExplainability.checkpointReason.candidateSelectionRequired",
+  book_contract_ready: "workflowExplainability.checkpointReason.bookContractReady",
+  character_setup_required: "workflowExplainability.checkpointReason.characterSetupRequired",
+  volume_strategy_ready: "workflowExplainability.checkpointReason.volumeStrategyReady",
+  chapter_batch_ready: "workflowExplainability.checkpointReason.chapterBatchReady",
+  replan_required: "workflowExplainability.checkpointReason.replanRequired",
+  workflow_completed: "workflowExplainability.checkpointReason.workflowCompleted",
 };
 
 const CHECKPOINT_LAST_HEALTHY_STAGE: Record<NovelWorkflowCheckpoint, NovelWorkflowStage> = {
@@ -78,37 +92,36 @@ const CHECKPOINT_LAST_HEALTHY_STAGE: Record<NovelWorkflowCheckpoint, NovelWorkfl
   workflow_completed: "quality_repair",
 };
 
-function getExecutionScopeLabel(input: WorkflowExplainabilityInput, fallback = "第 1-10 章"): string {
-  return input.executionScopeLabel?.trim() || fallback;
+function getExecutionScopeLabel(input: WorkflowExplainabilityInput, fallback?: string): string {
+  return input.executionScopeLabel?.trim() || fallback || t("workflowExplainability.defaultScope");
 }
 
 function buildAutoExecutionPreparedStatus(input: WorkflowExplainabilityInput): string {
-  return `${getExecutionScopeLabel(input)}已可进入章节执行`;
+  return t("workflowExplainability.autoExecution.preparedStatus", { scope: getExecutionScopeLabel(input) });
 }
 
 function buildAutoExecutionRunningStatus(input: WorkflowExplainabilityInput): string {
-  return `${getExecutionScopeLabel(input)}自动执行中`;
+  return t("workflowExplainability.autoExecution.runningStatus", { scope: getExecutionScopeLabel(input) });
 }
 
 function buildAutoExecutionPausedStatus(input: WorkflowExplainabilityInput): string {
-  return `${getExecutionScopeLabel(input)}自动执行已暂停`;
+  return t("workflowExplainability.autoExecution.pausedStatus", { scope: getExecutionScopeLabel(input) });
 }
 
 function buildAutoExecutionCancelledStatus(input: WorkflowExplainabilityInput): string {
-  return `${getExecutionScopeLabel(input)}自动执行已取消`;
+  return t("workflowExplainability.autoExecution.cancelledStatus", { scope: getExecutionScopeLabel(input) });
 }
 
 function buildAutoExecutionResumeAction(input: WorkflowExplainabilityInput): string {
-  return `继续自动执行${getExecutionScopeLabel(input)}`;
+  return t("workflowExplainability.autoExecution.resumeAction", { scope: getExecutionScopeLabel(input) });
 }
 
 function buildAutoExecutionPreparedReason(input: WorkflowExplainabilityInput): string {
-  const scopeLabel = getExecutionScopeLabel(input);
-  return `${scopeLabel}细化已准备完成，你可以进入章节执行，或继续让系统自动执行${scopeLabel}。`;
+  return t("workflowExplainability.autoExecution.preparedReason", { scope: getExecutionScopeLabel(input) });
 }
 
 function buildAutoExecutionPausedReason(input: WorkflowExplainabilityInput): string {
-  return `${getExecutionScopeLabel(input)}自动执行在批量阶段暂停了，建议先看结果，再决定是否继续自动执行当前范围。`;
+  return t("workflowExplainability.autoExecution.pausedReason", { scope: getExecutionScopeLabel(input) });
 }
 
 function isPreparedChapterBatchCheckpoint(input: WorkflowExplainabilityInput): boolean {
@@ -166,58 +179,58 @@ export function buildWorkflowResumeAction(
   } satisfies WorkflowExplainabilityInput;
   if (status === "waiting_approval") {
     if (checkpointType === "candidate_selection_required") {
-      return "继续确认书级方向";
+      return t("workflowExplainability.resumeAction.confirmCandidateDirection");
     }
     if (checkpointType === "book_contract_ready") {
-      return "查看 Book Contract";
+      return t("workflowExplainability.resumeAction.viewBookContract");
     }
     if (checkpointType === "character_setup_required") {
-      return "去审核角色准备";
+      return t("workflowExplainability.resumeAction.reviewCharacterSetup");
     }
     if (checkpointType === "volume_strategy_ready") {
-      return "查看卷战略";
+      return t("workflowExplainability.resumeAction.viewVolumeStrategy");
     }
     if (checkpointType === "chapter_batch_ready") {
       return buildAutoExecutionResumeAction(explainabilityInput);
     }
     if (checkpointType === "replan_required") {
-      return "处理重规划";
+      return t("workflowExplainability.resumeAction.handleReplan");
     }
     if (checkpointType === "workflow_completed") {
-      return "进入章节执行";
+      return t("workflowExplainability.resumeAction.enterChapterExecution");
     }
-    return "继续小说主流程";
+    return t("workflowExplainability.resumeAction.continueMainFlow");
   }
   if (explainabilityInput.pendingManualRecovery) {
-    return "从最近检查点恢复";
+    return t("workflowExplainability.resumeAction.resumeFromCheckpoint");
   }
   if (status === "failed" || status === "cancelled") {
     if (checkpointType === "chapter_batch_ready") {
       return buildAutoExecutionResumeAction(explainabilityInput);
     }
     if (checkpointType === "workflow_completed") {
-      return "进入章节执行";
+      return t("workflowExplainability.resumeAction.enterChapterExecution");
     }
-    return "从最近检查点恢复";
+    return t("workflowExplainability.resumeAction.resumeFromCheckpoint");
   }
   if (status === "running" || status === "queued") {
-    return "查看当前进度";
+    return t("workflowExplainability.resumeAction.viewCurrentProgress");
   }
   if (status === "succeeded" && checkpointType === "workflow_completed") {
-    return "进入章节执行";
+    return t("workflowExplainability.resumeAction.enterChapterExecution");
   }
   return null;
 }
 
 function buildDisplayStatus(input: WorkflowExplainabilityInput): string | null {
   if (input.pendingManualRecovery) {
-    return "等待手动恢复";
+    return t("workflowExplainability.displayStatus.waitingManualRecovery");
   }
   if (isAutoDirectorRecoveryInProgress(input)) {
     const currentStageLabel = getCurrentStageLabel(input);
     return currentStageLabel
-      ? `${currentStageLabel}恢复中`
-      : "自动导演恢复中";
+      ? t("workflowExplainability.displayStatus.stageRecovering", { stage: currentStageLabel })
+      : t("workflowExplainability.displayStatus.directorRecovering");
   }
   if (
     (input.status === "queued" || input.status === "running")
@@ -230,68 +243,68 @@ function buildDisplayStatus(input: WorkflowExplainabilityInput): string | null {
       return buildAutoExecutionPreparedStatus(input);
     }
     return input.checkpointType
-      ? CHECKPOINT_DISPLAY_STATUS[input.checkpointType]
-      : "等待继续小说主流程";
+      ? t(CHECKPOINT_DISPLAY_STATUS[input.checkpointType])
+      : t("workflowExplainability.displayStatus.waitingMainFlow");
   }
   if (input.status === "running") {
     const currentStageLabel = getCurrentStageLabel(input);
     return currentStageLabel
-      ? `${currentStageLabel}进行中`
-      : "自动导演进行中";
+      ? t("workflowExplainability.displayStatus.stageRunning", { stage: currentStageLabel })
+      : t("workflowExplainability.displayStatus.directorRunning");
   }
   if (input.status === "queued") {
-    return "自动导演排队中";
+    return t("workflowExplainability.displayStatus.directorQueued");
   }
   if (input.status === "failed") {
     if (input.checkpointType === "chapter_batch_ready") {
       return buildAutoExecutionPausedStatus(input);
     }
-    return "自动导演执行失败";
+    return t("workflowExplainability.displayStatus.directorFailed");
   }
   if (input.status === "cancelled") {
     if (input.checkpointType === "chapter_batch_ready") {
       return buildAutoExecutionCancelledStatus(input);
     }
-    return "自动导演已取消";
+    return t("workflowExplainability.displayStatus.directorCancelled");
   }
   if (input.checkpointType === "workflow_completed") {
-    return "自动导演已完成";
+    return t("workflowExplainability.displayStatus.directorCompleted");
   }
-  return input.status === "succeeded" ? "小说主流程已完成" : null;
+  return input.status === "succeeded" ? t("workflowExplainability.displayStatus.mainFlowCompleted") : null;
 }
 
 function buildBlockingReason(input: WorkflowExplainabilityInput): string | null {
   if (input.pendingManualRecovery) {
-    return input.lastError?.trim() || "服务重启后任务已暂停，等待手动恢复。";
+    return input.lastError?.trim() || t("workflowExplainability.blockingReason.pendingManualRecovery");
   }
   if (isAutoDirectorRecoveryInProgress(input)) {
-    return input.lastError?.trim() || "自动导演任务正在从服务重启中恢复。";
+    return input.lastError?.trim() || t("workflowExplainability.blockingReason.recoveryInProgress");
   }
   if (input.status === "running" || input.status === "succeeded") {
     return null;
   }
   if (input.status === "queued") {
-    return "任务已进入队列，正在等待工作线程和模型资源可用。";
+    return t("workflowExplainability.blockingReason.queued");
   }
   if (input.status === "waiting_approval") {
     if (input.checkpointType === "chapter_batch_ready") {
       return buildAutoExecutionPreparedReason(input);
     }
     return input.checkpointType
-      ? CHECKPOINT_BLOCKING_REASON[input.checkpointType]
-      : "当前流程已停在安全检查点，处理完当前阶段后才能继续。";
+      ? t(CHECKPOINT_BLOCKING_REASON[input.checkpointType])
+      : t("workflowExplainability.blockingReason.waitingCheckpoint");
   }
   if (input.status === "failed") {
     if (input.checkpointType === "chapter_batch_ready") {
-      return `${getExecutionScopeLabel(input)}自动执行在批量阶段中断了，建议从最近健康阶段继续恢复。`;
+      return t("workflowExplainability.blockingReason.chapterBatchFailed", { scope: getExecutionScopeLabel(input) });
     }
-    return normalizeFailureSummary(input.lastError, "当前阶段执行失败，建议从最近检查点恢复。");
+    return normalizeFailureSummary(input.lastError, t("workflowExplainability.blockingReason.failedDefault"));
   }
   if (input.status === "cancelled") {
     if (input.checkpointType === "chapter_batch_ready") {
-      return `${getExecutionScopeLabel(input)}自动执行已取消，如需继续可从最近健康阶段恢复。`;
+      return t("workflowExplainability.blockingReason.chapterBatchCancelled", { scope: getExecutionScopeLabel(input) });
     }
-    return "任务已取消，如仍需继续，可从最近检查点恢复。";
+    return t("workflowExplainability.blockingReason.cancelled");
   }
   return null;
 }

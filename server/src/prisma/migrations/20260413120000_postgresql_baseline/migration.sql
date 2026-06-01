@@ -125,7 +125,7 @@ CREATE TYPE "AntiAiSeverity" AS ENUM ('low', 'medium', 'high');
 CREATE TYPE "CharacterGender" AS ENUM ('male', 'female', 'other', 'unknown');
 
 -- CreateTable
-CREATE TABLE "Novel" (
+CREATE TABLE IF NOT EXISTS "Novel" (
     "id" TEXT NOT NULL,
     "title" TEXT NOT NULL,
     "description" TEXT,
@@ -168,7 +168,7 @@ CREATE TABLE "Novel" (
 );
 
 -- CreateTable
-CREATE TABLE "CreativeDecision" (
+CREATE TABLE IF NOT EXISTS "CreativeDecision" (
     "id" TEXT NOT NULL,
     "novelId" TEXT NOT NULL,
     "chapterId" TEXT,
@@ -185,7 +185,7 @@ CREATE TABLE "CreativeDecision" (
 );
 
 -- CreateTable
-CREATE TABLE "NovelSnapshot" (
+CREATE TABLE IF NOT EXISTS "NovelSnapshot" (
     "id" TEXT NOT NULL,
     "novelId" TEXT NOT NULL,
     "label" TEXT,
@@ -197,7 +197,7 @@ CREATE TABLE "NovelSnapshot" (
 );
 
 -- CreateTable
-CREATE TABLE "Chapter" (
+CREATE TABLE IF NOT EXISTS "Chapter" (
     "id" TEXT NOT NULL,
     "title" TEXT NOT NULL,
     "content" TEXT DEFAULT '',
@@ -226,7 +226,7 @@ CREATE TABLE "Chapter" (
 );
 
 -- CreateTable
-CREATE TABLE "Character" (
+CREATE TABLE IF NOT EXISTS "Character" (
     "id" TEXT NOT NULL,
     "name" TEXT NOT NULL,
     "role" TEXT NOT NULL,
@@ -261,7 +261,7 @@ CREATE TABLE "Character" (
 );
 
 -- CreateTable
-CREATE TABLE "CharacterRelation" (
+CREATE TABLE IF NOT EXISTS "CharacterRelation" (
     "id" TEXT NOT NULL,
     "novelId" TEXT NOT NULL,
     "sourceCharacterId" TEXT NOT NULL,
@@ -284,7 +284,7 @@ CREATE TABLE "CharacterRelation" (
 );
 
 -- CreateTable
-CREATE TABLE "CharacterCastOption" (
+CREATE TABLE IF NOT EXISTS "CharacterCastOption" (
     "id" TEXT NOT NULL,
     "novelId" TEXT NOT NULL,
     "title" TEXT NOT NULL,
@@ -300,7 +300,7 @@ CREATE TABLE "CharacterCastOption" (
 );
 
 -- CreateTable
-CREATE TABLE "CharacterCastOptionMember" (
+CREATE TABLE IF NOT EXISTS "CharacterCastOptionMember" (
     "id" TEXT NOT NULL,
     "optionId" TEXT NOT NULL,
     "sortOrder" INTEGER NOT NULL,
@@ -326,7 +326,7 @@ CREATE TABLE "CharacterCastOptionMember" (
 );
 
 -- CreateTable
-CREATE TABLE "CharacterCastOptionRelation" (
+CREATE TABLE IF NOT EXISTS "CharacterCastOptionRelation" (
     "id" TEXT NOT NULL,
     "optionId" TEXT NOT NULL,
     "sortOrder" INTEGER NOT NULL,
@@ -345,7 +345,7 @@ CREATE TABLE "CharacterCastOptionRelation" (
 );
 
 -- CreateTable
-CREATE TABLE "CharacterTimeline" (
+CREATE TABLE IF NOT EXISTS "CharacterTimeline" (
     "id" TEXT NOT NULL,
     "novelId" TEXT NOT NULL,
     "characterId" TEXT NOT NULL,
@@ -361,7 +361,7 @@ CREATE TABLE "CharacterTimeline" (
 );
 
 -- CreateTable
-CREATE TABLE "CharacterCandidate" (
+CREATE TABLE IF NOT EXISTS "CharacterCandidate" (
     "id" TEXT NOT NULL,
     "novelId" TEXT NOT NULL,
     "sourceChapterId" TEXT,
@@ -379,7 +379,7 @@ CREATE TABLE "CharacterCandidate" (
 );
 
 -- CreateTable
-CREATE TABLE "CharacterVolumeAssignment" (
+CREATE TABLE IF NOT EXISTS "CharacterVolumeAssignment" (
     "id" TEXT NOT NULL,
     "novelId" TEXT NOT NULL,
     "characterId" TEXT NOT NULL,
@@ -398,7 +398,7 @@ CREATE TABLE "CharacterVolumeAssignment" (
 );
 
 -- CreateTable
-CREATE TABLE "CharacterFactionTrack" (
+CREATE TABLE IF NOT EXISTS "CharacterFactionTrack" (
     "id" TEXT NOT NULL,
     "novelId" TEXT NOT NULL,
     "characterId" TEXT NOT NULL,
@@ -417,7 +417,7 @@ CREATE TABLE "CharacterFactionTrack" (
 );
 
 -- CreateTable
-CREATE TABLE "CharacterRelationStage" (
+CREATE TABLE IF NOT EXISTS "CharacterRelationStage" (
     "id" TEXT NOT NULL,
     "novelId" TEXT NOT NULL,
     "relationId" TEXT,
@@ -439,7 +439,7 @@ CREATE TABLE "CharacterRelationStage" (
 );
 
 -- CreateTable
-CREATE TABLE "BaseCharacter" (
+CREATE TABLE IF NOT EXISTS "BaseCharacter" (
     "id" TEXT NOT NULL,
     "name" TEXT NOT NULL,
     "role" TEXT NOT NULL,
@@ -459,7 +459,7 @@ CREATE TABLE "BaseCharacter" (
 );
 
 -- CreateTable
-CREATE TABLE "ImageGenerationTask" (
+CREATE TABLE IF NOT EXISTS "ImageGenerationTask" (
     "id" TEXT NOT NULL,
     "sceneType" "ImageSceneType" NOT NULL DEFAULT 'character',
     "baseCharacterId" TEXT,
@@ -490,7 +490,7 @@ CREATE TABLE "ImageGenerationTask" (
 );
 
 -- CreateTable
-CREATE TABLE "ImageAsset" (
+CREATE TABLE IF NOT EXISTS "ImageAsset" (
     "id" TEXT NOT NULL,
     "taskId" TEXT NOT NULL,
     "sceneType" "ImageSceneType" NOT NULL DEFAULT 'character',
@@ -513,7 +513,7 @@ CREATE TABLE "ImageAsset" (
 );
 
 -- CreateTable
-CREATE TABLE "NovelGenre" (
+CREATE TABLE IF NOT EXISTS "NovelGenre" (
     "id" TEXT NOT NULL,
     "name" TEXT NOT NULL,
     "description" TEXT,
@@ -526,7 +526,7 @@ CREATE TABLE "NovelGenre" (
 );
 
 -- CreateTable
-CREATE TABLE "NovelStoryMode" (
+CREATE TABLE IF NOT EXISTS "NovelStoryMode" (
     "id" TEXT NOT NULL,
     "name" TEXT NOT NULL,
     "description" TEXT,
@@ -540,7 +540,7 @@ CREATE TABLE "NovelStoryMode" (
 );
 
 -- CreateTable
-CREATE TABLE "World" (
+CREATE TABLE IF NOT EXISTS "World" (
     "id" TEXT NOT NULL,
     "name" TEXT NOT NULL,
     "description" TEXT,
@@ -576,7 +576,7 @@ CREATE TABLE "World" (
 );
 
 -- CreateTable
-CREATE TABLE "WorldPropertyLibrary" (
+CREATE TABLE IF NOT EXISTS "WorldPropertyLibrary" (
     "id" TEXT NOT NULL,
     "name" TEXT NOT NULL,
     "description" TEXT,
@@ -591,7 +591,7 @@ CREATE TABLE "WorldPropertyLibrary" (
 );
 
 -- CreateTable
-CREATE TABLE "WorldSnapshot" (
+CREATE TABLE IF NOT EXISTS "WorldSnapshot" (
     "id" TEXT NOT NULL,
     "worldId" TEXT NOT NULL,
     "label" TEXT,
@@ -602,7 +602,7 @@ CREATE TABLE "WorldSnapshot" (
 );
 
 -- CreateTable
-CREATE TABLE "WorldDeepeningQA" (
+CREATE TABLE IF NOT EXISTS "WorldDeepeningQA" (
     "id" TEXT NOT NULL,
     "worldId" TEXT NOT NULL,
     "priority" TEXT NOT NULL DEFAULT 'recommended',
@@ -619,7 +619,7 @@ CREATE TABLE "WorldDeepeningQA" (
 );
 
 -- CreateTable
-CREATE TABLE "WorldConsistencyIssue" (
+CREATE TABLE IF NOT EXISTS "WorldConsistencyIssue" (
     "id" TEXT NOT NULL,
     "worldId" TEXT NOT NULL,
     "severity" TEXT NOT NULL,
@@ -636,7 +636,7 @@ CREATE TABLE "WorldConsistencyIssue" (
 );
 
 -- CreateTable
-CREATE TABLE "WritingFormula" (
+CREATE TABLE IF NOT EXISTS "WritingFormula" (
     "id" TEXT NOT NULL,
     "name" TEXT NOT NULL,
     "sourceText" TEXT,
@@ -667,7 +667,7 @@ CREATE TABLE "WritingFormula" (
 );
 
 -- CreateTable
-CREATE TABLE "StyleProfile" (
+CREATE TABLE IF NOT EXISTS "StyleProfile" (
     "id" TEXT NOT NULL,
     "name" TEXT NOT NULL,
     "description" TEXT,
@@ -691,7 +691,7 @@ CREATE TABLE "StyleProfile" (
 );
 
 -- CreateTable
-CREATE TABLE "StyleTemplate" (
+CREATE TABLE IF NOT EXISTS "StyleTemplate" (
     "id" TEXT NOT NULL,
     "key" TEXT NOT NULL,
     "name" TEXT NOT NULL,
@@ -712,7 +712,7 @@ CREATE TABLE "StyleTemplate" (
 );
 
 -- CreateTable
-CREATE TABLE "AntiAiRule" (
+CREATE TABLE IF NOT EXISTS "AntiAiRule" (
     "id" TEXT NOT NULL,
     "key" TEXT NOT NULL,
     "name" TEXT NOT NULL,
@@ -731,7 +731,7 @@ CREATE TABLE "AntiAiRule" (
 );
 
 -- CreateTable
-CREATE TABLE "StyleProfileAntiAiRule" (
+CREATE TABLE IF NOT EXISTS "StyleProfileAntiAiRule" (
     "id" TEXT NOT NULL,
     "styleProfileId" TEXT NOT NULL,
     "antiAiRuleId" TEXT NOT NULL,
@@ -744,7 +744,7 @@ CREATE TABLE "StyleProfileAntiAiRule" (
 );
 
 -- CreateTable
-CREATE TABLE "StyleBinding" (
+CREATE TABLE IF NOT EXISTS "StyleBinding" (
     "id" TEXT NOT NULL,
     "styleProfileId" TEXT NOT NULL,
     "targetType" "StyleBindingTargetType" NOT NULL,
@@ -759,7 +759,7 @@ CREATE TABLE "StyleBinding" (
 );
 
 -- CreateTable
-CREATE TABLE "TitleLibrary" (
+CREATE TABLE IF NOT EXISTS "TitleLibrary" (
     "id" TEXT NOT NULL,
     "title" TEXT NOT NULL,
     "description" TEXT,
@@ -774,7 +774,7 @@ CREATE TABLE "TitleLibrary" (
 );
 
 -- CreateTable
-CREATE TABLE "APIKey" (
+CREATE TABLE IF NOT EXISTS "APIKey" (
     "id" TEXT NOT NULL,
     "provider" TEXT NOT NULL,
     "displayName" TEXT,
@@ -790,7 +790,7 @@ CREATE TABLE "APIKey" (
 );
 
 -- CreateTable
-CREATE TABLE "AppSetting" (
+CREATE TABLE IF NOT EXISTS "AppSetting" (
     "key" TEXT NOT NULL,
     "value" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -800,7 +800,7 @@ CREATE TABLE "AppSetting" (
 );
 
 -- CreateTable
-CREATE TABLE "ModelRouteConfig" (
+CREATE TABLE IF NOT EXISTS "ModelRouteConfig" (
     "id" TEXT NOT NULL,
     "taskType" TEXT NOT NULL,
     "provider" TEXT NOT NULL,
@@ -814,7 +814,7 @@ CREATE TABLE "ModelRouteConfig" (
 );
 
 -- CreateTable
-CREATE TABLE "NovelBible" (
+CREATE TABLE IF NOT EXISTS "NovelBible" (
     "id" TEXT NOT NULL,
     "novelId" TEXT NOT NULL,
     "coreSetting" TEXT,
@@ -830,7 +830,7 @@ CREATE TABLE "NovelBible" (
 );
 
 -- CreateTable
-CREATE TABLE "PlotBeat" (
+CREATE TABLE IF NOT EXISTS "PlotBeat" (
     "id" TEXT NOT NULL,
     "novelId" TEXT NOT NULL,
     "chapterOrder" INTEGER,
@@ -846,7 +846,7 @@ CREATE TABLE "PlotBeat" (
 );
 
 -- CreateTable
-CREATE TABLE "ChapterSummary" (
+CREATE TABLE IF NOT EXISTS "ChapterSummary" (
     "id" TEXT NOT NULL,
     "novelId" TEXT NOT NULL,
     "chapterId" TEXT NOT NULL,
@@ -861,7 +861,7 @@ CREATE TABLE "ChapterSummary" (
 );
 
 -- CreateTable
-CREATE TABLE "ConsistencyFact" (
+CREATE TABLE IF NOT EXISTS "ConsistencyFact" (
     "id" TEXT NOT NULL,
     "novelId" TEXT NOT NULL,
     "chapterId" TEXT,
@@ -875,7 +875,7 @@ CREATE TABLE "ConsistencyFact" (
 );
 
 -- CreateTable
-CREATE TABLE "GenerationJob" (
+CREATE TABLE IF NOT EXISTS "GenerationJob" (
     "id" TEXT NOT NULL,
     "novelId" TEXT NOT NULL,
     "startOrder" INTEGER NOT NULL,
@@ -914,7 +914,7 @@ CREATE TABLE "GenerationJob" (
 );
 
 -- CreateTable
-CREATE TABLE "AgentRun" (
+CREATE TABLE IF NOT EXISTS "AgentRun" (
     "id" TEXT NOT NULL,
     "novelId" TEXT,
     "chapterId" TEXT,
@@ -935,7 +935,7 @@ CREATE TABLE "AgentRun" (
 );
 
 -- CreateTable
-CREATE TABLE "AgentStep" (
+CREATE TABLE IF NOT EXISTS "AgentStep" (
     "id" TEXT NOT NULL,
     "runId" TEXT NOT NULL,
     "seq" INTEGER NOT NULL,
@@ -959,7 +959,7 @@ CREATE TABLE "AgentStep" (
 );
 
 -- CreateTable
-CREATE TABLE "AgentApproval" (
+CREATE TABLE IF NOT EXISTS "AgentApproval" (
     "id" TEXT NOT NULL,
     "runId" TEXT NOT NULL,
     "stepId" TEXT,
@@ -980,7 +980,7 @@ CREATE TABLE "AgentApproval" (
 );
 
 -- CreateTable
-CREATE TABLE "CreativeHubThread" (
+CREATE TABLE IF NOT EXISTS "CreativeHubThread" (
     "id" TEXT NOT NULL,
     "title" TEXT NOT NULL DEFAULT '新对话',
     "archived" BOOLEAN NOT NULL DEFAULT false,
@@ -996,7 +996,7 @@ CREATE TABLE "CreativeHubThread" (
 );
 
 -- CreateTable
-CREATE TABLE "CreativeHubCheckpoint" (
+CREATE TABLE IF NOT EXISTS "CreativeHubCheckpoint" (
     "id" TEXT NOT NULL,
     "threadId" TEXT NOT NULL,
     "checkpointId" TEXT NOT NULL,
@@ -1013,7 +1013,7 @@ CREATE TABLE "CreativeHubCheckpoint" (
 );
 
 -- CreateTable
-CREATE TABLE "StorylineVersion" (
+CREATE TABLE IF NOT EXISTS "StorylineVersion" (
     "id" TEXT NOT NULL,
     "novelId" TEXT NOT NULL,
     "version" INTEGER NOT NULL,
@@ -1027,7 +1027,7 @@ CREATE TABLE "StorylineVersion" (
 );
 
 -- CreateTable
-CREATE TABLE "VolumePlanVersion" (
+CREATE TABLE IF NOT EXISTS "VolumePlanVersion" (
     "id" TEXT NOT NULL,
     "novelId" TEXT NOT NULL,
     "version" INTEGER NOT NULL,
@@ -1041,7 +1041,7 @@ CREATE TABLE "VolumePlanVersion" (
 );
 
 -- CreateTable
-CREATE TABLE "VolumePlan" (
+CREATE TABLE IF NOT EXISTS "VolumePlan" (
     "id" TEXT NOT NULL,
     "novelId" TEXT NOT NULL,
     "sortOrder" INTEGER NOT NULL,
@@ -1063,7 +1063,7 @@ CREATE TABLE "VolumePlan" (
 );
 
 -- CreateTable
-CREATE TABLE "VolumeChapterPlan" (
+CREATE TABLE IF NOT EXISTS "VolumeChapterPlan" (
     "id" TEXT NOT NULL,
     "volumeId" TEXT NOT NULL,
     "chapterOrder" INTEGER NOT NULL,
@@ -1083,7 +1083,7 @@ CREATE TABLE "VolumeChapterPlan" (
 );
 
 -- CreateTable
-CREATE TABLE "QualityReport" (
+CREATE TABLE IF NOT EXISTS "QualityReport" (
     "id" TEXT NOT NULL,
     "novelId" TEXT NOT NULL,
     "chapterId" TEXT,
@@ -1101,7 +1101,7 @@ CREATE TABLE "QualityReport" (
 );
 
 -- CreateTable
-CREATE TABLE "StoryMacroPlan" (
+CREATE TABLE IF NOT EXISTS "StoryMacroPlan" (
     "id" TEXT NOT NULL,
     "novelId" TEXT NOT NULL,
     "storyInput" TEXT,
@@ -1118,7 +1118,7 @@ CREATE TABLE "StoryMacroPlan" (
 );
 
 -- CreateTable
-CREATE TABLE "BookContract" (
+CREATE TABLE IF NOT EXISTS "BookContract" (
     "id" TEXT NOT NULL,
     "novelId" TEXT NOT NULL,
     "readingPromise" TEXT NOT NULL,
@@ -1137,7 +1137,7 @@ CREATE TABLE "BookContract" (
 );
 
 -- CreateTable
-CREATE TABLE "NovelWorkflowTask" (
+CREATE TABLE IF NOT EXISTS "NovelWorkflowTask" (
     "id" TEXT NOT NULL,
     "novelId" TEXT,
     "lane" "NovelWorkflowLane" NOT NULL,
@@ -1171,7 +1171,7 @@ CREATE TABLE "NovelWorkflowTask" (
 );
 
 -- CreateTable
-CREATE TABLE "StoryStateSnapshot" (
+CREATE TABLE IF NOT EXISTS "StoryStateSnapshot" (
     "id" TEXT NOT NULL,
     "novelId" TEXT NOT NULL,
     "sourceChapterId" TEXT,
@@ -1184,7 +1184,7 @@ CREATE TABLE "StoryStateSnapshot" (
 );
 
 -- CreateTable
-CREATE TABLE "CharacterState" (
+CREATE TABLE IF NOT EXISTS "CharacterState" (
     "id" TEXT NOT NULL,
     "snapshotId" TEXT NOT NULL,
     "characterId" TEXT NOT NULL,
@@ -1202,7 +1202,7 @@ CREATE TABLE "CharacterState" (
 );
 
 -- CreateTable
-CREATE TABLE "RelationState" (
+CREATE TABLE IF NOT EXISTS "RelationState" (
     "id" TEXT NOT NULL,
     "snapshotId" TEXT NOT NULL,
     "sourceCharacterId" TEXT NOT NULL,
@@ -1219,7 +1219,7 @@ CREATE TABLE "RelationState" (
 );
 
 -- CreateTable
-CREATE TABLE "InformationState" (
+CREATE TABLE IF NOT EXISTS "InformationState" (
     "id" TEXT NOT NULL,
     "snapshotId" TEXT NOT NULL,
     "holderType" TEXT NOT NULL,
@@ -1234,7 +1234,7 @@ CREATE TABLE "InformationState" (
 );
 
 -- CreateTable
-CREATE TABLE "ForeshadowState" (
+CREATE TABLE IF NOT EXISTS "ForeshadowState" (
     "id" TEXT NOT NULL,
     "snapshotId" TEXT NOT NULL,
     "title" TEXT NOT NULL,
@@ -1249,7 +1249,7 @@ CREATE TABLE "ForeshadowState" (
 );
 
 -- CreateTable
-CREATE TABLE "OpenConflict" (
+CREATE TABLE IF NOT EXISTS "OpenConflict" (
     "id" TEXT NOT NULL,
     "novelId" TEXT NOT NULL,
     "chapterId" TEXT,
@@ -1273,7 +1273,7 @@ CREATE TABLE "OpenConflict" (
 );
 
 -- CreateTable
-CREATE TABLE "PayoffLedgerItem" (
+CREATE TABLE IF NOT EXISTS "PayoffLedgerItem" (
     "id" TEXT NOT NULL,
     "novelId" TEXT NOT NULL,
     "ledgerKey" TEXT NOT NULL,
@@ -1301,7 +1301,7 @@ CREATE TABLE "PayoffLedgerItem" (
 );
 
 -- CreateTable
-CREATE TABLE "StoryPlan" (
+CREATE TABLE IF NOT EXISTS "StoryPlan" (
     "id" TEXT NOT NULL,
     "novelId" TEXT NOT NULL,
     "chapterId" TEXT,
@@ -1330,7 +1330,7 @@ CREATE TABLE "StoryPlan" (
 );
 
 -- CreateTable
-CREATE TABLE "ChapterPlanScene" (
+CREATE TABLE IF NOT EXISTS "ChapterPlanScene" (
     "id" TEXT NOT NULL,
     "planId" TEXT NOT NULL,
     "sortOrder" INTEGER NOT NULL,
@@ -1346,7 +1346,7 @@ CREATE TABLE "ChapterPlanScene" (
 );
 
 -- CreateTable
-CREATE TABLE "ReplanRun" (
+CREATE TABLE IF NOT EXISTS "ReplanRun" (
     "id" TEXT NOT NULL,
     "novelId" TEXT NOT NULL,
     "chapterId" TEXT,
@@ -1360,7 +1360,7 @@ CREATE TABLE "ReplanRun" (
 );
 
 -- CreateTable
-CREATE TABLE "AuditReport" (
+CREATE TABLE IF NOT EXISTS "AuditReport" (
     "id" TEXT NOT NULL,
     "novelId" TEXT NOT NULL,
     "chapterId" TEXT NOT NULL,
@@ -1375,7 +1375,7 @@ CREATE TABLE "AuditReport" (
 );
 
 -- CreateTable
-CREATE TABLE "AuditIssue" (
+CREATE TABLE IF NOT EXISTS "AuditIssue" (
     "id" TEXT NOT NULL,
     "reportId" TEXT NOT NULL,
     "auditType" "AuditType" NOT NULL,
@@ -1392,7 +1392,7 @@ CREATE TABLE "AuditIssue" (
 );
 
 -- CreateTable
-CREATE TABLE "KnowledgeDocument" (
+CREATE TABLE IF NOT EXISTS "KnowledgeDocument" (
     "id" TEXT NOT NULL,
     "title" TEXT NOT NULL,
     "fileName" TEXT NOT NULL,
@@ -1408,7 +1408,7 @@ CREATE TABLE "KnowledgeDocument" (
 );
 
 -- CreateTable
-CREATE TABLE "KnowledgeDocumentVersion" (
+CREATE TABLE IF NOT EXISTS "KnowledgeDocumentVersion" (
     "id" TEXT NOT NULL,
     "documentId" TEXT NOT NULL,
     "versionNumber" INTEGER NOT NULL,
@@ -1421,7 +1421,7 @@ CREATE TABLE "KnowledgeDocumentVersion" (
 );
 
 -- CreateTable
-CREATE TABLE "KnowledgeBinding" (
+CREATE TABLE IF NOT EXISTS "KnowledgeBinding" (
     "id" TEXT NOT NULL,
     "targetType" "KnowledgeBindingTargetType" NOT NULL,
     "targetId" TEXT NOT NULL,
@@ -1432,7 +1432,7 @@ CREATE TABLE "KnowledgeBinding" (
 );
 
 -- CreateTable
-CREATE TABLE "BookAnalysis" (
+CREATE TABLE IF NOT EXISTS "BookAnalysis" (
     "id" TEXT NOT NULL,
     "documentId" TEXT NOT NULL,
     "documentVersionId" TEXT NOT NULL,
@@ -1461,7 +1461,7 @@ CREATE TABLE "BookAnalysis" (
 );
 
 -- CreateTable
-CREATE TABLE "BookAnalysisSourceCache" (
+CREATE TABLE IF NOT EXISTS "BookAnalysisSourceCache" (
     "id" TEXT NOT NULL,
     "documentVersionId" TEXT NOT NULL,
     "provider" TEXT NOT NULL,
@@ -1478,7 +1478,7 @@ CREATE TABLE "BookAnalysisSourceCache" (
 );
 
 -- CreateTable
-CREATE TABLE "BookAnalysisSection" (
+CREATE TABLE IF NOT EXISTS "BookAnalysisSection" (
     "id" TEXT NOT NULL,
     "analysisId" TEXT NOT NULL,
     "sectionKey" TEXT NOT NULL,
@@ -1497,7 +1497,7 @@ CREATE TABLE "BookAnalysisSection" (
 );
 
 -- CreateTable
-CREATE TABLE "KnowledgeChunk" (
+CREATE TABLE IF NOT EXISTS "KnowledgeChunk" (
     "id" TEXT NOT NULL,
     "tenantId" TEXT NOT NULL DEFAULT 'default',
     "ownerType" "RagOwnerType" NOT NULL,
@@ -1522,7 +1522,7 @@ CREATE TABLE "KnowledgeChunk" (
 );
 
 -- CreateTable
-CREATE TABLE "RagIndexJob" (
+CREATE TABLE IF NOT EXISTS "RagIndexJob" (
     "id" TEXT NOT NULL,
     "tenantId" TEXT NOT NULL DEFAULT 'default',
     "jobType" "RagJobType" NOT NULL,
@@ -1541,7 +1541,7 @@ CREATE TABLE "RagIndexJob" (
 );
 
 -- CreateTable
-CREATE TABLE "TaskCenterArchive" (
+CREATE TABLE IF NOT EXISTS "TaskCenterArchive" (
     "id" TEXT NOT NULL,
     "taskKind" TEXT NOT NULL,
     "taskId" TEXT NOT NULL,
@@ -1551,796 +1551,799 @@ CREATE TABLE "TaskCenterArchive" (
 );
 
 -- CreateIndex
-CREATE INDEX "Novel_genreId_idx" ON "Novel"("genreId");
+CREATE INDEX IF NOT EXISTS "Novel_genreId_idx" ON "Novel"("genreId");
 
 -- CreateIndex
-CREATE INDEX "Novel_primaryStoryModeId_idx" ON "Novel"("primaryStoryModeId");
+CREATE INDEX IF NOT EXISTS "Novel_primaryStoryModeId_idx" ON "Novel"("primaryStoryModeId");
 
 -- CreateIndex
-CREATE INDEX "Novel_secondaryStoryModeId_idx" ON "Novel"("secondaryStoryModeId");
+CREATE INDEX IF NOT EXISTS "Novel_secondaryStoryModeId_idx" ON "Novel"("secondaryStoryModeId");
 
 -- CreateIndex
-CREATE INDEX "Novel_worldId_idx" ON "Novel"("worldId");
+CREATE INDEX IF NOT EXISTS "Novel_worldId_idx" ON "Novel"("worldId");
 
 -- CreateIndex
-CREATE INDEX "Novel_writingMode_idx" ON "Novel"("writingMode");
+CREATE INDEX IF NOT EXISTS "Novel_writingMode_idx" ON "Novel"("writingMode");
 
 -- CreateIndex
-CREATE INDEX "Novel_sourceNovelId_idx" ON "Novel"("sourceNovelId");
+CREATE INDEX IF NOT EXISTS "Novel_sourceNovelId_idx" ON "Novel"("sourceNovelId");
 
 -- CreateIndex
-CREATE INDEX "Novel_sourceKnowledgeDocumentId_idx" ON "Novel"("sourceKnowledgeDocumentId");
+CREATE INDEX IF NOT EXISTS "Novel_sourceKnowledgeDocumentId_idx" ON "Novel"("sourceKnowledgeDocumentId");
 
 -- CreateIndex
-CREATE INDEX "Novel_continuationBookAnalysisId_idx" ON "Novel"("continuationBookAnalysisId");
+CREATE INDEX IF NOT EXISTS "Novel_continuationBookAnalysisId_idx" ON "Novel"("continuationBookAnalysisId");
 
 -- CreateIndex
-CREATE INDEX "CreativeDecision_novelId_createdAt_idx" ON "CreativeDecision"("novelId", "createdAt");
+CREATE INDEX IF NOT EXISTS "CreativeDecision_novelId_createdAt_idx" ON "CreativeDecision"("novelId", "createdAt");
 
 -- CreateIndex
-CREATE INDEX "NovelSnapshot_novelId_createdAt_idx" ON "NovelSnapshot"("novelId", "createdAt");
+CREATE INDEX IF NOT EXISTS "NovelSnapshot_novelId_createdAt_idx" ON "NovelSnapshot"("novelId", "createdAt");
 
 -- CreateIndex
-CREATE INDEX "Chapter_novelId_order_idx" ON "Chapter"("novelId", "order");
+CREATE INDEX IF NOT EXISTS "Chapter_novelId_order_idx" ON "Chapter"("novelId", "order");
 
 -- CreateIndex
-CREATE INDEX "Character_novelId_idx" ON "Character"("novelId");
+CREATE INDEX IF NOT EXISTS "Character_novelId_idx" ON "Character"("novelId");
 
 -- CreateIndex
-CREATE INDEX "Character_baseCharacterId_idx" ON "Character"("baseCharacterId");
+CREATE INDEX IF NOT EXISTS "Character_baseCharacterId_idx" ON "Character"("baseCharacterId");
 
 -- CreateIndex
-CREATE INDEX "CharacterRelation_novelId_updatedAt_idx" ON "CharacterRelation"("novelId", "updatedAt");
+CREATE INDEX IF NOT EXISTS "CharacterRelation_novelId_updatedAt_idx" ON "CharacterRelation"("novelId", "updatedAt");
 
 -- CreateIndex
-CREATE INDEX "CharacterRelation_sourceCharacterId_idx" ON "CharacterRelation"("sourceCharacterId");
+CREATE INDEX IF NOT EXISTS "CharacterRelation_sourceCharacterId_idx" ON "CharacterRelation"("sourceCharacterId");
 
 -- CreateIndex
-CREATE INDEX "CharacterRelation_targetCharacterId_idx" ON "CharacterRelation"("targetCharacterId");
+CREATE INDEX IF NOT EXISTS "CharacterRelation_targetCharacterId_idx" ON "CharacterRelation"("targetCharacterId");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "CharacterRelation_novelId_sourceCharacterId_targetCharacter_key" ON "CharacterRelation"("novelId", "sourceCharacterId", "targetCharacterId");
+CREATE UNIQUE INDEX IF NOT EXISTS "CharacterRelation_novelId_sourceCharacterId_targetCharacter_key" ON "CharacterRelation"("novelId", "sourceCharacterId", "targetCharacterId");
 
 -- CreateIndex
-CREATE INDEX "CharacterCastOption_novelId_updatedAt_idx" ON "CharacterCastOption"("novelId", "updatedAt");
+CREATE INDEX IF NOT EXISTS "CharacterCastOption_novelId_updatedAt_idx" ON "CharacterCastOption"("novelId", "updatedAt");
 
 -- CreateIndex
-CREATE INDEX "CharacterCastOptionMember_optionId_sortOrder_idx" ON "CharacterCastOptionMember"("optionId", "sortOrder");
+CREATE INDEX IF NOT EXISTS "CharacterCastOptionMember_optionId_sortOrder_idx" ON "CharacterCastOptionMember"("optionId", "sortOrder");
 
 -- CreateIndex
-CREATE INDEX "CharacterCastOptionRelation_optionId_sortOrder_idx" ON "CharacterCastOptionRelation"("optionId", "sortOrder");
+CREATE INDEX IF NOT EXISTS "CharacterCastOptionRelation_optionId_sortOrder_idx" ON "CharacterCastOptionRelation"("optionId", "sortOrder");
 
 -- CreateIndex
-CREATE INDEX "CharacterTimeline_novelId_characterId_idx" ON "CharacterTimeline"("novelId", "characterId");
+CREATE INDEX IF NOT EXISTS "CharacterTimeline_novelId_characterId_idx" ON "CharacterTimeline"("novelId", "characterId");
 
 -- CreateIndex
-CREATE INDEX "CharacterTimeline_characterId_chapterOrder_idx" ON "CharacterTimeline"("characterId", "chapterOrder");
+CREATE INDEX IF NOT EXISTS "CharacterTimeline_characterId_chapterOrder_idx" ON "CharacterTimeline"("characterId", "chapterOrder");
 
 -- CreateIndex
-CREATE INDEX "CharacterTimeline_chapterId_idx" ON "CharacterTimeline"("chapterId");
+CREATE INDEX IF NOT EXISTS "CharacterTimeline_chapterId_idx" ON "CharacterTimeline"("chapterId");
 
 -- CreateIndex
-CREATE INDEX "CharacterCandidate_novelId_status_updatedAt_idx" ON "CharacterCandidate"("novelId", "status", "updatedAt");
+CREATE INDEX IF NOT EXISTS "CharacterCandidate_novelId_status_updatedAt_idx" ON "CharacterCandidate"("novelId", "status", "updatedAt");
 
 -- CreateIndex
-CREATE INDEX "CharacterCandidate_sourceChapterId_idx" ON "CharacterCandidate"("sourceChapterId");
+CREATE INDEX IF NOT EXISTS "CharacterCandidate_sourceChapterId_idx" ON "CharacterCandidate"("sourceChapterId");
 
 -- CreateIndex
-CREATE INDEX "CharacterCandidate_matchedCharacterId_idx" ON "CharacterCandidate"("matchedCharacterId");
+CREATE INDEX IF NOT EXISTS "CharacterCandidate_matchedCharacterId_idx" ON "CharacterCandidate"("matchedCharacterId");
 
 -- CreateIndex
-CREATE INDEX "CharacterVolumeAssignment_novelId_volumeId_isCore_idx" ON "CharacterVolumeAssignment"("novelId", "volumeId", "isCore");
+CREATE INDEX IF NOT EXISTS "CharacterVolumeAssignment_novelId_volumeId_isCore_idx" ON "CharacterVolumeAssignment"("novelId", "volumeId", "isCore");
 
 -- CreateIndex
-CREATE INDEX "CharacterVolumeAssignment_volumeId_characterId_idx" ON "CharacterVolumeAssignment"("volumeId", "characterId");
+CREATE INDEX IF NOT EXISTS "CharacterVolumeAssignment_volumeId_characterId_idx" ON "CharacterVolumeAssignment"("volumeId", "characterId");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "CharacterVolumeAssignment_characterId_volumeId_key" ON "CharacterVolumeAssignment"("characterId", "volumeId");
+CREATE UNIQUE INDEX IF NOT EXISTS "CharacterVolumeAssignment_characterId_volumeId_key" ON "CharacterVolumeAssignment"("characterId", "volumeId");
 
 -- CreateIndex
-CREATE INDEX "CharacterFactionTrack_novelId_characterId_createdAt_idx" ON "CharacterFactionTrack"("novelId", "characterId", "createdAt");
+CREATE INDEX IF NOT EXISTS "CharacterFactionTrack_novelId_characterId_createdAt_idx" ON "CharacterFactionTrack"("novelId", "characterId", "createdAt");
 
 -- CreateIndex
-CREATE INDEX "CharacterFactionTrack_volumeId_characterId_createdAt_idx" ON "CharacterFactionTrack"("volumeId", "characterId", "createdAt");
+CREATE INDEX IF NOT EXISTS "CharacterFactionTrack_volumeId_characterId_createdAt_idx" ON "CharacterFactionTrack"("volumeId", "characterId", "createdAt");
 
 -- CreateIndex
-CREATE INDEX "CharacterFactionTrack_chapterId_createdAt_idx" ON "CharacterFactionTrack"("chapterId", "createdAt");
+CREATE INDEX IF NOT EXISTS "CharacterFactionTrack_chapterId_createdAt_idx" ON "CharacterFactionTrack"("chapterId", "createdAt");
 
 -- CreateIndex
-CREATE INDEX "CharacterRelationStage_novelId_isCurrent_updatedAt_idx" ON "CharacterRelationStage"("novelId", "isCurrent", "updatedAt");
+CREATE INDEX IF NOT EXISTS "CharacterRelationStage_novelId_isCurrent_updatedAt_idx" ON "CharacterRelationStage"("novelId", "isCurrent", "updatedAt");
 
 -- CreateIndex
-CREATE INDEX "CharacterRelationStage_sourceCharacterId_targetCharacterId__idx" ON "CharacterRelationStage"("sourceCharacterId", "targetCharacterId", "isCurrent");
+CREATE INDEX IF NOT EXISTS "CharacterRelationStage_sourceCharacterId_targetCharacterId__idx" ON "CharacterRelationStage"("sourceCharacterId", "targetCharacterId", "isCurrent");
 
 -- CreateIndex
-CREATE INDEX "CharacterRelationStage_relationId_idx" ON "CharacterRelationStage"("relationId");
+CREATE INDEX IF NOT EXISTS "CharacterRelationStage_relationId_idx" ON "CharacterRelationStage"("relationId");
 
 -- CreateIndex
-CREATE INDEX "CharacterRelationStage_chapterId_idx" ON "CharacterRelationStage"("chapterId");
+CREATE INDEX IF NOT EXISTS "CharacterRelationStage_chapterId_idx" ON "CharacterRelationStage"("chapterId");
 
 -- CreateIndex
-CREATE INDEX "ImageGenerationTask_sceneType_status_idx" ON "ImageGenerationTask"("sceneType", "status");
+CREATE INDEX IF NOT EXISTS "ImageGenerationTask_sceneType_status_idx" ON "ImageGenerationTask"("sceneType", "status");
 
 -- CreateIndex
-CREATE INDEX "ImageGenerationTask_baseCharacterId_createdAt_idx" ON "ImageGenerationTask"("baseCharacterId", "createdAt");
+CREATE INDEX IF NOT EXISTS "ImageGenerationTask_baseCharacterId_createdAt_idx" ON "ImageGenerationTask"("baseCharacterId", "createdAt");
 
 -- CreateIndex
-CREATE INDEX "ImageAsset_taskId_idx" ON "ImageAsset"("taskId");
+CREATE INDEX IF NOT EXISTS "ImageAsset_taskId_idx" ON "ImageAsset"("taskId");
 
 -- CreateIndex
-CREATE INDEX "ImageAsset_sceneType_createdAt_idx" ON "ImageAsset"("sceneType", "createdAt");
+CREATE INDEX IF NOT EXISTS "ImageAsset_sceneType_createdAt_idx" ON "ImageAsset"("sceneType", "createdAt");
 
 -- CreateIndex
-CREATE INDEX "ImageAsset_baseCharacterId_isPrimary_createdAt_idx" ON "ImageAsset"("baseCharacterId", "isPrimary", "createdAt");
+CREATE INDEX IF NOT EXISTS "ImageAsset_baseCharacterId_isPrimary_createdAt_idx" ON "ImageAsset"("baseCharacterId", "isPrimary", "createdAt");
 
 -- CreateIndex
-CREATE INDEX "NovelGenre_parentId_idx" ON "NovelGenre"("parentId");
+CREATE INDEX IF NOT EXISTS "NovelGenre_parentId_idx" ON "NovelGenre"("parentId");
 
 -- CreateIndex
-CREATE INDEX "NovelStoryMode_parentId_idx" ON "NovelStoryMode"("parentId");
+CREATE INDEX IF NOT EXISTS "NovelStoryMode_parentId_idx" ON "NovelStoryMode"("parentId");
 
 -- CreateIndex
-CREATE INDEX "WorldPropertyLibrary_sourceWorldId_idx" ON "WorldPropertyLibrary"("sourceWorldId");
+CREATE INDEX IF NOT EXISTS "WorldPropertyLibrary_sourceWorldId_idx" ON "WorldPropertyLibrary"("sourceWorldId");
 
 -- CreateIndex
-CREATE INDEX "WorldSnapshot_worldId_createdAt_idx" ON "WorldSnapshot"("worldId", "createdAt");
+CREATE INDEX IF NOT EXISTS "WorldSnapshot_worldId_createdAt_idx" ON "WorldSnapshot"("worldId", "createdAt");
 
 -- CreateIndex
-CREATE INDEX "WorldDeepeningQA_worldId_status_idx" ON "WorldDeepeningQA"("worldId", "status");
+CREATE INDEX IF NOT EXISTS "WorldDeepeningQA_worldId_status_idx" ON "WorldDeepeningQA"("worldId", "status");
 
 -- CreateIndex
-CREATE INDEX "WorldConsistencyIssue_worldId_status_idx" ON "WorldConsistencyIssue"("worldId", "status");
+CREATE INDEX IF NOT EXISTS "WorldConsistencyIssue_worldId_status_idx" ON "WorldConsistencyIssue"("worldId", "status");
 
 -- CreateIndex
-CREATE INDEX "WorldConsistencyIssue_worldId_severity_idx" ON "WorldConsistencyIssue"("worldId", "severity");
+CREATE INDEX IF NOT EXISTS "WorldConsistencyIssue_worldId_severity_idx" ON "WorldConsistencyIssue"("worldId", "severity");
 
 -- CreateIndex
-CREATE INDEX "StyleProfile_status_updatedAt_idx" ON "StyleProfile"("status", "updatedAt");
+CREATE INDEX IF NOT EXISTS "StyleProfile_status_updatedAt_idx" ON "StyleProfile"("status", "updatedAt");
 
 -- CreateIndex
-CREATE INDEX "StyleProfile_sourceType_sourceRefId_idx" ON "StyleProfile"("sourceType", "sourceRefId");
+CREATE INDEX IF NOT EXISTS "StyleProfile_sourceType_sourceRefId_idx" ON "StyleProfile"("sourceType", "sourceRefId");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "StyleTemplate_key_key" ON "StyleTemplate"("key");
+CREATE UNIQUE INDEX IF NOT EXISTS "StyleTemplate_key_key" ON "StyleTemplate"("key");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "AntiAiRule_key_key" ON "AntiAiRule"("key");
+CREATE UNIQUE INDEX IF NOT EXISTS "AntiAiRule_key_key" ON "AntiAiRule"("key");
 
 -- CreateIndex
-CREATE INDEX "AntiAiRule_type_enabled_idx" ON "AntiAiRule"("type", "enabled");
+CREATE INDEX IF NOT EXISTS "AntiAiRule_type_enabled_idx" ON "AntiAiRule"("type", "enabled");
 
 -- CreateIndex
-CREATE INDEX "StyleProfileAntiAiRule_antiAiRuleId_idx" ON "StyleProfileAntiAiRule"("antiAiRuleId");
+CREATE INDEX IF NOT EXISTS "StyleProfileAntiAiRule_antiAiRuleId_idx" ON "StyleProfileAntiAiRule"("antiAiRuleId");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "StyleProfileAntiAiRule_styleProfileId_antiAiRuleId_key" ON "StyleProfileAntiAiRule"("styleProfileId", "antiAiRuleId");
+CREATE UNIQUE INDEX IF NOT EXISTS "StyleProfileAntiAiRule_styleProfileId_antiAiRuleId_key" ON "StyleProfileAntiAiRule"("styleProfileId", "antiAiRuleId");
 
 -- CreateIndex
-CREATE INDEX "StyleBinding_targetType_targetId_enabled_idx" ON "StyleBinding"("targetType", "targetId", "enabled");
+CREATE INDEX IF NOT EXISTS "StyleBinding_targetType_targetId_enabled_idx" ON "StyleBinding"("targetType", "targetId", "enabled");
 
 -- CreateIndex
-CREATE INDEX "StyleBinding_styleProfileId_idx" ON "StyleBinding"("styleProfileId");
+CREATE INDEX IF NOT EXISTS "StyleBinding_styleProfileId_idx" ON "StyleBinding"("styleProfileId");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "APIKey_provider_key" ON "APIKey"("provider");
+CREATE UNIQUE INDEX IF NOT EXISTS "APIKey_provider_key" ON "APIKey"("provider");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "ModelRouteConfig_taskType_key" ON "ModelRouteConfig"("taskType");
+CREATE UNIQUE INDEX IF NOT EXISTS "ModelRouteConfig_taskType_key" ON "ModelRouteConfig"("taskType");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "NovelBible_novelId_key" ON "NovelBible"("novelId");
+CREATE UNIQUE INDEX IF NOT EXISTS "NovelBible_novelId_key" ON "NovelBible"("novelId");
 
 -- CreateIndex
-CREATE INDEX "PlotBeat_novelId_idx" ON "PlotBeat"("novelId");
+CREATE INDEX IF NOT EXISTS "PlotBeat_novelId_idx" ON "PlotBeat"("novelId");
 
 -- CreateIndex
-CREATE INDEX "PlotBeat_novelId_chapterOrder_idx" ON "PlotBeat"("novelId", "chapterOrder");
+CREATE INDEX IF NOT EXISTS "PlotBeat_novelId_chapterOrder_idx" ON "PlotBeat"("novelId", "chapterOrder");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "ChapterSummary_chapterId_key" ON "ChapterSummary"("chapterId");
+CREATE UNIQUE INDEX IF NOT EXISTS "ChapterSummary_chapterId_key" ON "ChapterSummary"("chapterId");
 
 -- CreateIndex
-CREATE INDEX "ChapterSummary_novelId_idx" ON "ChapterSummary"("novelId");
+CREATE INDEX IF NOT EXISTS "ChapterSummary_novelId_idx" ON "ChapterSummary"("novelId");
 
 -- CreateIndex
-CREATE INDEX "ConsistencyFact_novelId_idx" ON "ConsistencyFact"("novelId");
+CREATE INDEX IF NOT EXISTS "ConsistencyFact_novelId_idx" ON "ConsistencyFact"("novelId");
 
 -- CreateIndex
-CREATE INDEX "ConsistencyFact_chapterId_idx" ON "ConsistencyFact"("chapterId");
+CREATE INDEX IF NOT EXISTS "ConsistencyFact_chapterId_idx" ON "ConsistencyFact"("chapterId");
 
 -- CreateIndex
-CREATE INDEX "ConsistencyFact_novelId_category_idx" ON "ConsistencyFact"("novelId", "category");
+CREATE INDEX IF NOT EXISTS "ConsistencyFact_novelId_category_idx" ON "ConsistencyFact"("novelId", "category");
 
 -- CreateIndex
-CREATE INDEX "GenerationJob_novelId_idx" ON "GenerationJob"("novelId");
+CREATE INDEX IF NOT EXISTS "GenerationJob_novelId_idx" ON "GenerationJob"("novelId");
 
 -- CreateIndex
-CREATE INDEX "GenerationJob_novelId_status_idx" ON "GenerationJob"("novelId", "status");
+CREATE INDEX IF NOT EXISTS "GenerationJob_novelId_status_idx" ON "GenerationJob"("novelId", "status");
 
 -- CreateIndex
-CREATE INDEX "AgentRun_status_updatedAt_idx" ON "AgentRun"("status", "updatedAt");
+CREATE INDEX IF NOT EXISTS "AgentRun_status_updatedAt_idx" ON "AgentRun"("status", "updatedAt");
 
 -- CreateIndex
-CREATE INDEX "AgentRun_novelId_createdAt_idx" ON "AgentRun"("novelId", "createdAt");
+CREATE INDEX IF NOT EXISTS "AgentRun_novelId_createdAt_idx" ON "AgentRun"("novelId", "createdAt");
 
 -- CreateIndex
-CREATE INDEX "AgentRun_novelId_chapterId_createdAt_idx" ON "AgentRun"("novelId", "chapterId", "createdAt");
+CREATE INDEX IF NOT EXISTS "AgentRun_novelId_chapterId_createdAt_idx" ON "AgentRun"("novelId", "chapterId", "createdAt");
 
 -- CreateIndex
-CREATE INDEX "AgentRun_sessionId_createdAt_idx" ON "AgentRun"("sessionId", "createdAt");
+CREATE INDEX IF NOT EXISTS "AgentRun_sessionId_createdAt_idx" ON "AgentRun"("sessionId", "createdAt");
 
 -- CreateIndex
-CREATE INDEX "AgentStep_runId_idempotencyKey_idx" ON "AgentStep"("runId", "idempotencyKey");
+CREATE INDEX IF NOT EXISTS "AgentStep_runId_idempotencyKey_idx" ON "AgentStep"("runId", "idempotencyKey");
 
 -- CreateIndex
-CREATE INDEX "AgentStep_runId_parentStepId_idx" ON "AgentStep"("runId", "parentStepId");
+CREATE INDEX IF NOT EXISTS "AgentStep_runId_parentStepId_idx" ON "AgentStep"("runId", "parentStepId");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "AgentStep_runId_seq_key" ON "AgentStep"("runId", "seq");
+CREATE UNIQUE INDEX IF NOT EXISTS "AgentStep_runId_seq_key" ON "AgentStep"("runId", "seq");
 
 -- CreateIndex
-CREATE INDEX "AgentApproval_runId_status_idx" ON "AgentApproval"("runId", "status");
+CREATE INDEX IF NOT EXISTS "AgentApproval_runId_status_idx" ON "AgentApproval"("runId", "status");
 
 -- CreateIndex
-CREATE INDEX "AgentApproval_stepId_idx" ON "AgentApproval"("stepId");
+CREATE INDEX IF NOT EXISTS "AgentApproval_stepId_idx" ON "AgentApproval"("stepId");
 
 -- CreateIndex
-CREATE INDEX "AgentApproval_status_expiresAt_idx" ON "AgentApproval"("status", "expiresAt");
+CREATE INDEX IF NOT EXISTS "AgentApproval_status_expiresAt_idx" ON "AgentApproval"("status", "expiresAt");
 
 -- CreateIndex
-CREATE INDEX "CreativeHubThread_archived_updatedAt_idx" ON "CreativeHubThread"("archived", "updatedAt");
+CREATE INDEX IF NOT EXISTS "CreativeHubThread_archived_updatedAt_idx" ON "CreativeHubThread"("archived", "updatedAt");
 
 -- CreateIndex
-CREATE INDEX "CreativeHubThread_status_updatedAt_idx" ON "CreativeHubThread"("status", "updatedAt");
+CREATE INDEX IF NOT EXISTS "CreativeHubThread_status_updatedAt_idx" ON "CreativeHubThread"("status", "updatedAt");
 
 -- CreateIndex
-CREATE INDEX "CreativeHubCheckpoint_threadId_createdAt_idx" ON "CreativeHubCheckpoint"("threadId", "createdAt");
+CREATE INDEX IF NOT EXISTS "CreativeHubCheckpoint_threadId_createdAt_idx" ON "CreativeHubCheckpoint"("threadId", "createdAt");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "CreativeHubCheckpoint_threadId_checkpointId_key" ON "CreativeHubCheckpoint"("threadId", "checkpointId");
+CREATE UNIQUE INDEX IF NOT EXISTS "CreativeHubCheckpoint_threadId_checkpointId_key" ON "CreativeHubCheckpoint"("threadId", "checkpointId");
 
 -- CreateIndex
-CREATE INDEX "StorylineVersion_novelId_status_createdAt_idx" ON "StorylineVersion"("novelId", "status", "createdAt");
+CREATE INDEX IF NOT EXISTS "StorylineVersion_novelId_status_createdAt_idx" ON "StorylineVersion"("novelId", "status", "createdAt");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "StorylineVersion_novelId_version_key" ON "StorylineVersion"("novelId", "version");
+CREATE UNIQUE INDEX IF NOT EXISTS "StorylineVersion_novelId_version_key" ON "StorylineVersion"("novelId", "version");
 
 -- CreateIndex
-CREATE INDEX "VolumePlanVersion_novelId_status_createdAt_idx" ON "VolumePlanVersion"("novelId", "status", "createdAt");
+CREATE INDEX IF NOT EXISTS "VolumePlanVersion_novelId_status_createdAt_idx" ON "VolumePlanVersion"("novelId", "status", "createdAt");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "VolumePlanVersion_novelId_version_key" ON "VolumePlanVersion"("novelId", "version");
+CREATE UNIQUE INDEX IF NOT EXISTS "VolumePlanVersion_novelId_version_key" ON "VolumePlanVersion"("novelId", "version");
 
 -- CreateIndex
-CREATE INDEX "VolumePlan_novelId_status_sortOrder_idx" ON "VolumePlan"("novelId", "status", "sortOrder");
+CREATE INDEX IF NOT EXISTS "VolumePlan_novelId_status_sortOrder_idx" ON "VolumePlan"("novelId", "status", "sortOrder");
 
 -- CreateIndex
-CREATE INDEX "VolumePlan_sourceVersionId_idx" ON "VolumePlan"("sourceVersionId");
+CREATE INDEX IF NOT EXISTS "VolumePlan_sourceVersionId_idx" ON "VolumePlan"("sourceVersionId");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "VolumePlan_novelId_sortOrder_key" ON "VolumePlan"("novelId", "sortOrder");
+CREATE UNIQUE INDEX IF NOT EXISTS "VolumePlan_novelId_sortOrder_key" ON "VolumePlan"("novelId", "sortOrder");
 
 -- CreateIndex
-CREATE INDEX "VolumeChapterPlan_volumeId_chapterOrder_idx" ON "VolumeChapterPlan"("volumeId", "chapterOrder");
+CREATE INDEX IF NOT EXISTS "VolumeChapterPlan_volumeId_chapterOrder_idx" ON "VolumeChapterPlan"("volumeId", "chapterOrder");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "VolumeChapterPlan_volumeId_chapterOrder_key" ON "VolumeChapterPlan"("volumeId", "chapterOrder");
+CREATE UNIQUE INDEX IF NOT EXISTS "VolumeChapterPlan_volumeId_chapterOrder_key" ON "VolumeChapterPlan"("volumeId", "chapterOrder");
 
 -- CreateIndex
-CREATE INDEX "QualityReport_novelId_idx" ON "QualityReport"("novelId");
+CREATE INDEX IF NOT EXISTS "QualityReport_novelId_idx" ON "QualityReport"("novelId");
 
 -- CreateIndex
-CREATE INDEX "QualityReport_chapterId_idx" ON "QualityReport"("chapterId");
+CREATE INDEX IF NOT EXISTS "QualityReport_chapterId_idx" ON "QualityReport"("chapterId");
 
 -- CreateIndex
-CREATE INDEX "QualityReport_novelId_createdAt_idx" ON "QualityReport"("novelId", "createdAt");
+CREATE INDEX IF NOT EXISTS "QualityReport_novelId_createdAt_idx" ON "QualityReport"("novelId", "createdAt");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "StoryMacroPlan_novelId_key" ON "StoryMacroPlan"("novelId");
+CREATE UNIQUE INDEX IF NOT EXISTS "StoryMacroPlan_novelId_key" ON "StoryMacroPlan"("novelId");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "BookContract_novelId_key" ON "BookContract"("novelId");
+CREATE UNIQUE INDEX IF NOT EXISTS "BookContract_novelId_key" ON "BookContract"("novelId");
 
 -- CreateIndex
-CREATE INDEX "NovelWorkflowTask_novelId_status_updatedAt_idx" ON "NovelWorkflowTask"("novelId", "status", "updatedAt");
+CREATE INDEX IF NOT EXISTS "NovelWorkflowTask_novelId_status_updatedAt_idx" ON "NovelWorkflowTask"("novelId", "status", "updatedAt");
 
 -- CreateIndex
-CREATE INDEX "NovelWorkflowTask_status_updatedAt_idx" ON "NovelWorkflowTask"("status", "updatedAt");
+CREATE INDEX IF NOT EXISTS "NovelWorkflowTask_status_updatedAt_idx" ON "NovelWorkflowTask"("status", "updatedAt");
 
 -- CreateIndex
-CREATE INDEX "NovelWorkflowTask_lane_updatedAt_idx" ON "NovelWorkflowTask"("lane", "updatedAt");
+CREATE INDEX IF NOT EXISTS "NovelWorkflowTask_lane_updatedAt_idx" ON "NovelWorkflowTask"("lane", "updatedAt");
 
 -- CreateIndex
-CREATE INDEX "StoryStateSnapshot_novelId_createdAt_idx" ON "StoryStateSnapshot"("novelId", "createdAt");
+CREATE INDEX IF NOT EXISTS "StoryStateSnapshot_novelId_createdAt_idx" ON "StoryStateSnapshot"("novelId", "createdAt");
 
 -- CreateIndex
-CREATE INDEX "StoryStateSnapshot_sourceChapterId_idx" ON "StoryStateSnapshot"("sourceChapterId");
+CREATE INDEX IF NOT EXISTS "StoryStateSnapshot_sourceChapterId_idx" ON "StoryStateSnapshot"("sourceChapterId");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "StoryStateSnapshot_novelId_sourceChapterId_key" ON "StoryStateSnapshot"("novelId", "sourceChapterId");
+CREATE UNIQUE INDEX IF NOT EXISTS "StoryStateSnapshot_novelId_sourceChapterId_key" ON "StoryStateSnapshot"("novelId", "sourceChapterId");
 
 -- CreateIndex
-CREATE INDEX "CharacterState_characterId_createdAt_idx" ON "CharacterState"("characterId", "createdAt");
+CREATE INDEX IF NOT EXISTS "CharacterState_characterId_createdAt_idx" ON "CharacterState"("characterId", "createdAt");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "CharacterState_snapshotId_characterId_key" ON "CharacterState"("snapshotId", "characterId");
+CREATE UNIQUE INDEX IF NOT EXISTS "CharacterState_snapshotId_characterId_key" ON "CharacterState"("snapshotId", "characterId");
 
 -- CreateIndex
-CREATE INDEX "RelationState_sourceCharacterId_targetCharacterId_idx" ON "RelationState"("sourceCharacterId", "targetCharacterId");
+CREATE INDEX IF NOT EXISTS "RelationState_sourceCharacterId_targetCharacterId_idx" ON "RelationState"("sourceCharacterId", "targetCharacterId");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "RelationState_snapshotId_sourceCharacterId_targetCharacterI_key" ON "RelationState"("snapshotId", "sourceCharacterId", "targetCharacterId");
+CREATE UNIQUE INDEX IF NOT EXISTS "RelationState_snapshotId_sourceCharacterId_targetCharacterI_key" ON "RelationState"("snapshotId", "sourceCharacterId", "targetCharacterId");
 
 -- CreateIndex
-CREATE INDEX "InformationState_snapshotId_holderType_idx" ON "InformationState"("snapshotId", "holderType");
+CREATE INDEX IF NOT EXISTS "InformationState_snapshotId_holderType_idx" ON "InformationState"("snapshotId", "holderType");
 
 -- CreateIndex
-CREATE INDEX "ForeshadowState_snapshotId_status_idx" ON "ForeshadowState"("snapshotId", "status");
+CREATE INDEX IF NOT EXISTS "ForeshadowState_snapshotId_status_idx" ON "ForeshadowState"("snapshotId", "status");
 
 -- CreateIndex
-CREATE INDEX "ForeshadowState_setupChapterId_idx" ON "ForeshadowState"("setupChapterId");
+CREATE INDEX IF NOT EXISTS "ForeshadowState_setupChapterId_idx" ON "ForeshadowState"("setupChapterId");
 
 -- CreateIndex
-CREATE INDEX "ForeshadowState_payoffChapterId_idx" ON "ForeshadowState"("payoffChapterId");
+CREATE INDEX IF NOT EXISTS "ForeshadowState_payoffChapterId_idx" ON "ForeshadowState"("payoffChapterId");
 
 -- CreateIndex
-CREATE INDEX "OpenConflict_novelId_status_updatedAt_idx" ON "OpenConflict"("novelId", "status", "updatedAt");
+CREATE INDEX IF NOT EXISTS "OpenConflict_novelId_status_updatedAt_idx" ON "OpenConflict"("novelId", "status", "updatedAt");
 
 -- CreateIndex
-CREATE INDEX "OpenConflict_chapterId_status_idx" ON "OpenConflict"("chapterId", "status");
+CREATE INDEX IF NOT EXISTS "OpenConflict_chapterId_status_idx" ON "OpenConflict"("chapterId", "status");
 
 -- CreateIndex
-CREATE INDEX "OpenConflict_sourceSnapshotId_idx" ON "OpenConflict"("sourceSnapshotId");
+CREATE INDEX IF NOT EXISTS "OpenConflict_sourceSnapshotId_idx" ON "OpenConflict"("sourceSnapshotId");
 
 -- CreateIndex
-CREATE INDEX "OpenConflict_sourceIssueId_idx" ON "OpenConflict"("sourceIssueId");
+CREATE INDEX IF NOT EXISTS "OpenConflict_sourceIssueId_idx" ON "OpenConflict"("sourceIssueId");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "OpenConflict_novelId_chapterId_sourceType_conflictKey_key" ON "OpenConflict"("novelId", "chapterId", "sourceType", "conflictKey");
+CREATE UNIQUE INDEX IF NOT EXISTS "OpenConflict_novelId_chapterId_sourceType_conflictKey_key" ON "OpenConflict"("novelId", "chapterId", "sourceType", "conflictKey");
 
 -- CreateIndex
-CREATE INDEX "PayoffLedgerItem_novelId_currentStatus_updatedAt_idx" ON "PayoffLedgerItem"("novelId", "currentStatus", "updatedAt");
+CREATE INDEX IF NOT EXISTS "PayoffLedgerItem_novelId_currentStatus_updatedAt_idx" ON "PayoffLedgerItem"("novelId", "currentStatus", "updatedAt");
 
 -- CreateIndex
-CREATE INDEX "PayoffLedgerItem_novelId_targetEndChapterOrder_idx" ON "PayoffLedgerItem"("novelId", "targetEndChapterOrder");
+CREATE INDEX IF NOT EXISTS "PayoffLedgerItem_novelId_targetEndChapterOrder_idx" ON "PayoffLedgerItem"("novelId", "targetEndChapterOrder");
 
 -- CreateIndex
-CREATE INDEX "PayoffLedgerItem_lastTouchedChapterId_idx" ON "PayoffLedgerItem"("lastTouchedChapterId");
+CREATE INDEX IF NOT EXISTS "PayoffLedgerItem_lastTouchedChapterId_idx" ON "PayoffLedgerItem"("lastTouchedChapterId");
 
 -- CreateIndex
-CREATE INDEX "PayoffLedgerItem_setupChapterId_idx" ON "PayoffLedgerItem"("setupChapterId");
+CREATE INDEX IF NOT EXISTS "PayoffLedgerItem_setupChapterId_idx" ON "PayoffLedgerItem"("setupChapterId");
 
 -- CreateIndex
-CREATE INDEX "PayoffLedgerItem_payoffChapterId_idx" ON "PayoffLedgerItem"("payoffChapterId");
+CREATE INDEX IF NOT EXISTS "PayoffLedgerItem_payoffChapterId_idx" ON "PayoffLedgerItem"("payoffChapterId");
 
 -- CreateIndex
-CREATE INDEX "PayoffLedgerItem_lastSnapshotId_idx" ON "PayoffLedgerItem"("lastSnapshotId");
+CREATE INDEX IF NOT EXISTS "PayoffLedgerItem_lastSnapshotId_idx" ON "PayoffLedgerItem"("lastSnapshotId");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "PayoffLedgerItem_novelId_ledgerKey_key" ON "PayoffLedgerItem"("novelId", "ledgerKey");
+CREATE UNIQUE INDEX IF NOT EXISTS "PayoffLedgerItem_novelId_ledgerKey_key" ON "PayoffLedgerItem"("novelId", "ledgerKey");
 
 -- CreateIndex
-CREATE INDEX "StoryPlan_novelId_level_createdAt_idx" ON "StoryPlan"("novelId", "level", "createdAt");
+CREATE INDEX IF NOT EXISTS "StoryPlan_novelId_level_createdAt_idx" ON "StoryPlan"("novelId", "level", "createdAt");
 
 -- CreateIndex
-CREATE INDEX "StoryPlan_chapterId_createdAt_idx" ON "StoryPlan"("chapterId", "createdAt");
+CREATE INDEX IF NOT EXISTS "StoryPlan_chapterId_createdAt_idx" ON "StoryPlan"("chapterId", "createdAt");
 
 -- CreateIndex
-CREATE INDEX "StoryPlan_externalRef_idx" ON "StoryPlan"("externalRef");
+CREATE INDEX IF NOT EXISTS "StoryPlan_externalRef_idx" ON "StoryPlan"("externalRef");
 
 -- CreateIndex
-CREATE INDEX "StoryPlan_sourceStateSnapshotId_idx" ON "StoryPlan"("sourceStateSnapshotId");
+CREATE INDEX IF NOT EXISTS "StoryPlan_sourceStateSnapshotId_idx" ON "StoryPlan"("sourceStateSnapshotId");
 
 -- CreateIndex
-CREATE INDEX "ChapterPlanScene_planId_sortOrder_idx" ON "ChapterPlanScene"("planId", "sortOrder");
+CREATE INDEX IF NOT EXISTS "ChapterPlanScene_planId_sortOrder_idx" ON "ChapterPlanScene"("planId", "sortOrder");
 
 -- CreateIndex
-CREATE INDEX "ReplanRun_novelId_createdAt_idx" ON "ReplanRun"("novelId", "createdAt");
+CREATE INDEX IF NOT EXISTS "ReplanRun_novelId_createdAt_idx" ON "ReplanRun"("novelId", "createdAt");
 
 -- CreateIndex
-CREATE INDEX "ReplanRun_chapterId_createdAt_idx" ON "ReplanRun"("chapterId", "createdAt");
+CREATE INDEX IF NOT EXISTS "ReplanRun_chapterId_createdAt_idx" ON "ReplanRun"("chapterId", "createdAt");
 
 -- CreateIndex
-CREATE INDEX "AuditReport_novelId_chapterId_auditType_createdAt_idx" ON "AuditReport"("novelId", "chapterId", "auditType", "createdAt");
+CREATE INDEX IF NOT EXISTS "AuditReport_novelId_chapterId_auditType_createdAt_idx" ON "AuditReport"("novelId", "chapterId", "auditType", "createdAt");
 
 -- CreateIndex
-CREATE INDEX "AuditReport_chapterId_createdAt_idx" ON "AuditReport"("chapterId", "createdAt");
+CREATE INDEX IF NOT EXISTS "AuditReport_chapterId_createdAt_idx" ON "AuditReport"("chapterId", "createdAt");
 
 -- CreateIndex
-CREATE INDEX "AuditIssue_reportId_status_idx" ON "AuditIssue"("reportId", "status");
+CREATE INDEX IF NOT EXISTS "AuditIssue_reportId_status_idx" ON "AuditIssue"("reportId", "status");
 
 -- CreateIndex
-CREATE INDEX "AuditIssue_auditType_severity_idx" ON "AuditIssue"("auditType", "severity");
+CREATE INDEX IF NOT EXISTS "AuditIssue_auditType_severity_idx" ON "AuditIssue"("auditType", "severity");
 
 -- CreateIndex
-CREATE INDEX "KnowledgeDocument_status_updatedAt_idx" ON "KnowledgeDocument"("status", "updatedAt");
+CREATE INDEX IF NOT EXISTS "KnowledgeDocument_status_updatedAt_idx" ON "KnowledgeDocument"("status", "updatedAt");
 
 -- CreateIndex
-CREATE INDEX "KnowledgeDocument_title_idx" ON "KnowledgeDocument"("title");
+CREATE INDEX IF NOT EXISTS "KnowledgeDocument_title_idx" ON "KnowledgeDocument"("title");
 
 -- CreateIndex
-CREATE INDEX "KnowledgeDocumentVersion_documentId_createdAt_idx" ON "KnowledgeDocumentVersion"("documentId", "createdAt");
+CREATE INDEX IF NOT EXISTS "KnowledgeDocumentVersion_documentId_createdAt_idx" ON "KnowledgeDocumentVersion"("documentId", "createdAt");
 
 -- CreateIndex
-CREATE INDEX "KnowledgeDocumentVersion_contentHash_idx" ON "KnowledgeDocumentVersion"("contentHash");
+CREATE INDEX IF NOT EXISTS "KnowledgeDocumentVersion_contentHash_idx" ON "KnowledgeDocumentVersion"("contentHash");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "KnowledgeDocumentVersion_documentId_versionNumber_key" ON "KnowledgeDocumentVersion"("documentId", "versionNumber");
+CREATE UNIQUE INDEX IF NOT EXISTS "KnowledgeDocumentVersion_documentId_versionNumber_key" ON "KnowledgeDocumentVersion"("documentId", "versionNumber");
 
 -- CreateIndex
-CREATE INDEX "KnowledgeBinding_targetType_targetId_idx" ON "KnowledgeBinding"("targetType", "targetId");
+CREATE INDEX IF NOT EXISTS "KnowledgeBinding_targetType_targetId_idx" ON "KnowledgeBinding"("targetType", "targetId");
 
 -- CreateIndex
-CREATE INDEX "KnowledgeBinding_documentId_idx" ON "KnowledgeBinding"("documentId");
+CREATE INDEX IF NOT EXISTS "KnowledgeBinding_documentId_idx" ON "KnowledgeBinding"("documentId");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "KnowledgeBinding_targetType_targetId_documentId_key" ON "KnowledgeBinding"("targetType", "targetId", "documentId");
+CREATE UNIQUE INDEX IF NOT EXISTS "KnowledgeBinding_targetType_targetId_documentId_key" ON "KnowledgeBinding"("targetType", "targetId", "documentId");
 
 -- CreateIndex
-CREATE INDEX "BookAnalysis_documentId_status_idx" ON "BookAnalysis"("documentId", "status");
+CREATE INDEX IF NOT EXISTS "BookAnalysis_documentId_status_idx" ON "BookAnalysis"("documentId", "status");
 
 -- CreateIndex
-CREATE INDEX "BookAnalysis_documentVersionId_idx" ON "BookAnalysis"("documentVersionId");
+CREATE INDEX IF NOT EXISTS "BookAnalysis_documentVersionId_idx" ON "BookAnalysis"("documentVersionId");
 
 -- CreateIndex
-CREATE INDEX "BookAnalysis_status_updatedAt_idx" ON "BookAnalysis"("status", "updatedAt");
+CREATE INDEX IF NOT EXISTS "BookAnalysis_status_updatedAt_idx" ON "BookAnalysis"("status", "updatedAt");
 
 -- CreateIndex
-CREATE INDEX "BookAnalysisSourceCache_documentVersionId_updatedAt_idx" ON "BookAnalysisSourceCache"("documentVersionId", "updatedAt");
+CREATE INDEX IF NOT EXISTS "BookAnalysisSourceCache_documentVersionId_updatedAt_idx" ON "BookAnalysisSourceCache"("documentVersionId", "updatedAt");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "BookAnalysisSourceCache_documentVersionId_provider_model_te_key" ON "BookAnalysisSourceCache"("documentVersionId", "provider", "model", "temperature", "notesMaxTokens", "segmentVersion");
+CREATE UNIQUE INDEX IF NOT EXISTS "BookAnalysisSourceCache_documentVersionId_provider_model_te_key" ON "BookAnalysisSourceCache"("documentVersionId", "provider", "model", "temperature", "notesMaxTokens", "segmentVersion");
 
 -- CreateIndex
-CREATE INDEX "BookAnalysisSection_analysisId_sortOrder_idx" ON "BookAnalysisSection"("analysisId", "sortOrder");
+CREATE INDEX IF NOT EXISTS "BookAnalysisSection_analysisId_sortOrder_idx" ON "BookAnalysisSection"("analysisId", "sortOrder");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "BookAnalysisSection_analysisId_sectionKey_key" ON "BookAnalysisSection"("analysisId", "sectionKey");
+CREATE UNIQUE INDEX IF NOT EXISTS "BookAnalysisSection_analysisId_sectionKey_key" ON "BookAnalysisSection"("analysisId", "sectionKey");
 
 -- CreateIndex
-CREATE INDEX "KnowledgeChunk_tenantId_ownerType_ownerId_idx" ON "KnowledgeChunk"("tenantId", "ownerType", "ownerId");
+CREATE INDEX IF NOT EXISTS "KnowledgeChunk_tenantId_ownerType_ownerId_idx" ON "KnowledgeChunk"("tenantId", "ownerType", "ownerId");
 
 -- CreateIndex
-CREATE INDEX "KnowledgeChunk_tenantId_novelId_idx" ON "KnowledgeChunk"("tenantId", "novelId");
+CREATE INDEX IF NOT EXISTS "KnowledgeChunk_tenantId_novelId_idx" ON "KnowledgeChunk"("tenantId", "novelId");
 
 -- CreateIndex
-CREATE INDEX "KnowledgeChunk_tenantId_worldId_idx" ON "KnowledgeChunk"("tenantId", "worldId");
+CREATE INDEX IF NOT EXISTS "KnowledgeChunk_tenantId_worldId_idx" ON "KnowledgeChunk"("tenantId", "worldId");
 
 -- CreateIndex
-CREATE INDEX "KnowledgeChunk_chunkHash_idx" ON "KnowledgeChunk"("chunkHash");
+CREATE INDEX IF NOT EXISTS "KnowledgeChunk_chunkHash_idx" ON "KnowledgeChunk"("chunkHash");
 
 -- CreateIndex
-CREATE INDEX "RagIndexJob_status_runAfter_idx" ON "RagIndexJob"("status", "runAfter");
+CREATE INDEX IF NOT EXISTS "RagIndexJob_status_runAfter_idx" ON "RagIndexJob"("status", "runAfter");
 
 -- CreateIndex
-CREATE INDEX "RagIndexJob_tenantId_ownerType_ownerId_idx" ON "RagIndexJob"("tenantId", "ownerType", "ownerId");
+CREATE INDEX IF NOT EXISTS "RagIndexJob_tenantId_ownerType_ownerId_idx" ON "RagIndexJob"("tenantId", "ownerType", "ownerId");
 
 -- CreateIndex
-CREATE INDEX "TaskCenterArchive_taskKind_archivedAt_idx" ON "TaskCenterArchive"("taskKind", "archivedAt");
+CREATE INDEX IF NOT EXISTS "TaskCenterArchive_taskKind_archivedAt_idx" ON "TaskCenterArchive"("taskKind", "archivedAt");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "TaskCenterArchive_taskKind_taskId_key" ON "TaskCenterArchive"("taskKind", "taskId");
+CREATE UNIQUE INDEX IF NOT EXISTS "TaskCenterArchive_taskKind_taskId_key" ON "TaskCenterArchive"("taskKind", "taskId");
 
 -- AddForeignKey
-ALTER TABLE "Novel" ADD CONSTRAINT "Novel_genreId_fkey" FOREIGN KEY ("genreId") REFERENCES "NovelGenre"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "Novel" DROP CONSTRAINT IF EXISTS "Novel_genreId_fkey"; ALTER TABLE "Novel" ADD CONSTRAINT "Novel_genreId_fkey" FOREIGN KEY ("genreId") REFERENCES "NovelGenre"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Novel" ADD CONSTRAINT "Novel_primaryStoryModeId_fkey" FOREIGN KEY ("primaryStoryModeId") REFERENCES "NovelStoryMode"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "Novel" DROP CONSTRAINT IF EXISTS "Novel_primaryStoryModeId_fkey"; ALTER TABLE "Novel" ADD CONSTRAINT "Novel_primaryStoryModeId_fkey" FOREIGN KEY ("primaryStoryModeId") REFERENCES "NovelStoryMode"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Novel" ADD CONSTRAINT "Novel_secondaryStoryModeId_fkey" FOREIGN KEY ("secondaryStoryModeId") REFERENCES "NovelStoryMode"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "Novel" DROP CONSTRAINT IF EXISTS "Novel_secondaryStoryModeId_fkey"; ALTER TABLE "Novel" ADD CONSTRAINT "Novel_secondaryStoryModeId_fkey" FOREIGN KEY ("secondaryStoryModeId") REFERENCES "NovelStoryMode"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Novel" ADD CONSTRAINT "Novel_worldId_fkey" FOREIGN KEY ("worldId") REFERENCES "World"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "Novel" DROP CONSTRAINT IF EXISTS "Novel_worldId_fkey"; ALTER TABLE "Novel" ADD CONSTRAINT "Novel_worldId_fkey" FOREIGN KEY ("worldId") REFERENCES "World"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Novel" ADD CONSTRAINT "Novel_sourceNovelId_fkey" FOREIGN KEY ("sourceNovelId") REFERENCES "Novel"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "Novel" DROP CONSTRAINT IF EXISTS "Novel_sourceNovelId_fkey"; ALTER TABLE "Novel" ADD CONSTRAINT "Novel_sourceNovelId_fkey" FOREIGN KEY ("sourceNovelId") REFERENCES "Novel"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Novel" ADD CONSTRAINT "Novel_sourceKnowledgeDocumentId_fkey" FOREIGN KEY ("sourceKnowledgeDocumentId") REFERENCES "KnowledgeDocument"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "Novel" DROP CONSTRAINT IF EXISTS "Novel_sourceKnowledgeDocumentId_fkey"; ALTER TABLE "Novel" ADD CONSTRAINT "Novel_sourceKnowledgeDocumentId_fkey" FOREIGN KEY ("sourceKnowledgeDocumentId") REFERENCES "KnowledgeDocument"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Novel" ADD CONSTRAINT "Novel_continuationBookAnalysisId_fkey" FOREIGN KEY ("continuationBookAnalysisId") REFERENCES "BookAnalysis"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "Novel" DROP CONSTRAINT IF EXISTS "Novel_continuationBookAnalysisId_fkey"; ALTER TABLE "Novel" ADD CONSTRAINT "Novel_continuationBookAnalysisId_fkey" FOREIGN KEY ("continuationBookAnalysisId") REFERENCES "BookAnalysis"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "CreativeDecision" ADD CONSTRAINT "CreativeDecision_novelId_fkey" FOREIGN KEY ("novelId") REFERENCES "Novel"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "CreativeDecision" DROP CONSTRAINT IF EXISTS "CreativeDecision_novelId_fkey"; ALTER TABLE "CreativeDecision" ADD CONSTRAINT "CreativeDecision_novelId_fkey" FOREIGN KEY ("novelId") REFERENCES "Novel"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "NovelSnapshot" ADD CONSTRAINT "NovelSnapshot_novelId_fkey" FOREIGN KEY ("novelId") REFERENCES "Novel"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "NovelSnapshot" DROP CONSTRAINT IF EXISTS "NovelSnapshot_novelId_fkey"; ALTER TABLE "NovelSnapshot" ADD CONSTRAINT "NovelSnapshot_novelId_fkey" FOREIGN KEY ("novelId") REFERENCES "Novel"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Chapter" ADD CONSTRAINT "Chapter_novelId_fkey" FOREIGN KEY ("novelId") REFERENCES "Novel"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "Chapter" DROP CONSTRAINT IF EXISTS "Chapter_novelId_fkey"; ALTER TABLE "Chapter" ADD CONSTRAINT "Chapter_novelId_fkey" FOREIGN KEY ("novelId") REFERENCES "Novel"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Character" ADD CONSTRAINT "Character_novelId_fkey" FOREIGN KEY ("novelId") REFERENCES "Novel"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "Character" DROP CONSTRAINT IF EXISTS "Character_novelId_fkey"; ALTER TABLE "Character" ADD CONSTRAINT "Character_novelId_fkey" FOREIGN KEY ("novelId") REFERENCES "Novel"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "CharacterRelation" ADD CONSTRAINT "CharacterRelation_novelId_fkey" FOREIGN KEY ("novelId") REFERENCES "Novel"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "CharacterRelation" DROP CONSTRAINT IF EXISTS "CharacterRelation_novelId_fkey"; ALTER TABLE "CharacterRelation" ADD CONSTRAINT "CharacterRelation_novelId_fkey" FOREIGN KEY ("novelId") REFERENCES "Novel"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "CharacterRelation" ADD CONSTRAINT "CharacterRelation_sourceCharacterId_fkey" FOREIGN KEY ("sourceCharacterId") REFERENCES "Character"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "CharacterRelation" DROP CONSTRAINT IF EXISTS "CharacterRelation_sourceCharacterId_fkey"; ALTER TABLE "CharacterRelation" ADD CONSTRAINT "CharacterRelation_sourceCharacterId_fkey" FOREIGN KEY ("sourceCharacterId") REFERENCES "Character"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "CharacterRelation" ADD CONSTRAINT "CharacterRelation_targetCharacterId_fkey" FOREIGN KEY ("targetCharacterId") REFERENCES "Character"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "CharacterRelation" DROP CONSTRAINT IF EXISTS "CharacterRelation_targetCharacterId_fkey"; ALTER TABLE "CharacterRelation" ADD CONSTRAINT "CharacterRelation_targetCharacterId_fkey" FOREIGN KEY ("targetCharacterId") REFERENCES "Character"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "CharacterCastOption" ADD CONSTRAINT "CharacterCastOption_novelId_fkey" FOREIGN KEY ("novelId") REFERENCES "Novel"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "CharacterCastOption" DROP CONSTRAINT IF EXISTS "CharacterCastOption_novelId_fkey"; ALTER TABLE "CharacterCastOption" ADD CONSTRAINT "CharacterCastOption_novelId_fkey" FOREIGN KEY ("novelId") REFERENCES "Novel"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "CharacterCastOptionMember" ADD CONSTRAINT "CharacterCastOptionMember_optionId_fkey" FOREIGN KEY ("optionId") REFERENCES "CharacterCastOption"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "CharacterCastOptionMember" DROP CONSTRAINT IF EXISTS "CharacterCastOptionMember_optionId_fkey"; ALTER TABLE "CharacterCastOptionMember" ADD CONSTRAINT "CharacterCastOptionMember_optionId_fkey" FOREIGN KEY ("optionId") REFERENCES "CharacterCastOption"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "CharacterCastOptionRelation" ADD CONSTRAINT "CharacterCastOptionRelation_optionId_fkey" FOREIGN KEY ("optionId") REFERENCES "CharacterCastOption"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "CharacterCastOptionRelation" DROP CONSTRAINT IF EXISTS "CharacterCastOptionRelation_optionId_fkey"; ALTER TABLE "CharacterCastOptionRelation" ADD CONSTRAINT "CharacterCastOptionRelation_optionId_fkey" FOREIGN KEY ("optionId") REFERENCES "CharacterCastOption"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "CharacterTimeline" ADD CONSTRAINT "CharacterTimeline_novelId_fkey" FOREIGN KEY ("novelId") REFERENCES "Novel"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "CharacterTimeline" DROP CONSTRAINT IF EXISTS "CharacterTimeline_novelId_fkey"; ALTER TABLE "CharacterTimeline" ADD CONSTRAINT "CharacterTimeline_novelId_fkey" FOREIGN KEY ("novelId") REFERENCES "Novel"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "CharacterTimeline" ADD CONSTRAINT "CharacterTimeline_characterId_fkey" FOREIGN KEY ("characterId") REFERENCES "Character"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "CharacterTimeline" DROP CONSTRAINT IF EXISTS "CharacterTimeline_characterId_fkey"; ALTER TABLE "CharacterTimeline" ADD CONSTRAINT "CharacterTimeline_characterId_fkey" FOREIGN KEY ("characterId") REFERENCES "Character"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "CharacterTimeline" ADD CONSTRAINT "CharacterTimeline_chapterId_fkey" FOREIGN KEY ("chapterId") REFERENCES "Chapter"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "CharacterTimeline" DROP CONSTRAINT IF EXISTS "CharacterTimeline_chapterId_fkey"; ALTER TABLE "CharacterTimeline" ADD CONSTRAINT "CharacterTimeline_chapterId_fkey" FOREIGN KEY ("chapterId") REFERENCES "Chapter"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "CharacterCandidate" ADD CONSTRAINT "CharacterCandidate_novelId_fkey" FOREIGN KEY ("novelId") REFERENCES "Novel"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "CharacterCandidate" DROP CONSTRAINT IF EXISTS "CharacterCandidate_novelId_fkey"; ALTER TABLE "CharacterCandidate" ADD CONSTRAINT "CharacterCandidate_novelId_fkey" FOREIGN KEY ("novelId") REFERENCES "Novel"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "CharacterCandidate" ADD CONSTRAINT "CharacterCandidate_sourceChapterId_fkey" FOREIGN KEY ("sourceChapterId") REFERENCES "Chapter"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "CharacterCandidate" DROP CONSTRAINT IF EXISTS "CharacterCandidate_sourceChapterId_fkey"; ALTER TABLE "CharacterCandidate" ADD CONSTRAINT "CharacterCandidate_sourceChapterId_fkey" FOREIGN KEY ("sourceChapterId") REFERENCES "Chapter"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "CharacterCandidate" ADD CONSTRAINT "CharacterCandidate_matchedCharacterId_fkey" FOREIGN KEY ("matchedCharacterId") REFERENCES "Character"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "CharacterCandidate" DROP CONSTRAINT IF EXISTS "CharacterCandidate_matchedCharacterId_fkey"; ALTER TABLE "CharacterCandidate" ADD CONSTRAINT "CharacterCandidate_matchedCharacterId_fkey" FOREIGN KEY ("matchedCharacterId") REFERENCES "Character"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "CharacterVolumeAssignment" ADD CONSTRAINT "CharacterVolumeAssignment_novelId_fkey" FOREIGN KEY ("novelId") REFERENCES "Novel"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "CharacterVolumeAssignment" DROP CONSTRAINT IF EXISTS "CharacterVolumeAssignment_novelId_fkey"; ALTER TABLE "CharacterVolumeAssignment" ADD CONSTRAINT "CharacterVolumeAssignment_novelId_fkey" FOREIGN KEY ("novelId") REFERENCES "Novel"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "CharacterVolumeAssignment" ADD CONSTRAINT "CharacterVolumeAssignment_characterId_fkey" FOREIGN KEY ("characterId") REFERENCES "Character"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "CharacterVolumeAssignment" DROP CONSTRAINT IF EXISTS "CharacterVolumeAssignment_characterId_fkey"; ALTER TABLE "CharacterVolumeAssignment" ADD CONSTRAINT "CharacterVolumeAssignment_characterId_fkey" FOREIGN KEY ("characterId") REFERENCES "Character"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "CharacterVolumeAssignment" ADD CONSTRAINT "CharacterVolumeAssignment_volumeId_fkey" FOREIGN KEY ("volumeId") REFERENCES "VolumePlan"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "CharacterVolumeAssignment" DROP CONSTRAINT IF EXISTS "CharacterVolumeAssignment_volumeId_fkey"; ALTER TABLE "CharacterVolumeAssignment" ADD CONSTRAINT "CharacterVolumeAssignment_volumeId_fkey" FOREIGN KEY ("volumeId") REFERENCES "VolumePlan"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "CharacterFactionTrack" ADD CONSTRAINT "CharacterFactionTrack_novelId_fkey" FOREIGN KEY ("novelId") REFERENCES "Novel"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "CharacterFactionTrack" DROP CONSTRAINT IF EXISTS "CharacterFactionTrack_novelId_fkey"; ALTER TABLE "CharacterFactionTrack" ADD CONSTRAINT "CharacterFactionTrack_novelId_fkey" FOREIGN KEY ("novelId") REFERENCES "Novel"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "CharacterFactionTrack" ADD CONSTRAINT "CharacterFactionTrack_characterId_fkey" FOREIGN KEY ("characterId") REFERENCES "Character"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "CharacterFactionTrack" DROP CONSTRAINT IF EXISTS "CharacterFactionTrack_characterId_fkey"; ALTER TABLE "CharacterFactionTrack" ADD CONSTRAINT "CharacterFactionTrack_characterId_fkey" FOREIGN KEY ("characterId") REFERENCES "Character"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "CharacterFactionTrack" ADD CONSTRAINT "CharacterFactionTrack_volumeId_fkey" FOREIGN KEY ("volumeId") REFERENCES "VolumePlan"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "CharacterFactionTrack" DROP CONSTRAINT IF EXISTS "CharacterFactionTrack_volumeId_fkey"; ALTER TABLE "CharacterFactionTrack" ADD CONSTRAINT "CharacterFactionTrack_volumeId_fkey" FOREIGN KEY ("volumeId") REFERENCES "VolumePlan"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "CharacterFactionTrack" ADD CONSTRAINT "CharacterFactionTrack_chapterId_fkey" FOREIGN KEY ("chapterId") REFERENCES "Chapter"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "CharacterFactionTrack" DROP CONSTRAINT IF EXISTS "CharacterFactionTrack_chapterId_fkey"; ALTER TABLE "CharacterFactionTrack" ADD CONSTRAINT "CharacterFactionTrack_chapterId_fkey" FOREIGN KEY ("chapterId") REFERENCES "Chapter"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "CharacterRelationStage" ADD CONSTRAINT "CharacterRelationStage_novelId_fkey" FOREIGN KEY ("novelId") REFERENCES "Novel"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "CharacterRelationStage" DROP CONSTRAINT IF EXISTS "CharacterRelationStage_novelId_fkey"; ALTER TABLE "CharacterRelationStage" ADD CONSTRAINT "CharacterRelationStage_novelId_fkey" FOREIGN KEY ("novelId") REFERENCES "Novel"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "CharacterRelationStage" ADD CONSTRAINT "CharacterRelationStage_relationId_fkey" FOREIGN KEY ("relationId") REFERENCES "CharacterRelation"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "CharacterRelationStage" DROP CONSTRAINT IF EXISTS "CharacterRelationStage_relationId_fkey"; ALTER TABLE "CharacterRelationStage" ADD CONSTRAINT "CharacterRelationStage_relationId_fkey" FOREIGN KEY ("relationId") REFERENCES "CharacterRelation"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "CharacterRelationStage" ADD CONSTRAINT "CharacterRelationStage_sourceCharacterId_fkey" FOREIGN KEY ("sourceCharacterId") REFERENCES "Character"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "CharacterRelationStage" DROP CONSTRAINT IF EXISTS "CharacterRelationStage_sourceCharacterId_fkey"; ALTER TABLE "CharacterRelationStage" ADD CONSTRAINT "CharacterRelationStage_sourceCharacterId_fkey" FOREIGN KEY ("sourceCharacterId") REFERENCES "Character"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "CharacterRelationStage" ADD CONSTRAINT "CharacterRelationStage_targetCharacterId_fkey" FOREIGN KEY ("targetCharacterId") REFERENCES "Character"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "CharacterRelationStage" DROP CONSTRAINT IF EXISTS "CharacterRelationStage_targetCharacterId_fkey"; ALTER TABLE "CharacterRelationStage" ADD CONSTRAINT "CharacterRelationStage_targetCharacterId_fkey" FOREIGN KEY ("targetCharacterId") REFERENCES "Character"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "CharacterRelationStage" ADD CONSTRAINT "CharacterRelationStage_volumeId_fkey" FOREIGN KEY ("volumeId") REFERENCES "VolumePlan"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "CharacterRelationStage" DROP CONSTRAINT IF EXISTS "CharacterRelationStage_volumeId_fkey"; ALTER TABLE "CharacterRelationStage" ADD CONSTRAINT "CharacterRelationStage_volumeId_fkey" FOREIGN KEY ("volumeId") REFERENCES "VolumePlan"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "CharacterRelationStage" ADD CONSTRAINT "CharacterRelationStage_chapterId_fkey" FOREIGN KEY ("chapterId") REFERENCES "Chapter"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "CharacterRelationStage" DROP CONSTRAINT IF EXISTS "CharacterRelationStage_chapterId_fkey"; ALTER TABLE "CharacterRelationStage" ADD CONSTRAINT "CharacterRelationStage_chapterId_fkey" FOREIGN KEY ("chapterId") REFERENCES "Chapter"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "ImageGenerationTask" ADD CONSTRAINT "ImageGenerationTask_baseCharacterId_fkey" FOREIGN KEY ("baseCharacterId") REFERENCES "BaseCharacter"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "ImageGenerationTask" DROP CONSTRAINT IF EXISTS "ImageGenerationTask_baseCharacterId_fkey"; ALTER TABLE "ImageGenerationTask" ADD CONSTRAINT "ImageGenerationTask_baseCharacterId_fkey" FOREIGN KEY ("baseCharacterId") REFERENCES "BaseCharacter"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "ImageAsset" ADD CONSTRAINT "ImageAsset_taskId_fkey" FOREIGN KEY ("taskId") REFERENCES "ImageGenerationTask"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "ImageAsset" DROP CONSTRAINT IF EXISTS "ImageAsset_taskId_fkey"; ALTER TABLE "ImageAsset" ADD CONSTRAINT "ImageAsset_taskId_fkey" FOREIGN KEY ("taskId") REFERENCES "ImageGenerationTask"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "ImageAsset" ADD CONSTRAINT "ImageAsset_baseCharacterId_fkey" FOREIGN KEY ("baseCharacterId") REFERENCES "BaseCharacter"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "ImageAsset" DROP CONSTRAINT IF EXISTS "ImageAsset_baseCharacterId_fkey"; ALTER TABLE "ImageAsset" ADD CONSTRAINT "ImageAsset_baseCharacterId_fkey" FOREIGN KEY ("baseCharacterId") REFERENCES "BaseCharacter"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "NovelGenre" ADD CONSTRAINT "NovelGenre_parentId_fkey" FOREIGN KEY ("parentId") REFERENCES "NovelGenre"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "NovelGenre" DROP CONSTRAINT IF EXISTS "NovelGenre_parentId_fkey"; ALTER TABLE "NovelGenre" ADD CONSTRAINT "NovelGenre_parentId_fkey" FOREIGN KEY ("parentId") REFERENCES "NovelGenre"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "NovelStoryMode" ADD CONSTRAINT "NovelStoryMode_parentId_fkey" FOREIGN KEY ("parentId") REFERENCES "NovelStoryMode"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "NovelStoryMode" DROP CONSTRAINT IF EXISTS "NovelStoryMode_parentId_fkey"; ALTER TABLE "NovelStoryMode" ADD CONSTRAINT "NovelStoryMode_parentId_fkey" FOREIGN KEY ("parentId") REFERENCES "NovelStoryMode"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "WorldPropertyLibrary" ADD CONSTRAINT "WorldPropertyLibrary_sourceWorldId_fkey" FOREIGN KEY ("sourceWorldId") REFERENCES "World"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "WorldPropertyLibrary" DROP CONSTRAINT IF EXISTS "WorldPropertyLibrary_sourceWorldId_fkey"; ALTER TABLE "WorldPropertyLibrary" ADD CONSTRAINT "WorldPropertyLibrary_sourceWorldId_fkey" FOREIGN KEY ("sourceWorldId") REFERENCES "World"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "WorldSnapshot" ADD CONSTRAINT "WorldSnapshot_worldId_fkey" FOREIGN KEY ("worldId") REFERENCES "World"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "WorldSnapshot" DROP CONSTRAINT IF EXISTS "WorldSnapshot_worldId_fkey"; ALTER TABLE "WorldSnapshot" ADD CONSTRAINT "WorldSnapshot_worldId_fkey" FOREIGN KEY ("worldId") REFERENCES "World"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "WorldDeepeningQA" ADD CONSTRAINT "WorldDeepeningQA_worldId_fkey" FOREIGN KEY ("worldId") REFERENCES "World"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "WorldDeepeningQA" DROP CONSTRAINT IF EXISTS "WorldDeepeningQA_worldId_fkey"; ALTER TABLE "WorldDeepeningQA" ADD CONSTRAINT "WorldDeepeningQA_worldId_fkey" FOREIGN KEY ("worldId") REFERENCES "World"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "WorldConsistencyIssue" ADD CONSTRAINT "WorldConsistencyIssue_worldId_fkey" FOREIGN KEY ("worldId") REFERENCES "World"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "WorldConsistencyIssue" DROP CONSTRAINT IF EXISTS "WorldConsistencyIssue_worldId_fkey"; ALTER TABLE "WorldConsistencyIssue" ADD CONSTRAINT "WorldConsistencyIssue_worldId_fkey" FOREIGN KEY ("worldId") REFERENCES "World"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "StyleProfileAntiAiRule" ADD CONSTRAINT "StyleProfileAntiAiRule_styleProfileId_fkey" FOREIGN KEY ("styleProfileId") REFERENCES "StyleProfile"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "StyleProfileAntiAiRule" DROP CONSTRAINT IF EXISTS "StyleProfileAntiAiRule_styleProfileId_fkey"; ALTER TABLE "StyleProfileAntiAiRule" ADD CONSTRAINT "StyleProfileAntiAiRule_styleProfileId_fkey" FOREIGN KEY ("styleProfileId") REFERENCES "StyleProfile"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "StyleProfileAntiAiRule" ADD CONSTRAINT "StyleProfileAntiAiRule_antiAiRuleId_fkey" FOREIGN KEY ("antiAiRuleId") REFERENCES "AntiAiRule"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "StyleProfileAntiAiRule" DROP CONSTRAINT IF EXISTS "StyleProfileAntiAiRule_antiAiRuleId_fkey"; ALTER TABLE "StyleProfileAntiAiRule" ADD CONSTRAINT "StyleProfileAntiAiRule_antiAiRuleId_fkey" FOREIGN KEY ("antiAiRuleId") REFERENCES "AntiAiRule"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "StyleBinding" ADD CONSTRAINT "StyleBinding_styleProfileId_fkey" FOREIGN KEY ("styleProfileId") REFERENCES "StyleProfile"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "StyleBinding" DROP CONSTRAINT IF EXISTS "StyleBinding_styleProfileId_fkey"; ALTER TABLE "StyleBinding" ADD CONSTRAINT "StyleBinding_styleProfileId_fkey" FOREIGN KEY ("styleProfileId") REFERENCES "StyleProfile"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "NovelBible" ADD CONSTRAINT "NovelBible_novelId_fkey" FOREIGN KEY ("novelId") REFERENCES "Novel"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "NovelBible" DROP CONSTRAINT IF EXISTS "NovelBible_novelId_fkey"; ALTER TABLE "NovelBible" ADD CONSTRAINT "NovelBible_novelId_fkey" FOREIGN KEY ("novelId") REFERENCES "Novel"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "PlotBeat" ADD CONSTRAINT "PlotBeat_novelId_fkey" FOREIGN KEY ("novelId") REFERENCES "Novel"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "PlotBeat" DROP CONSTRAINT IF EXISTS "PlotBeat_novelId_fkey"; ALTER TABLE "PlotBeat" ADD CONSTRAINT "PlotBeat_novelId_fkey" FOREIGN KEY ("novelId") REFERENCES "Novel"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "ChapterSummary" ADD CONSTRAINT "ChapterSummary_novelId_fkey" FOREIGN KEY ("novelId") REFERENCES "Novel"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "ChapterSummary" DROP CONSTRAINT IF EXISTS "ChapterSummary_novelId_fkey"; ALTER TABLE "ChapterSummary" ADD CONSTRAINT "ChapterSummary_novelId_fkey" FOREIGN KEY ("novelId") REFERENCES "Novel"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "ChapterSummary" ADD CONSTRAINT "ChapterSummary_chapterId_fkey" FOREIGN KEY ("chapterId") REFERENCES "Chapter"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "ChapterSummary" DROP CONSTRAINT IF EXISTS "ChapterSummary_chapterId_fkey"; ALTER TABLE "ChapterSummary" ADD CONSTRAINT "ChapterSummary_chapterId_fkey" FOREIGN KEY ("chapterId") REFERENCES "Chapter"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "ConsistencyFact" ADD CONSTRAINT "ConsistencyFact_novelId_fkey" FOREIGN KEY ("novelId") REFERENCES "Novel"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "ConsistencyFact" DROP CONSTRAINT IF EXISTS "ConsistencyFact_novelId_fkey"; ALTER TABLE "ConsistencyFact" ADD CONSTRAINT "ConsistencyFact_novelId_fkey" FOREIGN KEY ("novelId") REFERENCES "Novel"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "ConsistencyFact" ADD CONSTRAINT "ConsistencyFact_chapterId_fkey" FOREIGN KEY ("chapterId") REFERENCES "Chapter"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "ConsistencyFact" DROP CONSTRAINT IF EXISTS "ConsistencyFact_chapterId_fkey"; ALTER TABLE "ConsistencyFact" ADD CONSTRAINT "ConsistencyFact_chapterId_fkey" FOREIGN KEY ("chapterId") REFERENCES "Chapter"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "GenerationJob" ADD CONSTRAINT "GenerationJob_novelId_fkey" FOREIGN KEY ("novelId") REFERENCES "Novel"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "GenerationJob" DROP CONSTRAINT IF EXISTS "GenerationJob_novelId_fkey"; ALTER TABLE "GenerationJob" ADD CONSTRAINT "GenerationJob_novelId_fkey" FOREIGN KEY ("novelId") REFERENCES "Novel"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "AgentRun" ADD CONSTRAINT "AgentRun_novelId_fkey" FOREIGN KEY ("novelId") REFERENCES "Novel"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "AgentRun" DROP CONSTRAINT IF EXISTS "AgentRun_novelId_fkey"; ALTER TABLE "AgentRun" ADD CONSTRAINT "AgentRun_novelId_fkey" FOREIGN KEY ("novelId") REFERENCES "Novel"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "AgentStep" ADD CONSTRAINT "AgentStep_runId_fkey" FOREIGN KEY ("runId") REFERENCES "AgentRun"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "AgentStep" DROP CONSTRAINT IF EXISTS "AgentStep_runId_fkey"; ALTER TABLE "AgentStep" ADD CONSTRAINT "AgentStep_runId_fkey" FOREIGN KEY ("runId") REFERENCES "AgentRun"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "AgentApproval" ADD CONSTRAINT "AgentApproval_runId_fkey" FOREIGN KEY ("runId") REFERENCES "AgentRun"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "AgentApproval" DROP CONSTRAINT IF EXISTS "AgentApproval_runId_fkey"; ALTER TABLE "AgentApproval" ADD CONSTRAINT "AgentApproval_runId_fkey" FOREIGN KEY ("runId") REFERENCES "AgentRun"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "AgentApproval" ADD CONSTRAINT "AgentApproval_stepId_fkey" FOREIGN KEY ("stepId") REFERENCES "AgentStep"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "AgentApproval" DROP CONSTRAINT IF EXISTS "AgentApproval_stepId_fkey"; ALTER TABLE "AgentApproval" ADD CONSTRAINT "AgentApproval_stepId_fkey" FOREIGN KEY ("stepId") REFERENCES "AgentStep"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "CreativeHubCheckpoint" ADD CONSTRAINT "CreativeHubCheckpoint_threadId_fkey" FOREIGN KEY ("threadId") REFERENCES "CreativeHubThread"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "CreativeHubCheckpoint" DROP CONSTRAINT IF EXISTS "CreativeHubCheckpoint_threadId_fkey"; ALTER TABLE "CreativeHubCheckpoint" ADD CONSTRAINT "CreativeHubCheckpoint_threadId_fkey" FOREIGN KEY ("threadId") REFERENCES "CreativeHubThread"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "StorylineVersion" ADD CONSTRAINT "StorylineVersion_novelId_fkey" FOREIGN KEY ("novelId") REFERENCES "Novel"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "StorylineVersion" DROP CONSTRAINT IF EXISTS "StorylineVersion_novelId_fkey"; ALTER TABLE "StorylineVersion" ADD CONSTRAINT "StorylineVersion_novelId_fkey" FOREIGN KEY ("novelId") REFERENCES "Novel"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "VolumePlanVersion" ADD CONSTRAINT "VolumePlanVersion_novelId_fkey" FOREIGN KEY ("novelId") REFERENCES "Novel"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "VolumePlanVersion" DROP CONSTRAINT IF EXISTS "VolumePlanVersion_novelId_fkey"; ALTER TABLE "VolumePlanVersion" ADD CONSTRAINT "VolumePlanVersion_novelId_fkey" FOREIGN KEY ("novelId") REFERENCES "Novel"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "VolumePlan" ADD CONSTRAINT "VolumePlan_novelId_fkey" FOREIGN KEY ("novelId") REFERENCES "Novel"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "VolumePlan" DROP CONSTRAINT IF EXISTS "VolumePlan_novelId_fkey"; ALTER TABLE "VolumePlan" ADD CONSTRAINT "VolumePlan_novelId_fkey" FOREIGN KEY ("novelId") REFERENCES "Novel"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "VolumePlan" ADD CONSTRAINT "VolumePlan_sourceVersionId_fkey" FOREIGN KEY ("sourceVersionId") REFERENCES "VolumePlanVersion"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "VolumePlan" DROP CONSTRAINT IF EXISTS "VolumePlan_sourceVersionId_fkey"; ALTER TABLE "VolumePlan" ADD CONSTRAINT "VolumePlan_sourceVersionId_fkey" FOREIGN KEY ("sourceVersionId") REFERENCES "VolumePlanVersion"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "VolumeChapterPlan" ADD CONSTRAINT "VolumeChapterPlan_volumeId_fkey" FOREIGN KEY ("volumeId") REFERENCES "VolumePlan"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "VolumeChapterPlan" DROP CONSTRAINT IF EXISTS "VolumeChapterPlan_volumeId_fkey"; ALTER TABLE "VolumeChapterPlan" ADD CONSTRAINT "VolumeChapterPlan_volumeId_fkey" FOREIGN KEY ("volumeId") REFERENCES "VolumePlan"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "QualityReport" ADD CONSTRAINT "QualityReport_novelId_fkey" FOREIGN KEY ("novelId") REFERENCES "Novel"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "QualityReport" DROP CONSTRAINT IF EXISTS "QualityReport_novelId_fkey"; ALTER TABLE "QualityReport" ADD CONSTRAINT "QualityReport_novelId_fkey" FOREIGN KEY ("novelId") REFERENCES "Novel"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "QualityReport" ADD CONSTRAINT "QualityReport_chapterId_fkey" FOREIGN KEY ("chapterId") REFERENCES "Chapter"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "QualityReport" DROP CONSTRAINT IF EXISTS "QualityReport_chapterId_fkey"; ALTER TABLE "QualityReport" ADD CONSTRAINT "QualityReport_chapterId_fkey" FOREIGN KEY ("chapterId") REFERENCES "Chapter"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "StoryMacroPlan" ADD CONSTRAINT "StoryMacroPlan_novelId_fkey" FOREIGN KEY ("novelId") REFERENCES "Novel"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "StoryMacroPlan" DROP CONSTRAINT IF EXISTS "StoryMacroPlan_novelId_fkey"; ALTER TABLE "StoryMacroPlan" ADD CONSTRAINT "StoryMacroPlan_novelId_fkey" FOREIGN KEY ("novelId") REFERENCES "Novel"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "BookContract" ADD CONSTRAINT "BookContract_novelId_fkey" FOREIGN KEY ("novelId") REFERENCES "Novel"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "BookContract" DROP CONSTRAINT IF EXISTS "BookContract_novelId_fkey"; ALTER TABLE "BookContract" ADD CONSTRAINT "BookContract_novelId_fkey" FOREIGN KEY ("novelId") REFERENCES "Novel"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "NovelWorkflowTask" ADD CONSTRAINT "NovelWorkflowTask_novelId_fkey" FOREIGN KEY ("novelId") REFERENCES "Novel"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "NovelWorkflowTask" DROP CONSTRAINT IF EXISTS "NovelWorkflowTask_novelId_fkey"; ALTER TABLE "NovelWorkflowTask" ADD CONSTRAINT "NovelWorkflowTask_novelId_fkey" FOREIGN KEY ("novelId") REFERENCES "Novel"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "StoryStateSnapshot" ADD CONSTRAINT "StoryStateSnapshot_novelId_fkey" FOREIGN KEY ("novelId") REFERENCES "Novel"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "StoryStateSnapshot" DROP CONSTRAINT IF EXISTS "StoryStateSnapshot_novelId_fkey"; ALTER TABLE "StoryStateSnapshot" ADD CONSTRAINT "StoryStateSnapshot_novelId_fkey" FOREIGN KEY ("novelId") REFERENCES "Novel"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "StoryStateSnapshot" ADD CONSTRAINT "StoryStateSnapshot_sourceChapterId_fkey" FOREIGN KEY ("sourceChapterId") REFERENCES "Chapter"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "StoryStateSnapshot" DROP CONSTRAINT IF EXISTS "StoryStateSnapshot_sourceChapterId_fkey"; ALTER TABLE "StoryStateSnapshot" ADD CONSTRAINT "StoryStateSnapshot_sourceChapterId_fkey" FOREIGN KEY ("sourceChapterId") REFERENCES "Chapter"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "CharacterState" ADD CONSTRAINT "CharacterState_snapshotId_fkey" FOREIGN KEY ("snapshotId") REFERENCES "StoryStateSnapshot"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "CharacterState" DROP CONSTRAINT IF EXISTS "CharacterState_snapshotId_fkey"; ALTER TABLE "CharacterState" ADD CONSTRAINT "CharacterState_snapshotId_fkey" FOREIGN KEY ("snapshotId") REFERENCES "StoryStateSnapshot"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "CharacterState" ADD CONSTRAINT "CharacterState_characterId_fkey" FOREIGN KEY ("characterId") REFERENCES "Character"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "CharacterState" DROP CONSTRAINT IF EXISTS "CharacterState_characterId_fkey"; ALTER TABLE "CharacterState" ADD CONSTRAINT "CharacterState_characterId_fkey" FOREIGN KEY ("characterId") REFERENCES "Character"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "RelationState" ADD CONSTRAINT "RelationState_snapshotId_fkey" FOREIGN KEY ("snapshotId") REFERENCES "StoryStateSnapshot"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "RelationState" DROP CONSTRAINT IF EXISTS "RelationState_snapshotId_fkey"; ALTER TABLE "RelationState" ADD CONSTRAINT "RelationState_snapshotId_fkey" FOREIGN KEY ("snapshotId") REFERENCES "StoryStateSnapshot"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "RelationState" ADD CONSTRAINT "RelationState_sourceCharacterId_fkey" FOREIGN KEY ("sourceCharacterId") REFERENCES "Character"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "RelationState" DROP CONSTRAINT IF EXISTS "RelationState_sourceCharacterId_fkey"; ALTER TABLE "RelationState" ADD CONSTRAINT "RelationState_sourceCharacterId_fkey" FOREIGN KEY ("sourceCharacterId") REFERENCES "Character"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "RelationState" ADD CONSTRAINT "RelationState_targetCharacterId_fkey" FOREIGN KEY ("targetCharacterId") REFERENCES "Character"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "RelationState" DROP CONSTRAINT IF EXISTS "RelationState_targetCharacterId_fkey"; ALTER TABLE "RelationState" ADD CONSTRAINT "RelationState_targetCharacterId_fkey" FOREIGN KEY ("targetCharacterId") REFERENCES "Character"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "InformationState" ADD CONSTRAINT "InformationState_snapshotId_fkey" FOREIGN KEY ("snapshotId") REFERENCES "StoryStateSnapshot"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "InformationState" DROP CONSTRAINT IF EXISTS "InformationState_snapshotId_fkey"; ALTER TABLE "InformationState" ADD CONSTRAINT "InformationState_snapshotId_fkey" FOREIGN KEY ("snapshotId") REFERENCES "StoryStateSnapshot"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "ForeshadowState" ADD CONSTRAINT "ForeshadowState_snapshotId_fkey" FOREIGN KEY ("snapshotId") REFERENCES "StoryStateSnapshot"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "ForeshadowState" DROP CONSTRAINT IF EXISTS "ForeshadowState_snapshotId_fkey"; ALTER TABLE "ForeshadowState" ADD CONSTRAINT "ForeshadowState_snapshotId_fkey" FOREIGN KEY ("snapshotId") REFERENCES "StoryStateSnapshot"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "ForeshadowState" ADD CONSTRAINT "ForeshadowState_setupChapterId_fkey" FOREIGN KEY ("setupChapterId") REFERENCES "Chapter"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "ForeshadowState" DROP CONSTRAINT IF EXISTS "ForeshadowState_setupChapterId_fkey"; ALTER TABLE "ForeshadowState" ADD CONSTRAINT "ForeshadowState_setupChapterId_fkey" FOREIGN KEY ("setupChapterId") REFERENCES "Chapter"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "ForeshadowState" ADD CONSTRAINT "ForeshadowState_payoffChapterId_fkey" FOREIGN KEY ("payoffChapterId") REFERENCES "Chapter"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "ForeshadowState" DROP CONSTRAINT IF EXISTS "ForeshadowState_payoffChapterId_fkey"; ALTER TABLE "ForeshadowState" ADD CONSTRAINT "ForeshadowState_payoffChapterId_fkey" FOREIGN KEY ("payoffChapterId") REFERENCES "Chapter"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "OpenConflict" ADD CONSTRAINT "OpenConflict_novelId_fkey" FOREIGN KEY ("novelId") REFERENCES "Novel"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "OpenConflict" DROP CONSTRAINT IF EXISTS "OpenConflict_novelId_fkey"; ALTER TABLE "OpenConflict" ADD CONSTRAINT "OpenConflict_novelId_fkey" FOREIGN KEY ("novelId") REFERENCES "Novel"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "OpenConflict" ADD CONSTRAINT "OpenConflict_chapterId_fkey" FOREIGN KEY ("chapterId") REFERENCES "Chapter"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "OpenConflict" DROP CONSTRAINT IF EXISTS "OpenConflict_chapterId_fkey"; ALTER TABLE "OpenConflict" ADD CONSTRAINT "OpenConflict_chapterId_fkey" FOREIGN KEY ("chapterId") REFERENCES "Chapter"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "OpenConflict" ADD CONSTRAINT "OpenConflict_sourceSnapshotId_fkey" FOREIGN KEY ("sourceSnapshotId") REFERENCES "StoryStateSnapshot"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "OpenConflict" DROP CONSTRAINT IF EXISTS "OpenConflict_sourceSnapshotId_fkey"; ALTER TABLE "OpenConflict" ADD CONSTRAINT "OpenConflict_sourceSnapshotId_fkey" FOREIGN KEY ("sourceSnapshotId") REFERENCES "StoryStateSnapshot"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "PayoffLedgerItem" ADD CONSTRAINT "PayoffLedgerItem_novelId_fkey" FOREIGN KEY ("novelId") REFERENCES "Novel"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "PayoffLedgerItem" DROP CONSTRAINT IF EXISTS "PayoffLedgerItem_novelId_fkey"; ALTER TABLE "PayoffLedgerItem" ADD CONSTRAINT "PayoffLedgerItem_novelId_fkey" FOREIGN KEY ("novelId") REFERENCES "Novel"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "PayoffLedgerItem" ADD CONSTRAINT "PayoffLedgerItem_lastTouchedChapterId_fkey" FOREIGN KEY ("lastTouchedChapterId") REFERENCES "Chapter"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "PayoffLedgerItem" DROP CONSTRAINT IF EXISTS "PayoffLedgerItem_lastTouchedChapterId_fkey"; ALTER TABLE "PayoffLedgerItem" ADD CONSTRAINT "PayoffLedgerItem_lastTouchedChapterId_fkey" FOREIGN KEY ("lastTouchedChapterId") REFERENCES "Chapter"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "PayoffLedgerItem" ADD CONSTRAINT "PayoffLedgerItem_setupChapterId_fkey" FOREIGN KEY ("setupChapterId") REFERENCES "Chapter"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "PayoffLedgerItem" DROP CONSTRAINT IF EXISTS "PayoffLedgerItem_setupChapterId_fkey"; ALTER TABLE "PayoffLedgerItem" ADD CONSTRAINT "PayoffLedgerItem_setupChapterId_fkey" FOREIGN KEY ("setupChapterId") REFERENCES "Chapter"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "PayoffLedgerItem" ADD CONSTRAINT "PayoffLedgerItem_payoffChapterId_fkey" FOREIGN KEY ("payoffChapterId") REFERENCES "Chapter"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "PayoffLedgerItem" DROP CONSTRAINT IF EXISTS "PayoffLedgerItem_payoffChapterId_fkey"; ALTER TABLE "PayoffLedgerItem" ADD CONSTRAINT "PayoffLedgerItem_payoffChapterId_fkey" FOREIGN KEY ("payoffChapterId") REFERENCES "Chapter"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "PayoffLedgerItem" ADD CONSTRAINT "PayoffLedgerItem_lastSnapshotId_fkey" FOREIGN KEY ("lastSnapshotId") REFERENCES "StoryStateSnapshot"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "PayoffLedgerItem" DROP CONSTRAINT IF EXISTS "PayoffLedgerItem_lastSnapshotId_fkey"; ALTER TABLE "PayoffLedgerItem" ADD CONSTRAINT "PayoffLedgerItem_lastSnapshotId_fkey" FOREIGN KEY ("lastSnapshotId") REFERENCES "StoryStateSnapshot"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "StoryPlan" ADD CONSTRAINT "StoryPlan_novelId_fkey" FOREIGN KEY ("novelId") REFERENCES "Novel"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "StoryPlan" DROP CONSTRAINT IF EXISTS "StoryPlan_novelId_fkey"; ALTER TABLE "StoryPlan" ADD CONSTRAINT "StoryPlan_novelId_fkey" FOREIGN KEY ("novelId") REFERENCES "Novel"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "StoryPlan" ADD CONSTRAINT "StoryPlan_chapterId_fkey" FOREIGN KEY ("chapterId") REFERENCES "Chapter"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "StoryPlan" DROP CONSTRAINT IF EXISTS "StoryPlan_chapterId_fkey"; ALTER TABLE "StoryPlan" ADD CONSTRAINT "StoryPlan_chapterId_fkey" FOREIGN KEY ("chapterId") REFERENCES "Chapter"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "StoryPlan" ADD CONSTRAINT "StoryPlan_parentId_fkey" FOREIGN KEY ("parentId") REFERENCES "StoryPlan"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "StoryPlan" DROP CONSTRAINT IF EXISTS "StoryPlan_parentId_fkey"; ALTER TABLE "StoryPlan" ADD CONSTRAINT "StoryPlan_parentId_fkey" FOREIGN KEY ("parentId") REFERENCES "StoryPlan"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "StoryPlan" ADD CONSTRAINT "StoryPlan_sourceStateSnapshotId_fkey" FOREIGN KEY ("sourceStateSnapshotId") REFERENCES "StoryStateSnapshot"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "StoryPlan" DROP CONSTRAINT IF EXISTS "StoryPlan_sourceStateSnapshotId_fkey"; ALTER TABLE "StoryPlan" ADD CONSTRAINT "StoryPlan_sourceStateSnapshotId_fkey" FOREIGN KEY ("sourceStateSnapshotId") REFERENCES "StoryStateSnapshot"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "ChapterPlanScene" ADD CONSTRAINT "ChapterPlanScene_planId_fkey" FOREIGN KEY ("planId") REFERENCES "StoryPlan"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "ChapterPlanScene" DROP CONSTRAINT IF EXISTS "ChapterPlanScene_planId_fkey"; ALTER TABLE "ChapterPlanScene" ADD CONSTRAINT "ChapterPlanScene_planId_fkey" FOREIGN KEY ("planId") REFERENCES "StoryPlan"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "ReplanRun" ADD CONSTRAINT "ReplanRun_novelId_fkey" FOREIGN KEY ("novelId") REFERENCES "Novel"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "ReplanRun" DROP CONSTRAINT IF EXISTS "ReplanRun_novelId_fkey"; ALTER TABLE "ReplanRun" ADD CONSTRAINT "ReplanRun_novelId_fkey" FOREIGN KEY ("novelId") REFERENCES "Novel"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "ReplanRun" ADD CONSTRAINT "ReplanRun_chapterId_fkey" FOREIGN KEY ("chapterId") REFERENCES "Chapter"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "ReplanRun" DROP CONSTRAINT IF EXISTS "ReplanRun_chapterId_fkey"; ALTER TABLE "ReplanRun" ADD CONSTRAINT "ReplanRun_chapterId_fkey" FOREIGN KEY ("chapterId") REFERENCES "Chapter"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "ReplanRun" ADD CONSTRAINT "ReplanRun_sourcePlanId_fkey" FOREIGN KEY ("sourcePlanId") REFERENCES "StoryPlan"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "ReplanRun" DROP CONSTRAINT IF EXISTS "ReplanRun_sourcePlanId_fkey"; ALTER TABLE "ReplanRun" ADD CONSTRAINT "ReplanRun_sourcePlanId_fkey" FOREIGN KEY ("sourcePlanId") REFERENCES "StoryPlan"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "AuditReport" ADD CONSTRAINT "AuditReport_novelId_fkey" FOREIGN KEY ("novelId") REFERENCES "Novel"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "AuditReport" DROP CONSTRAINT IF EXISTS "AuditReport_novelId_fkey"; ALTER TABLE "AuditReport" ADD CONSTRAINT "AuditReport_novelId_fkey" FOREIGN KEY ("novelId") REFERENCES "Novel"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "AuditReport" ADD CONSTRAINT "AuditReport_chapterId_fkey" FOREIGN KEY ("chapterId") REFERENCES "Chapter"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "AuditReport" DROP CONSTRAINT IF EXISTS "AuditReport_chapterId_fkey"; ALTER TABLE "AuditReport" ADD CONSTRAINT "AuditReport_chapterId_fkey" FOREIGN KEY ("chapterId") REFERENCES "Chapter"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "AuditIssue" ADD CONSTRAINT "AuditIssue_reportId_fkey" FOREIGN KEY ("reportId") REFERENCES "AuditReport"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "AuditIssue" DROP CONSTRAINT IF EXISTS "AuditIssue_reportId_fkey"; ALTER TABLE "AuditIssue" ADD CONSTRAINT "AuditIssue_reportId_fkey" FOREIGN KEY ("reportId") REFERENCES "AuditReport"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "KnowledgeDocument" ADD CONSTRAINT "KnowledgeDocument_activeVersionId_fkey" FOREIGN KEY ("activeVersionId") REFERENCES "KnowledgeDocumentVersion"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "KnowledgeDocument" DROP CONSTRAINT IF EXISTS "KnowledgeDocument_activeVersionId_fkey"; ALTER TABLE "KnowledgeDocument" ADD CONSTRAINT "KnowledgeDocument_activeVersionId_fkey" FOREIGN KEY ("activeVersionId") REFERENCES "KnowledgeDocumentVersion"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "KnowledgeDocumentVersion" ADD CONSTRAINT "KnowledgeDocumentVersion_documentId_fkey" FOREIGN KEY ("documentId") REFERENCES "KnowledgeDocument"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "KnowledgeDocumentVersion" DROP CONSTRAINT IF EXISTS "KnowledgeDocumentVersion_documentId_fkey"; ALTER TABLE "KnowledgeDocumentVersion" ADD CONSTRAINT "KnowledgeDocumentVersion_documentId_fkey" FOREIGN KEY ("documentId") REFERENCES "KnowledgeDocument"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "KnowledgeBinding" ADD CONSTRAINT "KnowledgeBinding_documentId_fkey" FOREIGN KEY ("documentId") REFERENCES "KnowledgeDocument"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "KnowledgeBinding" DROP CONSTRAINT IF EXISTS "KnowledgeBinding_documentId_fkey"; ALTER TABLE "KnowledgeBinding" ADD CONSTRAINT "KnowledgeBinding_documentId_fkey" FOREIGN KEY ("documentId") REFERENCES "KnowledgeDocument"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "BookAnalysis" ADD CONSTRAINT "BookAnalysis_documentId_fkey" FOREIGN KEY ("documentId") REFERENCES "KnowledgeDocument"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "BookAnalysis" DROP CONSTRAINT IF EXISTS "BookAnalysis_documentId_fkey"; ALTER TABLE "BookAnalysis" ADD CONSTRAINT "BookAnalysis_documentId_fkey" FOREIGN KEY ("documentId") REFERENCES "KnowledgeDocument"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "BookAnalysis" ADD CONSTRAINT "BookAnalysis_documentVersionId_fkey" FOREIGN KEY ("documentVersionId") REFERENCES "KnowledgeDocumentVersion"("id") ON DELETE NO ACTION ON UPDATE CASCADE;
+ALTER TABLE "BookAnalysis" DROP CONSTRAINT IF EXISTS "BookAnalysis_documentVersionId_fkey"; ALTER TABLE "BookAnalysis" ADD CONSTRAINT "BookAnalysis_documentVersionId_fkey" FOREIGN KEY ("documentVersionId") REFERENCES "KnowledgeDocumentVersion"("id") ON DELETE NO ACTION ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "BookAnalysis" ADD CONSTRAINT "BookAnalysis_publishedDocumentId_fkey" FOREIGN KEY ("publishedDocumentId") REFERENCES "KnowledgeDocument"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "BookAnalysis" DROP CONSTRAINT IF EXISTS "BookAnalysis_publishedDocumentId_fkey"; ALTER TABLE "BookAnalysis" ADD CONSTRAINT "BookAnalysis_publishedDocumentId_fkey" FOREIGN KEY ("publishedDocumentId") REFERENCES "KnowledgeDocument"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "BookAnalysisSourceCache" ADD CONSTRAINT "BookAnalysisSourceCache_documentVersionId_fkey" FOREIGN KEY ("documentVersionId") REFERENCES "KnowledgeDocumentVersion"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "BookAnalysisSourceCache" DROP CONSTRAINT IF EXISTS "BookAnalysisSourceCache_documentVersionId_fkey"; ALTER TABLE "BookAnalysisSourceCache" ADD CONSTRAINT "BookAnalysisSourceCache_documentVersionId_fkey" FOREIGN KEY ("documentVersionId") REFERENCES "KnowledgeDocumentVersion"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "BookAnalysisSection" ADD CONSTRAINT "BookAnalysisSection_analysisId_fkey" FOREIGN KEY ("analysisId") REFERENCES "BookAnalysis"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "BookAnalysisSection" DROP CONSTRAINT IF EXISTS "BookAnalysisSection_analysisId_fkey"; ALTER TABLE "BookAnalysisSection" ADD CONSTRAINT "BookAnalysisSection_analysisId_fkey" FOREIGN KEY ("analysisId") REFERENCES "BookAnalysis"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+
+

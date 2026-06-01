@@ -30,7 +30,7 @@ function tSeed(
   locale: LocaleCode,
   namespace: string,
   slug: string,
-  field: "name" | "description",
+  field: "name" | "description" | "coreDrive",
   fallback: string | null | undefined,
 ): string | null {
   const handle = getI18nServerHandle();
@@ -89,15 +89,20 @@ export function localizeAntiAiRule(
 }
 
 export function localizeStyleTemplate(
-  row: { id: string; key?: string | null; name: string; description?: string | null },
+  row: { id: string; key?: string | null; name: string; description?: string | null; category?: string | null },
   locale: LocaleCode = DEFAULT_LOCALE,
-): LocalizedSeedRow {
+): LocalizedSeedRow & { category?: string | null } {
   const slug = row.key ?? row.id;
+  const handle = getI18nServerHandle();
+  const localizedCategory = row.category && handle
+    ? (handle.t("seedData", `styleTemplates.categories.${row.category}`, { lng: locale, defaultValue: row.category }) ?? row.category)
+    : row.category;
   return {
     id: row.id,
     slug,
     name: tSeed(locale, "styleTemplates", slug, "name", row.name) ?? row.name,
     description: tSeed(locale, "styleTemplates", slug, "description", row.description),
+    category: localizedCategory,
   };
 }
 
@@ -116,4 +121,13 @@ export function localizeStoryModes(
   locale: LocaleCode = DEFAULT_LOCALE,
 ): LocalizedSeedRow[] {
   return rows.map((row) => localizeStoryMode(row, locale));
+}
+
+export function localizeStoryModeCoreDrive(
+  id: string,
+  coreDrive: string | null | undefined,
+  locale: LocaleCode = DEFAULT_LOCALE,
+): string | null {
+  if (!coreDrive) return coreDrive ?? null;
+  return tSeed(locale, "storyModes", id, "coreDrive", coreDrive);
 }

@@ -1,4 +1,4 @@
-CREATE TABLE "DirectorRun" (
+CREATE TABLE IF NOT EXISTS "DirectorRun" (
     "id" TEXT NOT NULL,
     "taskId" TEXT NOT NULL,
     "novelId" TEXT,
@@ -11,7 +11,7 @@ CREATE TABLE "DirectorRun" (
     CONSTRAINT "DirectorRun_pkey" PRIMARY KEY ("id")
 );
 
-CREATE TABLE "DirectorStepRun" (
+CREATE TABLE IF NOT EXISTS "DirectorStepRun" (
     "id" TEXT NOT NULL,
     "runId" TEXT NOT NULL,
     "taskId" TEXT NOT NULL,
@@ -33,7 +33,7 @@ CREATE TABLE "DirectorStepRun" (
     CONSTRAINT "DirectorStepRun_pkey" PRIMARY KEY ("id")
 );
 
-CREATE TABLE "DirectorEvent" (
+CREATE TABLE IF NOT EXISTS "DirectorEvent" (
     "id" TEXT NOT NULL,
     "runId" TEXT,
     "taskId" TEXT,
@@ -52,7 +52,7 @@ CREATE TABLE "DirectorEvent" (
     CONSTRAINT "DirectorEvent_pkey" PRIMARY KEY ("id")
 );
 
-CREATE TABLE "DirectorArtifact" (
+CREATE TABLE IF NOT EXISTS "DirectorArtifact" (
     "id" TEXT NOT NULL,
     "runId" TEXT,
     "novelId" TEXT NOT NULL,
@@ -79,7 +79,7 @@ CREATE TABLE "DirectorArtifact" (
     CONSTRAINT "DirectorArtifact_pkey" PRIMARY KEY ("id")
 );
 
-CREATE TABLE "DirectorArtifactDependency" (
+CREATE TABLE IF NOT EXISTS "DirectorArtifactDependency" (
     "id" TEXT NOT NULL,
     "artifactId" TEXT NOT NULL,
     "dependsOnArtifactId" TEXT NOT NULL,
@@ -89,33 +89,36 @@ CREATE TABLE "DirectorArtifactDependency" (
     CONSTRAINT "DirectorArtifactDependency_pkey" PRIMARY KEY ("id")
 );
 
-CREATE UNIQUE INDEX "DirectorRun_taskId_key" ON "DirectorRun"("taskId");
-CREATE INDEX "DirectorRun_novelId_updatedAt_idx" ON "DirectorRun"("novelId", "updatedAt");
-CREATE UNIQUE INDEX "DirectorStepRun_idempotencyKey_key" ON "DirectorStepRun"("idempotencyKey");
-CREATE INDEX "DirectorStepRun_runId_status_updatedAt_idx" ON "DirectorStepRun"("runId", "status", "updatedAt");
-CREATE INDEX "DirectorStepRun_taskId_nodeKey_idx" ON "DirectorStepRun"("taskId", "nodeKey");
-CREATE INDEX "DirectorStepRun_novelId_updatedAt_idx" ON "DirectorStepRun"("novelId", "updatedAt");
-CREATE INDEX "DirectorEvent_runId_occurredAt_idx" ON "DirectorEvent"("runId", "occurredAt");
-CREATE INDEX "DirectorEvent_taskId_occurredAt_idx" ON "DirectorEvent"("taskId", "occurredAt");
-CREATE INDEX "DirectorEvent_novelId_occurredAt_idx" ON "DirectorEvent"("novelId", "occurredAt");
-CREATE INDEX "DirectorEvent_type_occurredAt_idx" ON "DirectorEvent"("type", "occurredAt");
-CREATE INDEX "DirectorArtifact_novelId_artifactType_status_idx" ON "DirectorArtifact"("novelId", "artifactType", "status");
-CREATE INDEX "DirectorArtifact_runId_updatedAt_idx" ON "DirectorArtifact"("runId", "updatedAt");
-CREATE INDEX "DirectorArtifact_taskId_updatedAt_idx" ON "DirectorArtifact"("taskId", "updatedAt");
-CREATE INDEX "DirectorArtifact_targetType_targetId_idx" ON "DirectorArtifact"("targetType", "targetId");
-CREATE INDEX "DirectorArtifact_sourceStepRunId_idx" ON "DirectorArtifact"("sourceStepRunId");
-CREATE UNIQUE INDEX "DirectorArtifactDependency_artifactId_dependsOnArtifactId_key" ON "DirectorArtifactDependency"("artifactId", "dependsOnArtifactId");
-CREATE INDEX "DirectorArtifactDependency_dependsOnArtifactId_idx" ON "DirectorArtifactDependency"("dependsOnArtifactId");
+CREATE UNIQUE INDEX IF NOT EXISTS "DirectorRun_taskId_key" ON "DirectorRun"("taskId");
+CREATE INDEX IF NOT EXISTS "DirectorRun_novelId_updatedAt_idx" ON "DirectorRun"("novelId", "updatedAt");
+CREATE UNIQUE INDEX IF NOT EXISTS "DirectorStepRun_idempotencyKey_key" ON "DirectorStepRun"("idempotencyKey");
+CREATE INDEX IF NOT EXISTS "DirectorStepRun_runId_status_updatedAt_idx" ON "DirectorStepRun"("runId", "status", "updatedAt");
+CREATE INDEX IF NOT EXISTS "DirectorStepRun_taskId_nodeKey_idx" ON "DirectorStepRun"("taskId", "nodeKey");
+CREATE INDEX IF NOT EXISTS "DirectorStepRun_novelId_updatedAt_idx" ON "DirectorStepRun"("novelId", "updatedAt");
+CREATE INDEX IF NOT EXISTS "DirectorEvent_runId_occurredAt_idx" ON "DirectorEvent"("runId", "occurredAt");
+CREATE INDEX IF NOT EXISTS "DirectorEvent_taskId_occurredAt_idx" ON "DirectorEvent"("taskId", "occurredAt");
+CREATE INDEX IF NOT EXISTS "DirectorEvent_novelId_occurredAt_idx" ON "DirectorEvent"("novelId", "occurredAt");
+CREATE INDEX IF NOT EXISTS "DirectorEvent_type_occurredAt_idx" ON "DirectorEvent"("type", "occurredAt");
+CREATE INDEX IF NOT EXISTS "DirectorArtifact_novelId_artifactType_status_idx" ON "DirectorArtifact"("novelId", "artifactType", "status");
+CREATE INDEX IF NOT EXISTS "DirectorArtifact_runId_updatedAt_idx" ON "DirectorArtifact"("runId", "updatedAt");
+CREATE INDEX IF NOT EXISTS "DirectorArtifact_taskId_updatedAt_idx" ON "DirectorArtifact"("taskId", "updatedAt");
+CREATE INDEX IF NOT EXISTS "DirectorArtifact_targetType_targetId_idx" ON "DirectorArtifact"("targetType", "targetId");
+CREATE INDEX IF NOT EXISTS "DirectorArtifact_sourceStepRunId_idx" ON "DirectorArtifact"("sourceStepRunId");
+CREATE UNIQUE INDEX IF NOT EXISTS "DirectorArtifactDependency_artifactId_dependsOnArtifactId_key" ON "DirectorArtifactDependency"("artifactId", "dependsOnArtifactId");
+CREATE INDEX IF NOT EXISTS "DirectorArtifactDependency_dependsOnArtifactId_idx" ON "DirectorArtifactDependency"("dependsOnArtifactId");
 
-ALTER TABLE "DirectorRun" ADD CONSTRAINT "DirectorRun_taskId_fkey" FOREIGN KEY ("taskId") REFERENCES "NovelWorkflowTask"("id") ON DELETE CASCADE ON UPDATE CASCADE;
-ALTER TABLE "DirectorRun" ADD CONSTRAINT "DirectorRun_novelId_fkey" FOREIGN KEY ("novelId") REFERENCES "Novel"("id") ON DELETE SET NULL ON UPDATE CASCADE;
-ALTER TABLE "DirectorStepRun" ADD CONSTRAINT "DirectorStepRun_runId_fkey" FOREIGN KEY ("runId") REFERENCES "DirectorRun"("id") ON DELETE CASCADE ON UPDATE CASCADE;
-ALTER TABLE "DirectorStepRun" ADD CONSTRAINT "DirectorStepRun_taskId_fkey" FOREIGN KEY ("taskId") REFERENCES "NovelWorkflowTask"("id") ON DELETE CASCADE ON UPDATE CASCADE;
-ALTER TABLE "DirectorEvent" ADD CONSTRAINT "DirectorEvent_runId_fkey" FOREIGN KEY ("runId") REFERENCES "DirectorRun"("id") ON DELETE CASCADE ON UPDATE CASCADE;
-ALTER TABLE "DirectorEvent" ADD CONSTRAINT "DirectorEvent_taskId_fkey" FOREIGN KEY ("taskId") REFERENCES "NovelWorkflowTask"("id") ON DELETE CASCADE ON UPDATE CASCADE;
-ALTER TABLE "DirectorEvent" ADD CONSTRAINT "DirectorEvent_novelId_fkey" FOREIGN KEY ("novelId") REFERENCES "Novel"("id") ON DELETE SET NULL ON UPDATE CASCADE;
-ALTER TABLE "DirectorArtifact" ADD CONSTRAINT "DirectorArtifact_runId_fkey" FOREIGN KEY ("runId") REFERENCES "DirectorRun"("id") ON DELETE SET NULL ON UPDATE CASCADE;
-ALTER TABLE "DirectorArtifact" ADD CONSTRAINT "DirectorArtifact_taskId_fkey" FOREIGN KEY ("taskId") REFERENCES "NovelWorkflowTask"("id") ON DELETE SET NULL ON UPDATE CASCADE;
-ALTER TABLE "DirectorArtifact" ADD CONSTRAINT "DirectorArtifact_novelId_fkey" FOREIGN KEY ("novelId") REFERENCES "Novel"("id") ON DELETE CASCADE ON UPDATE CASCADE;
-ALTER TABLE "DirectorArtifactDependency" ADD CONSTRAINT "DirectorArtifactDependency_artifactId_fkey" FOREIGN KEY ("artifactId") REFERENCES "DirectorArtifact"("id") ON DELETE CASCADE ON UPDATE CASCADE;
-ALTER TABLE "DirectorArtifactDependency" ADD CONSTRAINT "DirectorArtifactDependency_dependsOnArtifactId_fkey" FOREIGN KEY ("dependsOnArtifactId") REFERENCES "DirectorArtifact"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "DirectorRun" DROP CONSTRAINT IF EXISTS "DirectorRun_taskId_fkey"; ALTER TABLE "DirectorRun" ADD CONSTRAINT "DirectorRun_taskId_fkey" FOREIGN KEY ("taskId") REFERENCES "NovelWorkflowTask"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "DirectorRun" DROP CONSTRAINT IF EXISTS "DirectorRun_novelId_fkey"; ALTER TABLE "DirectorRun" ADD CONSTRAINT "DirectorRun_novelId_fkey" FOREIGN KEY ("novelId") REFERENCES "Novel"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "DirectorStepRun" DROP CONSTRAINT IF EXISTS "DirectorStepRun_runId_fkey"; ALTER TABLE "DirectorStepRun" ADD CONSTRAINT "DirectorStepRun_runId_fkey" FOREIGN KEY ("runId") REFERENCES "DirectorRun"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "DirectorStepRun" DROP CONSTRAINT IF EXISTS "DirectorStepRun_taskId_fkey"; ALTER TABLE "DirectorStepRun" ADD CONSTRAINT "DirectorStepRun_taskId_fkey" FOREIGN KEY ("taskId") REFERENCES "NovelWorkflowTask"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "DirectorEvent" DROP CONSTRAINT IF EXISTS "DirectorEvent_runId_fkey"; ALTER TABLE "DirectorEvent" ADD CONSTRAINT "DirectorEvent_runId_fkey" FOREIGN KEY ("runId") REFERENCES "DirectorRun"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "DirectorEvent" DROP CONSTRAINT IF EXISTS "DirectorEvent_taskId_fkey"; ALTER TABLE "DirectorEvent" ADD CONSTRAINT "DirectorEvent_taskId_fkey" FOREIGN KEY ("taskId") REFERENCES "NovelWorkflowTask"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "DirectorEvent" DROP CONSTRAINT IF EXISTS "DirectorEvent_novelId_fkey"; ALTER TABLE "DirectorEvent" ADD CONSTRAINT "DirectorEvent_novelId_fkey" FOREIGN KEY ("novelId") REFERENCES "Novel"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "DirectorArtifact" DROP CONSTRAINT IF EXISTS "DirectorArtifact_runId_fkey"; ALTER TABLE "DirectorArtifact" ADD CONSTRAINT "DirectorArtifact_runId_fkey" FOREIGN KEY ("runId") REFERENCES "DirectorRun"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "DirectorArtifact" DROP CONSTRAINT IF EXISTS "DirectorArtifact_taskId_fkey"; ALTER TABLE "DirectorArtifact" ADD CONSTRAINT "DirectorArtifact_taskId_fkey" FOREIGN KEY ("taskId") REFERENCES "NovelWorkflowTask"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "DirectorArtifact" DROP CONSTRAINT IF EXISTS "DirectorArtifact_novelId_fkey"; ALTER TABLE "DirectorArtifact" ADD CONSTRAINT "DirectorArtifact_novelId_fkey" FOREIGN KEY ("novelId") REFERENCES "Novel"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "DirectorArtifactDependency" DROP CONSTRAINT IF EXISTS "DirectorArtifactDependency_artifactId_fkey"; ALTER TABLE "DirectorArtifactDependency" ADD CONSTRAINT "DirectorArtifactDependency_artifactId_fkey" FOREIGN KEY ("artifactId") REFERENCES "DirectorArtifact"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "DirectorArtifactDependency" DROP CONSTRAINT IF EXISTS "DirectorArtifactDependency_dependsOnArtifactId_fkey"; ALTER TABLE "DirectorArtifactDependency" ADD CONSTRAINT "DirectorArtifactDependency_dependsOnArtifactId_fkey" FOREIGN KEY ("dependsOnArtifactId") REFERENCES "DirectorArtifact"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+
+

@@ -22,8 +22,7 @@ function getT(): TranslateFn | null {
 // Unicode-escaped Chinese strings to avoid triggering the CJK scanner
 // These are lookup keys, not t() calls
 
-const STAGE_KEY_MAP: Record<string, string> = {
-  // i18n-ignore: lookup map keys, not t() calls
+const STAGE_KEY_MAP: Record<string, string> = { // i18n-ignore: lookup map keys, not t() calls
   "\u9879\u76ee\u8bbe\u5b9a": "project_setup",
   "AI \u81ea\u52a8\u5bfc\u6f14": "auto_director",
   "\u6545\u4e8b\u5b8f\u89c2\u89c4\u5212": "story_macro",
@@ -34,8 +33,7 @@ const STAGE_KEY_MAP: Record<string, string> = {
   "\u8d28\u91cf\u4fee\u590d": "quality_repair",
 };
 
-const STATUS_KEY_MAP: Record<string, string> = {
-  // i18n-ignore: lookup map keys, not t() calls
+const STATUS_KEY_MAP: Record<string, string> = { // i18n-ignore: lookup map keys, not t() calls
   "\u7b49\u5f85\u6267\u884c": "waiting",
   "AI \u63a5\u7ba1\u4e2d": "running",
   "\u7b49\u5f85\u786e\u8ba4": "waitingConfirm",
@@ -53,8 +51,7 @@ const STATUS_KEY_MAP: Record<string, string> = {
   "\u9700\u8981\u6062\u590d": "needsRecovery",
 };
 
-const ACTION_KEY_MAP: Record<string, string> = {
-  // i18n-ignore: lookup map keys, not t() calls
+const ACTION_KEY_MAP: Record<string, string> = { // i18n-ignore: lookup map keys, not t() calls
   "\u786e\u8ba4\u5f00\u4e66\u65b9\u5411": "confirmDirection",
   "\u7ee7\u7eed\u81ea\u52a8\u6267\u884c\u7ae0\u8282": "continueChapterExecution",
   "\u786e\u8ba4\u5e76\u7ee7\u7eed": "confirmAndContinue",
@@ -74,8 +71,7 @@ const ACTION_KEY_MAP: Record<string, string> = {
 };
 
 // Director item label map → serverLogs.directorLabels.*
-const ITEM_LABEL_MAP: Record<string, string> = {
-  // i18n-ignore: lookup map keys, not t() calls
+const ITEM_LABEL_MAP: Record<string, string> = { // i18n-ignore: lookup map keys, not t() calls
   "\u751f\u6210\u4e66\u7ea7\u5019\u9009": "generateCandidates",
   "\u4fee\u8ba2\u5019\u9009\u65b9\u5411": "reviseCandidates",
   "\u5b9a\u5411\u4fee\u6b63\u5019\u9009": "patchCandidate",
@@ -112,6 +108,14 @@ const ITEM_LABEL_MAP: Record<string, string> = {
   "\u6b63\u5728\u7ee7\u7eed\u751f\u6210\u5377\u6218\u7565": "preparingVolumeStrategy",
   "AI \u6b63\u5728\u68c0\u67e5\u5f53\u524d\u5c0f\u8bf4\u4ea7\u7269\u548c\u53ef\u7ee7\u7eed\u72b6\u6001": "analyzingWorkspace",
   "AI \u6b63\u5728\u5206\u6790\u624b\u52a8\u7f16\u8f91\u5bf9\u540e\u7eed\u4ea7\u7269\u7684\u5f71\u54cd": "analyzingEditImpact",
+  // Additional node/step labels from usage data
+  "AI \u63a8\u8fdb\u6b65\u9aa4": "aiAdvanceStep",
+  "\u5c40\u90e8\u6587\u672c\u4fee\u590d": "localTextRepair",
+  "\u7ae0\u8282\u6267\u884c\u6d41\u7a0b": "chapterExecutionFlow",
+  "\u7ae0\u8282\u8d28\u91cf\u5ba1\u6838": "chapterQualityReview",
+  "\u7ae0\u8282\u72b6\u6001\u63d0\u4ea4": "chapterStateCommit",
+  "\u7ae0\u8282\u8d28\u91cf\u4fee\u590d": "chapterQualityRepair",
+  "\u7ae0\u8282\u8d28\u91cf\u68c0\u67e5": "reviewChapterQuality",
 };
 
 function translateDirectorString(value: string | null | undefined, t: TranslateFn): string | null | undefined {
@@ -144,6 +148,24 @@ function translateDirectorString(value: string | null | undefined, t: TranslateF
   if (itemKey) {
     const result = t(`serverLogs:directorLabels.${itemKey}`);
     if (result && result !== `serverLogs:directorLabels.${itemKey}`) return result;
+  }
+
+  // Raw action codes (e.g. continue_chapter_execution, resume_from_checkpoint)
+  // i18n-ignore: lookup map keys
+  const ACTION_CODE_MAP: Record<string, string> = {
+    "continue": "serverLogs:nextActionLabels.continue",
+    "continue_chapter_execution": "serverLogs:nextActionLabels.continueChapterExecution",
+    "resume_from_checkpoint": "serverLogs:nextActionLabels.resumeFromCheckpoint",
+    "approve_gate": "serverLogs:nextActionLabels.approveGate",
+    "repair_chapter": "serverLogs:nextActionLabels.repairChapter",
+    "run_quality_review": "serverLogs:nextActionLabels.runQualityReview",
+    "run_chapter_execution": "serverLogs:nextActionLabels.runChapterExecution",
+    "sync_execution_contracts": "serverLogs:nextActionLabels.syncExecutionContracts",
+  };
+  const actionCodeKey = ACTION_CODE_MAP[v];
+  if (actionCodeKey) {
+    const result = t(actionCodeKey);
+    if (result && result !== actionCodeKey) return result;
   }
 
   return value;

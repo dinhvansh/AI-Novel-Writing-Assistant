@@ -62,38 +62,39 @@ CREATE INDEX IF NOT EXISTS "CharacterSyncProposal_baseCharacterId_status_updated
 CREATE INDEX IF NOT EXISTS "CharacterSyncProposal_baseRevisionId_idx" ON "CharacterSyncProposal"("baseRevisionId");
 
 DO $$ BEGIN
-  ALTER TABLE "BaseCharacterRevision" ADD CONSTRAINT "BaseCharacterRevision_baseCharacterId_fkey" FOREIGN KEY ("baseCharacterId") REFERENCES "BaseCharacter"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+  ALTER TABLE "BaseCharacterRevision" DROP CONSTRAINT IF EXISTS "BaseCharacterRevision_baseCharacterId_fkey"; ALTER TABLE "BaseCharacterRevision" ADD CONSTRAINT "BaseCharacterRevision_baseCharacterId_fkey" FOREIGN KEY ("baseCharacterId") REFERENCES "BaseCharacter"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 EXCEPTION WHEN duplicate_object THEN NULL;
 END $$;
 DO $$ BEGIN
-  ALTER TABLE "CharacterLibraryLink" ADD CONSTRAINT "CharacterLibraryLink_novelId_fkey" FOREIGN KEY ("novelId") REFERENCES "Novel"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+  ALTER TABLE "CharacterLibraryLink" DROP CONSTRAINT IF EXISTS "CharacterLibraryLink_novelId_fkey"; ALTER TABLE "CharacterLibraryLink" ADD CONSTRAINT "CharacterLibraryLink_novelId_fkey" FOREIGN KEY ("novelId") REFERENCES "Novel"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 EXCEPTION WHEN duplicate_object THEN NULL;
 END $$;
 DO $$ BEGIN
-  ALTER TABLE "CharacterLibraryLink" ADD CONSTRAINT "CharacterLibraryLink_characterId_fkey" FOREIGN KEY ("characterId") REFERENCES "Character"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+  ALTER TABLE "CharacterLibraryLink" DROP CONSTRAINT IF EXISTS "CharacterLibraryLink_characterId_fkey"; ALTER TABLE "CharacterLibraryLink" ADD CONSTRAINT "CharacterLibraryLink_characterId_fkey" FOREIGN KEY ("characterId") REFERENCES "Character"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 EXCEPTION WHEN duplicate_object THEN NULL;
 END $$;
 DO $$ BEGIN
-  ALTER TABLE "CharacterLibraryLink" ADD CONSTRAINT "CharacterLibraryLink_baseCharacterId_fkey" FOREIGN KEY ("baseCharacterId") REFERENCES "BaseCharacter"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+  ALTER TABLE "CharacterLibraryLink" DROP CONSTRAINT IF EXISTS "CharacterLibraryLink_baseCharacterId_fkey"; ALTER TABLE "CharacterLibraryLink" ADD CONSTRAINT "CharacterLibraryLink_baseCharacterId_fkey" FOREIGN KEY ("baseCharacterId") REFERENCES "BaseCharacter"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 EXCEPTION WHEN duplicate_object THEN NULL;
 END $$;
 DO $$ BEGIN
-  ALTER TABLE "CharacterLibraryLink" ADD CONSTRAINT "CharacterLibraryLink_baseRevisionId_fkey" FOREIGN KEY ("baseRevisionId") REFERENCES "BaseCharacterRevision"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+  ALTER TABLE "CharacterLibraryLink" DROP CONSTRAINT IF EXISTS "CharacterLibraryLink_baseRevisionId_fkey"; ALTER TABLE "CharacterLibraryLink" ADD CONSTRAINT "CharacterLibraryLink_baseRevisionId_fkey" FOREIGN KEY ("baseRevisionId") REFERENCES "BaseCharacterRevision"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 EXCEPTION WHEN duplicate_object THEN NULL;
 END $$;
 DO $$ BEGIN
-  ALTER TABLE "CharacterSyncProposal" ADD CONSTRAINT "CharacterSyncProposal_novelId_fkey" FOREIGN KEY ("novelId") REFERENCES "Novel"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+  ALTER TABLE "CharacterSyncProposal" DROP CONSTRAINT IF EXISTS "CharacterSyncProposal_novelId_fkey"; ALTER TABLE "CharacterSyncProposal" ADD CONSTRAINT "CharacterSyncProposal_novelId_fkey" FOREIGN KEY ("novelId") REFERENCES "Novel"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 EXCEPTION WHEN duplicate_object THEN NULL;
 END $$;
 DO $$ BEGIN
-  ALTER TABLE "CharacterSyncProposal" ADD CONSTRAINT "CharacterSyncProposal_characterId_fkey" FOREIGN KEY ("characterId") REFERENCES "Character"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+  ALTER TABLE "CharacterSyncProposal" DROP CONSTRAINT IF EXISTS "CharacterSyncProposal_characterId_fkey"; ALTER TABLE "CharacterSyncProposal" ADD CONSTRAINT "CharacterSyncProposal_characterId_fkey" FOREIGN KEY ("characterId") REFERENCES "Character"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 EXCEPTION WHEN duplicate_object THEN NULL;
 END $$;
 DO $$ BEGIN
-  ALTER TABLE "CharacterSyncProposal" ADD CONSTRAINT "CharacterSyncProposal_baseCharacterId_fkey" FOREIGN KEY ("baseCharacterId") REFERENCES "BaseCharacter"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+  ALTER TABLE "CharacterSyncProposal" DROP CONSTRAINT IF EXISTS "CharacterSyncProposal_baseCharacterId_fkey"; ALTER TABLE "CharacterSyncProposal" ADD CONSTRAINT "CharacterSyncProposal_baseCharacterId_fkey" FOREIGN KEY ("baseCharacterId") REFERENCES "BaseCharacter"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 EXCEPTION WHEN duplicate_object THEN NULL;
 END $$;
 DO $$ BEGIN
-  ALTER TABLE "CharacterSyncProposal" ADD CONSTRAINT "CharacterSyncProposal_baseRevisionId_fkey" FOREIGN KEY ("baseRevisionId") REFERENCES "BaseCharacterRevision"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+  ALTER TABLE "CharacterSyncProposal" DROP CONSTRAINT IF EXISTS "CharacterSyncProposal_baseRevisionId_fkey"; ALTER TABLE "CharacterSyncProposal" ADD CONSTRAINT "CharacterSyncProposal_baseRevisionId_fkey" FOREIGN KEY ("baseRevisionId") REFERENCES "BaseCharacterRevision"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 EXCEPTION WHEN duplicate_object THEN NULL;
 END $$;
+

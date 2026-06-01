@@ -11,7 +11,7 @@ import WorldLibraryQuickPick from "./WorldLibraryQuickPick";
 import WorldPropertyOptionSelector from "./WorldPropertyOptionSelector";
 import WorldReferenceSeedSelector from "./WorldReferenceSeedSelector";
 import type { WorldGeneratorTemplateOption } from "./worldGeneratorShared";
-import { getDimensionLabel, getReferenceModeLabel } from "./worldGeneratorShared";
+import { getDimensionLabelI18n, getReferenceModeOptions } from "./worldGeneratorShared";
 
 interface WorldGeneratorStepTwoProps {
   isReferenceMode: boolean;
@@ -94,7 +94,7 @@ export default function WorldGeneratorStepTwo(props: WorldGeneratorStepTwoProps)
       {isReferenceMode ? (
         <div className="rounded-md border p-3 text-sm space-y-3">
           <div className="font-medium">{t("stepTwo.referenceBlueprintTitle")}</div>
-          <div className="text-xs text-muted-foreground">{t("stepTwo.currentMode", { mode: getReferenceModeLabel(referenceMode) })}</div>
+          <div className="text-xs text-muted-foreground">{t("stepTwo.currentMode", { mode: getReferenceModeOptions(t).find((item) => item.value === referenceMode)?.label ?? referenceMode })}</div>
           {referenceAnchors.length > 0 ? (
             <div className="space-y-1">
               <div className="text-xs font-medium text-muted-foreground">{t("stepTwo.originalAnchorsTitle")}</div>
@@ -152,7 +152,7 @@ export default function WorldGeneratorStepTwo(props: WorldGeneratorStepTwoProps)
                 checked={Boolean(selectedDimensions[key])}
                 onChange={(event) => onToggleDimension(key, event.target.checked)}
               />
-              {getDimensionLabel(key)}
+              {getDimensionLabelI18n(t, key)}
             </label>
           ))}
         </div>

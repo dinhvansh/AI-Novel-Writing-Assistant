@@ -77,7 +77,7 @@ export function buildOutputLanguageDirective(locale: LocaleCode): OutputLanguage
       "【输出语言 / Output language】",
       "请使用越南语 (Tiếng Việt) 输出所有面向读者可见的内容：章节正文、人物描写、世界设定、对话、标题、章节摘要、可读 UI 文本。",
       "结构化输出 JSON 的字段名（schema keys）保持原样，不翻译。",
-      "JSON 内部的字符串值（标题、描述、台词等）必须使用越南语。",
+      "JSON 内部的所有字符串值必须使用越南语，包括：标题、描述、台词、摘要、问题描述（description）、证据（evidence）、修复建议（fixSuggestion）、审校类型（auditType）、问题分类（category）、原因说明（reason）、推荐说明（summary）等所有自然语言字段。",
       "数据 ID、枚举值、内部状态码、内部任务名等机器可读字段保持原样。",
       "",
       "专业术语遵循以下术语表（出现左边的中文，必须使用右边的越南语）：",

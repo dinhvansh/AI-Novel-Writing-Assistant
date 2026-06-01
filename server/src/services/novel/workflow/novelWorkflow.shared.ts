@@ -9,6 +9,7 @@ import type {
 import type { LocaleCode } from "@ai-novel/shared/localization";
 import { DEFAULT_LOCALE } from "@ai-novel/shared/localization";
 import { getI18nServerHandle } from "../../../i18n";
+import { getCurrentRequestLocale } from "../../../runtime/requestLocaleContext";
 
 export const NOVEL_WORKFLOW_STAGE_LABELS: Record<NovelWorkflowStage, string> = {
   project_setup: "项目设定",
@@ -211,5 +212,13 @@ export function defaultWorkflowTitle(input: {
   if (novelTitle) {
     return novelTitle;
   }
-  return input.lane === "auto_director" ? "AI 自动导演小说" : "小说流程任务";
+  const handle = getI18nServerHandle();
+  const locale = getCurrentRequestLocale() ?? DEFAULT_LOCALE;
+  if (handle) {
+    const key = input.lane === "auto_director" ? "taskTitles.autoDirectorDefault" : "taskTitles.manualDefault";
+    const result = handle.t("serverLogs", key, { lng: locale });
+    if (result && result !== `serverLogs:${key}`) return result;
+  }
+  // i18n-ignore: fallback
+  return input.lane === "auto_director" ? "AI \u81ea\u52a8\u5bfc\u6f14\u5c0f\u8bf4" : "\u5c0f\u8bf4\u6d41\u7a0b\u4efb\u52a1";
 }

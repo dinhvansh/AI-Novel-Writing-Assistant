@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+﻿import { useEffect, useMemo, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 import type {
@@ -89,12 +89,12 @@ function getSelectedSection(items: AutoDirectorFollowUpItem[]): AutoDirectorFoll
   return sections.length === 1 ? sections[0] : null;
 }
 
-function shouldConfirmAction(action: AutoDirectorAction): boolean {
+function shouldConfirmAction(action: AutoDirectorAction, confirmLabel: string): boolean {
   if (!action.requiresConfirm) {
     return false;
   }
-  // i18n-ignore: window.confirm called before t() is available
-  return window.confirm(`确认执行“${action.label}”？`);
+  // confirm label is passed from component where t() is available
+  return window.confirm(confirmLabel);
 }
 
 function formatActionFeedbackMessage(message: string, fallback: string): string {
@@ -349,7 +349,7 @@ export default function AutoDirectorFollowUpCenterPage() {
       }
       return;
     }
-    if (shouldConfirmAction(action) === false && action.requiresConfirm) {
+    if (shouldConfirmAction(action, t("autoDirectorFollowUps:actions.confirmAction", { label: action.label })) === false && action.requiresConfirm) {
       return;
     }
     const actionCode = action.code as AutoDirectorMutationActionCode;
@@ -440,3 +440,5 @@ export default function AutoDirectorFollowUpCenterPage() {
     </div>
   );
 }
+
+

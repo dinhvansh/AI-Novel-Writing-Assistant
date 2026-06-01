@@ -2,6 +2,13 @@ import type { TFunction } from "i18next";
 import type { DirectorCommandAcceptedResponse } from "@ai-novel/shared/types/directorRuntime";
 import type { DirectorContinuationMode } from "@ai-novel/shared/types/novelDirector";
 import type { UnifiedTaskDetail } from "@ai-novel/shared/types/task";
+import { getI18nClientHandle } from "@/i18n";
+
+function getT(): TFunction | null {
+  const handle = getI18nClientHandle();
+  if (!handle) return null;
+  return handle.i18n.t.bind(handle.i18n) as TFunction;
+}
 
 export function resolveWorkflowContinuationFeedback(
   task: UnifiedTaskDetail | DirectorCommandAcceptedResponse | null | undefined,
@@ -14,10 +21,10 @@ export function resolveWorkflowContinuationFeedback(
   tone: "success" | "error";
   message: string;
 } {
-  const t = options?.t;
+  const t = options?.t ?? getT();
   const requestedScopeLabel = options?.scopeLabel?.trim();
   const taskScopeLabel = task && "executionScopeLabel" in task ? task.executionScopeLabel?.trim() : undefined;
-  const scopeLabel = requestedScopeLabel || taskScopeLabel || (t ? t("novel:workspace.header.currentStep", { label: "" }).trim() || t("autoDirector:continuation.currentRange") : "");
+  const scopeLabel = requestedScopeLabel || taskScopeLabel || (t ? t("autoDirector:continuation.currentRange") : "");
 
   if (task && "kind" in task && task.status === "failed") {
     return {

@@ -1,2 +1,3 @@
 ALTER TABLE "VolumeChapterPlan"
-ADD COLUMN "sceneCards" TEXT;
+ADD COLUMN IF NOT EXISTS "sceneCards" TEXT;
+

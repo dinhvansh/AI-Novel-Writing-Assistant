@@ -7,6 +7,18 @@ import type {
   DirectorRuntimeProjection,
   DirectorStepRun,
 } from "@ai-novel/shared/types/directorRuntime";
+import type { LocaleCode } from "@ai-novel/shared/localization";
+import { DEFAULT_LOCALE } from "@ai-novel/shared/localization";
+import { getI18nServerHandle } from "../../../../i18n";
+import { getCurrentRequestLocale } from "../../../../runtime/requestLocaleContext";
+
+function t(key: string, values?: Record<string, unknown>): string {
+  const handle = getI18nServerHandle();
+  if (!handle) return key;
+  const locale: LocaleCode = getCurrentRequestLocale() ?? DEFAULT_LOCALE;
+  const result = handle.t("serverLogs", key, { lng: locale, values });
+  return (result && result !== `serverLogs:${key}`) ? result : key;
+}
 
 export function parseJsonOrNull<T>(value: string | null | undefined): T | null {
   if (!value?.trim()) {
@@ -39,29 +51,33 @@ export function timestampOf(value: string | null | undefined): number {
 }
 
 export function commandLabel(commandType: string): string {
-  const labels: Record<string, string> = {
-    confirm_candidate: "确认开书方向",
-    continue: "继续自动导演",
-    resume_from_checkpoint: "从进度点恢复",
-    retry: "重试自动导演",
-    takeover: "接管这本书",
-    repair_chapter_titles: "修复章节标题",
-    cancel: "取消自动导演",
+  // i18n-ignore: lookup map keys
+  const keyMap: Record<string, string> = {
+    confirm_candidate: "dashboardStatus.cmdConfirmCandidate",
+    continue: "dashboardStatus.cmdContinue",
+    resume_from_checkpoint: "dashboardStatus.cmdResumeCheckpoint",
+    retry: "dashboardStatus.cmdRetry",
+    takeover: "dashboardStatus.cmdTakeover",
+    repair_chapter_titles: "dashboardStatus.cmdRepairTitles",
+    cancel: "dashboardStatus.actionCancel",
   };
-  return labels[commandType] ?? commandType;
+  const key = keyMap[commandType];
+  return key ? t(key) : commandType;
 }
 
 export function commandStatusLabel(status: string): string {
-  const labels: Record<string, string> = {
-    queued: "排队中",
-    leased: "准备执行",
-    running: "执行中",
-    succeeded: "完成",
-    failed: "失败",
-    cancelled: "已取消",
-    stale: "需要恢复",
+  // i18n-ignore: lookup map keys
+  const keyMap: Record<string, string> = {
+    queued: "dashboardStatus.cmdStatusQueued",
+    leased: "dashboardStatus.cmdStatusLeased",
+    running: "dashboardStatus.cmdStatusRunning",
+    succeeded: "dashboardStatus.cmdStatusSucceeded",
+    failed: "dashboardStatus.cmdStatusFailed",
+    cancelled: "dashboardStatus.cmdStatusCancelled",
+    stale: "dashboardStatus.cmdStatusStale",
   };
-  return labels[status] ?? status;
+  const key = keyMap[status];
+  return key ? t(key) : status;
 }
 
 export function workflowStatusToBookStatus(status: string | null | undefined): DirectorBookAutomationStatus {
@@ -154,34 +170,34 @@ export function buildHeadline(input: {
   } | null;
 }): string {
   if (input.status === "waiting_recovery") {
-    return "等待恢复自动导演";
+    return t("dashboardStatus.headlineWaitingRecovery");
   }
   if (input.status === "cancelled") {
-    return "自动导演已取消";
+    return t("dashboardStatus.headlineCancelled");
   }
   if (input.runtimeProjection?.headline?.trim()) {
     return input.runtimeProjection.headline.trim();
   }
   if (input.status === "queued") {
-    return "AI 自动导演已排队";
+    return t("dashboardStatus.headlineQueuedAlt");
   }
   if (input.status === "running") {
     const label = input.task?.currentItemLabel?.trim();
-    return label ? `AI 正在推进：${label}` : "AI 正在推进这本书";
+    return label ? t("dashboardStatus.headlineRunningBook") : t("dashboardStatus.headlineRunningBook");
   }
   if (input.status === "waiting_approval") {
-    return "等待你的确认";
+    return t("dashboardStatus.headlineWaitingConfirm");
   }
   if (input.status === "blocked") {
-    return "自动导演已暂停";
+    return t("dashboardStatus.headlineBlocked");
   }
   if (input.status === "failed") {
-    return "自动导演遇到问题";
+    return t("dashboardStatus.headlineFailedAlt");
   }
   if (input.status === "completed") {
-    return "自动导演完成最近一次推进";
+    return t("dashboardStatus.headlineCompletedAlt");
   }
-  return "这本书还没有自动导演记录";
+  return t("dashboardStatus.headlineNoRecord");
 }
 
 function getTaskFailureReason(task: {
@@ -201,16 +217,16 @@ export function buildDetail(input: {
   } | null;
 }): string | null {
   if (input.status === "waiting_recovery") {
-    return input.task?.lastError?.trim() || "后台执行中断后保留了进度点，确认恢复后会从最近进展继续。";
+    return input.task?.lastError?.trim() || t("dashboardStatus.detailRecovery");
   }
   if (input.status === "cancelled") {
-    return "自动导演任务已取消。";
+    return t("dashboardStatus.detailCancelled");
   }
   if (input.status === "failed") {
     return getTaskFailureReason(input.task)
       || input.runtimeProjection?.blockedReason?.trim()
       || input.runtimeProjection?.detail?.trim()
-      || "查看执行详情后可选择恢复或重试。";
+      || t("dashboardStatus.detailFailed");
   }
   if (input.runtimeProjection?.detail?.trim()) {
     return input.runtimeProjection.detail.trim();
@@ -219,7 +235,7 @@ export function buildDetail(input: {
     return input.task.checkpointSummary.trim();
   }
   if (input.status === "idle") {
-    return "可以从 AI 自动导演开始，让系统根据这本书的资产推荐下一步。";
+    return t("dashboardStatus.detailIdle");
   }
   return input.task?.currentItemLabel?.trim() ?? null;
 }
@@ -233,36 +249,36 @@ export function buildAutomationSummary(input: {
 }): string {
   const parts: string[] = [];
   if (input.activeCommandCount > 0) {
-    parts.push(`${input.activeCommandCount} 个动作执行中`);
+    parts.push(t("automationSummary.activeCommands", { count: input.activeCommandCount }));
   }
   if (input.pendingCommandCount > 0) {
-    parts.push(`${input.pendingCommandCount} 个动作排队中`);
+    parts.push(t("automationSummary.pendingCommands", { count: input.pendingCommandCount }));
   }
   if (input.autoApprovalRecordCount > 0) {
-    parts.push(`${input.autoApprovalRecordCount} 个确认由 AI 自动处理`);
+    parts.push(t("automationSummary.autoApprovals", { count: input.autoApprovalRecordCount }));
   }
   if (input.artifactSummary.activeCount > 0) {
-    parts.push(`${input.artifactSummary.activeCount} 个可用产物`);
+    parts.push(t("automationSummary.activeArtifacts", { count: input.artifactSummary.activeCount }));
   }
   if (input.artifactSummary.staleCount > 0) {
-    parts.push(`${input.artifactSummary.staleCount} 个产物需复核`);
+    parts.push(t("automationSummary.staleArtifacts", { count: input.artifactSummary.staleCount }));
   }
   if (input.artifactSummary.repairTicketCount > 0) {
-    parts.push(`${input.artifactSummary.repairTicketCount} 个修复项`);
+    parts.push(t("automationSummary.repairTickets", { count: input.artifactSummary.repairTicketCount }));
   }
   if (input.artifactSummary.protectedUserContentCount > 0) {
-    parts.push(`${input.artifactSummary.protectedUserContentCount} 个用户内容受保护`);
+    parts.push(t("automationSummary.protectedContent", { count: input.artifactSummary.protectedUserContentCount }));
   }
   if (input.usageSummary && input.usageSummary.llmCallCount > 0) {
-    parts.push(`${input.usageSummary.llmCallCount} 次 AI 调用`);
+    parts.push(t("automationSummary.llmCalls", { count: input.usageSummary.llmCallCount }));
   }
   if (input.usageSummary && input.usageSummary.totalTokens > 0) {
-    parts.push(`${input.usageSummary.totalTokens} Tokens`);
+    parts.push(t("automationSummary.totalTokens", { count: input.usageSummary.totalTokens }));
   }
   if ((input.artifactSummary.dependencyCount ?? 0) > 0) {
-    parts.push(`${input.artifactSummary.dependencyCount} 条产物依赖`);
+    parts.push(t("automationSummary.dependencies", { count: input.artifactSummary.dependencyCount }));
   }
-  return parts.length > 0 ? parts.join("，") : "暂无自动化动作";
+  return parts.length > 0 ? parts.join(t("automationSummary.separator")) : t("dashboardStatus.noAutomation");
 }
 
 function buildNovelHref(
@@ -295,7 +311,7 @@ function buildCandidateSelectionHref(taskId: string): string {
 }
 
 export function buildFocusNovel(input: { id: string; title?: string | null }): DirectorBookAutomationFocusNovel {
-  const title = input.title?.trim() || "未命名小说";
+  const title = input.title?.trim() || t("dashboardStatus.unnamedNovel");
   return {
     id: input.id,
     title,
@@ -330,28 +346,27 @@ export function buildUserHeadline(input: {
   } | null;
 }): string {
   if (input.status === "queued") {
-    return "AI 已接到这本书的推进任务";
+    return t("dashboardStatus.userHeadlineQueued");
   }
   if (input.status === "running") {
-    const label = input.task?.currentItemLabel?.trim();
-    return label ? `AI 正在处理：${label}` : "AI 正在推进这本书";
+    return t("dashboardStatus.userHeadlineQueued"); // same key — AI is working
   }
   if (input.status === "waiting_approval") {
-    return "等你确认后继续";
+    return t("dashboardStatus.userHeadlineWaiting");
   }
   if (input.status === "waiting_recovery" || input.status === "blocked") {
-    return "AI 已暂停在可处理的位置";
+    return t("dashboardStatus.userHeadlineBlocked");
   }
   if (input.status === "failed") {
-    return "AI 推进遇到问题";
+    return t("dashboardStatus.userHeadlineFailed");
   }
   if (input.status === "cancelled") {
-    return "这次自动推进已停止";
+    return t("dashboardStatus.userHeadlineCancelled");
   }
   if (input.status === "completed") {
-    return "AI 完成了最近一次推进";
+    return t("dashboardStatus.userHeadlineCompleted");
   }
-  return "这本书还没有开启 AI 自动推进";
+  return t("dashboardStatus.userHeadlineNoRecord");
 }
 
 export function buildUserReason(input: {
@@ -386,27 +401,27 @@ export function buildUserReason(input: {
     return directReason;
   }
   if (input.status === "queued") {
-    return "任务已进入后台队列，你可以离开当前页面。";
+    return t("dashboardStatus.userReasonQueued");
   }
   if (input.status === "running") {
-    return input.task?.currentItemLabel?.trim() || "AI 正在按当前计划推进小说。";
+    return input.task?.currentItemLabel?.trim() || t("dashboardStatus.userReasonRunning");
   }
   if (input.status === "waiting_approval") {
-    return "继续前需要你确认当前阶段的结果或影响范围。";
+    return t("dashboardStatus.userReasonWaiting");
   }
   if (input.status === "waiting_recovery") {
-    return "系统保留了最近进度，确认后可以从当前位置继续。";
+    return t("dashboardStatus.userReasonRecovery");
   }
   if (input.status === "blocked") {
-    return "继续前需要先处理当前阻塞原因。";
+    return t("dashboardStatus.userReasonBlocked");
   }
   if (input.status === "failed") {
-    return "查看原因后可以重试或回到小说页面处理。";
+    return t("dashboardStatus.userReasonFailed");
   }
   if (input.status === "completed") {
-    return "可以进入小说页面查看成果或继续下一段写作。";
+    return t("dashboardStatus.userReasonCompleted");
   }
-  return "可以继续手动创作，也可以让 AI 接管后续推进。";
+  return t("dashboardStatus.userReasonIdle");
 }
 
 function action(input: DirectorBookAutomationAction): DirectorBookAutomationAction {
@@ -425,7 +440,7 @@ export function buildPrimaryAction(input: {
   if (!taskId) {
     return action({
       type: "open_novel",
-      label: "打开小说",
+      label: t("dashboardStatus.actionOpenNovel"),
       target: { novelId: input.novelId, href: buildNovelHref(input.novelId) },
       emphasis: "primary",
     });
@@ -435,7 +450,7 @@ export function buildPrimaryAction(input: {
     if (input.task?.checkpointType === "candidate_selection_required") {
       return action({
         type: "confirm_candidate",
-        label: "确认书级方向",
+        label: t("dashboardStatus.actionConfirmDirection"),
         target: { novelId: input.novelId, taskId, href: buildCandidateSelectionHref(taskId) },
         emphasis: "primary",
       });
@@ -443,7 +458,7 @@ export function buildPrimaryAction(input: {
     if (input.task?.checkpointType === "chapter_batch_ready") {
       return action({
         type: "auto_execute_range",
-        label: "继续自动执行章节",
+        label: t("dashboardStatus.actionContinueChapters"),
         target: {
           novelId: input.novelId,
           taskId,
@@ -457,7 +472,7 @@ export function buildPrimaryAction(input: {
     if (input.task?.checkpointType === "replan_required") {
       return action({
         type: "open_quality_repair",
-        label: "打开质量修复",
+        label: t("dashboardStatus.actionOpenQualityRepair"),
         target: {
           novelId: input.novelId,
           taskId,
@@ -469,7 +484,7 @@ export function buildPrimaryAction(input: {
     }
     return action({
       type: "continue",
-      label: "确认并继续",
+      label: t("dashboardStatus.actionConfirmContinue"),
       target: { novelId: input.novelId, taskId, href: buildNovelHref(input.novelId, { taskId }) },
       commandPayload: { taskId, continuationMode: "resume" },
       emphasis: "primary",
@@ -479,7 +494,7 @@ export function buildPrimaryAction(input: {
   if (input.status === "waiting_recovery") {
     return action({
       type: "continue",
-      label: "从进度点继续",
+      label: t("dashboardStatus.actionResumeCheckpoint"),
       target: { novelId: input.novelId, taskId, href: buildNovelHref(input.novelId, { taskId }) },
       commandPayload: { taskId, continuationMode: "resume" },
       emphasis: "primary",
@@ -489,7 +504,7 @@ export function buildPrimaryAction(input: {
   if (input.status === "failed" || input.status === "blocked") {
     return action({
       type: "open_details",
-      label: input.status === "failed" ? "查看失败原因" : "查看暂停原因",
+      label: input.status === "failed" ? t("dashboardStatus.actionViewFailure") : t("dashboardStatus.actionViewBlocked"),
       target: { novelId: input.novelId, taskId, href: buildNovelHref(input.novelId, { taskId, taskPanel: true }) },
       emphasis: "primary",
     });
@@ -498,7 +513,7 @@ export function buildPrimaryAction(input: {
   if (input.status === "queued" || input.status === "running") {
     return action({
       type: "open_novel",
-      label: "查看推进状态",
+      label: t("dashboardStatus.actionViewProgress"),
       target: { novelId: input.novelId, taskId, href: buildNovelHref(input.novelId, { taskId }) },
       emphasis: "primary",
     });
@@ -507,7 +522,7 @@ export function buildPrimaryAction(input: {
   if (input.status === "completed") {
     return action({
       type: "open_chapter",
-      label: "进入章节执行",
+      label: t("workflowExplainability.resumeAction.enterChapterExecution"),
       target: {
         novelId: input.novelId,
         taskId,
@@ -520,7 +535,7 @@ export function buildPrimaryAction(input: {
 
   return action({
     type: "open_novel",
-    label: "打开小说",
+    label: t("dashboardStatus.actionOpenNovel"),
     target: { novelId: input.novelId, taskId, href: buildNovelHref(input.novelId, { taskId }) },
     emphasis: "primary",
   });
@@ -537,7 +552,7 @@ export function buildSecondaryActions(input: {
   const actions: DirectorBookAutomationAction[] = [
     action({
       type: "open_details",
-      label: "执行详情",
+      label: t("dashboardStatus.actionExecutionDetails"),
       target: {
         novelId: input.novelId,
         taskId: input.taskId,
@@ -549,7 +564,7 @@ export function buildSecondaryActions(input: {
   if (input.status === "queued" || input.status === "running" || input.status === "waiting_approval") {
     actions.push(action({
       type: "cancel",
-      label: "暂停推进",
+      label: t("dashboardStatus.actionPause"),
       target: { novelId: input.novelId, taskId: input.taskId },
       emphasis: "secondary",
     }));
@@ -557,7 +572,7 @@ export function buildSecondaryActions(input: {
   if (input.status === "failed" || input.status === "cancelled") {
     actions.push(action({
       type: "retry",
-      label: "重试",
+      label: t("dashboardStatus.actionRetry"),
       target: { novelId: input.novelId, taskId: input.taskId },
       emphasis: "secondary",
     }));

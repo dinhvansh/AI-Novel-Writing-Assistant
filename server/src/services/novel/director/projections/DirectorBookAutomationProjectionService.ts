@@ -8,6 +8,8 @@ import type {
   DirectorWorkerHealthSummary,
 } from "@ai-novel/shared/types/directorRuntime";
 import { getDirectorNodeDisplayLabel } from "@ai-novel/shared/types/directorRuntime";
+import type { LocaleCode } from "@ai-novel/shared/localization";
+import { DEFAULT_LOCALE } from "@ai-novel/shared/localization";
 import { prisma } from "../../../../db/prisma";
 import { loadPersistentDirectorRuntimeProjection } from "./novelDirectorRuntimeProjection";
 import { directorArtifactLedgerQueryService } from "../runtime/DirectorArtifactLedgerQueryService";
@@ -35,6 +37,7 @@ import {
 } from "./DirectorBookAutomationProjectionModel";
 import { buildDirectorDashboardView } from "./DirectorDashboardViewBuilder";
 import { buildDirectorDisplayState } from "./DirectorDisplayStateBuilder";
+import { getI18nServerHandle } from "../../../../i18n";
 
 type RuntimeProjectionLoader = (taskId: string) => Promise<DirectorRuntimeProjection | null>;
 
@@ -128,17 +131,28 @@ function buildWorkerHealth(input: {
     return "idle";
   })();
   const message = (() => {
+    const handle = getI18nServerHandle();
+    const locale: LocaleCode = DEFAULT_LOCALE;
+    function tWorker(key: string): string | null {
+      if (!handle) return null;
+      const result = handle.t("serverLogs", `workerHealth.${key}`, { lng: locale });
+      return (result && result !== `serverLogs:workerHealth.${key}`) ? result : null;
+    }
     if (derivedState === "queued_waiting_worker") {
-      return "任务已进入后台队列，正在等待后台执行器接手。";
+      // i18n-ignore: fallback
+      return tWorker("queuedWaiting") ?? "\u4efb\u52a1\u5df2\u8fdb\u5165\u540e\u53f0\u961f\u5217\uff0c\u6b63\u5728\u7b49\u5f85\u540e\u53f0\u6267\u884c\u5668\u63a5\u624b\u3002";
     }
     if (derivedState === "leased_starting") {
-      return "后台执行器正在接手任务，马上会进入实际执行。";
+      // i18n-ignore: fallback
+      return tWorker("leasedStarting") ?? "\u540e\u53f0\u6267\u884c\u5668\u6b63\u5728\u63a5\u624b\u4efb\u52a1\uff0c\u9a6c\u4e0a\u4f1a\u8fdb\u5165\u5b9e\u9645\u6267\u884c\u3002";
     }
     if (derivedState === "running_step") {
-      return "后台执行器正在推进这本书的自动导演流程。";
+      // i18n-ignore: fallback
+      return tWorker("runningStep") ?? "\u540e\u53f0\u6267\u884c\u5668\u6b63\u5728\u63a8\u8fdb\u8fd9\u672c\u4e66\u7684\u81ea\u52a8\u5bfc\u6f14\u6d41\u7a0b\u3002";
     }
     if (derivedState === "auto_recovering") {
-      return "后台执行器连接中断后正在恢复，系统会优先从最近进度继续。";
+      // i18n-ignore: fallback
+      return tWorker("autoRecovering") ?? "\u540e\u53f0\u6267\u884c\u5668\u8fde\u63a5\u4e2d\u65ad\u540e\u6b63\u5728\u6062\u590d\uff0c\u7cfb\u7edf\u4f1a\u4f18\u5148\u4ece\u6700\u8fd1\u8fdb\u5ea6\u7ee7\u7eed\u3002";
     }
     return null;
   })();
@@ -496,35 +510,56 @@ export class DirectorBookAutomationProjectionService {
           : null,
         usage: usageTelemetry.stepUsage.find((usage) => usage.stepIdempotencyKey === step.idempotencyKey) ?? null,
       })),
-      ...usageTelemetry.recentUsage.slice(0, 8).map((usage) => ({
-        id: `usage:${usage.id}`,
-        type: "usage" as const,
-        title: `AI 用量：${getDirectorNodeDisplayLabel({
+      ...usageTelemetry.recentUsage.slice(0, 8).map((usage) => {
+        const handle = getI18nServerHandle();
+        const locale: LocaleCode = DEFAULT_LOCALE;
+        // i18n-ignore: fallback string
+        const fallbackStep = handle
+          ? (handle.t("serverLogs", "timeline.advancingStep", { lng: locale }) || "\u63a8\u8fdb\u6b65\u9aa4")
+          : "\u63a8\u8fdb\u6b65\u9aa4";
+        const nodeLabel = getDirectorNodeDisplayLabel({
           label: usage.promptAssetKey,
           nodeKey: usage.nodeKey,
-          fallback: "推进步骤",
-        })}`,
-        detail: usage.promptAssetKey
-          ? `${usage.promptAssetKey}${usage.promptVersion ? `@${usage.promptVersion}` : ""}`
-          : usage.model ?? usage.provider,
-        status: usage.status,
-        taskId: usage.taskId,
-        runId: usage.runId,
-        nodeKey: usage.nodeKey,
-        occurredAt: usage.recordedAt,
-        durationMs: usage.durationMs,
-        usage,
-        attributionStatus: usage.attributionStatus,
-      })),
-      ...approvalRecords.map((record) => ({
-        id: `approval:${record.id}`,
-        type: "approval" as const,
-        title: `AI 自动确认：${record.approvalPointLabel}`,
-        detail: record.summary || record.checkpointSummary || record.scopeLabel,
-        status: record.stage,
-        taskId: record.taskId,
-        occurredAt: toIso(record.createdAt),
-      })),
+          fallback: fallbackStep,
+        });
+        // i18n-ignore: fallback string
+        const usageTitle = handle
+          ? (handle.t("serverLogs", "timeline.aiUsageTitle", { lng: locale, values: { label: nodeLabel } }) || `AI \u7528\u91cf\uff1a${nodeLabel}`)
+          : `AI \u7528\u91cf\uff1a${nodeLabel}`;
+        return {
+          id: `usage:${usage.id}`,
+          type: "usage" as const,
+          title: usageTitle,
+          detail: usage.promptAssetKey
+            ? `${usage.promptAssetKey}${usage.promptVersion ? `@${usage.promptVersion}` : ""}`
+            : usage.model ?? usage.provider,
+          status: usage.status,
+          taskId: usage.taskId,
+          runId: usage.runId,
+          nodeKey: usage.nodeKey,
+          occurredAt: usage.recordedAt,
+          durationMs: usage.durationMs,
+          usage,
+          attributionStatus: usage.attributionStatus,
+        };
+      }),
+      ...approvalRecords.map((record) => {
+        const handle = getI18nServerHandle();
+        const locale: LocaleCode = DEFAULT_LOCALE;
+        // i18n-ignore: fallback string
+        const approvalTitle = handle
+          ? (handle.t("serverLogs", "timeline.aiAutoApproval", { lng: locale, values: { label: record.approvalPointLabel } }) || `AI \u81ea\u52a8\u786e\u8ba4\uff1a${record.approvalPointLabel}`)
+          : `AI \u81ea\u52a8\u786e\u8ba4\uff1a${record.approvalPointLabel}`;
+        return {
+          id: `approval:${record.id}`,
+          type: "approval" as const,
+          title: approvalTitle,
+          detail: record.summary || record.checkpointSummary || record.scopeLabel,
+          status: record.stage,
+          taskId: record.taskId,
+          occurredAt: toIso(record.createdAt),
+        };
+      }),
       ...(latestTask ? [{
         id: `task:${latestTask.id}`,
         type: "task" as const,

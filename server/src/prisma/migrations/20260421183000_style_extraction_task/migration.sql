@@ -1,4 +1,4 @@
-CREATE TABLE "StyleExtractionTask" (
+CREATE TABLE IF NOT EXISTS "StyleExtractionTask" (
     "id" TEXT NOT NULL PRIMARY KEY,
     "name" TEXT NOT NULL,
     "category" TEXT,
@@ -12,23 +12,25 @@ CREATE TABLE "StyleExtractionTask" (
     "retryCount" INTEGER NOT NULL DEFAULT 0,
     "maxRetries" INTEGER NOT NULL DEFAULT 1,
     "pendingManualRecovery" BOOLEAN NOT NULL DEFAULT false,
-    "heartbeatAt" DATETIME,
+    "heartbeatAt" TIMESTAMP,
     "currentStage" TEXT,
     "currentItemKey" TEXT,
     "currentItemLabel" TEXT,
-    "cancelRequestedAt" DATETIME,
+    "cancelRequestedAt" TIMESTAMP,
     "error" TEXT,
     "summary" TEXT,
     "createdStyleProfileId" TEXT,
     "createdStyleProfileName" TEXT,
-    "startedAt" DATETIME,
-    "finishedAt" DATETIME,
-    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" DATETIME NOT NULL
+    "startedAt" TIMESTAMP,
+    "finishedAt" TIMESTAMP,
+    "createdAt" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP NOT NULL
 );
 
-CREATE INDEX "StyleExtractionTask_status_updatedAt_idx"
+CREATE INDEX IF NOT EXISTS "StyleExtractionTask_status_updatedAt_idx"
 ON "StyleExtractionTask"("status", "updatedAt");
 
-CREATE INDEX "StyleExtractionTask_createdStyleProfileId_idx"
+CREATE INDEX IF NOT EXISTS "StyleExtractionTask_createdStyleProfileId_idx"
 ON "StyleExtractionTask"("createdStyleProfileId");
+
+

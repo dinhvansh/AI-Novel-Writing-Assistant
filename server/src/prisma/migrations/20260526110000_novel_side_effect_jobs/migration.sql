@@ -1,4 +1,4 @@
-CREATE TABLE "NovelSideEffectJob" (
+CREATE TABLE IF NOT EXISTS "NovelSideEffectJob" (
   "id" TEXT NOT NULL,
   "novelId" TEXT,
   "jobType" TEXT NOT NULL,
@@ -19,10 +19,13 @@ CREATE TABLE "NovelSideEffectJob" (
   CONSTRAINT "NovelSideEffectJob_pkey" PRIMARY KEY ("id")
 );
 
-CREATE UNIQUE INDEX "NovelSideEffectJob_idempotencyKey_key" ON "NovelSideEffectJob"("idempotencyKey");
-CREATE INDEX "NovelSideEffectJob_status_runAfter_idx" ON "NovelSideEffectJob"("status", "runAfter");
-CREATE INDEX "NovelSideEffectJob_novelId_status_updatedAt_idx" ON "NovelSideEffectJob"("novelId", "status", "updatedAt");
-CREATE INDEX "NovelSideEffectJob_leaseOwner_leaseExpiresAt_idx" ON "NovelSideEffectJob"("leaseOwner", "leaseExpiresAt");
-CREATE INDEX "NovelSideEffectJob_jobType_status_runAfter_idx" ON "NovelSideEffectJob"("jobType", "status", "runAfter");
+CREATE UNIQUE INDEX IF NOT EXISTS "NovelSideEffectJob_idempotencyKey_key" ON "NovelSideEffectJob"("idempotencyKey");
+CREATE INDEX IF NOT EXISTS "NovelSideEffectJob_status_runAfter_idx" ON "NovelSideEffectJob"("status", "runAfter");
+CREATE INDEX IF NOT EXISTS "NovelSideEffectJob_novelId_status_updatedAt_idx" ON "NovelSideEffectJob"("novelId", "status", "updatedAt");
+CREATE INDEX IF NOT EXISTS "NovelSideEffectJob_leaseOwner_leaseExpiresAt_idx" ON "NovelSideEffectJob"("leaseOwner", "leaseExpiresAt");
+CREATE INDEX IF NOT EXISTS "NovelSideEffectJob_jobType_status_runAfter_idx" ON "NovelSideEffectJob"("jobType", "status", "runAfter");
 
-ALTER TABLE "NovelSideEffectJob" ADD CONSTRAINT "NovelSideEffectJob_novelId_fkey" FOREIGN KEY ("novelId") REFERENCES "Novel"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "NovelSideEffectJob" DROP CONSTRAINT IF EXISTS "NovelSideEffectJob_novelId_fkey"; ALTER TABLE "NovelSideEffectJob" ADD CONSTRAINT "NovelSideEffectJob_novelId_fkey" FOREIGN KEY ("novelId") REFERENCES "Novel"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+
+

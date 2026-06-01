@@ -1,4 +1,4 @@
-CREATE TABLE "ChapterArtifactSyncCheckpoint" (
+CREATE TABLE IF NOT EXISTS "ChapterArtifactSyncCheckpoint" (
   "id" TEXT NOT NULL,
   "novelId" TEXT NOT NULL,
   "chapterId" TEXT NOT NULL,
@@ -15,16 +15,15 @@ CREATE TABLE "ChapterArtifactSyncCheckpoint" (
   CONSTRAINT "ChapterArtifactSyncCheckpoint_pkey" PRIMARY KEY ("id")
 );
 
-CREATE UNIQUE INDEX "ChapterArtifactSyncCheckpoint_novelId_chapterId_contentHash_artifactType_syncMode_key"
+CREATE UNIQUE INDEX IF NOT EXISTS "ChapterArtifactSyncCheckpoint_novelId_chapterId_contentHash_artifactType_syncMode_key"
   ON "ChapterArtifactSyncCheckpoint"("novelId", "chapterId", "contentHash", "artifactType", "syncMode");
 
-CREATE INDEX "ChapterArtifactSyncCheckpoint_novelId_chapterId_artifactType_updatedAt_idx"
+CREATE INDEX IF NOT EXISTS "ChapterArtifactSyncCheckpoint_novelId_chapterId_artifactType_updatedAt_idx"
   ON "ChapterArtifactSyncCheckpoint"("novelId", "chapterId", "artifactType", "updatedAt");
 
-ALTER TABLE "ChapterArtifactSyncCheckpoint"
-  ADD CONSTRAINT "ChapterArtifactSyncCheckpoint_novelId_fkey"
-  FOREIGN KEY ("novelId") REFERENCES "Novel"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "ChapterArtifactSyncCheckpoint" DROP CONSTRAINT IF EXISTS "ChapterArtifactSyncCheckpoint_novelId_fkey"; ALTER TABLE "ChapterArtifactSyncCheckpoint" ADD CONSTRAINT "ChapterArtifactSyncCheckpoint_novelId_fkey" FOREIGN KEY ("novelId") REFERENCES "Novel"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
-ALTER TABLE "ChapterArtifactSyncCheckpoint"
-  ADD CONSTRAINT "ChapterArtifactSyncCheckpoint_chapterId_fkey"
-  FOREIGN KEY ("chapterId") REFERENCES "Chapter"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "ChapterArtifactSyncCheckpoint" DROP CONSTRAINT IF EXISTS "ChapterArtifactSyncCheckpoint_chapterId_fkey"; ALTER TABLE "ChapterArtifactSyncCheckpoint" ADD CONSTRAINT "ChapterArtifactSyncCheckpoint_chapterId_fkey" FOREIGN KEY ("chapterId") REFERENCES "Chapter"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+
+

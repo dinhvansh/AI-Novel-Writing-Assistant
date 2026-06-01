@@ -1,4 +1,4 @@
-CREATE TABLE "DirectorLlmUsageRecord" (
+CREATE TABLE IF NOT EXISTS "DirectorLlmUsageRecord" (
     "id" TEXT NOT NULL,
     "novelId" TEXT,
     "taskId" TEXT,
@@ -23,14 +23,17 @@ CREATE TABLE "DirectorLlmUsageRecord" (
     CONSTRAINT "DirectorLlmUsageRecord_pkey" PRIMARY KEY ("id")
 );
 
-CREATE INDEX "DirectorLlmUsageRecord_novelId_recordedAt_idx" ON "DirectorLlmUsageRecord"("novelId", "recordedAt");
-CREATE INDEX "DirectorLlmUsageRecord_taskId_recordedAt_idx" ON "DirectorLlmUsageRecord"("taskId", "recordedAt");
-CREATE INDEX "DirectorLlmUsageRecord_runId_recordedAt_idx" ON "DirectorLlmUsageRecord"("runId", "recordedAt");
-CREATE INDEX "DirectorLlmUsageRecord_stepIdempotencyKey_recordedAt_idx" ON "DirectorLlmUsageRecord"("stepIdempotencyKey", "recordedAt");
-CREATE INDEX "DirectorLlmUsageRecord_nodeKey_recordedAt_idx" ON "DirectorLlmUsageRecord"("nodeKey", "recordedAt");
-CREATE INDEX "DirectorLlmUsageRecord_attributionStatus_recordedAt_idx" ON "DirectorLlmUsageRecord"("attributionStatus", "recordedAt");
+CREATE INDEX IF NOT EXISTS "DirectorLlmUsageRecord_novelId_recordedAt_idx" ON "DirectorLlmUsageRecord"("novelId", "recordedAt");
+CREATE INDEX IF NOT EXISTS "DirectorLlmUsageRecord_taskId_recordedAt_idx" ON "DirectorLlmUsageRecord"("taskId", "recordedAt");
+CREATE INDEX IF NOT EXISTS "DirectorLlmUsageRecord_runId_recordedAt_idx" ON "DirectorLlmUsageRecord"("runId", "recordedAt");
+CREATE INDEX IF NOT EXISTS "DirectorLlmUsageRecord_stepIdempotencyKey_recordedAt_idx" ON "DirectorLlmUsageRecord"("stepIdempotencyKey", "recordedAt");
+CREATE INDEX IF NOT EXISTS "DirectorLlmUsageRecord_nodeKey_recordedAt_idx" ON "DirectorLlmUsageRecord"("nodeKey", "recordedAt");
+CREATE INDEX IF NOT EXISTS "DirectorLlmUsageRecord_attributionStatus_recordedAt_idx" ON "DirectorLlmUsageRecord"("attributionStatus", "recordedAt");
 
-ALTER TABLE "DirectorLlmUsageRecord" ADD CONSTRAINT "DirectorLlmUsageRecord_novelId_fkey" FOREIGN KEY ("novelId") REFERENCES "Novel"("id") ON DELETE SET NULL ON UPDATE CASCADE;
-ALTER TABLE "DirectorLlmUsageRecord" ADD CONSTRAINT "DirectorLlmUsageRecord_taskId_fkey" FOREIGN KEY ("taskId") REFERENCES "NovelWorkflowTask"("id") ON DELETE CASCADE ON UPDATE CASCADE;
-ALTER TABLE "DirectorLlmUsageRecord" ADD CONSTRAINT "DirectorLlmUsageRecord_runId_fkey" FOREIGN KEY ("runId") REFERENCES "DirectorRun"("id") ON DELETE SET NULL ON UPDATE CASCADE;
-ALTER TABLE "DirectorLlmUsageRecord" ADD CONSTRAINT "DirectorLlmUsageRecord_stepIdempotencyKey_fkey" FOREIGN KEY ("stepIdempotencyKey") REFERENCES "DirectorStepRun"("idempotencyKey") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "DirectorLlmUsageRecord" DROP CONSTRAINT IF EXISTS "DirectorLlmUsageRecord_novelId_fkey"; ALTER TABLE "DirectorLlmUsageRecord" ADD CONSTRAINT "DirectorLlmUsageRecord_novelId_fkey" FOREIGN KEY ("novelId") REFERENCES "Novel"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "DirectorLlmUsageRecord" DROP CONSTRAINT IF EXISTS "DirectorLlmUsageRecord_taskId_fkey"; ALTER TABLE "DirectorLlmUsageRecord" ADD CONSTRAINT "DirectorLlmUsageRecord_taskId_fkey" FOREIGN KEY ("taskId") REFERENCES "NovelWorkflowTask"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "DirectorLlmUsageRecord" DROP CONSTRAINT IF EXISTS "DirectorLlmUsageRecord_runId_fkey"; ALTER TABLE "DirectorLlmUsageRecord" ADD CONSTRAINT "DirectorLlmUsageRecord_runId_fkey" FOREIGN KEY ("runId") REFERENCES "DirectorRun"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "DirectorLlmUsageRecord" DROP CONSTRAINT IF EXISTS "DirectorLlmUsageRecord_stepIdempotencyKey_fkey"; ALTER TABLE "DirectorLlmUsageRecord" ADD CONSTRAINT "DirectorLlmUsageRecord_stepIdempotencyKey_fkey" FOREIGN KEY ("stepIdempotencyKey") REFERENCES "DirectorStepRun"("idempotencyKey") ON DELETE SET NULL ON UPDATE CASCADE;
+
+
+

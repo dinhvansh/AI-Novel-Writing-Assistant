@@ -1,4 +1,4 @@
-CREATE TABLE "AutoDirectorFollowUpActionLog" (
+CREATE TABLE IF NOT EXISTS "AutoDirectorFollowUpActionLog" (
     "id" TEXT NOT NULL,
     "taskId" TEXT NOT NULL,
     "actionCode" TEXT NOT NULL,
@@ -14,6 +14,8 @@ CREATE TABLE "AutoDirectorFollowUpActionLog" (
     CONSTRAINT "AutoDirectorFollowUpActionLog_pkey" PRIMARY KEY ("id")
 );
 
-CREATE UNIQUE INDEX "AutoDirectorFollowUpActionLog_idempotencyKey_key" ON "AutoDirectorFollowUpActionLog"("idempotencyKey");
-CREATE INDEX "AutoDirectorFollowUpActionLog_taskId_executedAt_idx" ON "AutoDirectorFollowUpActionLog"("taskId", "executedAt");
-CREATE INDEX "AutoDirectorFollowUpActionLog_taskId_actionCode_executedAt_idx" ON "AutoDirectorFollowUpActionLog"("taskId", "actionCode", "executedAt");
+CREATE UNIQUE INDEX IF NOT EXISTS "AutoDirectorFollowUpActionLog_idempotencyKey_key" ON "AutoDirectorFollowUpActionLog"("idempotencyKey");
+CREATE INDEX IF NOT EXISTS "AutoDirectorFollowUpActionLog_taskId_executedAt_idx" ON "AutoDirectorFollowUpActionLog"("taskId", "executedAt");
+CREATE INDEX IF NOT EXISTS "AutoDirectorFollowUpActionLog_taskId_actionCode_executedAt_idx" ON "AutoDirectorFollowUpActionLog"("taskId", "actionCode", "executedAt");
+
+

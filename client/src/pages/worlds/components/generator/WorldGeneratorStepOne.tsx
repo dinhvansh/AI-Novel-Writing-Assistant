@@ -121,9 +121,6 @@ export default function WorldGeneratorStepOne(props: WorldGeneratorStepOneProps)
           <div className="rounded-md border p-3 text-xs text-muted-foreground space-y-1">
             <div>{t("generator.genrePathLabel", { path: selectedGenre.path })}</div>
             {selectedGenre.description?.trim() ? <div>{t("generator.genreDescriptionLabel", { description: selectedGenre.description.trim() })}</div> : null}
-            {selectedGenre.template?.trim() ? (
-              <div className="whitespace-pre-wrap">{t("generator.genreTemplateLabel", { template: selectedGenre.template.trim() })}</div>
-            ) : null}
           </div>
         ) : null}
         {genreLoading ? <div className="text-xs text-muted-foreground">{t("generator.genreLoadingTree")}</div> : null}

@@ -17,8 +17,12 @@ import type {
   DirectorQualityLoopBudgetEntry,
   DirectorQualityLoopBudgetNextAction,
 } from "@ai-novel/shared/types/novelDirector";
+import type { LocaleCode } from "@ai-novel/shared/localization";
+import { DEFAULT_LOCALE } from "@ai-novel/shared/localization";
 import { classifyChapterQualityLoopRisk } from "@ai-novel/shared/types/chapterQualityLoop";
 import { resolveDirectorQualityLoopBudgetNextAction } from "./DirectorQualityLoopBudgetLedgerService";
+import { getI18nServerHandle } from "../../../../i18n";
+import { getCurrentRequestLocale } from "../../../../runtime/requestLocaleContext";
 
 function timestampOf(value?: string | null): number {
   if (!value) {
@@ -86,21 +90,28 @@ function resolveBlockedReason(step: DirectorStepRun | null, event: DirectorEvent
   return null;
 }
 
-function formatNextAction(action: DirectorNextAction | null | undefined): string | null {
+function formatNextAction(action: DirectorNextAction | null | undefined, locale: LocaleCode = DEFAULT_LOCALE): string | null {
   if (!action) {
     return null;
   }
+  const handle = getI18nServerHandle();
+  if (handle) {
+    const key = `nextActions.${action.action}`;
+    const result = handle.t("serverLogs", key, { lng: locale });
+    if (result && result !== `serverLogs:${key}`) return result;
+  }
+  // i18n-ignore: fallback map keys
   const labels: Record<DirectorNextAction["action"], string> = {
-    generate_candidates: "生成可选开书方向",
-    create_book_contract: "生成书级创作约定",
-    complete_story_macro: "完善故事宏观规划",
-    prepare_characters: "准备角色阵容",
-    build_volume_strategy: "生成分卷策略",
-    build_chapter_tasks: "生成章节任务单",
-    continue_chapter_execution: "继续章节生成",
-    review_recent_chapters: "复查最近章节",
-    repair_scope: "修复受影响范围",
-    ask_user_confirmation: "请确认后继续",
+    generate_candidates: "\u751f\u6210\u53ef\u9009\u5f00\u4e66\u65b9\u5411",
+    create_book_contract: "\u751f\u6210\u4e66\u7ea7\u521b\u4f5c\u7ea6\u5b9a",
+    complete_story_macro: "\u5b8c\u5584\u6545\u4e8b\u5b8f\u89c2\u89c4\u5212",
+    prepare_characters: "\u51c6\u5907\u89d2\u8272\u9635\u5bb9",
+    build_volume_strategy: "\u751f\u6210\u5206\u5377\u7b56\u7565",
+    build_chapter_tasks: "\u751f\u6210\u7ae0\u8282\u4efb\u52a1\u5355",
+    continue_chapter_execution: "\u7ee7\u7eed\u7ae0\u8282\u751f\u6210",
+    review_recent_chapters: "\u590d\u67e5\u6700\u8fd1\u7ae0\u8282",
+    repair_scope: "\u4fee\u590d\u53d7\u5f71\u54cd\u8303\u56f4",
+    ask_user_confirmation: "\u8bf7\u786e\u8ba4\u540e\u7ee7\u7eed",
   };
   return labels[action.action];
 }
@@ -109,22 +120,37 @@ function buildHeadline(input: {
   status: DirectorRuntimeProjectionStatus;
   step: DirectorStepRun | null;
   event: DirectorEvent | null;
+  locale?: LocaleCode;
 }): string {
-  const label = input.step?.label?.trim() || input.event?.summary?.trim() || "同步导演进度";
+  const locale = input.locale ?? DEFAULT_LOCALE;
+  const handle = getI18nServerHandle();
+  // i18n-ignore: fallback string
+  const label = input.step?.label?.trim() || input.event?.summary?.trim() || (
+    handle ? handle.t("serverLogs", "headlineStatus.syncingProgress", { lng: locale }) : "\u540c\u6b65\u5bfc\u6f14\u8fdb\u5ea6"
+  );
+
+  function fmt(key: string): string {
+    if (handle) {
+      const result = handle.t("serverLogs", key, { lng: locale, values: { label } });
+      if (result && result !== `serverLogs:${key}`) return result;
+    }
+    return label;
+  }
+
   if (input.status === "waiting_approval") {
-    return `等待确认：${label}`;
+    return fmt("headlineStatus.waitingApproval");
   }
   if (input.status === "blocked") {
-    return `暂停处理：${label}`;
+    return fmt("headlineStatus.blocked");
   }
   if (input.status === "failed") {
-    return `处理失败：${label}`;
+    return fmt("headlineStatus.failed");
   }
   if (input.status === "running") {
-    return `推进任务：${label}`;
+    return fmt("headlineStatus.running");
   }
   if (input.status === "completed") {
-    return `步骤完成：${label}`;
+    return fmt("headlineStatus.completed");
   }
   return label;
 }
@@ -134,10 +160,26 @@ function buildDetail(input: {
   step: DirectorStepRun | null;
   event: DirectorEvent | null;
   blockedReason: string | null;
+  locale?: LocaleCode;
 }): string | null {
+  const locale = input.locale ?? DEFAULT_LOCALE;
+  const handle = getI18nServerHandle();
   if (input.status === "running") {
     const eventSummary = input.event?.summary?.trim();
-    return eventSummary ? `最近进展：${eventSummary}` : "系统正在处理这一步，完成后会写入新的进展。";
+    if (eventSummary) {
+      if (handle) {
+        const result = handle.t("serverLogs", "detailStatus.recentProgress", { lng: locale, values: { summary: eventSummary } });
+        if (result && result !== "serverLogs:detailStatus.recentProgress") return result;
+      }
+      // i18n-ignore: fallback
+      return `\u6700\u8fd1\u8fdb\u5c55\uff1a${eventSummary}`;
+    }
+    if (handle) {
+      const result = handle.t("serverLogs", "detailStatus.processingStep", { lng: locale });
+      if (result && result !== "serverLogs:detailStatus.processingStep") return result;
+    }
+    // i18n-ignore: fallback
+    return "\u7cfb\u7edf\u6b63\u5728\u5904\u7406\u8fd9\u4e00\u6b65\uff0c\u5b8c\u6210\u540e\u4f1a\u5199\u5165\u65b0\u7684\u8fdb\u5c55\u3002";
   }
   if (input.status === "waiting_approval" || input.status === "blocked" || input.status === "failed") {
     return input.blockedReason;
@@ -148,27 +190,37 @@ function buildDetail(input: {
   return null;
 }
 
-function buildScopeSummary(inventory: DirectorWorkspaceInventory | null | undefined): string | null {
+function buildScopeSummary(inventory: DirectorWorkspaceInventory | null | undefined, locale: LocaleCode = DEFAULT_LOCALE): string | null {
   if (!inventory) {
     return null;
   }
+  const handle = getI18nServerHandle();
+  function t(key: string, values?: Record<string, unknown>): string {
+    if (handle) {
+      const result = handle.t("serverLogs", key, { lng: locale, values });
+      if (result && result !== `serverLogs:${key}`) return result;
+    }
+    return key;
+  }
   const parts = [
-    `${inventory.chapterCount} 章`,
-    `${inventory.draftedChapterCount} 章有正文`,
+    t("scopeSummary.totalChapters", { count: inventory.chapterCount }),
+    t("scopeSummary.draftedChapters", { count: inventory.draftedChapterCount }),
   ];
   if (inventory.pendingRepairChapterCount > 0) {
-    parts.push(`${inventory.pendingRepairChapterCount} 章待修复`);
+    parts.push(t("scopeSummary.pendingRepair", { count: inventory.pendingRepairChapterCount }));
   }
   if (inventory.missingArtifactTypes.length > 0) {
-    parts.push(`${inventory.missingArtifactTypes.length} 类产物待补齐`);
+    parts.push(t("scopeSummary.missingArtifacts", { count: inventory.missingArtifactTypes.length }));
   }
-  return `工作区：${parts.join("，")}。`;
+  const prefix = t("scopeSummary.prefix");
+  return `${prefix}${parts.join("，")}。`;
 }
 
 function buildProgressSummary(
   snapshot: DirectorRuntimeSnapshot,
   inventory: DirectorWorkspaceInventory | null | undefined,
   factSummary?: DirectorTaskFactSummary | null,
+  locale: LocaleCode = DEFAULT_LOCALE,
 ): string {
   const completedSteps = factSummary?.completedStepCount ?? snapshot.steps.filter((step) => step.status === "succeeded").length;
   const totalSteps = factSummary?.totalStepCount ?? snapshot.steps.length;
@@ -180,26 +232,37 @@ function buildProgressSummary(
     ?? snapshot.artifacts.filter((artifact) => artifact.status === "stale").length;
   const repairCount = inventory?.needsRepairArtifacts.length
     ?? snapshot.artifacts.filter((artifact) => artifact.artifactType === "repair_ticket" && artifact.status !== "rejected").length;
+
+  const handle = getI18nServerHandle();
+  function t(key: string, values?: Record<string, unknown>): string {
+    if (handle) {
+      const result = handle.t("serverLogs", key, { lng: locale, values });
+      if (result && result !== `serverLogs:${key}`) return result;
+    }
+    return key;
+  }
+
   const parts = [
-    `${completedSteps}/${snapshot.steps.length} 个步骤完成`,
-    `${snapshot.artifacts.length} 个产物记录`,
+    t("progressSummary.stepsCompleted", { completed: completedSteps, total: snapshot.steps.length }),
+    t("progressSummary.artifactCount", { count: snapshot.artifacts.length }),
   ];
   if (waitingSteps > 0) {
-    parts.push(`${waitingSteps} 个步骤待确认`);
+    parts.push(t("progressSummary.waitingSteps", { count: waitingSteps }));
   }
   if (failedSteps > 0) {
-    parts.push(`${failedSteps} 个步骤失败`);
+    parts.push(t("progressSummary.failedSteps", { count: failedSteps }));
   }
   if (protectedCount > 0) {
-    parts.push(`${protectedCount} 个用户内容受保护`);
+    parts.push(t("progressSummary.protectedContent", { count: protectedCount }));
   }
   if (staleCount > 0) {
-    parts.push(`${staleCount} 个产物需确认`);
+    parts.push(t("progressSummary.staleArtifacts", { count: staleCount }));
   }
   if (repairCount > 0) {
-    parts.push(`${repairCount} 个修复任务`);
+    parts.push(t("progressSummary.repairTasks", { count: repairCount }));
   }
-  return `进展：${parts.join("，")}。`;
+  const prefix = t("progressSummary.prefix");
+  return `${prefix}${parts.join("，")}。`;
 }
 
 const PLANNING_ARTIFACT_TYPES: DirectorArtifactType[] = [
@@ -372,6 +435,7 @@ function buildProgressBreakdown(
   inventory: DirectorWorkspaceInventory | null | undefined,
   chapterProgress?: DirectorChapterExecutionProgressSummary | null,
   factSummary?: DirectorTaskFactSummary | null,
+  locale: LocaleCode = DEFAULT_LOCALE,
 ): DirectorRuntimeProgressBreakdown {
   const completedSteps = factSummary?.completedStepCount ?? snapshot.steps.filter((step) => step.status === "succeeded").length;
   const planningPercent = buildPlanningPercent(snapshot, inventory, factSummary);
@@ -394,6 +458,39 @@ function buildProgressBreakdown(
     : 0;
   const totalChapters = inventory?.chapterCount ?? 0;
   const pendingRepairChapters = inventory?.pendingRepairChapterCount ?? 0;
+
+  const handle = getI18nServerHandle();
+  let explanation: string;
+  if (totalChapters > 0) {
+    if (handle) {
+      const result = handle.t("serverLogs", "progressBreakdown.withChapters", {
+        lng: locale,
+        values: { continuable: continuableChapters, total: totalChapters, planning: planningPercent, quality: qualityRepairPercent, overall: totalPercent },
+      });
+      explanation = (result && result !== "serverLogs:progressBreakdown.withChapters")
+        ? result
+        // i18n-ignore: fallback
+        : `\u7ae0\u8282\u8fdb\u5ea6 ${continuableChapters}/${totalChapters}\uff0c\u89c4\u5212 ${planningPercent}%\uff0c\u8d28\u91cf\u4fee\u590d ${qualityRepairPercent}%\uff0c\u7efc\u5408\u8fdb\u5ea6 ${totalPercent}%\u3002`;
+    } else {
+      // i18n-ignore: fallback
+      explanation = `\u7ae0\u8282\u8fdb\u5ea6 ${continuableChapters}/${totalChapters}\uff0c\u89c4\u5212 ${planningPercent}%\uff0c\u8d28\u91cf\u4fee\u590d ${qualityRepairPercent}%\uff0c\u7efc\u5408\u8fdb\u5ea6 ${totalPercent}%\u3002`;
+    }
+  } else {
+    if (handle) {
+      const result = handle.t("serverLogs", "progressBreakdown.withoutChapters", {
+        lng: locale,
+        values: { planning: planningPercent, chapter: chapterExecutionPercent, quality: qualityRepairPercent, overall: totalPercent },
+      });
+      explanation = (result && result !== "serverLogs:progressBreakdown.withoutChapters")
+        ? result
+        // i18n-ignore: fallback
+        : `\u89c4\u5212 ${planningPercent}%\uff0c\u7ae0\u8282\u6267\u884c ${chapterExecutionPercent}%\uff0c\u8d28\u91cf\u4fee\u590d ${qualityRepairPercent}%\uff0c\u7efc\u5408\u8fdb\u5ea6 ${totalPercent}%\u3002`;
+    } else {
+      // i18n-ignore: fallback
+      explanation = `\u89c4\u5212 ${planningPercent}%\uff0c\u7ae0\u8282\u6267\u884c ${chapterExecutionPercent}%\uff0c\u8d28\u91cf\u4fee\u590d ${qualityRepairPercent}%\uff0c\u7efc\u5408\u8fdb\u5ea6 ${totalPercent}%\u3002`;
+    }
+  }
+
   return {
     planningProgress: planningPercent,
     chapterProgress: chapterExecutionPercent,
@@ -409,9 +506,7 @@ function buildProgressBreakdown(
     continuableChapters,
     totalChapters,
     pendingRepairChapters,
-    explanation: totalChapters > 0
-      ? `章节进度 ${continuableChapters}/${totalChapters}，规划 ${planningPercent}%，质量修复 ${qualityRepairPercent}%，综合进度 ${totalPercent}%。`
-      : `规划 ${planningPercent}%，章节执行 ${chapterExecutionPercent}%，质量修复 ${qualityRepairPercent}%，综合进度 ${totalPercent}%。`,
+    explanation,
   };
 }
 
@@ -460,24 +555,35 @@ function buildVisibleRiskBadges(input: {
       badges.push(badge);
     }
   };
+
+  const handle = getI18nServerHandle();
+  const locale = getCurrentRequestLocale() ?? DEFAULT_LOCALE;
+  function tb(key: string, values?: Record<string, unknown>): string {
+    if (handle) {
+      const result = handle.t("serverLogs", key, { lng: locale, values });
+      if (result && result !== `serverLogs:${key}`) return result;
+    }
+    return key;
+  }
+
   if (input.status === "failed") {
-    push({ label: "执行失败", level: "danger", source: "status" });
+    push({ label: tb("riskBadges.executionFailed"), level: "danger", source: "status" });
   } else if (input.status === "blocked" || input.status === "waiting_approval") {
-    push({ label: input.blockedReason ? "等待处理" : "等待确认", level: "warning", source: "status" });
+    push({ label: input.blockedReason ? tb("riskBadges.waitingAction") : tb("riskBadges.waitingConfirm"), level: "warning", source: "status" });
   }
   const inventory = input.inventory;
   if (inventory) {
     if (inventory.protectedUserContentArtifacts.length > 0) {
-      push({ label: "受保护正文", level: "danger", source: "artifact" });
+      push({ label: tb("riskBadges.protectedContent"), level: "danger", source: "artifact" });
     }
     if (inventory.pendingRepairChapterCount > 0) {
-      push({ label: `${inventory.pendingRepairChapterCount} 章待修复`, level: "warning", source: "artifact" });
+      push({ label: tb("riskBadges.pendingRepairChapters", { count: inventory.pendingRepairChapterCount }), level: "warning", source: "artifact" });
     }
     if (inventory.staleArtifacts.length > 0) {
-      push({ label: `${inventory.staleArtifacts.length} 项需复核`, level: "warning", source: "artifact" });
+      push({ label: tb("riskBadges.staleArtifacts", { count: inventory.staleArtifacts.length }), level: "warning", source: "artifact" });
     }
     if (inventory.missingArtifactTypes.length > 0) {
-      push({ label: "缺少规划资源", level: "warning", source: "artifact" });
+      push({ label: tb("riskBadges.missingPlanResources"), level: "warning", source: "artifact" });
     }
   }
   for (const event of input.events) {
@@ -486,23 +592,23 @@ function buildVisibleRiskBadges(input: {
         ? classifyChapterQualityLoopRisk((event.metadata?.assessment as unknown) ?? null)
         : "blocking";
       if (qualityLoopRisk === "non_blocking_quality_debt") {
-        push({ label: "已暂存质量债", level: "info", source: "event" });
+        push({ label: tb("riskBadges.qualityDebtDeferred"), level: "info", source: "event" });
       } else if (qualityLoopRisk === "blocking") {
-        push({ label: "质量阻塞", level: event.severity === "high" ? "danger" : "warning", source: "event" });
+        push({ label: tb("riskBadges.qualityBlocked"), level: event.severity === "high" ? "danger" : "warning", source: "event" });
       } else if (event.type === "quality_issue_found") {
-        push({ label: "质量风险", level: event.severity === "high" ? "danger" : "warning", source: "event" });
+        push({ label: tb("riskBadges.qualityRisk"), level: event.severity === "high" ? "danger" : "warning", source: "event" });
       }
     }
     if (event.type === "replan_run_created") {
-      push({ label: "已进入重规划", level: "info", source: "event" });
+      push({ label: tb("riskBadges.replanStarted"), level: "info", source: "event" });
     }
     if (event.type === "circuit_breaker_opened") {
-      push({ label: "连续失败保护", level: "danger", source: "event" });
+      push({ label: tb("riskBadges.circuitBreakerOpen"), level: "danger", source: "event" });
     }
   }
   for (const event of input.events) {
     if (event.type === "continue_with_risk") {
-      push({ label: "已暂存质量债", level: "info", source: "event" });
+      push({ label: tb("riskBadges.qualityDebtDeferred"), level: "info", source: "event" });
     }
   }
   return badges.slice(0, 6);
@@ -598,18 +704,26 @@ function buildQualityDebtSummary(
   };
 }
 
-function formatQualityBudgetNextAction(action: DirectorQualityLoopBudgetNextAction): string {
+function formatQualityBudgetNextAction(action: DirectorQualityLoopBudgetNextAction, locale: LocaleCode = DEFAULT_LOCALE): string {
+  const handle = getI18nServerHandle();
+  if (handle) {
+    const key = `qualityBudget.nextAction.${action}`;
+    const result = handle.t("serverLogs", key, { lng: locale });
+    if (result && result !== `serverLogs:${key}`) return result;
+  }
+  // i18n-ignore: fallback map keys
   const labels: Record<DirectorQualityLoopBudgetNextAction, string> = {
-    auto_patch_repair: "先尝试局部修复",
-    auto_rewrite_chapter: "改用整章重写",
-    auto_replan_window: "重规划受影响章节",
-    defer_and_continue: "登记为质量待回收并继续后续章节",
+    auto_patch_repair: "\u5148\u5c1d\u8bd5\u5c40\u90e8\u4fee\u590d",
+    auto_rewrite_chapter: "\u6539\u7528\u6574\u7ae0\u91cd\u5199",
+    auto_replan_window: "\u91cd\u89c4\u5212\u53d7\u5f71\u54cd\u7ae0\u8282",
+    defer_and_continue: "\u767b\u8bb0\u4e3a\u8d28\u91cf\u5f85\u56de\u6536\u5e76\u7ee7\u7eed\u540e\u7eed\u7ae0\u8282",
   };
   return labels[action];
 }
 
 function buildQualityBudgetSummary(
   events: DirectorEvent[],
+  locale: LocaleCode = DEFAULT_LOCALE,
 ): DirectorRuntimeProjection["qualityBudgetSummary"] {
   const budgetEvents = events
     .map((event) => {
@@ -636,11 +750,36 @@ function buildQualityBudgetSummary(
     return null;
   }
   const { entry, nextAction } = latest;
-  const nextActionLabel = formatQualityBudgetNextAction(nextAction);
+  const nextActionLabel = formatQualityBudgetNextAction(nextAction, locale);
   const currentChapterOrder = entry.lastChapterOrder
     ?? readFiniteNumber(latest.event.metadata?.chapterOrder)
     ?? (entry.affectedChapterWindow.chapterOrders ?? [])[0]
     ?? null;
+
+  const handle = getI18nServerHandle();
+  let explanation: string;
+  if (handle) {
+    const result = handle.t("serverLogs", "qualityBudget.summary", {
+      lng: locale,
+      values: {
+        chapter: currentChapterOrder != null
+          ? handle.t("serverLogs", "qualityBudget.chapterFormat", { lng: locale, values: { order: currentChapterOrder } }) + " "
+          : "",
+        patch: entry.patchRepairCount,
+        rewrite: entry.chapterRewriteCount,
+        replan: entry.windowReplanCount,
+        action: nextActionLabel,
+      },
+    });
+    explanation = (result && result !== "serverLogs:qualityBudget.summary")
+      ? result
+      // i18n-ignore: fallback
+      : `\u8d28\u91cf\u9884\u7b97\uff1a\u5c40\u90e8\u4fee\u590d ${entry.patchRepairCount}/1\uff0c\u6574\u7ae0\u91cd\u5199 ${entry.chapterRewriteCount}/1\uff0c\u7a97\u53e3\u91cd\u89c4\u5212 ${entry.windowReplanCount}/1\uff1b\u540c\u7c7b\u95ee\u9898\u4e0b\u4e00\u6b65\u4f1a${nextActionLabel}\u3002`;
+  } else {
+    // i18n-ignore: fallback
+    explanation = `\u8d28\u91cf\u9884\u7b97\uff1a\u5c40\u90e8\u4fee\u590d ${entry.patchRepairCount}/1\uff0c\u6574\u7ae0\u91cd\u5199 ${entry.chapterRewriteCount}/1\uff0c\u7a97\u53e3\u91cd\u89c4\u5212 ${entry.windowReplanCount}/1\uff1b\u540c\u7c7b\u95ee\u9898\u4e0b\u4e00\u6b65\u4f1a${nextActionLabel}\u3002`;
+  }
+
   return {
     currentChapterId: entry.lastChapterId ?? null,
     currentChapterOrder,
@@ -653,7 +792,7 @@ function buildQualityBudgetSummary(
     deferredCount: entry.deferredCount,
     nextAction,
     nextActionLabel,
-    explanation: `质量预算：局部修复 ${entry.patchRepairCount}/1，整章重写 ${entry.chapterRewriteCount}/1，窗口重规划 ${entry.windowReplanCount}/1；同类问题下一步会${nextActionLabel}。`,
+    explanation,
   };
 }
 
@@ -687,11 +826,13 @@ export class DirectorEventProjectionService {
         evidence?: Record<string, unknown> | null;
         nextActionLabel?: string | null;
       } | null;
+      locale?: LocaleCode;
     },
   ): DirectorRuntimeProjection | null {
     if (!snapshot) {
       return null;
     }
+    const locale = options?.locale ?? DEFAULT_LOCALE;
     const step = latestStep(snapshot.steps);
     const event = latestEvent(snapshot.events);
     const status = statusFromStep(step, options?.factSummary ?? null);
@@ -701,15 +842,16 @@ export class DirectorEventProjectionService {
     const recommendation = snapshot.lastWorkspaceAnalysis?.recommendation
       ?? snapshot.lastWorkspaceAnalysis?.interpretation?.recommendedAction
       ?? null;
-    const headline = buildHeadline({ status, step, event });
+    const headline = buildHeadline({ status, step, event, locale });
     const progressBreakdown = buildProgressBreakdown(
       snapshot,
       inventory,
       options?.chapterProgress ?? null,
       options?.factSummary ?? null,
+      locale,
     );
     const qualityDebtSummary = buildQualityDebtSummary(snapshot.events);
-    const qualityBudgetSummary = buildQualityBudgetSummary(snapshot.events);
+    const qualityBudgetSummary = buildQualityBudgetSummary(snapshot.events, locale);
     const qualityRootCause = readLatestQualityLoopAssessment(snapshot.events);
     const recoveryDecision = buildRecoveryDecision({
       status,
@@ -751,17 +893,17 @@ export class DirectorEventProjectionService {
       currentFactEvidence: options?.currentFactStep?.evidence ?? null,
       factSummary: options?.factSummary ?? null,
       headline,
-      detail: buildDetail({ status, step, event, blockedReason }),
+      detail: buildDetail({ status, step, event, blockedReason, locale }),
       lastEventSummary: event?.summary ?? null,
       requiresUserAction,
       blockedReason,
       blockingReason: blockedReason,
-      nextActionLabel: options?.currentFactStep?.nextActionLabel ?? formatNextAction(recommendation),
+      nextActionLabel: options?.currentFactStep?.nextActionLabel ?? formatNextAction(recommendation, locale),
       recommendedAction: recommendation,
       recoveryDecision,
       isAutopilotRecoverable,
-      scopeSummary: buildScopeSummary(inventory),
-      progressSummary: buildProgressSummary(snapshot, inventory, options?.factSummary ?? null),
+      scopeSummary: buildScopeSummary(inventory, locale),
+      progressSummary: buildProgressSummary(snapshot, inventory, options?.factSummary ?? null, locale),
       progressBreakdown,
       chapterExecutionProgress: options?.chapterProgress ?? null,
       visibleRiskBadges,

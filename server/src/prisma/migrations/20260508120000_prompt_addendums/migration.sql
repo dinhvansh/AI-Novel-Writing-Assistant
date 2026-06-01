@@ -1,6 +1,6 @@
 -- Additive table for user-managed prompt addendums.
 
-CREATE TABLE "PromptAddendum" (
+CREATE TABLE IF NOT EXISTS "PromptAddendum" (
   "id" TEXT NOT NULL,
   "scope" TEXT NOT NULL,
   "novelId" TEXT,
@@ -13,8 +13,11 @@ CREATE TABLE "PromptAddendum" (
   CONSTRAINT "PromptAddendum_pkey" PRIMARY KEY ("id")
 );
 
-CREATE INDEX "PromptAddendum_scope_promptId_enabled_idx" ON "PromptAddendum"("scope", "promptId", "enabled");
-CREATE INDEX "PromptAddendum_novelId_promptId_enabled_idx" ON "PromptAddendum"("novelId", "promptId", "enabled");
-CREATE INDEX "PromptAddendum_updatedAt_idx" ON "PromptAddendum"("updatedAt");
+CREATE INDEX IF NOT EXISTS "PromptAddendum_scope_promptId_enabled_idx" ON "PromptAddendum"("scope", "promptId", "enabled");
+CREATE INDEX IF NOT EXISTS "PromptAddendum_novelId_promptId_enabled_idx" ON "PromptAddendum"("novelId", "promptId", "enabled");
+CREATE INDEX IF NOT EXISTS "PromptAddendum_updatedAt_idx" ON "PromptAddendum"("updatedAt");
 
-ALTER TABLE "PromptAddendum" ADD CONSTRAINT "PromptAddendum_novelId_fkey" FOREIGN KEY ("novelId") REFERENCES "Novel"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "PromptAddendum" DROP CONSTRAINT IF EXISTS "PromptAddendum_novelId_fkey"; ALTER TABLE "PromptAddendum" ADD CONSTRAINT "PromptAddendum_novelId_fkey" FOREIGN KEY ("novelId") REFERENCES "Novel"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+
+

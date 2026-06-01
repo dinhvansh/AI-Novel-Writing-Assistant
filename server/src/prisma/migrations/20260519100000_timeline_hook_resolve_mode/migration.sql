@@ -1,7 +1,9 @@
 ALTER TABLE "TimelineHook"
-ADD COLUMN "resolveMode" TEXT NOT NULL DEFAULT 'long_arc';
+ADD COLUMN IF NOT EXISTS "resolveMode" TEXT NOT NULL DEFAULT 'long_arc';
 
 ALTER TABLE "TimelineHook"
-ADD COLUMN "blocking" BOOLEAN NOT NULL DEFAULT false;
+ADD COLUMN IF NOT EXISTS "blocking" BOOLEAN NOT NULL DEFAULT false;
 
-CREATE INDEX "TimelineHook_novelId_resolveMode_blocking_idx" ON "TimelineHook"("novelId", "resolveMode", "blocking");
+CREATE INDEX IF NOT EXISTS "TimelineHook_novelId_resolveMode_blocking_idx" ON "TimelineHook"("novelId", "resolveMode", "blocking");
+
+

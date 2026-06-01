@@ -31,6 +31,7 @@ import NovelAutoDirectorProgressPanel from "@/pages/novels/components/NovelAutoD
 import { shouldShowPinnedBookAutomationProjection } from "@/pages/novels/novelEditAutomationStatus";
 import { cn } from "@/lib/utils";
 import { resolveWorkflowContinuationFeedback } from "@/lib/novelWorkflowContinuation";
+import { translateDirectorLabel } from "@/lib/directorRuntimeI18n";
 import {
   applyAutoDirectorResetStepReadiness,
   extractAutoDirectorResetStepsFromMeta,
@@ -339,7 +340,7 @@ export default function NovelWorkspaceRail(props: NovelWorkspaceRailProps) {
   const workflowProgressCount = workflowIndex >= 0 ? workflowIndex + 1 : completedStepCount;
   const novelTitle = novelDetail?.title?.trim() || t("novel:workspace.rail.fallbackTitle");
   const runtimeActionSummary = runtimeProjection?.nextActionLabel
-    ? t("novel:workspace.rail.nextStep", { label: runtimeProjection.nextActionLabel })
+    ? t("novel:workspace.rail.nextStep", { label: translateDirectorLabel(runtimeProjection.nextActionLabel) ?? runtimeProjection.nextActionLabel })
     : null;
   const runtimeSummary = dashboardView?.currentAction?.trim()
     || (dashboardView?.requiresUserAction

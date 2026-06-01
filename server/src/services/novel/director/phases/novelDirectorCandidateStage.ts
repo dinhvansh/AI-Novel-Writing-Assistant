@@ -1,4 +1,6 @@
 import { randomUUID } from "node:crypto";
+import { getI18nServerHandle } from "../../../../i18n";
+import { getCurrentRequestLocale } from "../../../../runtime/requestLocaleContext";
 import {
   DIRECTOR_CANDIDATE_SETUP_STEPS,
   type DirectorCandidate,
@@ -224,7 +226,16 @@ export class NovelDirectorCandidateStageService {
       batch: {
         id: randomUUID(),
         round,
-        roundLabel: `第 ${round} 轮`,
+        roundLabel: (() => {
+          const handle = getI18nServerHandle();
+          const locale = getCurrentRequestLocale();
+          if (handle) {
+            const result = handle.t("serverLogs", "candidateRound.roundLabel", { lng: locale, values: { round } });
+            if (result && result !== "serverLogs:candidateRound.roundLabel") return result;
+          }
+          // i18n-ignore: fallback
+          return `\u7b2c ${round} \u8f6e`;
+        })(),
         idea: context.idea.trim(),
         refinementSummary: buildRefinementSummary(context.presets, context.feedback, round),
         presets: context.presets,

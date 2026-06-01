@@ -24,6 +24,8 @@ ENV AI_NOVEL_DATABASE_MODE=postgresql
 COPY shared/package.json shared/tsconfig.json ./shared/
 COPY shared/*.ts ./shared/
 COPY shared/types ./shared/types
+COPY shared/localization ./shared/localization
+COPY shared/scripts ./shared/scripts
 COPY server/package.json server/tsconfig.json server/prisma.config.ts ./server/
 COPY server/src ./server/src
 RUN pnpm --filter @ai-novel/shared build \
@@ -49,6 +51,9 @@ FROM ${NODE_IMAGE} AS runtime
 USER root
 WORKDIR /app
 ENV NODE_ENV=production
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends openssl \
+    && rm -rf /var/lib/apt/lists/*
 RUN rm -rf /app/* /app/.[!.]* /app/..?* || true
 COPY --from=build --chown=node:node /app/package.json ./package.json
 COPY --from=build --chown=node:node /app/pnpm-workspace.yaml ./pnpm-workspace.yaml

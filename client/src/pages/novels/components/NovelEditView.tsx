@@ -164,7 +164,7 @@ function DesktopNovelEditView(props: NovelEditViewProps) {
           <div className="flex min-w-0 flex-wrap items-center gap-3 text-sm">
             <span className="truncate font-semibold text-foreground">{novelTitle}</span>
             <span className="h-1 w-1 shrink-0 rounded-full bg-border" />
-            <span className="shrink-0 text-muted-foreground">{"\u5f53\u524d\u6b65\u9aa4\uff1a"}{currentStepLabel}</span>
+            <span className="shrink-0 text-muted-foreground">{t("novel:workspace.header.currentStep", { label: currentStepLabel })}</span>
             {progressLabel ? (
               <>
                 <span className="h-1 w-1 shrink-0 rounded-full bg-border" />
@@ -172,11 +172,11 @@ function DesktopNovelEditView(props: NovelEditViewProps) {
               </>
             ) : null}
             <span className="h-1 w-1 shrink-0 rounded-full bg-border" />
-            <span className="shrink-0 text-muted-foreground">{"\u5f53\u524d\u9875\u9762\uff1a"}{currentPageLabel}</span>
+            <span className="shrink-0 text-muted-foreground">{t("novel:workspace.header.currentPage", { label: currentPageLabel })}</span>
             {showWorkflowRecommendation && workflowStepLabel ? (
               <>
                 <span className="h-1 w-1 shrink-0 rounded-full bg-border" />
-                <span className="shrink-0 text-sky-700">{"\u6d41\u7a0b\u63a8\u8350\uff1a\u5efa\u8bae\u5207\u6362\u5230 "}{workflowStepLabel}</span>
+                <span className="shrink-0 text-sky-700">{t("novel:workspace.header.workflowRecommend", { label: workflowStepLabel })}</span>
               </>
             ) : null}
           </div>

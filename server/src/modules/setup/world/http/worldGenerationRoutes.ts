@@ -15,16 +15,39 @@ import {
   worldIdSchema,
   worldService,
 } from "./worldHttpContext";
+import { DEFAULT_LOCALE, type LocaleCode } from "@ai-novel/shared/localization";
+import { getI18nServerHandle } from "../../../../i18n";
+import { getCurrentRequestLocale } from "../../../../runtime/requestLocaleContext";
+
+function tWorld(key: string, res: { locals: Record<string, unknown> }): string {
+  const handle = getI18nServerHandle();
+  if (!handle) return key;
+  const locale: LocaleCode = (res.locals.locale as LocaleCode) ?? getCurrentRequestLocale() ?? DEFAULT_LOCALE;
+  return handle.t("world", key, { lng: locale });
+}
 
 export function registerGenerationWorldRoutes(router: Router): void {
   router.get("/templates", requireWorldWizard, async (_req, res, next) => {
     try {
       const data = await worldService.getTemplates();
+      const handle = getI18nServerHandle();
+      const locale: LocaleCode = (res.locals.locale as LocaleCode) ?? getCurrentRequestLocale() ?? DEFAULT_LOCALE;
+      const localizedData = handle ? data.map((template) => ({
+        ...template,
+        name: handle.t("world", `templates.${template.key}.name`, { lng: locale, defaultValue: template.name }),
+        description: handle.t("world", `templates.${template.key}.description`, { lng: locale, defaultValue: template.description }),
+        classicElements: template.classicElements.map((el) =>
+          handle.t("world", `templates.${template.key}.classicElements.${el}`, { lng: locale, defaultValue: el }),
+        ),
+        pitfalls: template.pitfalls.map((p) =>
+          handle.t("world", `templates.${template.key}.pitfalls.${p}`, { lng: locale, defaultValue: p }),
+        ),
+      })) : data;
       res.status(200).json({
         success: true,
-        data,
+        data: localizedData,
         message: "Templates loaded.",
-      } satisfies ApiResponse<typeof data>);
+      } satisfies ApiResponse<typeof localizedData>);
     } catch (error) {
       next(error);
     }
@@ -115,7 +138,7 @@ export function registerGenerationWorldRoutes(router: Router): void {
           type: "run_status",
           runId,
           status: "queued",
-          message: isReferenceMode ? "已开始分析参考作品" : "已开始分析世界灵感",
+          message: isReferenceMode ? tWorld("generator.sseStatus.startedReference", res) : tWorld("generator.sseStatus.startedFree", res),
         });
 
         const data = await worldService.analyzeInspiration(
@@ -134,14 +157,14 @@ export function registerGenerationWorldRoutes(router: Router): void {
           type: "run_status",
           runId,
           status: "succeeded",
-          message: isReferenceMode ? "原作锚点与架空方向已生成" : "概念卡与属性选项已生成",
+          message: isReferenceMode ? tWorld("generator.sseStatus.succeededReference", res) : tWorld("generator.sseStatus.succeededFree", res),
         });
         writeSSEFrame(res, {
           type: "done",
           fullContent: JSON.stringify(data),
         });
       } catch (error) {
-        const message = error instanceof Error ? error.message : "世界灵感分析失败。";
+        const message = error instanceof Error ? error.message : tWorld("generator.sseStatus.failed", res);
         writeSSEFrame(res, {
           type: "run_status",
           runId,

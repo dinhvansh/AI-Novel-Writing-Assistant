@@ -24,6 +24,16 @@ import {
   buildSteps,
   toLegacyTaskStatus,
 } from "../taskCenter.shared";
+import { DEFAULT_LOCALE, type LocaleCode } from "@ai-novel/shared/localization";
+import { getI18nServerHandle } from "../../../i18n";
+import { getCurrentRequestLocale } from "../../../runtime/requestLocaleContext";
+
+function t(key: string, values?: Record<string, unknown>): string {
+  const handle = getI18nServerHandle();
+  if (!handle) return key;
+  const locale: LocaleCode = getCurrentRequestLocale() ?? DEFAULT_LOCALE;
+  return handle.t("serverLogs", key, { lng: locale, ...(values ?? {}) });
+}
 
 type PipelineRow = {
   id: string;
@@ -92,7 +102,7 @@ export class PipelineTaskAdapter {
       noticeSummary: notice.noticeSummary,
       failureCode: row.lastErrorType ?? (row.status === "failed" ? "PIPELINE_FAILED" : null),
       failureSummary: row.status === "failed"
-        ? normalizeFailureSummary(row.error, "章节流水线失败，但没有记录明确错误。")
+        ? normalizeFailureSummary(row.error, t("taskSupport.pipeline.failed"))
         : null,
       recoveryHint: buildTaskRecoveryHint("novel_pipeline", row.status as TaskStatus),
       tokenUsage: toTaskTokenUsageSummary({
@@ -111,7 +121,7 @@ export class PipelineTaskAdapter {
       targetResources: [{
         type: "generation_job",
         id: row.id,
-        label: `${row.startOrder}-${row.endOrder}章流水线`,
+        label: t("taskSupport.pipeline.chapterRange", { start: row.startOrder, end: row.endOrder }),
         route: `/novels/${row.novelId}/edit`,
       }],
     };

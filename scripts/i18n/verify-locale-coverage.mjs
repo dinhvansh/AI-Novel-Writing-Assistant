@@ -508,6 +508,35 @@ function runP7() {
   }
 }
 
+// ---------------------------------------------------------------------------
+// P8 (Task 6.9): every seed slug in vi-VN.json has a name entry.
+// Ensures SeedTranslator can resolve all known slugs.
+
+function runP8(viBundle) {
+  const seedData = viBundle?.seedData ?? {};
+  const namespaces = ["genres", "storyModes", "styleTemplates", "antiAiRules"];
+  const missing = [];
+  for (const ns of namespaces) {
+    const entries = seedData[ns] ?? {};
+    for (const [slug, entry] of Object.entries(entries)) {
+      if (!entry?.name || typeof entry.name !== "string" || entry.name.trim().length === 0) {
+        missing.push({ ns, slug });
+      }
+    }
+  }
+  if (missing.length > 0) {
+    failures.push({
+      property: "P8",
+      message: `${missing.length} seed slug(s) in vi-VN.json are missing a name`,
+      sample: missing.slice(0, 5),
+    });
+    process.stdout.write(`P8: ${missing.length} seed slug(s) missing name in vi-VN (FAIL)\n`);
+  } else {
+    const total = namespaces.reduce((sum, ns) => sum + Object.keys(seedData[ns] ?? {}).length, 0);
+    process.stdout.write(`P8: ${total} seed slug(s) all have vi-VN name entries\n`);
+  }
+}
+
 async function main() {
   const viBundle = readJson(VI_BUNDLE_PATH);
   const zhBundle = readJson(ZH_BUNDLE_PATH);
@@ -520,6 +549,7 @@ async function main() {
   runP5();
   runP6();
   runP7();
+  runP8(viBundle);
 
   if (failures.length > 0) {
     process.stderr.write("\nCoverage gate FAILED:\n");

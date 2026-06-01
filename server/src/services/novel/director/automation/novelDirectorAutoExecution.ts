@@ -10,6 +10,16 @@ import type {
   DirectorAutoExecutionPlan,
   DirectorAutoExecutionState,
 } from "@ai-novel/shared/types/novelDirector";
+import { DEFAULT_LOCALE, type LocaleCode } from "@ai-novel/shared/localization";
+import { getI18nServerHandle } from "../../../../i18n";
+import { getCurrentRequestLocale } from "../../../../runtime/requestLocaleContext";
+
+function tAutoExec(key: string, values?: Record<string, unknown>): string {
+  const handle = getI18nServerHandle();
+  if (!handle) return key;
+  const locale: LocaleCode = getCurrentRequestLocale() ?? DEFAULT_LOCALE;
+  return handle.t("serverLogs", key, { lng: locale, ...(values ?? {}) });
+}
 import { parseChapterScenePlan } from "@ai-novel/shared/types/chapterLengthControl";
 import { resolveDirectorQualityLoopBudgetNextAction } from "../runtime/DirectorQualityLoopBudgetLedgerService";
 import {
@@ -457,16 +467,21 @@ export function buildDirectorAutoExecutionPausedSummary(input: {
     });
   }
   const remainingSummary = input.remainingChapterCount > 0
-    ? `当前仍有 ${input.remainingChapterCount} 章待继续`
-    : "当前批次已无待继续章节";
+    ? tAutoExec("autoExecution.remainingChapters", { count: input.remainingChapterCount })
+    : tAutoExec("autoExecution.noRemainingChapters");
   const nextSummary = typeof input.nextChapterOrder === "number"
-    ? `，建议从第 ${input.nextChapterOrder} 章继续`
+    ? tAutoExec("autoExecution.suggestContinueFrom", { order: input.nextChapterOrder })
     : "";
-  return `${input.scopeLabel}已进入自动执行，但当前批量任务未完全完成：${input.failureMessage} ${remainingSummary}${nextSummary}。`;
+  return tAutoExec("autoExecution.batchNotComplete", {
+    scopeLabel: input.scopeLabel,
+    failureMessage: input.failureMessage,
+    remainingSummary,
+    nextSummary,
+  });
 }
 
 export function buildDirectorAutoExecutionCompletedLabel(scopeLabel: string): string {
-  return `${scopeLabel}自动执行完成`;
+  return tAutoExec("autoExecution.completedLabel", { scopeLabel });
 }
 
 export function buildDirectorAutoExecutionCompletedSummary(input: {

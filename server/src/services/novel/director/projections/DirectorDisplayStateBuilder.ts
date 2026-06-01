@@ -7,6 +7,9 @@ import type {
   DirectorRuntimeProjection,
   DirectorTaskFactSummary,
 } from "@ai-novel/shared/types/directorRuntime";
+import { DEFAULT_LOCALE } from "@ai-novel/shared/localization";
+import { getI18nServerHandle } from "../../../../i18n";
+import { getCurrentRequestLocale } from "../../../../runtime/requestLocaleContext";
 import {
   getWorkflowCheckpointLabel,
   resolveWorkflowDisplayStage,
@@ -116,36 +119,42 @@ function buildMode(input: {
 }
 
 function buildDescription(mode: DirectorDisplayMode): string {
+  const handle = getI18nServerHandle();
+  const locale = getCurrentRequestLocale() ?? DEFAULT_LOCALE;
+  function td(key: string): string {
+    if (handle) {
+      const result = handle.t("serverLogs", key, { lng: locale });
+      if (result && result !== `serverLogs:${key}`) return result;
+    }
+    return key;
+  }
   switch (mode) {
-    case "needs_recovery":
-      return "后台执行器连接中断后正在恢复，系统会优先从最近进度继续。";
-    case "waiting":
-      return "当前导演流程停在需要确认的位置。你可以先查看结果，再决定是否继续。";
-    case "failed":
-      return "当前导演流程停在最近一步。可以先查看执行详情，再决定是否重试或继续。";
-    case "completed":
-      return "本轮导演流程已收尾，你可以继续推进章节、查看结果，或发起下一轮自动导演。";
-    case "running":
-      return "AI 正在后台接管这本书的开书流程。你可以继续手动操作当前项目；如果与自动导演同时改同一块内容，以最新写入结果为准。";
-    default:
-      return "当前没有正在推进的导演任务。";
+    case "needs_recovery": return td("dashboardStatus.descRecovering");
+    case "waiting": return td("dashboardStatus.descWaiting");
+    case "failed": return td("dashboardStatus.descFailed");
+    case "completed": return td("dashboardStatus.descCompleted");
+    case "running": return td("dashboardStatus.descRunning");
+    default: return td("dashboardStatus.descIdle");
   }
 }
 
 function buildHeadline(mode: DirectorDisplayMode): string {
+  const handle = getI18nServerHandle();
+  const locale = getCurrentRequestLocale() ?? DEFAULT_LOCALE;
+  function th(key: string): string {
+    if (handle) {
+      const result = handle.t("serverLogs", key, { lng: locale });
+      if (result && result !== `serverLogs:${key}`) return result;
+    }
+    return key;
+  }
   switch (mode) {
-    case "needs_recovery":
-      return "等待恢复";
-    case "waiting":
-      return "等待确认";
-    case "failed":
-      return "执行受阻";
-    case "completed":
-      return "导演已完成";
-    case "running":
-      return "正在自动导演";
-    default:
-      return "暂未启动";
+    case "needs_recovery": return th("dashboardStatus.headlineWaitingRecovery");
+    case "waiting": return th("dashboardStatus.headlineWaitingConfirm");
+    case "failed": return th("dashboardStatus.headlineFailed");
+    case "completed": return th("dashboardStatus.headlineCompleted");
+    case "running": return th("dashboardStatus.headlineRunning");
+    default: return th("dashboardStatus.statusIdle");
   }
 }
 
@@ -161,7 +170,15 @@ function buildCurrentAction(input: {
       input.task.lastError?.trim()
       || input.projection?.blockingReason?.trim()
       || input.projection?.lastEventSummary?.trim()
-      || "系统会从最近进度继续恢复。"
+      || (() => {
+        const handle = getI18nServerHandle();
+        const locale = getCurrentRequestLocale() ?? DEFAULT_LOCALE;
+        if (handle) {
+          const result = handle.t("serverLogs", "dashboardStatus.detailRecovery", { lng: locale });
+          if (result && result !== "serverLogs:dashboardStatus.detailRecovery") return result;
+        }
+        return "dashboardStatus.detailRecovery";
+      })()
     );
   }
   if (
@@ -179,7 +196,15 @@ function buildCurrentAction(input: {
       || input.projection?.currentAction?.trim()
       || input.projection?.currentLabel?.trim()
       || input.projection?.lastEventSummary?.trim()
-      || "等待同步当前推进状态"
+      || (() => {
+        const handle = getI18nServerHandle();
+        const locale = getCurrentRequestLocale() ?? DEFAULT_LOCALE;
+        if (handle) {
+          const result = handle.t("serverLogs", "dashboardStatus.fallbackPrimary", { lng: locale });
+          if (result && result !== "serverLogs:dashboardStatus.fallbackPrimary") return result;
+        }
+        return "dashboardStatus.fallbackPrimary";
+      })()
     );
   }
   return (
@@ -188,7 +213,15 @@ function buildCurrentAction(input: {
     || input.factStep?.progress.label?.trim()
     || input.task.currentItemLabel?.trim()
     || input.projection?.lastEventSummary?.trim()
-    || "等待同步当前推进状态"
+    || (() => {
+      const handle = getI18nServerHandle();
+      const locale = getCurrentRequestLocale() ?? DEFAULT_LOCALE;
+      if (handle) {
+        const result = handle.t("serverLogs", "dashboardStatus.fallbackPrimary", { lng: locale });
+        if (result && result !== "serverLogs:dashboardStatus.fallbackPrimary") return result;
+      }
+      return "dashboardStatus.fallbackPrimary";
+    })()
   );
 }
 
@@ -203,23 +236,35 @@ function buildNextActionLabel(input: {
   if (!raw) {
     return null;
   }
+
+  const handle = getI18nServerHandle();
+  const locale = getCurrentRequestLocale() ?? DEFAULT_LOCALE;
+
+  function tAction(key: string): string {
+    if (handle) {
+      const result = handle.t("serverLogs", key, { lng: locale });
+      if (result && result !== `serverLogs:${key}`) return result;
+    }
+    return key;
+  }
+
   switch (raw) {
     case "continue":
-      return "继续自动导演";
+      return tAction("nextActionLabels.continue");
     case "continue_chapter_execution":
-      return "继续章节执行";
+      return tAction("nextActionLabels.continueChapterExecution");
     case "resume_from_checkpoint":
-      return "从最近进度恢复";
+      return tAction("nextActionLabels.resumeFromCheckpoint");
     case "approve_gate":
-      return "确认并继续";
+      return tAction("nextActionLabels.approveGate");
     case "repair_chapter":
-      return "修复当前章节";
+      return tAction("nextActionLabels.repairChapter");
     case "run_quality_review":
-      return "进入质量检查";
+      return tAction("nextActionLabels.runQualityReview");
     case "run_chapter_execution":
-      return "开始章节执行";
+      return tAction("nextActionLabels.runChapterExecution");
     case "sync_execution_contracts":
-      return "同步正式章节执行上下文";
+      return tAction("nextActionLabels.syncExecutionContracts");
     default:
       return raw;
   }
@@ -243,6 +288,15 @@ function buildProgressPercent(input: {
 }
 
 function buildSteps(currentStageKey: DirectorDisplayStageKey, mode: DirectorDisplayMode): DirectorDisplayStep[] {
+  const handle = getI18nServerHandle();
+  const locale = getCurrentRequestLocale() ?? DEFAULT_LOCALE;
+  function tStage(key: string): string {
+    if (handle) {
+      const result = handle.t("serverLogs", `workflowStages.${key}`, { lng: locale });
+      if (result && result !== `serverLogs:workflowStages.${key}`) return result;
+    }
+    return key;
+  }
   const currentIndex = DISPLAY_STAGES.findIndex((stage) => stage.key === currentStageKey);
   return DISPLAY_STAGES.map((stage, index) => {
     let status: DirectorDisplayStep["status"] = "pending";
@@ -257,7 +311,7 @@ function buildSteps(currentStageKey: DirectorDisplayStageKey, mode: DirectorDisp
     }
     return {
       key: stage.key,
-      label: stage.label,
+      label: tStage(stage.key),
       status,
       isCurrent: index === currentIndex,
     };
@@ -294,9 +348,17 @@ export function buildDirectorDisplayState(input: {
     isLiveRunning,
   });
   const stepIndex = Math.max(0, DISPLAY_STAGES.findIndex((item) => item.key === stage.key));
+  const handle = getI18nServerHandle();
+  const locale = getCurrentRequestLocale() ?? DEFAULT_LOCALE;
+  const stageLabel = handle
+    ? (() => {
+      const result = handle.t("serverLogs", `workflowStages.${stage.key}`, { lng: locale });
+      return (result && result !== `serverLogs:workflowStages.${stage.key}`) ? result : stage.label;
+    })()
+    : stage.label;
   return {
     stageKey: stage.key,
-    stageLabel: stage.label,
+    stageLabel,
     stepIndex,
     totalSteps: DISPLAY_STAGES.length,
     mode,

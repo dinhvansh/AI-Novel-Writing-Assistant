@@ -1,1 +1,2 @@
-ALTER TABLE "Novel" ADD COLUMN "postGenerationStyleReviewEnabled" BOOLEAN NOT NULL DEFAULT true;
+ALTER TABLE "Novel" ADD COLUMN IF NOT EXISTS "postGenerationStyleReviewEnabled" BOOLEAN NOT NULL DEFAULT true;
+

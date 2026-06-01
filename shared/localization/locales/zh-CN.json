@@ -107,6 +107,8 @@
         "exportProjectTitle": "导出项目内容",
         "exportProjectDescription": "当前步骤会按你正在查看的工作台导出；整本书会把项目设定、故事规划、角色、卷规划、拆章、章节和质量修复资产一起导出。",
         "currentStep": "当前步骤：{label}",
+        "currentPage": "当前页面：{label}",
+        "workflowRecommend": "流程推荐：建议切换到 {label}",
         "exporting": "导出中...",
         "fullBookCardTitle": "整本书",
         "projectTools": "项目工具",
@@ -3770,6 +3772,27 @@
         "savingButton": "正在保存写法...",
         "noPreviewHint": "还没有可预览的特征。先完成特征提取，再决定保存方式。"
       },
+      "landingItems": {
+        "sourceType": {
+          "manual": "手动创建",
+          "fromText": "文本提取",
+          "fromBookAnalysis": "拆书生成",
+          "fromKnowledgeDocument": "知识库原文",
+          "fromCurrentWork": "当前作品",
+          "other": "其他"
+        },
+        "readingFeelLine": "读感：{value}",
+        "languageLine": "语言：{value}",
+        "dialogueLine": "对白：{value}",
+        "emotionLine": "情绪：{value}",
+        "antiAiLine": "去 AI 味：{value}",
+        "noSummary": "暂无摘要",
+        "noDescription": "暂无描述",
+        "noNarrativeSummary": "暂无叙事规则摘要",
+        "noCharacterSummary": "暂无人物规则摘要",
+        "noLanguageSummary": "暂无语言规则摘要",
+        "noRhythmSummary": "暂无节奏规则摘要"
+      },
       "originLabel": {
         "preset": "预置",
         "aiGenerated": "AI生成",
@@ -3963,7 +3986,7 @@
       "hookAction": "生成钩子",
       "reviewScoreTitle": "审校评分",
       "scoreCoherence": "连贯性",
-      "scoreRepetition": "重复率",
+      "scoreRepetition": "重复控制",
       "scorePacing": "节奏",
       "scoreVoice": "口吻",
       "scoreEngagement": "追更感",
@@ -4638,7 +4661,12 @@
         "noRevisionResult": "AI 没有返回可用的修改结果。",
         "revisionFailed": "AI 修改失败。",
         "noApplicableCandidate": "当前没有可应用的候选版本。",
-        "noSelectionForRevision": "请先选中正文片段，或先从问题卡定位到对应片段。"
+        "noSelectionForRevision": "请先选中正文片段，或先从问题卡定位到对应片段。",
+        "invalidSelection": "选区范围无效，请重新选择后再试。",
+        "emptySelection": "选中文本不能为空。",
+        "selectionChanged": "选中文本已发生变化，请重新选择后再试。",
+        "chapterTooLong": "整章修正当前限制为 8000 个非空白字符以内，请改为片段修正。",
+        "noInstruction": "请先写下你希望 AI 如何修改。"
       },
       "feedback": {
         "chapterSaved": "章节已保存。",
@@ -5262,7 +5290,13 @@
       "qualityBudget": {
         "summary": "{chapter}质量预算：局部修复 {patch}/1，整章重写 {rewrite}/1，窗口重规划 {replan}/1。{action}",
         "currentChapter": "当前章节",
-        "chapterFormat": "第 {order} 章"
+        "chapterFormat": "第 {order} 章",
+        "nextAction": {
+          "auto_patch_repair": "先尝试局部修复",
+          "auto_rewrite_chapter": "改用整章重写",
+          "auto_replan_window": "重规划受影响章节",
+          "defer_and_continue": "登记为质量待回收并继续后续章节"
+        }
       },
       "rootCause": {
         "replanRequired": "当前问题来自章节职责失配，系统需要先调整附近章节安排。",
@@ -6093,6 +6127,163 @@
     },
     "openButton": {
       "defaultLabel": "在创作中枢中继续"
+    },
+    "answers": {
+      "social": {
+        "greetingWithNovel": "你好。我可以继续陪你打磨这本书的设定、大纲、人物、章节，或者先帮你判断当前卡点。你现在想先推进哪一块？",
+        "greetingGeneral": "你好。我可以帮你一起打磨设定、大纲、人物、章节，或者帮你诊断当前卡点。你现在想先推进哪一块？"
+      },
+      "collaborative": {
+        "leadGeneral": "我先不把它当成命令执行，先和你一起把问题说清楚：{goal}",
+        "leadTask": "我理解你现在想推进的是：{goal}",
+        "modeReview": "这轮更适合先一起诊断和判断。",
+        "modeCoCreate": "这轮更适合先共创澄清，再决定是否进入执行。",
+        "missingInfoPrefix": "在继续之前，我还缺这几个关键信息：{items}。",
+        "missingInfoPrefixWant": "在继续之前，我还想补齐这几个点：{items}。",
+        "chooseDirection": "你可以直接选一个方向继续：",
+        "separator": "、",
+        "questions": {
+          "produceNovel": "你想先把一句话设定钉牢，还是让我直接给你三套可选方向？",
+          "writeChapter": "这章你最想先解决的是剧情推进、人物情绪，还是文风节奏？",
+          "ideateNovelSetup": "你更想先看核心设定、故事承诺，还是题材风格的备选方案？",
+          "default": "你现在最想先解决哪一个创作问题？"
+        },
+        "options": {
+          "produceNovel": {
+            "option1": "我先基于当前信息给你 3 套核心设定方向。",
+            "option2": "你补一句主角、冲突和目标，我帮你收敛成可执行设定。",
+            "option3": "如果你已经想清楚，也可以直接说“现在启动整本生产”。"
+          },
+          "writeChapter": {
+            "option1": "我先帮你判断这一章的问题出在情节、人物还是节奏。",
+            "option2": "你告诉我这章的目标和想保留的部分，我给你重写方案。",
+            "option3": "如果你已经确定范围，也可以直接说要改哪一章、往哪个方向改。"
+          },
+          "ideateNovelSetup": {
+            "option1": "先给你 3 套核心设定备选。",
+            "option2": "先给你 3 套故事承诺和卖点方向。",
+            "option3": "先给你 3 套题材风格与叙事配置组合。"
+          },
+          "default": {
+            "option1": "我先帮你拆清楚这个问题。",
+            "option2": "我先给你几个可选方向。",
+            "option3": "你补充最关键的限制条件，我再继续推进。"
+          }
+        }
+      },
+      "title": {
+        "notFound": "未获取到标题"
+      },
+      "novelList": {
+        "empty": "当前还没有小说。",
+        "summary": "当前共有 {total} 本小说：",
+        "unnamedNovel": "未命名小说",
+        "chapterCount": "（{count}章）"
+      },
+      "baseCharacterList": {
+        "empty": "当前基础角色库还是空的。",
+        "summary": "当前基础角色库共有 {count} 个角色模板："
+      },
+      "worldList": {
+        "empty": "当前还没有世界观。",
+        "summary": "当前共有 {count} 个世界观：",
+        "unnamedWorld": "未命名世界观"
+      },
+      "taskList": {
+        "empty": "当前没有系统任务。",
+        "summary": "当前共有 {count} 个系统任务：",
+        "unnamedTask": "未命名任务"
+      },
+      "worldBinding": {
+        "bound": "已将世界观《{worldName}》绑定到小说《{novelTitle}》。",
+        "boundGeneric": "已完成世界观绑定。",
+        "noContext": "没有当前小说上下文，无法设置世界观。",
+        "notFound": "未找到要绑定的世界观。",
+        "failed": "未完成世界观绑定。"
+      },
+      "worldUnbinding": {
+        "unbound": "已将世界观《{previousWorldName}》从小说《{novelTitle}》解绑。",
+        "unboundUpdated": "已更新小说《{novelTitle}》的世界观绑定状态。",
+        "unboundGeneric": "已完成世界观解绑。",
+        "noContext": "没有当前小说上下文，无法解除世界观绑定。",
+        "failed": "未完成世界观解绑。"
+      },
+      "productionStatus": {
+        "fallbackTitle": "当前小说",
+        "unknownStage": "未知阶段",
+        "factProgress": "《{title}》事实进展：{stage}。",
+        "planning": "规划：{completed}/{total} 项。",
+        "draftWithTarget": "正文：{drafted}/{target} 章。",
+        "draftOnly": "正文：{drafted} 章。",
+        "chapterDirWithTarget": "章节目录：{count}/{target} 章。",
+        "chapterDirOnly": "章节目录：{count} 章。",
+        "reviewed": "审校：{count} 章。",
+        "committed": "状态提交：{count} 章。",
+        "needsRepair": "{count} 章待修复。",
+        "runtimeLabel": "后台补充：{label}。",
+        "pipelineStatus": "后台补充：{status}。",
+        "failureSummary": "后台失败原因：{summary}",
+        "contentUsable": "已产出的事实内容可继续使用。",
+        "recoveryHint": "建议：{hint}"
+      },
+      "progress": {
+        "insufficient": "当前信息不足，无法继续",
+        "draftWithTarget": "正文：{completed}/{total} 章。",
+        "draftOnly": "正文：{completed} 章。",
+        "latestChapter": "最近完成到第{order}章。",
+        "noChapters": "未检测到写入正文的章节。"
+      },
+      "character": {
+        "notFound": "未获取到角色状态信息",
+        "empty": "当前小说还没有已规划角色。",
+        "summary": "当前小说已规划 {count} 个角色：",
+        "unnamedCharacter": "未命名角色"
+      },
+      "chapter": {
+        "orderTitle": "第{order}章",
+        "orderTitleWithName": "第{order}章《{title}》",
+        "emptyContent": "正文为空",
+        "notFound": "未获取到章节正文"
+      },
+      "write": {
+        "previewSingle": "已完成第{start}章执行预览，当前等待审批。",
+        "previewRange": "已完成第{start}到第{end}章执行预览，当前等待审批。",
+        "queuedSingle": "已创建第{start}章的写作任务（任务 {jobId}）。",
+        "queuedSingleNoJob": "已创建第{start}章的写作任务。",
+        "queuedRange": "已创建第{start}到第{end}章的写作任务（任务 {jobId}）。",
+        "queuedRangeNoJob": "已创建第{start}到第{end}章的写作任务。",
+        "noScope": "未获取到可执行范围"
+      },
+      "produce": {
+        "worldAsset": "世界观《{name}》",
+        "worldAssetGeneric": "世界观",
+        "characterCount": "{count} 个核心角色",
+        "bible": "小说圣经",
+        "outline": "发展走向",
+        "structuredOutlineWithCount": "{count} 章结构化大纲",
+        "structuredOutlineGeneric": "结构化大纲",
+        "chapterDirWithCount": "{count} 个章节目录",
+        "chapterDirGeneric": "章节目录",
+        "assetsWithPreview": "《{title}》的核心资产已生成完成：{assets}。整本写作预览已完成，当前等待审批。",
+        "assetsWithPreviewNoList": "《{title}》的核心资产已生成完成。整本写作预览已完成，当前等待审批。",
+        "assetsQueued": "《{title}》的核心资产已生成完成：{assets}。整本写作任务已启动（任务 {jobId}）。",
+        "assetsQueuedNoJob": "《{title}》的核心资产已生成完成：{assets}。整本写作任务已启动。",
+        "assetsQueuedNoList": "《{title}》的核心资产已生成完成。整本写作任务已启动。",
+        "assetsNoQueue": "《{title}》的核心资产已生成完成：{assets}。整本写作未启动。",
+        "assetsNoQueueNoList": "《{title}》的核心资产已生成完成。整本写作未启动。",
+        "assetsOnly": "《{title}》的核心资产已生成完成：{assets}。",
+        "assetsOnlyNoList": "《{title}》的核心资产已生成完成。"
+      },
+      "overallStatus": {
+        "notFound": "未获取到整本生产状态。",
+        "noContext": "没有当前小说上下文，无法读取整本生产状态。"
+      },
+      "failure": {
+        "noDiagnostics": "当前没有可用的失败诊断信息",
+        "details": "详情：{details}",
+        "hint": "建议：{hint}",
+        "step": "失败步骤：{step}"
+      }
     }
   },
   "promptWorkbench": {
@@ -7018,6 +7209,43 @@
       "description": "绑定后会成为该实体的默认知识文档来源。",
       "saving": "保存中...",
       "saveButton": "保存绑定"
+    },
+    "page": {
+      "tabDocuments": "文档",
+      "tabOps": "操作",
+      "tabSettings": "设置",
+      "sendToCreativeHub": "带去创作中枢",
+      "confirmDeleteJob": "确认删除这条索引任务吗？",
+      "deletedJobMessage": "索引任务已删除。",
+      "deleteJobFailed": "删除索引任务失败，请稍后重试。",
+      "confirmClearJobs": "确认清空所有已完成/失败/取消的索引任务吗？",
+      "clearedJobsMessage": "已清空历史索引任务。",
+      "clearJobsFailed": "清空索引任务失败，请稍后重试。",
+      "onlyTxtSupported": "目前仅支持 .txt 格式文件。",
+      "fileEmptyOrEncoding": "文件内容为空或编码不支持，请检查后重试。",
+      "ragHealthLoadFailed": "RAG 健康状态加载失败。",
+      "recallTestFailed": "召回测试失败，请稍后重试。"
+    },
+    "opsTab": {
+      "statsTitle": "文档统计",
+      "docCount": "文档总数：{count}",
+      "enabledCount": "已启用：{count}",
+      "disabledCount": "已停用：{count}",
+      "ragHealth": "RAG 健康状态",
+      "ragHealthOk": "正常",
+      "ragHealthFail": "异常",
+      "healthTitle": "RAG 健康检查",
+      "recentJobsTitle": "最近索引任务",
+      "recentJobsHint": "显示最近的索引任务，包括进行中、已完成和失败的任务。",
+      "clearing": "清空中...",
+      "clearFinished": "清空已完成 ({count})",
+      "noJobs": "暂无索引任务。",
+      "deleteJobAriaLabel": "删除任务",
+      "deleting": "删除中...",
+      "delete": "删除",
+      "attempts": "第 {current}/{max} 次",
+      "failedJobsTitle": "失败任务",
+      "noFailedJobs": "暂无失败任务。"
     }
   },
   "settings": {
@@ -7787,6 +8015,7 @@
       "project_setup": "项目设定",
       "auto_director": "AI 自动导演",
       "story_macro": "故事宏观规划",
+      "story_planning": "故事宏观规划",
       "character_setup": "角色准备",
       "volume_strategy": "卷战略 / 卷骨架",
       "structured_outline": "节奏 / 拆章",
@@ -7838,7 +8067,461 @@
       "preparingVolumeStrategy": "正在继续生成卷战略",
       "preparingBeatSheet": "正在继续生成第 1 卷节奏板与细化",
       "analyzingWorkspace": "AI 正在检查当前小说产物和可继续状态",
-      "analyzingEditImpact": "AI 正在分析手动编辑对后续产物的影响"
+      "analyzingEditImpact": "AI 正在分析手动编辑对后续产物的影响",
+      "aiAdvanceStep": "AI 推进步骤",
+      "localTextRepair": "局部文本修复",
+      "chapterExecutionFlow": "章节执行流程",
+      "chapterQualityReview": "章节质量审核",
+      "chapterStateCommit": "章节状态提交",
+      "chapterQualityRepair": "章节质量修复",
+      "chapterQualityCheck": "章节质量检查"
+    },
+    "nextActions": {
+      "generate_candidates": "生成可选开书方向",
+      "create_book_contract": "生成书级创作约定",
+      "complete_story_macro": "完善故事宏观规划",
+      "prepare_characters": "准备角色阵容",
+      "build_volume_strategy": "生成分卷策略",
+      "build_chapter_tasks": "生成章节任务单",
+      "continue_chapter_execution": "继续章节生成",
+      "review_recent_chapters": "复查最近章节",
+      "repair_scope": "修复受影响范围",
+      "ask_user_confirmation": "请确认后继续"
+    },
+    "headlineStatus": {
+      "waitingApproval": "等待确认：{label}",
+      "blocked": "暂停处理：{label}",
+      "failed": "处理失败：{label}",
+      "running": "推进任务：{label}",
+      "completed": "步骤完成：{label}",
+      "syncingProgress": "同步导演进度"
+    },
+    "detailStatus": {
+      "recentProgress": "最近进展：{summary}",
+      "processingStep": "系统正在处理这一步，完成后会写入新的进展。"
+    },
+    "scopeSummary": {
+      "prefix": "工作区：",
+      "totalChapters": "{count} 章",
+      "draftedChapters": "{count} 章有正文",
+      "pendingRepair": "{count} 章待修复",
+      "missingArtifacts": "{count} 类产物待补齐"
+    },
+    "progressSummary": {
+      "prefix": "进展：",
+      "stepsCompleted": "{completed}/{total} 个步骤完成",
+      "artifactCount": "{count} 个产物记录",
+      "waitingSteps": "{count} 个步骤待确认",
+      "failedSteps": "{count} 个步骤失败",
+      "protectedContent": "{count} 个用户内容受保护",
+      "staleArtifacts": "{count} 个产物需确认",
+      "repairTasks": "{count} 个修复任务"
+    },
+    "progressBreakdown": {
+      "withChapters": "章节进度 {continuable}/{total}，规划 {planning}%，质量修复 {quality}%，综合进度 {overall}%。",
+      "withoutChapters": "规划 {planning}%，章节执行 {chapter}%，质量修复 {quality}%，综合进度 {overall}%。"
+    },
+    "workerHealth": {
+      "queuedWaiting": "任务已进入后台队列，正在等待后台执行器接手。",
+      "leasedStarting": "后台执行器正在接手任务，马上会进入实际执行。",
+      "runningStep": "后台执行器正在推进这本书的自动导演流程。",
+      "autoRecovering": "后台执行器连接中断后正在恢复，系统会优先从最近进度继续。"
+    },
+    "timeline": {
+      "aiUsageTitle": "AI 用量：{label}",
+      "aiAutoApproval": "AI 自动确认：{label}",
+      "advancingStep": "推进步骤"
+    },
+    "dashboardStatus": {
+      "statusQueued": "等待执行",
+      "statusRunning": "AI 接管中",
+      "statusWaiting": "等待确认",
+      "statusRecovering": "等待恢复",
+      "statusFailed": "执行异常",
+      "statusCompleted": "已完成",
+      "statusIdle": "暂未启动",
+      "headlineQueued": "等待自动导演",
+      "headlineRunning": "正在自动导演",
+      "headlineFailed": "执行受阻",
+      "headlineCompleted": "导演已完成",
+      "headlineWaitingRecovery": "等待恢复自动导演",
+      "headlineCancelled": "自动导演已取消",
+      "headlineQueuedAlt": "AI 自动导演已排队",
+      "headlineRunningBook": "AI 正在推进这本书",
+      "headlineWaitingConfirm": "等待你的确认",
+      "headlineBlocked": "自动导演已暂停",
+      "headlineFailedAlt": "自动导演遇到问题",
+      "headlineCompletedAlt": "自动导演完成最近一次推进",
+      "headlineNoRecord": "这本书还没有自动导演记录",
+      "userHeadlineQueued": "AI 已接到这本书的推进任务",
+      "userHeadlineWaiting": "等你确认后继续",
+      "userHeadlineBlocked": "AI 已暂停在可处理的位置",
+      "userHeadlineFailed": "AI 推进遇到问题",
+      "userHeadlineCancelled": "这次自动推进已停止",
+      "userHeadlineCompleted": "AI 完成了最近一次推进",
+      "userHeadlineNoRecord": "这本书还没有开启 AI 自动推进",
+      "userReasonQueued": "任务已进入后台队列，你可以离开当前页面。",
+      "userReasonRunning": "AI 正在按当前计划推进小说。",
+      "userReasonWaiting": "继续前需要你确认当前阶段的结果或影响范围。",
+      "userReasonRecovery": "系统保留了最近进度，确认后可以从当前位置继续。",
+      "userReasonBlocked": "继续前需要先处理当前阻塞原因。",
+      "userReasonFailed": "查看原因后可以重试或回到小说页面处理。",
+      "userReasonCompleted": "可以进入小说页面查看成果或继续下一段写作。",
+      "userReasonIdle": "可以继续手动创作，也可以让 AI 接管后续推进。",
+      "detailRecovery": "后台执行中断后保留了进度点，确认恢复后会从最近进展继续。",
+      "detailCancelled": "自动导演任务已取消。",
+      "detailFailed": "查看执行详情后可选择恢复或重试。",
+      "detailIdle": "可以从 AI 自动导演开始，让系统根据这本书的资产推荐下一步。",
+      "unnamedNovel": "未命名小说",
+      "noAutomation": "暂无自动化动作",
+      "descQueued": "任务已进入后台队列，执行器领取后会继续推进。",
+      "descRunning": "AI 正在后台接管这本书的开书流程。你可以继续手动操作当前项目；如果与自动导演同时改同一块内容，以最新写入结果为准。",
+      "descWaiting": "当前导演流程停在需要确认的位置。你可以先查看结果，再决定是否继续。",
+      "descRecovering": "后台执行器连接中断后正在恢复，系统会优先从最近进度继续。",
+      "descFailed": "当前导演流程停在最近一步。可以先查看执行详情，再决定是否重试或继续。",
+      "descCompleted": "本轮导演流程已收尾，你可以继续推进章节、查看结果，或发起下一轮自动导演。",
+      "descIdle": "当前没有正在推进的导演任务。",
+      "actionOpenNovel": "打开小说",
+      "actionConfirmDirection": "确认书级方向",
+      "actionContinueChapters": "继续自动执行章节",
+      "actionOpenQualityRepair": "打开质量修复",
+      "actionConfirmContinue": "确认并继续",
+      "actionResumeCheckpoint": "从进度点继续",
+      "actionViewFailure": "查看失败原因",
+      "actionViewBlocked": "查看暂停原因",
+      "actionViewProgress": "查看进度",
+      "actionBackgroundContinue": "后台继续",
+      "actionCancel": "取消自动导演",
+      "cmdConfirmCandidate": "确认开书方向",
+      "cmdContinue": "继续自动导演",
+      "cmdResumeCheckpoint": "从进度点恢复",
+      "cmdRetry": "重试自动导演",
+      "cmdTakeover": "接管这本书",
+      "cmdRepairTitles": "修复章节标题",
+      "cmdStatusQueued": "排队中",
+      "cmdStatusLeased": "准备执行",
+      "cmdStatusRunning": "执行中",
+      "cmdStatusSucceeded": "完成",
+      "cmdStatusFailed": "失败",
+      "cmdStatusCancelled": "已取消",
+      "cmdStatusStale": "需要恢复",
+      "actionExecutionDetails": "执行详情",
+      "actionPause": "暂停推进",
+      "actionRetry": "重试",
+      "eventEnteredRuntime": "自动导演已进入运行时",
+      "eventCandidateEnteredRuntime": "自动导演候选阶段已进入运行时",
+      "eventConfirmEnteredRuntime": "自动导演确认方案后进入运行时",
+      "eventReuseNovelEnteredRuntime": "自动导演复用已有项目并进入运行时",
+      "eventCreatedNovelEnteredRuntime": "自动导演已创建项目并进入运行时",
+      "eventTakeoverEnteredRuntime": "AI 自动导演接管已进入运行时",
+      "eventRuntimeContinued": "自动导演任务从运行时继续",
+      "diagStaleRecoveryIgnored": "恢复标记已被实时进度覆盖",
+      "diagStaleProjectionIgnored": "历史等待信号已被实时进度覆盖",
+      "diagScopeSummary": "工作区摘要",
+      "descIdle": "当前没有正在推进的导演任务。",
+      "fallbackPrimary": "等待同步当前推进状态"
+    },
+    "automationSummary": {
+      "separator": "，",
+      "activeCommands": "{count} 个动作执行中",
+      "pendingCommands": "{count} 个动作排队中",
+      "autoApprovals": "{count} 个确认由 AI 自动处理",
+      "activeArtifacts": "{count} 个可用产物",
+      "staleArtifacts": "{count} 个产物需复核",
+      "repairTickets": "{count} 个修复项",
+      "protectedContent": "{count} 个用户内容受保护",
+      "llmCalls": "{count} 次 AI 调用",
+      "totalTokens": "{count} Tokens",
+      "dependencies": "{count} 条产物依赖"
+    },
+    "chapterDetailMode": {
+      "purpose": "章节目标",
+      "boundary": "执行边界",
+      "taskSheet": "任务单"
+    },
+    "chapterDetailBundle": {
+      "refiningChapter": "正在细化第 {index}/{total} 章 · {mode}",
+      "waitingSuffix": "（已等待 {elapsed}）"
+    },
+    "candidateRound": {
+      "roundLabel": "第 {round} 轮",
+      "presetPrefix": "预设修正：",
+      "feedbackPrefix": "补充说明：",
+      "regenerateDefault": "按上一轮意见重新生成"
+    },
+    "directorCommand": {
+      "candidateStage": "AI 自动导演",
+      "candidateItemLabel": "书级方向已准备好，请选择一套继续",
+      "candidateCheckpointSummary": "AI 已生成可选的书级方向。",
+      "pipelineDispatch": "导演任务已进入单轨执行管线。",
+      "chapterTitleDiversityLabel": "章节列表已生成，但标题结构仍需分散"
+    },
+    "taskSupport": {
+      "noFailureRecord": "当前没有明确失败记录。",
+      "agentRunFailed": "运行失败，但没有记录明确错误。",
+      "agentRunWaitingApproval": "当前运行在等待审批。",
+      "globalChat": "全局对话",
+      "chapterTarget": "章节目标",
+      "pipeline": {
+        "failed": "章节流水线失败，但没有记录明确错误。",
+        "chapterRange": "第 {start}-{end} 章流水线"
+      },
+      "knowledge": {
+        "unnamedDocument": "未命名知识文档",
+        "indexFailed": "知识库索引失败，但没有记录明确错误。",
+        "indexCancelled": "知识库索引已取消。",
+        "titleDelete": "知识库删除：{title}",
+        "titleUpsert": "知识库更新：{title}",
+        "titleRebuild": "知识库重建：{title}"
+      },
+      "image": {
+        "novelCover": "小说封面：{title}",
+        "characterImage": "角色图像：{name}",
+        "taskFallback": "图像任务 {id}",
+        "unlinkedCharacter": "未关联角色",
+        "baseCharacter": "基础角色",
+        "taskFailed": "图像任务失败，但没有记录明确错误。"
+      },
+      "styleExtraction": {
+        "failed": "写法提取任务失败，但没有记录到明确错误。"
+      },
+      "bookAnalysis": {
+        "failed": "拆书任务失败，但没有记录明确错误。"
+      },
+      "recovery": {
+        "failed": {
+          "knowledge_document": "建议检查知识文档版本、分块结果、向量模型和共享 RAG 队列占用情况后再重试。",
+          "agent_run": "建议先查看最后失败步骤、相关审批状态和对应资源上下文，再决定是否重试。",
+          "novel_workflow": "建议从最近检查点恢复，优先检查当前阶段资产是否完整、模型是否超时以及恢复目标页是否可重新打开。",
+          "novel_pipeline": "建议检查模型配置、章节上下文和最近一次生成日志后再重试。",
+          "book_analysis": "建议检查原始文档质量、模型可用性和拆书分段结果后再重试。",
+          "style_extraction": "建议检查参考文本是否完整、模型是否可用，以及当前保留策略是否适合自动保存后再重试。",
+          "default": "建议检查提示词、模型配置和目标资源状态后再重试。"
+        },
+        "waiting_approval": {
+          "novel_workflow": "当前小说主流程已推进到安全检查点，点继续即可回到对应阶段页恢复创作。",
+          "default": "当前任务正在等待审批，先处理审批后才能继续执行。"
+        },
+        "running": "当前任务仍在执行中，建议先等待完成或查看实时轨迹。",
+        "queued": {
+          "knowledge_document": "当前知识库索引仍在共享 RAG 队列中，建议确认 worker 是否被更早的任务占满。",
+          "style_extraction": "当前写法提取任务仍在排队，建议先到任务中心查看进度，稍后会自动保存结果。",
+          "default": "当前任务仍在排队，建议确认工作线程和模型服务是否可用。"
+        },
+        "cancelled": {
+          "knowledge_document": "当前知识库索引已取消，如需继续可重新提交索引任务。",
+          "novel_workflow": "当前小说主流程已取消，如需继续，可从最近检查点恢复。",
+          "style_extraction": "当前写法提取任务已取消，如仍需生成这套写法，可重新提交参考文本。",
+          "default": "当前任务已取消，如仍需继续，可重新发起或执行重试。"
+        },
+        "noAction": "当前无需恢复操作。"
+      }
+    },
+    "worldInspiration": {
+      "progress": {
+        "organizingInput": "正在整理灵感输入",
+        "organizingReference": "正在整理参考材料",
+        "extractingAnchors": "正在提取原作世界锚点",
+        "generatingConceptCard": "正在生成概念卡",
+        "generatingPropertyOptions": "正在生成前置属性选项",
+        "generatingReferenceDecisions": "正在生成架空改造决策"
+      }
+    },
+    "directorStep": {
+      "missingDraftsForReview": "需要先有章节草稿才能进行质量审阅。",
+      "missingDraftsForRepair": "需要先有章节草稿才能进行章节修复。",
+      "missingDraftsForQualityRepair": "需要先有章节草稿才能进行质量修复。"
+    },
+    "pipeline": {
+      "replan": {
+        "executedToChapter": "已执行至第 {order} 章，后续需重规划",
+        "needsReplanFirst": "后续章节需要先处理重规划",
+        "waitingStatus": "等待重规划处理",
+        "impactedChapters": "影响章节={chapters}",
+        "anchorChapter": "锚点章节={order}",
+        "chapterNeedsReplan": "第{order}章需要重规划（{details}；原因={reason}）"
+      }
+    },
+    "autoExecution": {
+      "remainingChapters": "当前仍有 {count} 章待继续",
+      "noRemainingChapters": "当前批次已无待继续章节",
+      "suggestContinueFrom": "，建议从第 {order} 章继续",
+      "batchNotComplete": "{scopeLabel}已进入自动执行，但当前批量任务未完全完成：{failureMessage} {remainingSummary}{nextSummary}。",
+      "completedLabel": "{scopeLabel}自动执行完成"
+    },
+    "nextActionLabels": {
+      "continue": "继续自动导演",
+      "continueChapterExecution": "继续章节执行",
+      "resumeFromCheckpoint": "从最近进度恢复",
+      "approveGate": "确认并继续",
+      "repairChapter": "修复当前章节",
+      "runQualityReview": "进入质量检查",
+      "runChapterExecution": "开始章节执行",
+      "syncExecutionContracts": "同步正式章节执行上下文"
+    },
+    "riskBadges": {
+      "executionFailed": "执行失败",
+      "waitingAction": "等待处理",
+      "waitingConfirm": "等待确认",
+      "protectedContent": "受保护正文",
+      "pendingRepairChapters": "{count} 章待修复",
+      "staleArtifacts": "{count} 项需复核",
+      "missingPlanResources": "缺少规划资源",
+      "qualityDebtDeferred": "已暂存质量债",
+      "qualityBlocked": "质量阻塞",
+      "qualityRisk": "质量风险",
+      "replanStarted": "已进入重规划",
+      "circuitBreakerOpen": "连续失败保护"
+    },
+    "qualityBudget": {
+      "summary": "{chapter}质量预算：局部修复 {patch}/1，整章重写 {rewrite}/1，窗口重规划 {replan}/1。{action}",
+      "chapterFormat": "第 {order} 章",
+      "nextAction": {
+        "auto_patch_repair": "先尝试局部修复",
+        "auto_rewrite_chapter": "改用整章重写",
+        "auto_replan_window": "重规划受影响章节",
+        "defer_and_continue": "登记为质量待回收并继续后续章节"
+      }
+    },
+    "takeoverEntry": {
+      "basic": {
+        "label": "项目设定",
+        "description": "从现有项目基础信息继续接管，优先补最早缺失的导演前置资产。"
+      },
+      "story_macro": {
+        "label": "故事宏观规划",
+        "description": "围绕 Story Macro 和 Book Contract 继续或重跑书级规划。"
+      },
+      "character": {
+        "label": "角色准备",
+        "description": "围绕角色阵容与应用继续或重跑当前步骤。"
+      },
+      "outline": {
+        "label": "卷战略",
+        "description": "围绕卷战略与卷骨架继续或重跑当前步骤。"
+      },
+      "structured": {
+        "label": "节奏 / 拆章",
+        "description": "围绕当前卷节奏板、章节列表和细化资源继续或重跑当前步骤。"
+      },
+      "chapter": {
+        "label": "章节执行",
+        "description": "优先恢复当前章节批次或从已准备范围继续执行。"
+      },
+      "pipeline": {
+        "label": "质量修复",
+        "description": "优先恢复当前修复批次，或承接待修章节继续推进。"
+      }
+    },
+    "takeoverStage": {
+      "story_macro": {
+        "label": "从故事宏观规划开始",
+        "description": "先补齐 Story Macro 和 Book Contract，再继续角色、卷战略和拆章。"
+      },
+      "character_setup": {
+        "label": "从角色准备开始",
+        "description": "沿用已有书级方向，只让 AI 接手角色阵容和后续规划。"
+      },
+      "volume_strategy": {
+        "label": "从卷战略开始",
+        "description": "沿用现有书级方向和角色，继续生成卷战略与卷骨架。"
+      },
+      "structured_outline": {
+        "label": "从节奏 / 拆章开始",
+        "description": "沿用现有卷规划，继续生成节奏板、章节列表和章节细化。"
+      }
+    },
+    "followUpReason": {
+      "manualRecoveryRequired": "人工恢复待处理",
+      "runtimeFailed": "失败待重试",
+      "candidateSelectionRequired": "待确认书级方向",
+      "replanRequired": "待处理重规划",
+      "runtimeCancelled": "已取消待恢复",
+      "chapterBatchExecutionPending": "自动执行待继续",
+      "qualityRepairPending": "质量修复待继续",
+      "autoProgressRunning": "自动推进中",
+      "autoApprovalCompleted": "最近自动通过",
+      "runtimeReplaced": "任务已替代",
+      "validationRequired": "需要重新校验"
+    },
+    "followUpActions": {
+      "viewValidationResult": "查看校验结果",
+      "aiBackfillStructuredOutline": "让 AI 补齐章节拆分后继续",
+      "safeFix": "一键安全修复",
+      "viewReplacementDetail": "查看替代详情",
+      "recoverTask": "恢复任务",
+      "viewDetail": "查看详情",
+      "viewProgressDetail": "查看推进详情",
+      "retryWithTaskModel": "按任务模型重试",
+      "retryWithRouteModel": "按路由模型重试",
+      "resumeFromCheckpoint": "从最近检查点恢复",
+      "confirmCandidateDirection": "去确认书级方向",
+      "handleReplan": "处理重规划",
+      "continueAutoExecution": "继续自动执行当前范围"
+    },
+    "workflowExplainability": {
+      "defaultScope": "第 1-10 章",
+      "checkpointStatus": {
+        "candidateSelectionRequired": "等待确认书级方向",
+        "bookContractReady": "Book Contract 已就绪",
+        "characterSetupRequired": "角色准备待审核",
+        "volumeStrategyReady": "卷战略待审核",
+        "chapterBatchReady": "已准备章节可进入执行",
+        "replanRequired": "等待处理重规划",
+        "workflowCompleted": "自动导演已完成"
+      },
+      "checkpointReason": {
+        "candidateSelectionRequired": "需要先确认书级方向，自动导演才能继续推进后续主链。",
+        "bookContractReady": "Book Contract 已生成，需先确认核心承诺后再继续后续规划。",
+        "characterSetupRequired": "角色准备已生成，需先审核角色阵容后再继续推进。",
+        "volumeStrategyReady": "卷战略与卷骨架已就绪，需先确认卷级推进方案后再继续。",
+        "chapterBatchReady": "章节范围的拆章与执行资源已经准备好，可以进入章节执行或继续自动执行当前范围。",
+        "replanRequired": "审计结果要求先处理重规划，后续章节才能继续推进。",
+        "workflowCompleted": "默认主流程已跑通，你可以直接进入章节执行继续写作。"
+      },
+      "autoExecution": {
+        "preparedStatus": "{scope}已可进入章节执行",
+        "runningStatus": "{scope}自动执行中",
+        "pausedStatus": "{scope}自动执行已暂停",
+        "cancelledStatus": "{scope}自动执行已取消",
+        "resumeAction": "继续自动执行{scope}",
+        "preparedReason": "{scope}细化已准备完成，你可以进入章节执行，或继续让系统自动执行{scope}。",
+        "pausedReason": "{scope}自动执行在批量阶段暂停了，建议先看结果，再决定是否继续自动执行当前范围。"
+      },
+      "resumeAction": {
+        "confirmCandidateDirection": "继续确认书级方向",
+        "viewBookContract": "查看 Book Contract",
+        "reviewCharacterSetup": "去审核角色准备",
+        "viewVolumeStrategy": "查看卷战略",
+        "handleReplan": "处理重规划",
+        "enterChapterExecution": "进入章节执行",
+        "continueMainFlow": "继续小说主流程",
+        "resumeFromCheckpoint": "从最近检查点恢复",
+        "viewCurrentProgress": "查看当前进度"
+      },
+      "displayStatus": {
+        "waitingManualRecovery": "等待手动恢复",
+        "stageRecovering": "{stage}恢复中",
+        "directorRecovering": "自动导演恢复中",
+        "waitingMainFlow": "等待继续小说主流程",
+        "stageRunning": "{stage}进行中",
+        "directorRunning": "自动导演进行中",
+        "directorQueued": "自动导演排队中",
+        "directorFailed": "自动导演执行失败",
+        "directorCancelled": "自动导演已取消",
+        "directorCompleted": "自动导演已完成",
+        "mainFlowCompleted": "小说主流程已完成"
+      },
+      "blockingReason": {
+        "pendingManualRecovery": "服务重启后任务已暂停，等待手动恢复。",
+        "recoveryInProgress": "自动导演任务正在从服务重启中恢复。",
+        "queued": "任务已进入队列，正在等待工作线程和模型资源可用。",
+        "waitingCheckpoint": "当前流程已停在安全检查点，处理完当前阶段后才能继续。",
+        "chapterBatchFailed": "{scope}自动执行在批量阶段中断了，建议从最近健康阶段继续恢复。",
+        "failedDefault": "当前阶段执行失败，建议从最近检查点恢复。",
+        "chapterBatchCancelled": "{scope}自动执行已取消，如需继续可从最近健康阶段恢复。",
+        "cancelled": "任务已取消，如仍需继续，可从最近检查点恢复。"
+      }
     }
   },
   "workflow": {
@@ -7978,127 +8661,158 @@
     "storyModes": {
       "story_mode_power_root": {
         "name": "爽感推进",
-        "description": "以优势兑现、立威、反差和阶段性压制为主驱动力的阅读模式。"
+        "description": "以优势兑现、立威、反差和阶段性压制为主驱动力的阅读模式。",
+        "coreDrive": "通过主角优势兑现、认知反差和局势翻转持续制造爽感。"
       },
       "story_mode_invincible": {
         "name": "无敌流",
-        "description": "主角优势非常明确，悬念来自展示方式和秩序改写，而不是生存危机。"
+        "description": "主角优势非常明确，悬念来自展示方式和秩序改写，而不是生存危机。",
+        "coreDrive": "让主角以明显优势碾压阻力，并不断刷新他人认知。"
       },
       "story_mode_face_slap": {
         "name": "打脸流",
-        "description": "以误判、轻视和反转羞辱构成高频爽点。"
+        "description": "以误判、轻视和反转羞辱构成高频爽点。",
+        "coreDrive": "通过他人误判和后续反转持续兑现高频打脸快感。"
       },
       "story_mode_misread": {
         "name": "迪化流",
-        "description": "围绕他人误读主角、主动脑补和失控放大来制造趣味与爽感。"
+        "description": "围绕他人误读主角、主动脑补和失控放大来制造趣味与爽感。",
+        "coreDrive": "利用他人对主角的过度解读制造持续失控的优势局面。"
       },
       "story_mode_secret_identity": {
         "name": "马甲流",
-        "description": "用多重身份、隐藏层级和掉马风险驱动阅读欲。"
+        "description": "用多重身份、隐藏层级和掉马风险驱动阅读欲。",
+        "coreDrive": "通过多重身份切换、隐藏与掉马风险制造连续张力。"
       },
       "story_mode_build_root": {
         "name": "建设经营",
-        "description": "以积累、建设、经营和阶段性收成为主要推进方式的阅读模式。"
+        "description": "以积累、建设、经营和阶段性收成为主要推进方式的阅读模式。",
+        "coreDrive": "通过积累、扩张、经营和建设成果持续制造成就感。"
       },
       "story_mode_farming": {
         "name": "种田流",
-        "description": "重视生产、积累、生活秩序和长期回暖感的建设型模式。"
+        "description": "重视生产、积累、生活秩序和长期回暖感的建设型模式。",
+        "coreDrive": "通过一点点把生活与生产盘活，给读者稳定的回暖和积累感。"
       },
       "story_mode_management": {
         "name": "经营流",
-        "description": "以商业、组织、品牌或系统运营推动剧情。"
+        "description": "以商业、组织、品牌或系统运营推动剧情。",
+        "coreDrive": "通过经营决策和组织扩张持续制造上升感。"
       },
       "story_mode_territory_building": {
         "name": "领地建设",
-        "description": "围绕据点、城镇、势力版图和秩序搭建持续推进。"
+        "description": "围绕据点、城镇、势力版图和秩序搭建持续推进。",
+        "coreDrive": "通过把一块地、一座城或一个据点逐步经营成型，持续制造扩张与稳固的成就感。"
       },
       "story_mode_family_management": {
         "name": "家族经营",
-        "description": "以家业、家族关系和代际责任推动持续阅读。"
+        "description": "以家业、家族关系和代际责任推动持续阅读。",
+        "coreDrive": "通过家业扩张、家族关系重组和责任传承维持故事推进。"
       },
       "story_mode_healing_root": {
         "name": "日常治愈",
-        "description": "以陪伴、修复、生活回暖和低烈度持续陪伴感为核心驱动。"
+        "description": "以陪伴、修复、生活回暖和低烈度持续陪伴感为核心驱动。",
+        "coreDrive": "通过陪伴、修复、生活细节和关系回暖持续吸引读者。"
       },
       "story_mode_healing_daily": {
         "name": "治愈日常",
-        "description": "以日常互动、陪伴和情绪回温为主要看点的治愈模式。"
+        "description": "以日常互动、陪伴和情绪回温为主要看点的治愈模式。",
+        "coreDrive": "靠日常陪伴和细小修复慢慢把人物带回稳定状态。"
       },
       "story_mode_shop_daily": {
         "name": "小店日常",
-        "description": "以店铺经营和人与人来往构成稳定、治愈的追读节奏。"
+        "description": "以店铺经营和人与人来往构成稳定、治愈的追读节奏。",
+        "coreDrive": "通过店铺经营、来客故事和社区互动形成持续新鲜感。"
       },
       "story_mode_slow_life": {
         "name": "慢生活",
-        "description": "以节奏放缓、生活细节和日常秩序修复构成阅读吸引力。"
+        "description": "以节奏放缓、生活细节和日常秩序修复构成阅读吸引力。",
+        "coreDrive": "通过缓慢但持续的生活改善与身心安定感推动读者停留。"
       },
       "story_mode_companion_healing": {
         "name": "陪伴疗愈",
-        "description": "把人与人之间稳定陪伴、照料和共同恢复作为主要推进器。"
+        "description": "把人与人之间稳定陪伴、照料和共同恢复作为主要推进器。",
+        "coreDrive": "通过陪伴关系逐步建立、安全感逐步累积来带动情绪兑现。"
       },
       "story_mode_comedy_root": {
         "name": "喜剧整活",
-        "description": "以反差、包袱、误会和失控回收构成主要追读动力。"
+        "description": "以反差、包袱、误会和失控回收构成主要追读动力。",
+        "coreDrive": "通过反差、包袱、误会和整活节奏持续制造轻松爽快感。"
       },
       "story_mode_comedy": {
         "name": "搞笑流",
-        "description": "高频笑点、反差和轻松回收是阅读核心。"
+        "description": "高频笑点、反差和轻松回收是阅读核心。",
+        "coreDrive": "靠高频包袱、反差和失控场面维持阅读快乐。"
       },
       "story_mode_misunderstanding_comedy": {
         "name": "误会喜剧",
-        "description": "靠多方信息差和误会扩散制造连续喜剧效果。"
+        "description": "靠多方信息差和误会扩散制造连续喜剧效果。",
+        "coreDrive": "通过多方信息差导致的误会扩散维持喜剧节奏。"
       },
       "story_mode_absurd_subversion": {
         "name": "沙雕反套路",
-        "description": "用离谱展开、反套路回收和节奏突转制造强烈轻松感。"
+        "description": "用离谱展开、反套路回收和节奏突转制造强烈轻松感。",
+        "coreDrive": "通过不断拆解常规预期，再给出更离谱但更成立的结果维持新鲜感。"
       },
       "story_mode_mystery_root": {
         "name": "悬念博弈",
-        "description": "以信息差、推演、布局和对抗智性满足驱动追读。"
+        "description": "以信息差、推演、布局和对抗智性满足驱动追读。",
+        "coreDrive": "通过信息差、推演和博弈升级持续制造想追下去的欲望。"
       },
       "story_mode_mystery_inference": {
         "name": "悬疑推演",
-        "description": "以线索、推理和真相揭示节奏构成阅读核心。"
+        "description": "以线索、推理和真相揭示节奏构成阅读核心。",
+        "coreDrive": "让读者跟着线索与推演不断靠近真相。"
       },
       "story_mode_mind_game": {
         "name": "智斗流",
-        "description": "强调布局、博弈、对手思维和反制节奏。"
+        "description": "强调布局、博弈、对手思维和反制节奏。",
+        "coreDrive": "通过多轮布局和拆招形成高黏性的智斗快感。"
       },
       "story_mode_survival_game": {
         "name": "生存博弈",
-        "description": "在有限资源、高压环境和规则竞争中制造持续紧张感。"
+        "description": "在有限资源、高压环境和规则竞争中制造持续紧张感。",
+        "coreDrive": "通过资源稀缺、环境压力和规则对抗持续制造必须做出选择的张力。"
       },
       "story_mode_relationship_root": {
         "name": "关系情感",
-        "description": "以关系推进、情感兑现和人物之间的拉扯变化作为主驱动。"
+        "description": "以关系推进、情感兑现和人物之间的拉扯变化作为主驱动。",
+        "coreDrive": "通过人物关系的靠近、拉扯、错位与回收，持续制造追读动力。"
       },
       "story_mode_romantic_tension": {
         "name": "恋爱拉扯",
-        "description": "以暧昧、靠近、退缩和关系试探制造持续吸引力。"
+        "description": "以暧昧、靠近、退缩和关系试探制造持续吸引力。",
+        "coreDrive": "通过双向吸引与现实阻力之间的反复拉扯维持情感张力。"
       },
       "story_mode_chasing_wife": {
         "name": "追妻火葬场",
-        "description": "以前期伤害或错失为前提，靠后续追偿、悔意和关系重建推进。"
+        "description": "以前期伤害或错失为前提，靠后续追偿、悔意和关系重建推进。",
+        "coreDrive": "通过失去后的追偿、悔改和关系重建制造强烈情绪牵引。"
       },
       "story_mode_ensemble_bond": {
         "name": "群像羁绊",
-        "description": "通过多人关系网、共同经历和羁绊演化形成阅读黏性。"
+        "description": "通过多人关系网、共同经历和羁绊演化形成阅读黏性。",
+        "coreDrive": "通过多人互动和羁绊变化让故事始终有新的关系火花。"
       },
       "story_mode_growth_root": {
         "name": "成长冒险",
-        "description": "以升级、探索、闯关和阶段性突破构成追读主动力。"
+        "description": "以升级、探索、闯关和阶段性突破构成追读主动力。",
+        "coreDrive": "通过成长曲线、探索推进和阶段突破持续制造前进感。"
       },
       "story_mode_growth_leveling": {
         "name": "升级成长",
-        "description": "围绕角色能力、认知和阶段门槛突破构建阅读快感。"
+        "description": "围绕角色能力、认知和阶段门槛突破构建阅读快感。",
+        "coreDrive": "通过清晰可感的成长曲线和阶段突破持续拉动阅读。"
       },
       "story_mode_adventure_exploration": {
         "name": "探索冒险",
-        "description": "以新地图、新文明和未知风险驱动阅读新鲜感。"
+        "description": "以新地图、新文明和未知风险驱动阅读新鲜感。",
+        "coreDrive": "通过不断进入未知区域、接触新规则和发现新秘密保持阅读新鲜感。"
       },
       "story_mode_dungeon_challenge": {
         "name": "副本闯关",
-        "description": "以阶段关卡、规则破解和通关反馈形成强节奏推进。"
+        "description": "以阶段关卡、规则破解和通关反馈形成强节奏推进。",
+        "coreDrive": "通过阶段性关卡挑战和规则破解形成连续的推进快感。"
       }
     },
     "styleTemplates": {
@@ -8133,6 +8847,16 @@
       "absurd-dark-humor": {
         "name": "荒诞黑色幽默流",
         "description": "通过反差、冷感观察和荒诞细节制造黑色幽默。"
+      },
+      "categories": {
+        "专业流": "专业流",
+        "悬疑流": "悬疑流",
+        "情感流": "情感流",
+        "日常流": "日常流",
+        "爽文流": "爽文流",
+        "现实流": "现实流",
+        "群像流": "群像流",
+        "黑色幽默": "黑色幽默"
       }
     },
     "antiAiRules": {

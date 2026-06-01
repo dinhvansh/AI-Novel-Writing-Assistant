@@ -3,6 +3,7 @@ import type { ApiResponse } from "@ai-novel/shared/types/api";
 import { z } from "zod";
 import { llmProviderSchema } from "../llm/providerSchema";
 import { authMiddleware } from "../middleware/auth";
+import { tError } from "../middleware/errorHandler";
 import { validate } from "../middleware/validate";
 import { streamToSSE } from "../llm/streaming";
 import { WritingFormulaService } from "../services/writingFormula/WritingFormulaService";
@@ -61,7 +62,7 @@ router.get("/:id", validate({ params: idSchema }), async (req, res, next) => {
     if (!data) {
       res.status(404).json({
         success: false,
-        error: "写作公式不存在。", // i18n-ignore: TODO Phase 4 - wrap with tError()
+        error: tError(res, "writingFormulaNotFound", undefined, "\u5199\u4f5c\u516c\u5f0f\u4e0d\u5b58\u5728\u3002"), // i18n-ignore: tError fallback
       } satisfies ApiResponse<null>);
       return;
     }

@@ -9,6 +9,18 @@ import type {
   StoryStateSnapshot,
   VolumePlan,
 } from "@ai-novel/shared/types/novel";
+import type { LocaleCode } from "@ai-novel/shared/localization";
+import { DEFAULT_LOCALE } from "@ai-novel/shared/localization";
+import { getI18nServerHandle } from "../../../i18n";
+import { getCurrentRequestLocale } from "../../../runtime/requestLocaleContext";
+
+function tShared(key: string, locale?: LocaleCode): string {
+  const handle = getI18nServerHandle();
+  if (!handle) return key;
+  const lng = locale ?? getCurrentRequestLocale() ?? DEFAULT_LOCALE;
+  const result = handle.t("novel", key, { lng });
+  return (result && result !== `novel:${key}`) ? result : key;
+}
 
 type WorldLike = {
   name?: string | null;
@@ -313,75 +325,78 @@ export function buildPresetIntent(
 ): ChapterEditorAiRevisionIntent {
   const preserved = Array.from(new Set([
     ...mustKeepConstraints,
-    "保留当前剧情事实",
-    "保留原段核心信息",
+    tShared("chapterEditor.presetIntent.preservePlotFacts"),
+    tShared("chapterEditor.presetIntent.preserveCoreInfo"),
   ])).slice(0, 6);
   const shared = {
     mustPreserve: preserved,
-    mustAvoid: ["不要改写出模板化 AI 腔", "不要破坏上下文承接"],
+    mustAvoid: [
+      tShared("chapterEditor.presetIntent.avoidAiTone"),
+      tShared("chapterEditor.presetIntent.avoidBreakContinuity"),
+    ],
     strength: "medium" as const,
   };
 
   switch (operation) {
     case "expand":
       return {
-        editGoal: "补足细节，让信息更可感知",
-        toneShift: "保持原有语气",
-        paceAdjustment: "略微放慢，换取更清晰的画面与动作",
-        conflictAdjustment: "保持现有冲突强度",
-        emotionAdjustment: "维持现有情绪基调",
-        reasoningSummary: "这次改写重点是补细节和体验感，但不改变原段任务。",
+        editGoal: tShared("chapterEditor.presetIntent.expand.goal"),
+        toneShift: tShared("chapterEditor.presetIntent.expand.tone"),
+        paceAdjustment: tShared("chapterEditor.presetIntent.expand.pace"),
+        conflictAdjustment: tShared("chapterEditor.presetIntent.expand.conflict"),
+        emotionAdjustment: tShared("chapterEditor.presetIntent.expand.emotion"),
+        reasoningSummary: tShared("chapterEditor.presetIntent.expand.reasoning"),
         ...shared,
       };
     case "compress":
       return {
-        editGoal: "压缩冗余，让推进更紧",
-        toneShift: "保持原有语气",
-        paceAdjustment: "明显提速，减少重复和静态描述",
-        conflictAdjustment: "维持现有冲突走向",
-        emotionAdjustment: "保留现有情绪信号，不额外拔高",
-        reasoningSummary: "这次改写重点是去掉拖慢推进的内容，让读者更快进入下一步。",
+        editGoal: tShared("chapterEditor.presetIntent.compress.goal"),
+        toneShift: tShared("chapterEditor.presetIntent.compress.tone"),
+        paceAdjustment: tShared("chapterEditor.presetIntent.compress.pace"),
+        conflictAdjustment: tShared("chapterEditor.presetIntent.compress.conflict"),
+        emotionAdjustment: tShared("chapterEditor.presetIntent.compress.emotion"),
+        reasoningSummary: tShared("chapterEditor.presetIntent.compress.reasoning"),
         ...shared,
       };
     case "emotion":
       return {
-        editGoal: "强化情绪传递",
-        toneShift: "在不跳出原文风格的前提下更有情绪张力",
-        paceAdjustment: "节奏保持稳健，不额外拉长动作链",
-        conflictAdjustment: "允许情绪上的紧张感更明显",
-        emotionAdjustment: "显著增强人物情绪与感受",
-        reasoningSummary: "这次改写重点是让读者更直接感受到人物情绪，而不是只看到事件。",
+        editGoal: tShared("chapterEditor.presetIntent.emotion.goal"),
+        toneShift: tShared("chapterEditor.presetIntent.emotion.tone"),
+        paceAdjustment: tShared("chapterEditor.presetIntent.emotion.pace"),
+        conflictAdjustment: tShared("chapterEditor.presetIntent.emotion.conflict"),
+        emotionAdjustment: tShared("chapterEditor.presetIntent.emotion.emotion"),
+        reasoningSummary: tShared("chapterEditor.presetIntent.emotion.reasoning"),
         ...shared,
       };
     case "conflict":
       return {
-        editGoal: "强化冲突与压迫",
-        toneShift: "保持原有语气，但更有对抗感",
-        paceAdjustment: "适度提速，让矛盾更快顶上来",
-        conflictAdjustment: "显著增强冲突感与不适感",
-        emotionAdjustment: "让情绪更贴着冲突走",
-        reasoningSummary: "这次改写重点是把冲突推到更前面，让张力更早被读者感知。",
+        editGoal: tShared("chapterEditor.presetIntent.conflict.goal"),
+        toneShift: tShared("chapterEditor.presetIntent.conflict.tone"),
+        paceAdjustment: tShared("chapterEditor.presetIntent.conflict.pace"),
+        conflictAdjustment: tShared("chapterEditor.presetIntent.conflict.conflict"),
+        emotionAdjustment: tShared("chapterEditor.presetIntent.conflict.emotion"),
+        reasoningSummary: tShared("chapterEditor.presetIntent.conflict.reasoning"),
         ...shared,
       };
     case "custom":
       return {
-        editGoal: customInstruction?.trim() || "按用户要求修正",
-        toneShift: "按用户要求调整",
-        paceAdjustment: "按用户要求调整",
-        conflictAdjustment: "按用户要求调整",
-        emotionAdjustment: "按用户要求调整",
-        reasoningSummary: "这次改写直接执行用户的补充修正要求，同时守住章节事实和承接。",
+        editGoal: customInstruction?.trim() || tShared("chapterEditor.presetIntent.custom.goal"),
+        toneShift: tShared("chapterEditor.presetIntent.custom.tone"),
+        paceAdjustment: tShared("chapterEditor.presetIntent.custom.pace"),
+        conflictAdjustment: tShared("chapterEditor.presetIntent.custom.conflict"),
+        emotionAdjustment: tShared("chapterEditor.presetIntent.custom.emotion"),
+        reasoningSummary: tShared("chapterEditor.presetIntent.custom.reasoning"),
         ...shared,
       };
     case "polish":
     default:
       return {
-        editGoal: "优化表达，让文本更自然顺畅",
-        toneShift: "保持原有语气",
-        paceAdjustment: "节奏尽量保持稳定",
-        conflictAdjustment: "维持现有冲突走向",
-        emotionAdjustment: "保留原有情绪，但表达更准确",
-        reasoningSummary: "这次改写重点是让句子更顺、更稳，不改变原段剧情职责。",
+        editGoal: tShared("chapterEditor.presetIntent.polish.goal"),
+        toneShift: tShared("chapterEditor.presetIntent.polish.tone"),
+        paceAdjustment: tShared("chapterEditor.presetIntent.polish.pace"),
+        conflictAdjustment: tShared("chapterEditor.presetIntent.polish.conflict"),
+        emotionAdjustment: tShared("chapterEditor.presetIntent.polish.emotion"),
+        reasoningSummary: tShared("chapterEditor.presetIntent.polish.reasoning"),
         ...shared,
       };
   }

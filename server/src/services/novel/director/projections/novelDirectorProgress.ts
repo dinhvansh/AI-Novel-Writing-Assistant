@@ -1,4 +1,6 @@
 import { formatChapterDetailModeLabel } from "../../volume/chapterDetailModeLabel";
+import { DEFAULT_LOCALE, type LocaleCode } from "@ai-novel/shared/localization";
+import { getI18nServerHandle } from "../../../../i18n";
 
 export const DIRECTOR_PROGRESS = {
   candidateSeedAlignment: 0.03,
@@ -56,6 +58,17 @@ export function buildChapterDetailBundleLabel(
   chapterIndex: number,
   totalChapters: number,
   detailMode: (typeof DIRECTOR_CHAPTER_DETAIL_MODES)[number],
+  locale: LocaleCode = DEFAULT_LOCALE,
 ): string {
-  return `正在细化第 ${chapterIndex}/${totalChapters} 章 · ${formatChapterDetailModeLabel(detailMode)}`;
+  const handle = getI18nServerHandle();
+  const modeLabel = formatChapterDetailModeLabel(detailMode, locale);
+  if (handle) {
+    const result = handle.t("serverLogs", "chapterDetailBundle.refiningChapter", {
+      lng: locale,
+      values: { index: chapterIndex, total: totalChapters, mode: modeLabel },
+    });
+    if (result && result !== "serverLogs:chapterDetailBundle.refiningChapter") return result;
+  }
+  // i18n-ignore: fallback
+  return `\u6b63\u5728\u7ec6\u5316\u7b2c ${chapterIndex}/${totalChapters} \u7ae0 \u00b7 ${modeLabel}`;
 }

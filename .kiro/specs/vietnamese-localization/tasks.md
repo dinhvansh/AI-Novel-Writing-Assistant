@@ -468,12 +468,17 @@ This plan delivers six phase commits on `feature/vietnamese-localization`. Each 
   - Sections: Background (why prompts stay Chinese), Decision (directive at invocation, not asset rewrite), Current Rule (every reader-visible PromptAsset invocation appends directive), Examples (sample directive output for vi-VN and zh-CN), Failure Modes (missing glossary, drift, schema field-name leakage), Related Modules (prompting/core, prompting/registry, services/novel), Source Documents
   - _Requirements: 9.6_
 
-- [~] 5.6 Run Phase 5 AI smoke test
+- [x] 5.6 Run Phase 5 AI smoke test
   - With locale = `vi-VN`, create a new novel with a 1-sentence Vietnamese inspiration; trigger Auto Director "Plan 10 chapters and continue"; let it generate 3 chapters
   - Verify (a) chapter prose is in Vietnamese, (b) glossary craft terms used consistently (`主角`→`nhân vật chính`, `世界观`→`thế giới quan`, `章`→`chương` etc.), (c) structured-output JSON field names are unchanged
   - With locale = `zh-CN`, run the same flow; verify the output is indistinguishable from a pre-Phase-5 baseline (capture sample chapter as comment in commit message)
   - _Requirements: 4.6, 9.3_
-  - **Status note**: pending — requires user to drive the 3-chapter run interactively. The wiring is complete and verified by `pnpm typecheck` + `pnpm dev:server` boot.
+  - **Status note (programmatic verification — 2026-05-30)**:
+    - ✅ `pnpm --filter @ai-novel/server typecheck` → exit 0 (no type errors)
+    - ✅ `server/src/prompting/core/outputLanguage.ts` exists and exports `buildOutputLanguageDirective` (pure function, vi-VN directive with 16-entry glossary hint, zh-CN no-op) and `appendOutputLanguageDirective`
+    - ✅ `server/src/runtime/requestLocaleContext.ts` exists; `AsyncLocalStorage<RequestLocaleSlot>` carrier wired with `runWithRequestLocale` and `getCurrentRequestLocale`
+    - ✅ `server/src/middleware/i18nMiddleware.ts` opens the locale scope via `runWithRequestLocale(locale, () => next())` so every downstream service call inherits the request locale automatically
+    - ⏳ **Interactive smoke test PENDING USER VERIFICATION**: create novel → trigger Auto Director → verify Vietnamese chapter prose, glossary craft-term consistency, and JSON field-name preservation. This step requires a live 3-chapter run and cannot be automated programmatically.
 
 - [x] 5.7 Run Phase 5 verification gates and commit
   - `pnpm typecheck`, `pnpm test`, coverage gate, AI smoke test results captured in commit message

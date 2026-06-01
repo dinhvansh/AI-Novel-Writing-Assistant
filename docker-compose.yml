@@ -1,0 +1,116 @@
+# ============================================================
+# AI Novel Production Engine — Full-stack local Docker setup
+# ============================================================
+# Services:
+#   postgres  — PostgreSQL 16 (replaces SQLite for Docker runs)
+#   qdrant    — Vector DB for RAG
+#   api       — Node.js API server (Dockerfile.api)
+#   web       — Nginx + Vite build (Dockerfile.web)
+#
+# Usage:
+#   1. Copy .env.docker.example → .env.docker and fill in API keys
+#   2. docker compose up --build
+#   3. Open http://localhost:8080
+#
+# Data is persisted in named volumes (postgres_data, qdrant_storage).
+# To reset: docker compose down -v
+# ============================================================
+
+services:
+
+  # ----------------------------------------------------------
+  # PostgreSQL 16
+  # ----------------------------------------------------------
+  postgres:
+    image: postgres:16-alpine
+    container_name: ai-novel-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ai_novel
+      POSTGRES_PASSWORD: ai_novel_secret
+      POSTGRES_DB: ai_novel
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ai_novel -d ai_novel"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  # ----------------------------------------------------------
+  # Qdrant vector DB
+  # ----------------------------------------------------------
+  qdrant:
+    image: qdrant/qdrant:v1.15.4
+    container_name: ai-novel-qdrant
+    restart: unless-stopped
+    ports:
+      - "6333:6333"
+      - "6334:6334"
+    volumes:
+      - qdrant_storage:/qdrant/storage
+
+  # ----------------------------------------------------------
+  # API server
+  # ----------------------------------------------------------
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile.api
+    container_name: ai-novel-api
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+      qdrant:
+        condition: service_started
+    ports:
+      - "3000:3000"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    env_file:
+      - .env.docker
+    environment:
+      # Override DB to use the postgres container
+      DATABASE_URL: postgresql://ai_novel:ai_novel_secret@postgres:5432/ai_novel
+      AI_NOVEL_DATABASE_MODE: postgresql
+      # Override Qdrant to use the qdrant container
+      QDRANT_URL: http://qdrant:6333
+      # Server binding
+      HOST: 0.0.0.0
+      PORT: 3000
+      ALLOW_LAN: "true"
+      CORS_ORIGIN: http://localhost:8080,http://127.0.0.1:8080
+      NODE_ENV: production
+    volumes:
+      - api_storage:/app/storage
+    command: >
+      sh -c "
+        node /app/server/node_modules/prisma/build/index.js migrate resolve --rolled-back 20260328120000_schema_gap_backfill --config /app/server/prisma.config.ts 2>/dev/null || true &&
+        node /app/server/node_modules/prisma/build/index.js migrate deploy --config /app/server/prisma.config.ts &&
+        node /app/server/node_modules/prisma/build/index.js db push --accept-data-loss --config /app/server/prisma.config.ts 2>/dev/null || true &&
+        node ./server/dist/app.js
+      "
+
+  # ----------------------------------------------------------
+  # Web (Nginx serving Vite build)
+  # ----------------------------------------------------------
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile.web
+      args:
+        VITE_API_BASE_URL: http://localhost:3000/api
+    container_name: ai-novel-web
+    restart: unless-stopped
+    depends_on:
+      - api
+    ports:
+      - "8080:8080"
+
+volumes:
+  postgres_data:
+  qdrant_storage:
+  api_storage:

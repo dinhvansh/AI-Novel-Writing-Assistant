@@ -4,6 +4,7 @@ import type {
   DirectorRuntimeProjectionStatus,
 } from "@ai-novel/shared/types/directorRuntime";
 import { getDirectorNodeDisplayLabel } from "@ai-novel/shared/types/directorRuntime";
+import { translateDirectorLabel } from "@/lib/directorRuntimeI18n";
 import {
   Activity,
   AlertTriangle,
@@ -363,7 +364,7 @@ export default function DirectorRuntimeProjectionCard({
               {promptUsage.map((item) => (
                 <div key={`${item.promptAssetKey}:${item.promptVersion ?? ""}:${item.nodeKey ?? ""}`} className="flex flex-wrap items-center justify-between gap-2 border-t pt-1">
                   <span className="min-w-0 truncate text-foreground">
-                    {getDirectorNodeDisplayLabel({ label: item.label ?? item.promptAssetKey, nodeKey: item.nodeKey })}
+                    {translateDirectorLabel(getDirectorNodeDisplayLabel({ label: item.label ?? item.promptAssetKey, nodeKey: item.nodeKey })) ?? getDirectorNodeDisplayLabel({ label: item.label ?? item.promptAssetKey, nodeKey: item.nodeKey })}
                   </span>
                   <span className="shrink-0">{formatUsageLine(t, item)}</span>
                 </div>
@@ -376,7 +377,7 @@ export default function DirectorRuntimeProjectionCard({
               {stepUsage.map((item) => (
                 <div key={item.stepIdempotencyKey} className="flex flex-wrap items-center justify-between gap-2 border-t pt-1">
                   <span className="min-w-0 truncate text-foreground">
-                    {getDirectorNodeDisplayLabel({ label: item.label, nodeKey: item.nodeKey })}
+                    {translateDirectorLabel(getDirectorNodeDisplayLabel({ label: item.label, nodeKey: item.nodeKey })) ?? getDirectorNodeDisplayLabel({ label: item.label, nodeKey: item.nodeKey })}
                   </span>
                   <span className="shrink-0">{formatUsageLine(t, item)}</span>
                 </div>

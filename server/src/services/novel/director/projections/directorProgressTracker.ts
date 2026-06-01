@@ -3,6 +3,9 @@ import type {
   DirectorMarkTaskRunningCallback,
   DirectorMutatingStage,
 } from "../phases/novelDirectorPhaseTypes";
+import { DEFAULT_LOCALE } from "@ai-novel/shared/localization";
+import { getCurrentRequestLocale } from "../../../../runtime/requestLocaleContext";
+import { getI18nServerHandle } from "../../../../i18n";
 
 export type DirectorTrackedStage = DirectorMutatingStage;
 
@@ -112,11 +115,20 @@ export async function runDirectorTrackedStep<T>(input: {
     }
     heartbeatInFlight = true;
     const elapsed = formatElapsed(Date.now() - startedAt);
+    const locale = getCurrentRequestLocale() ?? DEFAULT_LOCALE;
+    const handle = getI18nServerHandle();
+    // i18n-ignore: fallback
+    const waitingSuffix = handle
+      ? handle.t("serverLogs", "chapterDetailBundle.waitingSuffix", { lng: locale, values: { elapsed } })
+      : `\uff08\u5df2\u7b49\u5f85 ${elapsed}\uff09`;
+    const heartbeatLabel = (waitingSuffix && waitingSuffix !== "serverLogs:chapterDetailBundle.waitingSuffix")
+      ? `${currentLabel}${waitingSuffix}`
+      : `${currentLabel}（${elapsed}）`;
     void input.callbacks.markDirectorTaskRunning(
       input.taskId,
       input.stage,
       currentItemKey,
-      `${currentLabel}（已等待 ${elapsed}）`,
+      heartbeatLabel,
       currentProgress,
       {
         chapterId: input.chapterId ?? null,

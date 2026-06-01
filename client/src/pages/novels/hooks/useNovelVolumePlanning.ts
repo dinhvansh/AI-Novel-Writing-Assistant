@@ -103,7 +103,7 @@ export function useNovelVolumePlanning({
   setStructuredMessage,
 }: UseNovelVolumePlanningArgs) {
   const queryClient = useQueryClient();
-  const { t } = useTranslation();
+  const { t } = useTranslation("novel");
   const normalizedVolumeDraft = useMemo(() => normalizeVolumeDraft(volumeDraft), [volumeDraft]);
   const normalizedSavedVolumes = useMemo(
     () => normalizeVolumeDraft(savedWorkspace?.volumes ?? []),

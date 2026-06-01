@@ -22,6 +22,7 @@ import {
 import { Link } from "react-router-dom";
 import TaskCenterManualEditImpactCard from "@/pages/tasks/components/TaskCenterManualEditImpactCard";
 import TaskCenterRuntimePolicyCard from "@/pages/tasks/components/TaskCenterRuntimePolicyCard";
+import { translateDirectorLabel } from "@/lib/directorRuntimeI18n";
 import type { NovelTaskDrawerState } from "./NovelEditView.types";
 
 type DrawerTask = NonNullable<NovelTaskDrawerState["task"]>;
@@ -549,7 +550,7 @@ export default function NovelTaskDrawer({
                 <div className="space-y-2">
                   {(displayState?.steps ?? task.steps).map((step) => (
                     <div key={step.key} className="flex items-center justify-between rounded-xl border bg-background/80 px-3 py-2">
-                      <div className="text-sm text-foreground">{step.label}</div>
+                      <div className="text-sm text-foreground">{translateDirectorLabel(step.label) ?? step.label}</div>
                       <Badge variant="outline">{"isCurrent" in step
                         ? (step.status === "attention"
                           ? t("novel:taskDrawer.stepStatus.attention")

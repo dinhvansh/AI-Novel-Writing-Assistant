@@ -176,13 +176,14 @@ router.post("/", validate({ body: chatSchema }), async (req, res, next) => {
 
     const finalSystemPrompt =
       body.agentMode
+        // i18n-ignore: AI prompt content — Chinese instructions for LLM, not user-facing
         ? `${systemPrompt}
 
-作为智能创作代理，你需要： // i18n-ignore: AI prompt content
-- 主动分析用户需求背后的深层问题 // i18n-ignore: AI prompt content
-- 提供多个解决方案并分析各自优劣 // i18n-ignore: AI prompt content
-- 给出具体的下一步行动建议 // i18n-ignore: AI prompt content
-- 在必要时主动提问以获取更多信息` // i18n-ignore: AI prompt content
+\u4f5c\u4e3a\u667a\u80fd\u521b\u4f5c\u4ee3\u7406\uff0c\u4f60\u9700\u8981\uff1a
+- \u4e3b\u52a8\u5206\u6790\u7528\u6237\u9700\u6c42\u80cc\u540e\u7684\u6df1\u5c42\u95ee\u9898
+- \u63d0\u4f9b\u591a\u4e2a\u89e3\u51b3\u65b9\u6848\u5e76\u5206\u6790\u5404\u81ea\u4f18\u52a3
+- \u7ed9\u51fa\u5177\u4f53\u7684\u4e0b\u4e00\u6b65\u884c\u52a8\u5efa\u8bae
+- \u5728\u5fc5\u8981\u65f6\u4e3b\u52a8\u63d0\u95ee\u4ee5\u83b7\u53d6\u66f4\u591a\u4fe1\u606f`
         : systemPrompt;
 
     const searchHint = body.enableSearch

@@ -1,4 +1,4 @@
-import type { TaskStatus, UnifiedTaskDetail, UnifiedTaskSummary } from "@ai-novel/shared/types/task";
+﻿import type { TaskStatus, UnifiedTaskDetail, UnifiedTaskSummary } from "@ai-novel/shared/types/task";
 import { prisma } from "../../../db/prisma";
 import { AppError } from "../../../middleware/errorHandler";
 import { getStyleEngineRuntimeSettings } from "../../settings/StyleEngineRuntimeSettingsService";
@@ -16,6 +16,17 @@ import {
   resolveStructuredFailureSummary,
 } from "../taskSupport";
 import { toTaskTokenUsageSummary } from "../taskTokenUsageSummary";
+import { DEFAULT_LOCALE, type LocaleCode } from "@ai-novel/shared/localization";
+import { getI18nServerHandle } from "../../../i18n";
+import { getCurrentRequestLocale } from "../../../runtime/requestLocaleContext";
+
+function t(key: string): string {
+  const handle = getI18nServerHandle();
+  if (!handle) return key;
+  const locale: LocaleCode = getCurrentRequestLocale() ?? DEFAULT_LOCALE;
+  return handle.t("serverLogs", key, { lng: locale });
+}
+
 import {
   archiveTask as recordTaskArchive,
   getArchivedTaskIds,
@@ -23,7 +34,7 @@ import {
 } from "../taskArchive";
 
 function buildTaskTitle(name: string): string {
-  return `写法提取：${name}`;
+  return `å†™æ³•æå–ï¼š${name}`;
 }
 
 export class StyleExtractionTaskAdapter {
@@ -79,7 +90,7 @@ export class StyleExtractionTaskAdapter {
           ? (structuredFailure.failureCode ?? "STYLE_EXTRACTION_FAILED")
           : null,
         failureSummary: row.status === "failed"
-          ? (structuredFailure.failureSummary ?? normalizeFailureSummary(row.error, "写法提取任务失败，但没有记录到明确错误。"))
+          ? (structuredFailure.failureSummary ?? normalizeFailureSummary(row.error, "å†™æ³•æå–ä»»åŠ¡å¤±è´¥ï¼Œä½†æ²¡æœ‰è®°å½•åˆ°æ˜Žç¡®é”™è¯¯ã€‚"))
           : row.error,
         recoveryHint: buildTaskRecoveryHint("style_extraction", row.status as TaskStatus),
         tokenUsage: toTaskTokenUsageSummary({
@@ -143,7 +154,7 @@ export class StyleExtractionTaskAdapter {
         ? (structuredFailure.failureCode ?? "STYLE_EXTRACTION_FAILED")
         : null,
       failureSummary: row.status === "failed"
-        ? (structuredFailure.failureSummary ?? normalizeFailureSummary(row.error, "写法提取任务失败，但没有记录到明确错误。"))
+        ? (structuredFailure.failureSummary ?? normalizeFailureSummary(row.error, "å†™æ³•æå–ä»»åŠ¡å¤±è´¥ï¼Œä½†æ²¡æœ‰è®°å½•åˆ°æ˜Žç¡®é”™è¯¯ã€‚"))
         : row.error,
       recoveryHint: buildTaskRecoveryHint("style_extraction", row.status as TaskStatus),
       tokenUsage: toTaskTokenUsageSummary({
@@ -249,3 +260,4 @@ export class StyleExtractionTaskAdapter {
     return null;
   }
 }
+

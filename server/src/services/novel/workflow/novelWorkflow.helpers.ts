@@ -208,6 +208,28 @@ export function stageLabel(stage: NovelWorkflowStage): string {
   return NOVEL_WORKFLOW_STAGE_LABELS[stage] ?? stage;
 }
 
+// i18n-ignore: lookup map keys — translated at runtime via getI18nServerHandle
+const CHECKPOINT_ITEM_LABELS: Record<string, string> = {
+  candidate_selection_required: "workflowExplainability.checkpointStatus.candidateSelectionRequired",
+  book_contract_ready: "workflowExplainability.checkpointStatus.bookContractReady",
+  character_setup_required: "workflowExplainability.checkpointStatus.characterSetupRequired",
+};
+
+export function checkpointItemLabel(checkpoint: string): string {
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  const { getI18nServerHandle } = require("../../../i18n") as { getI18nServerHandle: () => { t: (ns: string, key: string, opts?: Record<string, unknown>) => string } | null };
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  const { getCurrentRequestLocale } = require("../../../runtime/requestLocaleContext") as { getCurrentRequestLocale: () => string | null };
+  const handle = getI18nServerHandle();
+  const locale = getCurrentRequestLocale() ?? "zh-CN";
+  const key = CHECKPOINT_ITEM_LABELS[checkpoint];
+  if (handle && key) {
+    const result = handle.t("serverLogs", key, { lng: locale });
+    if (result && result !== `serverLogs:${key}`) return result;
+  }
+  return checkpoint;
+}
+
 export function isTaskCancellationRequested(row: {
   status?: string | null;
   cancelRequestedAt?: Date | null;
