@@ -34,14 +34,16 @@ export function registerGenerationWorldRoutes(router: Router): void {
       const locale: LocaleCode = (res.locals.locale as LocaleCode) ?? getCurrentRequestLocale() ?? DEFAULT_LOCALE;
       const localizedData = handle ? data.map((template) => ({
         ...template,
-        name: handle.t("world", `templates.${template.key}.name`, { lng: locale, defaultValue: template.name }),
-        description: handle.t("world", `templates.${template.key}.description`, { lng: locale, defaultValue: template.description }),
-        classicElements: template.classicElements.map((el) =>
-          handle.t("world", `templates.${template.key}.classicElements.${el}`, { lng: locale, defaultValue: el }),
-        ),
-        pitfalls: template.pitfalls.map((p) =>
-          handle.t("world", `templates.${template.key}.pitfalls.${p}`, { lng: locale, defaultValue: p }),
-        ),
+        name: (() => { const r = handle.t("world", `templates.${template.key}.name`, { lng: locale }); return (r && r !== `world:templates.${template.key}.name`) ? r : template.name; })(),
+        description: (() => { const r = handle.t("world", `templates.${template.key}.description`, { lng: locale }); return (r && r !== `world:templates.${template.key}.description`) ? r : template.description; })(),
+        classicElements: template.classicElements.map((el) => {
+          const r = handle.t("world", `templates.${template.key}.classicElements.${el}`, { lng: locale });
+          return (r && r !== `world:templates.${template.key}.classicElements.${el}`) ? r : el;
+        }),
+        pitfalls: template.pitfalls.map((p) => {
+          const r = handle.t("world", `templates.${template.key}.pitfalls.${p}`, { lng: locale });
+          return (r && r !== `world:templates.${template.key}.pitfalls.${p}`) ? r : p;
+        }),
       })) : data;
       res.status(200).json({
         success: true,

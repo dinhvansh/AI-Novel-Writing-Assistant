@@ -4791,6 +4791,60 @@
         "customPlaceholder": "Ví dụ: Làm đoạn này u ám hơn, giữ nguyên thông tin, nhưng siết chặt nhịp độ hơn.",
         "cancelCustom": "Hủy",
         "submitCustom": "Gửi lệnh"
+      },
+      "presetIntent": {
+        "preservePlotFacts": "Giữ nguyên sự kiện cốt truyện, quan hệ nhân vật và thiết định thế giới đã có",
+        "preserveCoreInfo": "Giữ lại các nút thông tin quan trọng",
+        "avoidAiTone": "Tránh giọng AI: không thăng hoa, không tổng kết, không thuyết giáo",
+        "avoidBreakContinuity": "Không phá vỡ tính liên tục trước sau",
+        "expand": {
+          "goal": "Mở rộng đoạn nội dung này trong khi giữ nguyên sự kiện, bổ sung chi tiết và tầng lớp cảm xúc",
+          "tone": "Giữ nguyên giọng điệu gốc",
+          "pace": "Làm chậm nhịp độ, tăng chi tiết",
+          "conflict": "Có thể làm sâu thêm cảm nhận xung đột",
+          "emotion": "Làm phong phú biểu đạt cảm xúc",
+          "reasoning": "Mở rộng nội dung để tăng độ dày của cảnh và chiều sâu cảm xúc"
+        },
+        "compress": {
+          "goal": "Nén đoạn nội dung này trong khi giữ nguyên sự kiện, loại bỏ phần thừa",
+          "tone": "Giữ nguyên giọng điệu gốc",
+          "pace": "Tăng tốc nhịp độ, giảm ngừng nghỉ",
+          "conflict": "Giữ lại cốt lõi xung đột",
+          "emotion": "Giữ lại điểm then chốt của cảm xúc",
+          "reasoning": "Nén nội dung thừa để tăng cảm giác nhịp điệu"
+        },
+        "emotion": {
+          "goal": "Tăng cường biểu đạt cảm xúc của đoạn này trong khi giữ nguyên sự kiện",
+          "tone": "Làm sâu sắc màu sắc cảm xúc",
+          "pace": "Điều chỉnh nhịp độ theo nhu cầu cảm xúc",
+          "conflict": "Tăng cường căng thẳng cảm xúc",
+          "emotion": "Tăng cường biểu lộ cảm xúc và phản ứng nội tâm",
+          "reasoning": "Tăng cường tầng lớp cảm xúc để nâng cao sức truyền cảm"
+        },
+        "conflict": {
+          "goal": "Tăng cường cảm giác xung đột của đoạn này trong khi giữ nguyên sự kiện",
+          "tone": "Tăng cường cảm giác căng thẳng",
+          "pace": "Tăng tốc nhịp độ, thêm căng thẳng",
+          "conflict": "Tăng cường mâu thuẫn đối lập",
+          "emotion": "Phù hợp với cảm giác xung đột",
+          "reasoning": "Tăng cường xung đột để nâng cao kịch tính"
+        },
+        "polish": {
+          "goal": "Trau chuốt đoạn này trong khi giữ nguyên sự kiện và giọng điệu cảm xúc",
+          "tone": "Giữ nguyên giọng điệu gốc",
+          "pace": "Giữ nguyên nhịp độ gốc",
+          "conflict": "Giữ nguyên trạng thái xung đột",
+          "emotion": "Giữ nguyên trạng thái cảm xúc",
+          "reasoning": "Trau chuốt văn chữ để nâng cao khả năng đọc và độ trôi chảy"
+        },
+        "custom": {
+          "goal": "Chỉnh sửa đoạn này theo lệnh của người dùng",
+          "tone": "Điều chỉnh theo lệnh",
+          "pace": "Điều chỉnh theo lệnh",
+          "conflict": "Điều chỉnh theo lệnh",
+          "emotion": "Điều chỉnh theo lệnh",
+          "reasoning": "Thực hiện chỉnh sửa tùy chỉnh theo lệnh người dùng"
+        }
       }
     },
     "characterDynamics": {

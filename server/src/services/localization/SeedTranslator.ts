@@ -95,7 +95,10 @@ export function localizeStyleTemplate(
   const slug = row.key ?? row.id;
   const handle = getI18nServerHandle();
   const localizedCategory = row.category && handle
-    ? (handle.t("seedData", `styleTemplates.categories.${row.category}`, { lng: locale, defaultValue: row.category }) ?? row.category)
+    ? (() => {
+      const r = handle.t("seedData", `styleTemplates.categories.${row.category}`, { lng: locale });
+      return (r && r !== `seedData:styleTemplates.categories.${row.category}`) ? r : row.category;
+    })()
     : row.category;
   return {
     id: row.id,

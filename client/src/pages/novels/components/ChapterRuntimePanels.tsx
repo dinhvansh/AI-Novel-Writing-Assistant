@@ -104,6 +104,49 @@ function buildReplanSummary(
   return buildReplanRecommendationFromAuditReports(auditReports);
 }
 
+function formatAuditIssueCode(code: string): string {
+  // Format "payoff/payoff_overdue" → "payoff · overdue"
+  // Format "continuity/continuity_antagonist_hint" → "continuity · antagonist hint"
+  if (!code) return code;
+  const parts = code.split("/");
+  const lastPart = parts[parts.length - 1] ?? code;
+  // Remove prefix that duplicates the category (e.g. "continuity_" from "continuity_antagonist")
+  const category = parts[0] ?? "";
+  const detail = lastPart.startsWith(`${category}_`) ? lastPart.slice(category.length + 1) : lastPart;
+  const formatted = detail.replace(/_/g, " ");
+  return category && category !== detail ? `${category} · ${formatted}` : formatted;
+}
+
+// Translate common Chinese label prefixes in AI-generated audit text
+const AUDIT_TEXT_LABEL_MAP: Record<string, string> = {
+  // i18n-ignore: lookup map keys
+  "官分任务：": "Tác vụ: ",
+  "官分任务:": "Tác vụ: ",
+  "关联角色：": "Nhân vật liên quan: ",
+  "关联角色:": "Nhân vật liên quan: ",
+  "总结：": "Tóm tắt: ",
+  "总结:": "Tóm tắt: ",
+  "问题描述：": "Mô tả vấn đề: ",
+  "问题描述:": "Mô tả vấn đề: ",
+  "修复建议：": "Đề xuất sửa: ",
+  "修复建议:": "Đề xuất sửa: ",
+  "证据：": "Bằng chứng: ",
+  "证据:": "Bằng chứng: ",
+  "原因：": "Nguyên nhân: ",
+  "原因:": "Nguyên nhân: ",
+  "影响：": "Ảnh hưởng: ",
+  "影响:": "Ảnh hưởng: ",
+};
+
+function translateAuditText(text: string): string {
+  if (!text) return text;
+  let result = text;
+  for (const [zh, vi] of Object.entries(AUDIT_TEXT_LABEL_MAP)) {
+    result = result.split(zh).join(vi);
+  }
+  return result;
+}
+
 function buildTriggerLabel(triggerType: string): string {
   switch (triggerType) {
     case "manual":
@@ -394,7 +437,7 @@ export function ChapterRuntimeAuditCard(props: {
                 </Button>
               ) : null}
             </div>
-            <div className="text-muted-foreground">{replanSummary.reason}</div>
+            <div className="text-muted-foreground">{translateAuditText(replanSummary.reason)}</div>
             {replanSummary.blockingIssueIds.length > 0 ? (
               <div className="mt-1 text-muted-foreground">
                 {t("chapterRuntime.highRiskIssues")}：{replanSummary.blockingIssueIds.length}
@@ -424,11 +467,11 @@ export function ChapterRuntimeAuditCard(props: {
               <div key={issue.id} className="rounded-md border p-2 text-xs">
                 <div className="mb-1 flex items-center gap-2">
                   <SeverityBadge severity={issue.severity} />
-                  <span className="font-medium">{issue.code}</span>
+                  <span className="font-medium">{formatAuditIssueCode(issue.code)}</span>
                 </div>
-                <div>{issue.description}</div>
-                <div className="mt-1 text-muted-foreground">{t("chapterRuntime.evidence")}：{issue.evidence}</div>
-                <div className="mt-1 text-muted-foreground">{t("chapterRuntime.fixSuggestion")}：{issue.fixSuggestion}</div>
+                <div>{translateAuditText(issue.description)}</div>
+                <div className="mt-1 text-muted-foreground">{t("chapterRuntime.evidence")}：{translateAuditText(issue.evidence)}</div>
+                <div className="mt-1 text-muted-foreground">{t("chapterRuntime.fixSuggestion")}：{translateAuditText(issue.fixSuggestion)}</div>
               </div>
             ))}
           </div>

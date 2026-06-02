@@ -4721,6 +4721,60 @@
         "customPlaceholder": "例如：让这段更压抑一点，保留原信息，但把节奏压得更紧。",
         "cancelCustom": "取消",
         "submitCustom": "提交指令"
+      },
+      "presetIntent": {
+        "preservePlotFacts": "保持已定的情节事实、角色关系和世界设定不变",
+        "preserveCoreInfo": "保留关键信息节点",
+        "avoidAiTone": "避免AI腔：不要升华、不要总结、不要说教",
+        "avoidBreakContinuity": "不要破坏前后连续性",
+        "expand": {
+          "goal": "在保持情节事实不变的前提下扩充这段内容，补充细节和情绪层次",
+          "tone": "保持原有基调",
+          "pace": "放慢节奏，增加细节",
+          "conflict": "可以加深冲突感受",
+          "emotion": "丰富情绪表达",
+          "reasoning": "扩充内容以增加场景密度和情绪厚度"
+        },
+        "compress": {
+          "goal": "在保持情节事实不变的前提下压缩这段内容，去除冗余",
+          "tone": "保持原有基调",
+          "pace": "加快节奏，减少停顿",
+          "conflict": "保持冲突核心",
+          "emotion": "保留情绪关键点",
+          "reasoning": "压缩冗余内容以提高节奏感"
+        },
+        "emotion": {
+          "goal": "在保持情节事实不变的前提下加强这段内容的情绪表达",
+          "tone": "加深情绪色彩",
+          "pace": "根据情绪需要调整节奏",
+          "conflict": "强化情绪张力",
+          "emotion": "加强情绪外显和内在反应",
+          "reasoning": "加强情绪层次以提升感染力"
+        },
+        "conflict": {
+          "goal": "在保持情节事实不变的前提下加强这段内容的冲突感",
+          "tone": "加强紧张感",
+          "pace": "加快节奏，增加张力",
+          "conflict": "强化矛盾对立",
+          "emotion": "与冲突感匹配",
+          "reasoning": "加强冲突感以提升戏剧张力"
+        },
+        "polish": {
+          "goal": "在保持情节事实和情绪基调不变的前提下润色这段内容",
+          "tone": "保持原有基调",
+          "pace": "保持原有节奏",
+          "conflict": "保持冲突现状",
+          "emotion": "保持情绪现状",
+          "reasoning": "润色文字以提升可读性和流畅度"
+        },
+        "custom": {
+          "goal": "按照用户指令修改这段内容",
+          "tone": "根据指令调整",
+          "pace": "根据指令调整",
+          "conflict": "根据指令调整",
+          "emotion": "根据指令调整",
+          "reasoning": "按用户指令执行定制修改"
+        }
       }
     },
     "characterDynamics": {
