@@ -8,6 +8,7 @@ import {
   Dialog,
 } from "@/components/ui/dialog";
 import { Card, CardContent } from "@/components/ui/card";
+import { translateDirectorLabel } from "@/lib/directorRuntimeI18n";
 import { useTaskRecovery } from "./TaskRecoveryContext";
 
 function formatTaskKind(kind: RecoverableTaskSummary["kind"], t: ReturnType<typeof useTranslation>["t"]): string {
@@ -57,6 +58,12 @@ export default function TaskRecoveryDialog() {
       >
         <div className="space-y-3">
           {items.map((item) => (
+            (() => {
+              const currentStage = translateDirectorLabel(item.currentStage ?? null) ?? item.currentStage;
+              const currentItemLabel = translateDirectorLabel(item.currentItemLabel ?? null) ?? item.currentItemLabel;
+              const resumeAction = translateDirectorLabel(item.resumeAction ?? null) ?? item.resumeAction;
+              const recoveryHint = translateDirectorLabel(item.recoveryHint ?? null) ?? item.recoveryHint;
+              return (
             <Card key={`${item.kind}-${item.id}`}>
               <CardContent className="space-y-3 p-4">
                 <div className="flex flex-wrap items-start justify-between gap-3">
@@ -85,13 +92,15 @@ export default function TaskRecoveryDialog() {
                 </div>
 
                 <div className="grid gap-2 text-sm text-muted-foreground">
-                  {item.currentStage ? <div>{t("desktop:taskRecovery.currentStage", { stage: item.currentStage })}</div> : null}
-                  {item.currentItemLabel ? <div>{t("desktop:taskRecovery.interruptedAt", { label: item.currentItemLabel })}</div> : null}
-                  {item.resumeAction ? <div>{t("desktop:taskRecovery.suggestedAction", { action: item.resumeAction })}</div> : null}
-                  {item.recoveryHint ? <div>{t("desktop:taskRecovery.recoveryHint", { hint: item.recoveryHint })}</div> : null}
+                  {currentStage ? <div>{t("desktop:taskRecovery.currentStage", { stage: currentStage })}</div> : null}
+                  {currentItemLabel ? <div>{t("desktop:taskRecovery.interruptedAt", { label: currentItemLabel })}</div> : null}
+                  {resumeAction ? <div>{t("desktop:taskRecovery.suggestedAction", { action: resumeAction })}</div> : null}
+                  {recoveryHint ? <div>{t("desktop:taskRecovery.recoveryHint", { hint: recoveryHint })}</div> : null}
                 </div>
               </CardContent>
             </Card>
+              );
+            })()
           ))}
         </div>
       </AppDialogContent>

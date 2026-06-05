@@ -281,3 +281,30 @@ export function isHistoricalAutoDirectorFront10RecoveryUnsupportedFailure(input:
   return message.includes("服务重启后恢复失败")
     && message.includes("当前检查点不支持继续自动导演");
 }
+
+/**
+ * Sanitize task error message before storing in DB.
+ * Prevents LLM-generated content (novel text, JSON fragments) from leaking into error fields.
+ */
+export function sanitizeTaskErrorMessage(message: string): string {
+  const trimmed = message.trim();
+  if (!trimmed) return trimmed;
+
+  // If message is very long (>500 chars), it's likely novel content leaked in — truncate
+  if (trimmed.length > 500) {
+    return trimmed.slice(0, 497) + "...";
+  }
+
+  // If message contains high ratio of CJK characters but no common error keywords,
+  // it may be novel content — replace with generic error
+  const cjkCount = (trimmed.match(/[\u4E00-\u9FFF\u3400-\u4DBF]/g) ?? []).length;
+  const cjkRatio = cjkCount / trimmed.length;
+  const hasErrorKeywords = /错误|失败|异常|超时|连接|模型|网络|格式|解析|timeout|error|fail|invalid|missing/i.test(trimmed);
+
+  if (cjkRatio > 0.6 && !hasErrorKeywords && trimmed.length > 50) {
+    // Looks like novel content, not an error message
+    return trimmed.slice(0, 100) + "...（内容已截断）";
+  }
+
+  return trimmed;
+}

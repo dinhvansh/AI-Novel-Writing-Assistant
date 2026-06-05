@@ -591,7 +591,7 @@
           },
           "canGenerateSkeleton": {
             "label": "Khung tập",
-            "description": "Xác nhận móc mở tập, nguồn áp lực và cách trả phục bút cho từng tập."
+            "description": "Xác nhận cách mở đầu cuốn hút, nguồn áp lực và cách trả nút cho từng tập."
           },
           "canGenerateBeatSheet": {
             "label": "Bảng nhịp độ",
@@ -719,7 +719,7 @@
         "fields": {
           "title": "Tiêu đề tập",
           "summary": "Tóm tắt tập",
-          "openingHook": "Móc mở tập",
+          "openingHook": "Mở đầu cuốn hút",
           "mainPromise": "Cam kết chính",
           "primaryPressureSource": "Nguồn áp lực chính",
           "coreSellingPoint": "Điểm bán cốt lõi",
@@ -1112,7 +1112,7 @@
         "noChapters": "Chưa tách chương",
         "volumeHeader": "[Tập {order}] {title}",
         "summary": "Tóm tắt tập: {value}",
-        "openingHook": "Móc mở tập: {value}",
+        "openingHook": "Mở đầu cuốn hút: {value}",
         "mainPromise": "Cam kết chính: {value}",
         "primaryPressureSource": "Nguồn áp lực chính: {value}",
         "coreSellingPoint": "Điểm bán cốt lõi: {value}",
@@ -7243,6 +7243,41 @@
       "chapterStateCommit": "Ghi nhận trạng thái chương",
       "chapterQualityRepair": "Sửa chất lượng chương",
       "chapterQualityCheck": "Kiểm tra chất lượng chương"
+    },
+    "dynamicDirectorLabels": {
+      "generatingBeatSheetForVolume": "Đang tạo bảng nhịp độ của tập {volumeOrder}",
+      "generatingChapterListForVolume": "Đang tạo danh sách chương của tập {volumeOrder}",
+      "continuingBeatSheetForVolume": "Đang tiếp tục tạo bảng nhịp độ và chi tiết hóa tập {volumeOrder}"
+    },
+    "beatLabels": {
+      "openingHook": "Mở đầu cuốn hút",
+      "firstEscalation": "Lần leo thang đầu tiên",
+      "midTurn": "Bước ngoặt giữa tập",
+      "preClimaxPressure": "Siết căng trước cao trào",
+      "volumeClimax": "Cao trào của tập",
+      "endingHook": "Gợi mở cuối tập"
+    },
+    "directorErrors": {
+      "missingUsableVolumeSkeleton": "Đạo diễn AI chưa tạo được khung tập có thể dùng.",
+      "structuredOutlineRecoveryStalled": "Khôi phục phần nhịp độ và tách chương chưa tiến thêm được. Hãy kiểm tra lại kết quả lập kế hoạch chương rồi thử lại.",
+      "missingBeatSheetTargetVolume": "Khôi phục đạo diễn AI đang thiếu tập mục tiêu để tạo bảng nhịp độ.",
+      "missingChapterListTargetVolume": "Khôi phục đạo diễn AI đang thiếu tập mục tiêu để tách chương.",
+      "volumeOrderOutOfRange": "Kế hoạch hiện tại chỉ có {available} tập, chưa thể tự động chạy thẳng tập {requested}.",
+      "novelNotFound": "Không tìm thấy tiểu thuyết."
+    },
+    "directorWarnings": {
+      "chapterTitleDiversityPending": "Danh sách chương đã tạo, nhưng cấu trúc tiêu đề vẫn cần đa dạng hóa",
+      "chapterTitleDiversityPendingForVolume": "Tập {volumeOrder} đã tạo xong danh sách chương, nhưng cấu trúc tiêu đề vẫn cần đa dạng hóa",
+      "chapterTitleTooLong": "Tiêu đề chương quá dài: {title}. Hãy rút xuống còn tối đa {limit} ý chính, tránh viết thành tóm tắt cốt truyện.",
+      "waitingBookReplan": "Toàn bộ sách đang chờ xử lý đề xuất tái lập kế hoạch"
+    },
+    "followUpLabels": {
+      "revalidateTaskState": "Đọc lại trạng thái tác vụ",
+      "currentTaskScope": "Phạm vi tác vụ hiện tại",
+      "waitingAiAfterCheckpointConfirm": "Đã xác nhận mốc hiện tại, chờ AI tiếp tục đẩy tiếp."
+    },
+    "commonScopes": {
+      "book": "Toàn bộ sách"
     },
     "nextActions": {
       "generate_candidates": "Tạo hướng mở sách khả dụng",

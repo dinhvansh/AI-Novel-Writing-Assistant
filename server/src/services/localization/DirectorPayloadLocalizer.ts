@@ -21,6 +21,24 @@ function getT(locale: LocaleCode): TranslateFn | null {
   return (key, opts) => handle.t("serverLogs", key, { lng: locale, ...(opts ?? {}) });
 }
 
+function formatServerLog(t: TranslateFn, key: string, fallback: string, opts?: Record<string, unknown>): string {
+  const result = t(key, opts);
+  return result && result !== `serverLogs:${key}` ? result : fallback;
+}
+
+function translateBeatLabel(value: string, t: TranslateFn): string {
+  const beatKeyMap: Record<string, string> = {
+    "开卷抓手": "beatLabels.openingHook",
+    "第一次升级": "beatLabels.firstEscalation",
+    "中段转向": "beatLabels.midTurn",
+    "高潮前挤压": "beatLabels.preClimaxPressure",
+    "卷高潮": "beatLabels.volumeClimax",
+    "卷尾钩子": "beatLabels.endingHook",
+  };
+  const key = beatKeyMap[value.trim()];
+  return key ? formatServerLog(t, key, value) : value;
+}
+
 // ---------------------------------------------------------------------------
 // Stage label map (key → serverLogs.workflowStages.*)
 // ---------------------------------------------------------------------------
@@ -28,6 +46,8 @@ const STAGE_MAP: Record<string, string> = {
   // i18n-ignore: lookup map keys
   "\u9879\u76ee\u8bbe\u5b9a": "workflowStages.project_setup",
   "AI \u81ea\u52a8\u5bfc\u6f14": "workflowStages.auto_director",
+  "AI \u81ea\u52a8\u6784\u5efa": "workflowStages.auto_director",
+  "\u81ea\u52a8\u5bfc\u6f14": "workflowStages.auto_director",
   "\u6545\u4e8b\u5b8f\u89c2\u89c4\u5212": "workflowStages.story_macro",
   "\u89d2\u8272\u51c6\u5907": "workflowStages.character_setup",
   "\u5377\u6218\u7565 / \u5377\u9aa8\u67b6": "workflowStages.volume_strategy",
@@ -201,6 +221,14 @@ export function localizeDirectorString(
 
   const v = value.trim();
 
+  if (v.startsWith("serverLogs:")) {
+    const directKey = v.slice("serverLogs:".length);
+    const result = t(directKey);
+    if (result && result !== `serverLogs:${directKey}`) {
+      return result;
+    }
+  }
+
   // Stage labels
   const stageKey = STAGE_MAP[v];
   if (stageKey) {
@@ -279,6 +307,139 @@ export function localizeDirectorString(
     if (result && result !== `serverLogs:${nextActionKey}`) return result;
   }
 
+  // Pattern match for legacy recovery hint / resume action strings
+  // i18n-ignore: pattern matching
+  if (v.includes("\u5df2\u786e\u8ba4\u65b9\u5411") || v.includes("\u5f85\u786e\u8ba4") || v.includes("\u65b9\u5411\u9009\u5361")) {
+    const result = t("nextActionLabels.continue");
+    if (result && result !== "serverLogs:nextActionLabels.continue") return result;
+  }
+  if (v.includes("\u4f9d\u636e\u76ee\u524d\u9636\u6bb5") || v.includes("\u8fdb\u884c\u4e0b\u4e00\u4e2a\u9636\u6bb5") || v.includes("\u5f00\u59cb\u4e0b\u4e00\u4e2a\u9636\u6bb5")) {
+    const result = t("nextActionLabels.resumeFromCheckpoint");
+    if (result && result !== "serverLogs:nextActionLabels.resumeFromCheckpoint") return result;
+  }
+
+  const dynamicVolumeBeatSheet = v.match(/^正在生成第\s*(\d+)\s*卷节奏板(?<suffix>\s*\(.+\))?$/);
+  if (dynamicVolumeBeatSheet) {
+    const base = formatServerLog(
+      t,
+      "dynamicDirectorLabels.generatingBeatSheetForVolume",
+      `Đang tạo bảng nhịp độ của tập ${dynamicVolumeBeatSheet[1]}`,
+      { values: { volumeOrder: Number(dynamicVolumeBeatSheet[1]) } },
+    );
+    return `${base}${dynamicVolumeBeatSheet.groups?.suffix ?? ""}`;
+  }
+
+  const dynamicVolumeChapterList = v.match(/^正在生成第\s*(\d+)\s*卷章节列表(?<suffix>\s*\(.+\))?$/);
+  if (dynamicVolumeChapterList) {
+    const base = formatServerLog(
+      t,
+      "dynamicDirectorLabels.generatingChapterListForVolume",
+      `Đang tạo danh sách chương của tập ${dynamicVolumeChapterList[1]}`,
+      { values: { volumeOrder: Number(dynamicVolumeChapterList[1]) } },
+    );
+    return `${base}${dynamicVolumeChapterList.groups?.suffix ?? ""}`;
+  }
+
+  const continuingBeatSheet = v.match(/^正在继续生成第\s*(\d+)\s*卷节奏板与细化(?<suffix>\s*\(.+\))?$/);
+  if (continuingBeatSheet) {
+    const base = formatServerLog(
+      t,
+      "dynamicDirectorLabels.continuingBeatSheetForVolume",
+      `Đang tiếp tục tạo bảng nhịp độ và chi tiết hóa tập ${continuingBeatSheet[1]}`,
+      { values: { volumeOrder: Number(continuingBeatSheet[1]) } },
+    );
+    return `${base}${continuingBeatSheet.groups?.suffix ?? ""}`;
+  }
+
+  const chapterRangeLabel = v.match(/^第\s*(\d+)(?:-(\d+))?\s*章$/);
+  if (chapterRangeLabel) {
+    const start = Number(chapterRangeLabel[1]);
+    const end = chapterRangeLabel[2] ? Number(chapterRangeLabel[2]) : null;
+    return end && end !== start ? `Chương ${start}-${end}` : `Chương ${start}`;
+  }
+
+  const beatSegmentLabel = v.match(/^正在生成第\s*(\d+)\s*卷节奏段：(.+?)(?<suffix>\s*\(.+\))?$/);
+  if (beatSegmentLabel) {
+    const volumeOrder = Number(beatSegmentLabel[1]);
+    const beatLabel = translateBeatLabel(beatSegmentLabel[2], t);
+    return `Đang tạo nhịp đoạn của tập ${volumeOrder}: ${beatLabel}${beatSegmentLabel.groups?.suffix ?? ""}`;
+  }
+
+  const translatedBeat = translateBeatLabel(v, t);
+  if (translatedBeat !== v) {
+    return translatedBeat;
+  }
+
+  if (v === "自动导演未能生成可用卷骨架。") {
+    return formatServerLog(t, "directorErrors.missingUsableVolumeSkeleton", "Đạo diễn AI chưa tạo được khung tập có thể dùng.");
+  }
+  if (v === "自动导演结构化大纲恢复没有推进，请检查章节规划生成结果后重试。") {
+    return formatServerLog(t, "directorErrors.structuredOutlineRecoveryStalled", "Khôi phục phần nhịp độ và tách chương chưa tiến thêm được. Hãy kiểm tra lại kết quả lập kế hoạch chương rồi thử lại.");
+  }
+  if (v === "自动导演恢复时缺少待生成节奏板的目标卷。") {
+    return formatServerLog(t, "directorErrors.missingBeatSheetTargetVolume", "Khôi phục đạo diễn AI đang thiếu tập mục tiêu để tạo bảng nhịp độ.");
+  }
+  if (v === "自动导演恢复时缺少待拆章的目标卷。") {
+    return formatServerLog(t, "directorErrors.missingChapterListTargetVolume", "Khôi phục đạo diễn AI đang thiếu tập mục tiêu để tách chương.");
+  }
+  if (v === "小说不存在。") {
+    return formatServerLog(t, "directorErrors.novelNotFound", "Không tìm thấy tiểu thuyết.");
+  }
+  if (v === "重新读取任务状态") {
+    return formatServerLog(t, "followUpLabels.revalidateTaskState", "Đọc lại trạng thái tác vụ");
+  }
+  if (v === "当前任务范围") {
+    return formatServerLog(t, "followUpLabels.currentTaskScope", "Phạm vi tác vụ hiện tại");
+  }
+  if (v === "已确认当前关卡，等待 AI 继续推进") {
+    return formatServerLog(t, "followUpLabels.waitingAiAfterCheckpointConfirm", "Đã xác nhận mốc hiện tại, chờ AI tiếp tục đẩy tiếp.");
+  }
+  const volumeOutOfRange = v.match(/^当前卷规划只有\s*(\d+)\s*卷，不能直接自动执行第\s*(\d+)\s*卷。$/);
+  if (volumeOutOfRange) {
+    return formatServerLog(
+      t,
+      "directorErrors.volumeOrderOutOfRange",
+      `Kế hoạch hiện tại chỉ có ${volumeOutOfRange[1]} tập, chưa thể tự động chạy thẳng tập ${volumeOutOfRange[2]}.`,
+      { values: { available: Number(volumeOutOfRange[1]), requested: Number(volumeOutOfRange[2]) } },
+    );
+  }
+
+  if (v === "全书") {
+    return formatServerLog(t, "commonScopes.book", "Toàn bộ sách");
+  }
+  if (v === "章节列表已生成，但标题结构仍需分散") {
+    return formatServerLog(
+      t,
+      "directorWarnings.chapterTitleDiversityPending",
+      "Danh sách chương đã tạo, nhưng cấu trúc tiêu đề vẫn cần đa dạng hóa",
+    );
+  }
+  if (v === "全书等待处理重规划建议") {
+    return formatServerLog(
+      t,
+      "directorWarnings.waitingBookReplan",
+      "Toàn bộ sách đang chờ xử lý đề xuất tái lập kế hoạch",
+    );
+  }
+  const volumeChapterTitleDiversity = v.match(/^第\s*(\d+)\s*卷章节列表已生成，但标题结构仍需分散$/);
+  if (volumeChapterTitleDiversity) {
+    return formatServerLog(
+      t,
+      "directorWarnings.chapterTitleDiversityPendingForVolume",
+      `Tập ${volumeChapterTitleDiversity[1]} đã tạo xong danh sách chương, nhưng cấu trúc tiêu đề vẫn cần đa dạng hóa`,
+      { values: { volumeOrder: Number(volumeChapterTitleDiversity[1]) } },
+    );
+  }
+  const chapterTitleTooLong = v.match(/^章节标题过长：(.+?)。请压缩到\s*(\d+)\s*个核心字以内，避免写成剧情梗概。$/);
+  if (chapterTitleTooLong) {
+    return formatServerLog(
+      t,
+      "directorWarnings.chapterTitleTooLong",
+      `Tiêu đề chương quá dài: ${chapterTitleTooLong[1]}. Hãy rút xuống còn tối đa ${chapterTitleTooLong[2]} ý chính, tránh viết thành tóm tắt cốt truyện.`,
+      { values: { title: chapterTitleTooLong[1], limit: Number(chapterTitleTooLong[2]) } },
+    );
+  }
+
   return value;
 }
 
@@ -295,12 +456,17 @@ export function localizeTaskPayload<T extends Record<string, unknown>>(
     "currentItemLabel",
     "currentStage",
     "displayStatus",
+    "executionScopeLabel",
     "checkpointSummary",
+    "noticeSummary",
     "resumeAction",
     "nextActionLabel",
     "blockingReason",
     "lastError",
     "ownerLabel",
+    "recoveryHint",
+    "failureSummary",
+    "failureDetails",
   ] as const;
 
   const result = { ...data };
@@ -325,6 +491,19 @@ export function localizeTaskPayload<T extends Record<string, unknown>>(
         };
       },
     );
+  }
+
+  if (Array.isArray(result.steps)) {
+    (result as Record<string, unknown>).steps = result.steps.map((step: unknown) => {
+      if (!step || typeof step !== "object") return step;
+      const record = step as Record<string, unknown>;
+      return {
+        ...record,
+        label: typeof record.label === "string"
+          ? (localizeDirectorString(record.label, locale) ?? record.label)
+          : record.label,
+      };
+    });
   }
 
   return result;

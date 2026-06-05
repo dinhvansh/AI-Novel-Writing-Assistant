@@ -131,9 +131,9 @@ function normalizeStrategyVolume(raw: unknown, index: number): VolumeStrategyVol
   return {
     sortOrder: Math.max(1, normalizeInteger(raw.sortOrder, index + 1)),
     planningMode,
-    roleLabel: normalizeString(raw.roleLabel, `第${index + 1}卷定位`),
-    coreReward: normalizeString(raw.coreReward, "待补全本卷读者回报。"),
-    escalationFocus: normalizeString(raw.escalationFocus, "待补全本卷升级焦点。"),
+    roleLabel: normalizeString(raw.roleLabel, `Định vị tập ${index + 1}`),
+    coreReward: normalizeString(raw.coreReward, "Cần bổ sung phần thưởng đọc giả của tập này."),
+    escalationFocus: normalizeString(raw.escalationFocus, "Cần bổ sung trọng tâm nâng cấp của tập này."),
     uncertaintyLevel,
   };
 }
@@ -174,10 +174,10 @@ function normalizeStrategyPlan(raw: unknown, volumeCount: number): VolumeStrateg
   return {
     recommendedVolumeCount: Math.max(1, normalizeInteger(raw.recommendedVolumeCount, volumes.length || volumeCount || 1)),
     hardPlannedVolumeCount: Math.max(1, normalizeInteger(raw.hardPlannedVolumeCount, Math.min(volumes.length, 3))),
-    readerRewardLadder: normalizeString(raw.readerRewardLadder, "待补全读者回报梯度。"),
-    escalationLadder: normalizeString(raw.escalationLadder, "待补全升级梯度。"),
-    midpointShift: normalizeString(raw.midpointShift, "待补全中盘转向。"),
-    notes: normalizeString(raw.notes, "待补全卷战略备注。"),
+    readerRewardLadder: normalizeString(raw.readerRewardLadder, "Cần bổ sung thang phần thưởng cho người đọc."),
+    escalationLadder: normalizeString(raw.escalationLadder, "Cần bổ sung thang nâng cấp xung đột."),
+    midpointShift: normalizeString(raw.midpointShift, "Cần bổ sung cú chuyển ở giữa truyện."),
+    notes: normalizeString(raw.notes, "Cần bổ sung ghi chú chiến lược phân tập."),
     volumes,
     uncertainties: Array.isArray(raw.uncertainties)
       ? raw.uncertainties
@@ -381,13 +381,13 @@ export function buildVolumePlanningReadiness(input: {
   const { volumes, strategyPlan, beatSheets } = input;
   const blockingReasons: string[] = [];
   if (!strategyPlan) {
-    blockingReasons.push("请先生成卷战略建议，再确认卷骨架。");
+    blockingReasons.push("Hãy tạo chiến lược phân tập trước khi chốt khung tập.");
   }
   if (volumes.length === 0) {
-    blockingReasons.push("当前还没有卷骨架。");
+    blockingReasons.push("Hiện chưa có khung tập nào.");
   }
   if (!beatSheets.some((sheet) => sheet.beats.length > 0)) {
-    blockingReasons.push("当前卷还没有节奏板，默认不能直接拆章节列表。");
+    blockingReasons.push("Tập hiện tại chưa có beat sheet nên chưa thể tách danh sách chương trực tiếp.");
   }
   return {
     canGenerateStrategy: true,

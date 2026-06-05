@@ -8130,6 +8130,41 @@
       "chapterQualityRepair": "章节质量修复",
       "chapterQualityCheck": "章节质量检查"
     },
+    "dynamicDirectorLabels": {
+      "generatingBeatSheetForVolume": "正在生成第 {volumeOrder} 卷节奏板",
+      "generatingChapterListForVolume": "正在生成第 {volumeOrder} 卷章节列表",
+      "continuingBeatSheetForVolume": "正在继续生成第 {volumeOrder} 卷节奏板与细化"
+    },
+    "beatLabels": {
+      "openingHook": "开卷抓手",
+      "firstEscalation": "第一次升级",
+      "midTurn": "中段转向",
+      "preClimaxPressure": "高潮前挤压",
+      "volumeClimax": "卷高潮",
+      "endingHook": "卷尾钩子"
+    },
+    "directorErrors": {
+      "missingUsableVolumeSkeleton": "自动导演未能生成可用卷骨架。",
+      "structuredOutlineRecoveryStalled": "自动导演结构化大纲恢复没有推进，请检查章节规划生成结果后重试。",
+      "missingBeatSheetTargetVolume": "自动导演恢复时缺少待生成节奏板的目标卷。",
+      "missingChapterListTargetVolume": "自动导演恢复时缺少待拆章的目标卷。",
+      "volumeOrderOutOfRange": "当前卷规划只有 {available} 卷，不能直接自动执行第 {requested} 卷。",
+      "novelNotFound": "小说不存在。"
+    },
+    "directorWarnings": {
+      "chapterTitleDiversityPending": "章节列表已生成，但标题结构仍需分散",
+      "chapterTitleDiversityPendingForVolume": "第 {volumeOrder} 卷章节列表已生成，但标题结构仍需分散",
+      "chapterTitleTooLong": "章节标题过长：{title}。请压缩到 {limit} 个核心字以内，避免写成剧情梗概。",
+      "waitingBookReplan": "全书等待处理重规划建议"
+    },
+    "followUpLabels": {
+      "revalidateTaskState": "重新读取任务状态",
+      "currentTaskScope": "当前任务范围",
+      "waitingAiAfterCheckpointConfirm": "已确认当前关卡，等待 AI 继续推进"
+    },
+    "commonScopes": {
+      "book": "全书"
+    },
     "nextActions": {
       "generate_candidates": "生成可选开书方向",
       "create_book_contract": "生成书级创作约定",

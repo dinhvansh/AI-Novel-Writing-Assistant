@@ -2,6 +2,7 @@ import type { DirectorDashboardView } from "@ai-novel/shared/types/directorRunti
 import { useTranslation } from "react-i18next";
 import type { UnifiedTaskDetail } from "@ai-novel/shared/types/task";
 import { Badge } from "@/components/ui/badge";
+import { translateDirectorLabel } from "@/lib/directorRuntimeI18n";
 import {
   formatCheckpoint,
   formatDate,
@@ -29,8 +30,23 @@ export default function TaskCenterDetailSummary({
   const progressPercent = typeof dashboardView?.progressPercent === "number"
     ? dashboardView.progressPercent
     : Math.round(task.progress * 100);
-  const currentStage = dashboardView?.stageLabel ?? task.currentStage ?? t("tasks:detail.none");
-  const currentItem = dashboardView?.currentAction ?? task.currentItemLabel ?? t("tasks:detail.none");
+  const currentStage = translateDirectorLabel(dashboardView?.stageLabel ?? task.currentStage ?? null)
+    ?? dashboardView?.stageLabel
+    ?? task.currentStage
+    ?? t("tasks:detail.none");
+  const currentItem = translateDirectorLabel(dashboardView?.currentAction ?? task.currentItemLabel ?? null)
+    ?? dashboardView?.currentAction
+    ?? task.currentItemLabel
+    ?? t("tasks:detail.none");
+  const displayStatus = translateDirectorLabel(dashboardView?.statusLabel ?? task.displayStatus ?? null)
+    ?? dashboardView?.statusLabel
+    ?? task.displayStatus
+    ?? formatStatus(task.status, t);
+  const translatedResumeAction = translateDirectorLabel(task.resumeAction ?? task.nextActionLabel ?? null)
+    ?? task.resumeAction
+    ?? task.nextActionLabel
+    ?? t("tasks:detail.defaultContinue");
+  const translatedBlockingReason = translateDirectorLabel(task.blockingReason ?? null) ?? task.blockingReason;
   return (
     <>
       <div className="space-y-1">
@@ -44,19 +60,19 @@ export default function TaskCenterDetailSummary({
         <Badge variant="outline">{t("tasks:detail.progress", { percent: progressPercent })}</Badge>
       </div>
       <div className="space-y-1 text-muted-foreground">
-        <div>{t("tasks:detail.displayStatus", { status: dashboardView?.statusLabel ?? task.displayStatus ?? formatStatus(task.status, t) })}</div>
+        <div>{t("tasks:detail.displayStatus", { status: displayStatus })}</div>
         <div>{t("tasks:detail.currentStage", { stage: currentStage })}</div>
         <div>{t("tasks:detail.currentItem", { item: currentItem })}</div>
         {task.kind === "novel_workflow" ? (
           <>
             <div>{t("tasks:detail.latestCheckpoint", { checkpoint: formatCheckpoint(task.checkpointType, t, task.executionScopeLabel) })}</div>
             <div>{t("tasks:detail.resumeTarget", { target: formatResumeTarget(task.resumeTarget, t) })}</div>
-            <div>{t("tasks:detail.suggestContinue", { action: task.resumeAction ?? task.nextActionLabel ?? t("tasks:detail.defaultContinue") })}</div>
+            <div>{t("tasks:detail.suggestContinue", { action: translatedResumeAction })}</div>
             <div>{t("tasks:detail.lastHealthyStage", { stage: task.lastHealthyStage ?? t("tasks:detail.none") })}</div>
           </>
         ) : null}
-        {task.blockingReason ? (
-          <div>{t("tasks:detail.blockingReason", { reason: task.blockingReason })}</div>
+        {translatedBlockingReason ? (
+          <div>{t("tasks:detail.blockingReason", { reason: translatedBlockingReason })}</div>
         ) : null}
         <div>{t("tasks:detail.latestHeartbeat", { date: formatDate(task.heartbeatAt, t) })}</div>
         <div>{t("tasks:detail.startedAt", { date: formatDate(task.startedAt, t) })}</div>

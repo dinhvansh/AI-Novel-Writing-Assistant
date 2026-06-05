@@ -13,7 +13,7 @@ import { StyleGenerationService } from "../services/styleEngine/StyleGenerationS
 import { StyleProfileService } from "../services/styleEngine/StyleProfileService";
 import { styleRecommendationService } from "../services/styleEngine/StyleRecommendationService";
 import { StyleRewriteService } from "../services/styleEngine/StyleRewriteService";
-import { localizeStyleTemplate } from "../services/localization/SeedTranslator";
+import { localizeAntiAiRule, localizeStyleTemplate } from "../services/localization/SeedTranslator";
 import type { LocaleCode } from "@ai-novel/shared/localization";
 
 const router = Router();
@@ -349,11 +349,16 @@ router.get("/style-templates", async (_req, res, next) => {
 router.get("/anti-ai-rules", async (_req, res, next) => {
   try {
     const data = await antiAiRuleService.listRules();
+    const locale = (res.locals as { locale?: LocaleCode }).locale ?? "vi-VN";
+    const localizedData = data.map((rule) => ({
+      ...rule,
+      ...localizeAntiAiRule(rule, locale),
+    }));
     res.status(200).json({
       success: true,
-      data,
-      message: "获取反AI规则成功。" // i18n-ignore-internal-log: API success message, not user-facing
-    } satisfies ApiResponse<typeof data>);
+      data: localizedData,
+      message: "Listed anti-AI rules successfully." // i18n-ignore-internal-log: API success message, not user-facing
+    } satisfies ApiResponse<typeof localizedData>);
   } catch (error) {
     next(error);
   }

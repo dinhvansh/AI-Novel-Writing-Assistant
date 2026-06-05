@@ -449,10 +449,6 @@ async function seedStarterStyleProfiles(
   mode: SystemResourceSeedMode,
 ): Promise<StyleEngineSeedReport> {
   let report = { ...EMPTY_STYLE_ENGINE_REPORT };
-  const totalProfiles = await tx.styleProfile.count();
-  if (mode === "missing_only" && totalProfiles > 0) {
-    return report;
-  }
 
   for (const definition of DEFAULT_STARTER_STYLE_PROFILES) {
     const template = DEFAULT_STYLE_TEMPLATES.find((item) => item.key === definition.templateKey);

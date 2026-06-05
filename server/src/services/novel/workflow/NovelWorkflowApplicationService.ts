@@ -12,6 +12,7 @@ import {
   resolveCheckpointStageFromRow,
   stageLabel,
   checkpointItemLabel,
+  sanitizeTaskErrorMessage,
 } from "./novelWorkflow.helpers";
 import { buildRestoreTaskToCheckpointResult } from "./novelWorkflowCheckpoint";
 import { applyDirectorLlmOverride, type DirectorWorkflowSeedPayload } from "../director/runtime/novelDirectorHelpers";
@@ -318,7 +319,7 @@ export class NovelWorkflowApplicationService {
         checkpointType: patch?.checkpointType ?? existing.checkpointType,
         checkpointSummary: patch?.checkpointSummary ?? existing.checkpointSummary,
         resumeTargetJson: stringifyResumeTarget(resumeTarget),
-        lastError: message.trim(),
+        lastError: sanitizeTaskErrorMessage(message),
       },
     });
   }

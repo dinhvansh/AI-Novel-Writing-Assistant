@@ -114,8 +114,8 @@ export function useNovelVolumePlanning({
     [normalizedSavedVolumes, normalizedVolumeDraft],
   );
   const readiness = useMemo(
-    () => buildVolumePlanningReadiness({ volumes: normalizedVolumeDraft, strategyPlan, beatSheets }),
-    [beatSheets, normalizedVolumeDraft, strategyPlan],
+    () => buildVolumePlanningReadiness({ t, volumes: normalizedVolumeDraft, strategyPlan, beatSheets }),
+    [beatSheets, normalizedVolumeDraft, strategyPlan, t],
   );
   const currentChapterCount = useMemo(
     () => normalizedVolumeDraft.reduce((sum, volume) => sum + volume.chapters.length, 0),
@@ -441,7 +441,7 @@ export function useNovelVolumePlanning({
     setVolumeGenerationMessage(t("volumeMessages.systemRecommendedRestored", { count: volumeCountGuidance.systemRecommendedVolumeCount }));
   };
 
-  const generationNotice = buildGenerationNotice(strategyPlan);
+  const generationNotice = buildGenerationNotice(strategyPlan, t);
   const generatingChapterDetailMode: ChapterDetailMode | "" = isGeneratingChapterDetailBundle ? bundleGeneratingMode : generateMutation.variables?.scope === "chapter_detail" ? generateMutation.variables.detailMode ?? "" : "";
   const generatingChapterDetailChapterId = isGeneratingChapterDetailBundle ? bundleGeneratingChapterId : generateMutation.variables?.scope === "chapter_detail" ? generateMutation.variables.targetChapterId ?? "" : "";
   const isGeneratingChapterDetail = isGeneratingChapterDetailBundle

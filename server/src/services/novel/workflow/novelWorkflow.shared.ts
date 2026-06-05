@@ -12,18 +12,18 @@ import { getI18nServerHandle } from "../../../i18n";
 import { getCurrentRequestLocale } from "../../../runtime/requestLocaleContext";
 
 export const NOVEL_WORKFLOW_STAGE_LABELS: Record<NovelWorkflowStage, string> = {
-  project_setup: "项目设定",
-  auto_director: "AI 自动导演",
-  story_macro: "故事宏观规划",
-  character_setup: "角色准备",
-  volume_strategy: "卷战略 / 卷骨架",
-  structured_outline: "节奏 / 拆章",
-  chapter_execution: "章节执行",
-  quality_repair: "质量修复",
+  project_setup: "Thiết lập dự án",
+  auto_director: "Đạo diễn AI",
+  story_macro: "Hoạch định tổng thể câu chuyện",
+  character_setup: "Chuẩn bị nhân vật",
+  volume_strategy: "Chiến lược tập / khung tập",
+  structured_outline: "Nhịp độ / tách chương",
+  chapter_execution: "Thực thi chương",
+  quality_repair: "Sửa chất lượng",
 };
 
 /**
- * Get a localized stage label. Falls back to the Chinese canonical label
+ * Get a localized stage label. Falls back to the default Vietnamese label
  * when the i18n handle is not available or the key is missing.
  */
 export function getWorkflowStageLabel(stage: NovelWorkflowStage, locale: LocaleCode = DEFAULT_LOCALE): string {
@@ -49,14 +49,14 @@ export const NOVEL_WORKFLOW_STAGE_PROGRESS: Record<NovelWorkflowStage, number> =
 };
 
 export const NOVEL_WORKFLOW_STAGE_STEPS = [
-  { key: "project_setup", label: "项目设定" },
-  { key: "auto_director", label: "自动导演" },
-  { key: "story_macro", label: "故事宏观规划" },
-  { key: "character_setup", label: "角色准备" },
-  { key: "volume_strategy", label: "卷战略 / 卷骨架" },
-  { key: "structured_outline", label: "节奏 / 拆章" },
-  { key: "chapter_execution", label: "章节执行" },
-  { key: "quality_repair", label: "质量修复" },
+  { key: "project_setup", label: "Thiết lập dự án" },
+  { key: "auto_director", label: "Đạo diễn AI" },
+  { key: "story_macro", label: "Hoạch định tổng thể câu chuyện" },
+  { key: "character_setup", label: "Chuẩn bị nhân vật" },
+  { key: "volume_strategy", label: "Chiến lược tập / khung tập" },
+  { key: "structured_outline", label: "Nhịp độ / tách chương" },
+  { key: "chapter_execution", label: "Thực thi chương" },
+  { key: "quality_repair", label: "Sửa chất lượng" },
 ] as const;
 
 export function buildNovelCreateResumeTarget(taskId: string, mode: "director" | null = null): NovelWorkflowResumeTarget {

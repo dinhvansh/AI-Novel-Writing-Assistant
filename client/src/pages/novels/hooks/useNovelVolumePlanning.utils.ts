@@ -1,3 +1,4 @@
+import type { TFunction } from "i18next";
 import type {
   VolumeBeatSheet,
   VolumeCountGuidance,
@@ -100,7 +101,7 @@ export function resolveCustomVolumeCountInput(
   if (!Number.isFinite(parsed)) {
     return {
       value: null,
-      message: "请先输入有效的固定卷数。", // i18n-ignore: internal validation message
+      message: "Vui long nhap so tap hop le.",
     };
   }
   if (
@@ -109,7 +110,7 @@ export function resolveCustomVolumeCountInput(
   ) {
     return {
       value: null,
-      message: `固定卷数必须落在 ${volumeCountGuidance.allowedVolumeCountRange.min}-${volumeCountGuidance.allowedVolumeCountRange.max} 卷之间。`, // i18n-ignore: internal validation message
+      message: `So tap phai nam trong khoang ${volumeCountGuidance.allowedVolumeCountRange.min}-${volumeCountGuidance.allowedVolumeCountRange.max}.`,
     };
   }
   return {
@@ -118,9 +119,9 @@ export function resolveCustomVolumeCountInput(
   };
 }
 
-export function buildGenerationNotice(strategyPlan: VolumeStrategyPlan | null): string {
-  // i18n-ignore: internal guidance text — displayed via component that wraps with t()
+export function buildGenerationNotice(strategyPlan: VolumeStrategyPlan | null, t?: TFunction): string {
+  const tr = t ?? ((key: string) => key);
   return strategyPlan
-    ? "当前工作区已进入二期链路：先审卷战略，再确认卷骨架，之后按卷生成节奏板和章节列表。" // i18n-ignore: internal guidance
-    : "先生成卷战略建议，让系统帮你决定卷数和硬/软规划，再进入卷骨架。"; // i18n-ignore: internal guidance
+    ? tr("novel:outline.volumeCount.withStrategy")
+    : tr("novel:outline.volumeCount.withoutStrategy");
 }

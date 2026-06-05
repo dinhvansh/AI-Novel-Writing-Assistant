@@ -39,7 +39,7 @@ import type { DirectorPhaseCallbacks, DirectorPhaseDependencies } from "./novelD
 import { resetDirectorDownstreamChapterState } from "../recovery/novelDirectorDownstreamReset";
 
 function buildChapterOrderRangeLabel(startOrder: number, endOrder: number): string {
-  return startOrder === endOrder ? `第 ${startOrder} 章` : `第 ${startOrder}-${endOrder} 章`;
+  return startOrder === endOrder ? `Chương ${startOrder}` : `Chương ${startOrder}-${endOrder}`;
 }
 
 function findMissingSelectedChapterOrders(
@@ -94,21 +94,21 @@ function buildStructuredOutlinePhaseUpdate(event: VolumeGenerationPhaseEvent): {
   if (event.scope === "beat_sheet") {
     return {
       itemKey: "beat_sheet",
-      itemLabel: event.label.trim() || (event.phase === "load_context" ? "正在整理节奏板上下文" : "正在生成节奏板"),
+      itemLabel: event.label.trim() || (event.phase === "load_context" ? "Đang chuẩn bị ngữ cảnh bảng nhịp độ" : "Đang tạo bảng nhịp độ"),
       progress: DIRECTOR_PROGRESS.beatSheet,
     };
   }
   if (event.scope === "chapter_list") {
     return {
       itemKey: "chapter_list",
-      itemLabel: event.label.trim() || (event.phase === "load_context" ? "正在整理拆章上下文" : "正在生成章节列表"),
+      itemLabel: event.label.trim() || (event.phase === "load_context" ? "Đang chuẩn bị ngữ cảnh tách chương" : "Đang tạo danh sách chương"),
       progress: DIRECTOR_PROGRESS.chapterList,
     };
   }
   if (event.scope === "rebalance") {
     return {
       itemKey: "chapter_list",
-      itemLabel: event.label.trim() || "正在校准相邻卷衔接",
+      itemLabel: event.label.trim() || "Đang hiệu chỉnh liên kết giữa các tập",
       progress: 0.8,
     };
   }
@@ -163,7 +163,7 @@ function buildChapterTitleNotice(input: {
     summary: input.issue,
     action: {
       type: "open_structured_outline",
-      label: "快速修复章节标题",
+      label: "Sửa nhanh tiêu đề chương",
       volumeId: input.volume.id,
     },
   };
@@ -192,7 +192,7 @@ export async function runDirectorStructuredOutlinePhase(input: {
   });
   const firstVolume = baseWorkspace.volumes[0];
   if (!firstVolume) {
-    throw new Error("自动导演未能生成可用卷骨架。");
+    throw new Error("Đạo diễn AI chưa tạo được khung tập có thể dùng.");
   }
   const detailPlan = normalizeDirectorAutoExecutionPlan(
     isDirectorAutoExecutionRunMode(normalizeDirectorRunMode(request.runMode))
@@ -203,7 +203,7 @@ export async function runDirectorStructuredOutlinePhase(input: {
     .slice()
     .sort((left, right) => left.sortOrder - right.sortOrder);
   if (detailPlan.mode === "volume" && (detailPlan.volumeOrder ?? 1) > sortedVolumes.length) {
-    throw new Error(`当前卷规划只有 ${sortedVolumes.length} 卷，不能直接自动执行第 ${detailPlan.volumeOrder} 卷。`);
+    throw new Error(`Kế hoạch hiện tại chỉ có ${sortedVolumes.length} tập, chưa thể tự động chạy thẳng tập ${detailPlan.volumeOrder}.`);
   }
 
   const directorSession = buildDirectorSessionState({
@@ -242,20 +242,20 @@ export async function runDirectorStructuredOutlinePhase(input: {
     });
     const cursorKey = buildStructuredOutlineCursorKey(recoveryCursor);
     if (cursorKey === previousCursorKey) {
-      throw new Error("自动导演结构化大纲恢复没有推进，请检查章节规划生成结果后重试。");
+      throw new Error("Khôi phục phần nhịp độ và tách chương chưa tiến thêm được. Hãy kiểm tra lại kết quả lập kế hoạch chương rồi thử lại.");
     }
     previousCursorKey = cursorKey;
 
     if (recoveryCursor.step === "beat_sheet") {
       const targetVolume = workspace.volumes.find((volume) => volume.id === recoveryCursor.volumeId);
       if (!targetVolume) {
-        throw new Error("自动导演恢复时缺少待生成节奏板的目标卷。");
+        throw new Error("Khôi phục đạo diễn AI đang thiếu tập mục tiêu để tạo bảng nhịp độ.");
       }
       workspace = await runDirectorTrackedStep({
         taskId,
         stage: "structured_outline",
         itemKey: "beat_sheet",
-        itemLabel: `正在生成第 ${targetVolume.sortOrder} 卷节奏板`,
+        itemLabel: `Đang tạo bảng nhịp độ của tập ${targetVolume.sortOrder}`,
         progress: DIRECTOR_PROGRESS.beatSheet,
         volumeId: targetVolume.id,
         callbacks,
@@ -293,13 +293,13 @@ export async function runDirectorStructuredOutlinePhase(input: {
     if (recoveryCursor.step === "chapter_list") {
       const targetVolume = workspace.volumes.find((volume) => volume.id === recoveryCursor.volumeId);
       if (!targetVolume) {
-        throw new Error("自动导演恢复时缺少待拆章的目标卷。");
+        throw new Error("Khôi phục đạo diễn AI đang thiếu tập mục tiêu để tách chương.");
       }
       workspace = await runDirectorTrackedStep({
         taskId,
         stage: "structured_outline",
         itemKey: "chapter_list",
-        itemLabel: `正在生成第 ${targetVolume.sortOrder} 卷章节列表`,
+        itemLabel: `Đang tạo danh sách chương của tập ${targetVolume.sortOrder}`,
         progress: DIRECTOR_PROGRESS.chapterList,
         volumeId: targetVolume.id,
         callbacks,

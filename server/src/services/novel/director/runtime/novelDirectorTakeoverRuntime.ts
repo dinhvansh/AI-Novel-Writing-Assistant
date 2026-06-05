@@ -56,7 +56,10 @@ function hasPersistedChapterContent(chapter: Pick<TakeoverChapterRow, "content">
 }
 
 function isNoChaptersToGenerateFailure(message: string | null | undefined): boolean {
-  return typeof message === "string" && message.includes("指定区间内没有可生成的章节");
+  return typeof message === "string" && (
+    message.includes("指定区间内没有可生成的章节")
+    || message.includes("Không có chương nào có thể tạo trong phạm vi đã chọn")
+  );
 }
 
 function isPendingAutoExecutionChapter(chapter: TakeoverChapterRow): boolean {
@@ -107,7 +110,7 @@ function reconcileAutoExecutionStateAfterStaleNoChapterFailure(input: {
 
   const deferredState = buildDirectorAutoExecutionDeferredQualityState({
     state,
-    reason: "继续已有进度时已跳过当前待修章节，后续章节继续执行。",
+    reason: "Khi tiếp tục từ tiến độ hiện có, hệ thống đã bỏ qua chương đang chờ sửa và tiếp tục xử lý các chương phía sau.",
     source: "review_skip",
     chapter: {
       id: nextChapter.id,
@@ -386,7 +389,7 @@ export async function loadDirectorTakeoverState(input: {
     }),
   ]);
   if (!novelRow) {
-    throw new Error("小说不存在。");
+    throw new Error("Không tìm thấy tiểu thuyết.");
   }
 
   const novel = normalizeNovelOutput(novelRow) as DirectorTakeoverNovelContext & {
@@ -499,7 +502,7 @@ export function resolveDirectorRunningStateForPhase(
     return {
       stage: "story_macro" as const,
       itemKey: "book_contract" as const,
-      itemLabel: "正在准备 Book Contract 与故事宏观规划",
+      itemLabel: "Đang chuẩn bị Book Contract và hoạch định tổng thể câu chuyện",
       progress: DIRECTOR_PROGRESS.bookContract,
     };
   }
@@ -507,7 +510,7 @@ export function resolveDirectorRunningStateForPhase(
     return {
       stage: "character_setup" as const,
       itemKey: "character_setup" as const,
-      itemLabel: "正在补齐角色准备",
+      itemLabel: "Đang bổ sung thiết lập nhân vật",
       progress: DIRECTOR_PROGRESS.characterSetup,
     };
   }
@@ -515,14 +518,14 @@ export function resolveDirectorRunningStateForPhase(
     return {
       stage: "volume_strategy" as const,
       itemKey: "volume_strategy" as const,
-      itemLabel: "正在继续生成卷战略",
+      itemLabel: "Đang tiếp tục tạo chiến lược tập",
       progress: DIRECTOR_PROGRESS.volumeStrategy,
     };
   }
   return {
     stage: "structured_outline" as const,
     itemKey: "beat_sheet" as const,
-    itemLabel: "正在继续生成第 1 卷节奏板与细化",
+    itemLabel: "Đang tiếp tục tạo bảng nhịp độ và chi tiết hóa tập 1",
     progress: DIRECTOR_PROGRESS.beatSheet,
   };
 }

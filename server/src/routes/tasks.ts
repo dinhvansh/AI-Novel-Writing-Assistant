@@ -11,7 +11,7 @@ import { AutoDirectorFollowUpActionExecutor } from "../services/task/autoDirecto
 import { AutoDirectorFollowUpService } from "../services/task/autoDirectorFollowUps/AutoDirectorFollowUpService";
 import { taskCenterService } from "../services/task/TaskCenterService";
 import { getI18nServerHandle } from "../i18n";
-import { localizeTaskPayload } from "../services/localization/DirectorPayloadLocalizer";
+import { localizeDirectorString, localizeTaskPayload } from "../services/localization/DirectorPayloadLocalizer";
 
 function localizeStepLabel(key: string, fallback: string, locale: LocaleCode): string {
   const handle = getI18nServerHandle();
@@ -34,6 +34,101 @@ function localizeTaskDetail(data: UnifiedTaskDetail, locale: LocaleCode): Unifie
     : data;
   // Localize user-facing payload fields
   return localizeTaskPayload(withSteps as unknown as Record<string, unknown>, locale) as unknown as UnifiedTaskDetail;
+}
+
+function localizeFollowUpDetail<T extends Record<string, unknown>>(data: T, locale: LocaleCode): T {
+  const result = { ...data };
+  const topLevelFields = [
+    "reasonLabel",
+    "currentStage",
+    "followUpSummary",
+    "checkpointSummary",
+    "blockingReason",
+    "nextStepSuggestion",
+    "validationSummary",
+    "riskNote",
+    "failureDetails",
+  ] as const;
+  for (const field of topLevelFields) {
+    const value = result[field];
+    if (typeof value === "string") {
+      (result as Record<string, unknown>)[field] = localizeDirectorString(value, locale) ?? value;
+    }
+  }
+  if (Array.isArray(result.availableActions)) {
+    (result as Record<string, unknown>).availableActions = result.availableActions.map((action: unknown) => {
+      if (!action || typeof action !== "object") return action;
+      const record = action as Record<string, unknown>;
+      return {
+        ...record,
+        label: typeof record.label === "string"
+          ? (localizeDirectorString(record.label, locale) ?? record.label)
+          : record.label,
+      };
+    });
+  }
+  if (Array.isArray(result.milestones)) {
+    (result as Record<string, unknown>).milestones = result.milestones.map((milestone: unknown) => {
+      if (!milestone || typeof milestone !== "object") return milestone;
+      const record = milestone as Record<string, unknown>;
+      return {
+        ...record,
+        summary: typeof record.summary === "string"
+          ? (localizeDirectorString(record.summary, locale) ?? record.summary)
+          : record.summary,
+      };
+    });
+  }
+  const validationSummary = result.validationSummary;
+  if (validationSummary && typeof validationSummary === "object" && !Array.isArray(validationSummary)) {
+    const record = validationSummary as Record<string, unknown>;
+    (result as Record<string, unknown>).validationSummary = {
+      ...record,
+      blockingReasons: Array.isArray(record.blockingReasons)
+        ? record.blockingReasons.map((reason) => typeof reason === "string" ? (localizeDirectorString(reason, locale) ?? reason) : reason)
+        : record.blockingReasons,
+      warnings: Array.isArray(record.warnings)
+        ? record.warnings.map((warning) => typeof warning === "string" ? (localizeDirectorString(warning, locale) ?? warning) : warning)
+        : record.warnings,
+      requiredActions: Array.isArray(record.requiredActions)
+        ? record.requiredActions.map((action: unknown) => {
+            if (!action || typeof action !== "object") return action;
+            const actionRecord = action as Record<string, unknown>;
+            return {
+              ...actionRecord,
+              label: typeof actionRecord.label === "string"
+                ? (localizeDirectorString(actionRecord.label, locale) ?? actionRecord.label)
+                : actionRecord.label,
+            };
+          })
+        : record.requiredActions,
+      affectedScope: record.affectedScope && typeof record.affectedScope === "object" && !Array.isArray(record.affectedScope)
+        ? {
+            ...(record.affectedScope as Record<string, unknown>),
+            label: typeof (record.affectedScope as Record<string, unknown>).label === "string"
+              ? (localizeDirectorString((record.affectedScope as Record<string, unknown>).label as string, locale)
+                ?? (record.affectedScope as Record<string, unknown>).label)
+              : (record.affectedScope as Record<string, unknown>).label,
+          }
+        : record.affectedScope,
+    };
+  }
+  if (result.task && typeof result.task === "object" && !Array.isArray(result.task)) {
+    (result as Record<string, unknown>).task = localizeTaskPayload(result.task as Record<string, unknown>, locale);
+  }
+  if (Array.isArray(result.steps)) {
+    (result as Record<string, unknown>).steps = result.steps.map((step: unknown) => {
+      if (!step || typeof step !== "object") return step;
+      const record = step as Record<string, unknown>;
+      return {
+        ...record,
+        label: typeof record.label === "string"
+          ? (localizeDirectorString(record.label, locale) ?? record.label)
+          : record.label,
+      };
+    });
+  }
+  return result;
 }
 
 const router = Router();
@@ -105,11 +200,18 @@ router.get("/overview", async (_req, res, next) => {
 router.get("/recovery-candidates", async (_req, res, next) => {
   try {
     const data = await recoveryTaskService.listRecoveryCandidates();
+    const locale = (res.locals as { locale?: LocaleCode }).locale ?? "vi-VN";
+    const localizedData = {
+      ...data,
+      items: Array.isArray(data.items)
+        ? data.items.map((item: unknown) => localizeTaskPayload(item as Record<string, unknown>, locale))
+        : data.items,
+    };
     res.status(200).json({
       success: true,
-      data,
+      data: localizedData,
       message: "Recovery candidates loaded.",
-    } satisfies ApiResponse<typeof data>);
+    } satisfies ApiResponse<typeof localizedData>);
   } catch (error) {
     next(error);
   }
@@ -157,11 +259,13 @@ router.get("/auto-director-follow-ups/:taskId", validate({ params: autoDirectorF
       } satisfies ApiResponse<null>);
       return;
     }
+    const locale = (res.locals as { locale?: LocaleCode }).locale ?? "vi-VN";
+    const localizedData = localizeFollowUpDetail(data as unknown as Record<string, unknown>, locale);
     res.status(200).json({
       success: true,
-      data,
+      data: localizedData,
       message: "Auto director follow-up loaded.",
-    } satisfies ApiResponse<typeof data>);
+    } satisfies ApiResponse<typeof localizedData>);
   } catch (error) {
     next(error);
   }

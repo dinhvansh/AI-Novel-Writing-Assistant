@@ -283,6 +283,15 @@ export default function NovelTaskDrawer({
   const canShowManualImpact = capabilities?.canInspectManualEditImpact !== false && Boolean(task);
   const canShowRetryWithOverrideModel = capabilities?.canRetryWithOverrideModel === true;
   const canShowFollowUp = capabilities?.availableFollowUps !== false && Boolean(followUp);
+  const translatedCurrentStage = translateDirectorLabel(
+    dashboardView?.stageLabel ?? displayState?.stageLabel ?? task?.currentStage ?? null,
+  ) ?? dashboardView?.stageLabel ?? displayState?.stageLabel ?? task?.currentStage ?? t("novel:taskDrawer.none");
+  const translatedCurrentAction = translateDirectorLabel(
+    dashboardView?.currentAction ?? displayState?.currentAction ?? task?.currentItemLabel ?? null,
+  ) ?? dashboardView?.currentAction ?? displayState?.currentAction ?? task?.currentItemLabel ?? t("novel:taskDrawer.none");
+  const translatedCheckpointSummary = translateDirectorLabel(task?.checkpointSummary ?? null) ?? task?.checkpointSummary;
+  const translatedLastError = translateDirectorLabel(task?.lastError ?? null) ?? task?.lastError;
+  const translatedRecoveryHint = translateDirectorLabel(task?.recoveryHint ?? null) ?? task?.recoveryHint;
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -349,11 +358,11 @@ export default function NovelTaskDrawer({
                 <div className="grid gap-3 sm:grid-cols-2">
                   <div className="rounded-xl border bg-background/80 p-3">
                     <div className="text-xs text-muted-foreground">{t("novel:taskDrawer.fields.currentStage")}</div>
-                    <div className="mt-1 text-sm font-medium text-foreground">{dashboardView?.stageLabel ?? displayState?.stageLabel ?? task.currentStage ?? t("novel:taskDrawer.none")}</div>
+                    <div className="mt-1 text-sm font-medium text-foreground">{translatedCurrentStage}</div>
                   </div>
                   <div className="rounded-xl border bg-background/80 p-3">
                     <div className="text-xs text-muted-foreground">{t("novel:taskDrawer.fields.currentAction")}</div>
-                    <div className="mt-1 text-sm font-medium text-foreground">{dashboardView?.currentAction ?? displayState?.currentAction ?? task.currentItemLabel ?? t("novel:taskDrawer.none")}</div>
+                    <div className="mt-1 text-sm font-medium text-foreground">{translatedCurrentAction}</div>
                   </div>
                   <div className="rounded-xl border bg-background/80 p-3">
                     <div className="text-xs text-muted-foreground">{t("novel:taskDrawer.fields.lastCheckpoint")}</div>
@@ -367,17 +376,17 @@ export default function NovelTaskDrawer({
                 <div className="h-2 overflow-hidden rounded-full bg-muted">
                   <div className="h-full rounded-full bg-primary transition-all" style={{ width: `${progressPercent}%` }} />
                 </div>
-                {task.checkpointSummary ? (
+                {translatedCheckpointSummary ? (
                   <div className="rounded-xl border bg-background/80 p-3 text-sm text-muted-foreground">
-                    {task.checkpointSummary}
+                    {translatedCheckpointSummary}
                   </div>
                 ) : null}
-                {task.lastError ? (
+                {translatedLastError ? (
                   <div className="rounded-xl border border-destructive/30 bg-destructive/5 p-3 text-sm text-destructive">
                     <div className="font-medium">{t("novel:taskDrawer.fields.lastError")}</div>
-                    <div className="mt-1">{task.lastError}</div>
-                    {task.recoveryHint ? (
-                      <div className="mt-2 text-xs text-destructive/80">{t("novel:taskDrawer.fields.recoveryHint", { hint: task.recoveryHint })}</div>
+                    <div className="mt-1">{translatedLastError}</div>
+                    {translatedRecoveryHint ? (
+                      <div className="mt-2 text-xs text-destructive/80">{t("novel:taskDrawer.fields.recoveryHint", { hint: translatedRecoveryHint })}</div>
                     ) : null}
                   </div>
                 ) : null}

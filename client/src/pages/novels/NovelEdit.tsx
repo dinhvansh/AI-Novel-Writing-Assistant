@@ -2017,6 +2017,7 @@ export default function NovelEdit() {
     beatSheets: volumeBeatSheets,
     rebalanceDecisions: volumeRebalanceDecisions,
     readiness: buildVolumePlanningReadiness({
+      t,
       volumes: normalizedVolumeDraft,
       strategyPlan: volumeStrategyPlan,
       beatSheets: volumeBeatSheets,
